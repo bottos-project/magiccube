@@ -6,7 +6,7 @@
 设计），给大数据、人工智能、机器人、物联网等领域提供一个合规性的开放的区块链技术和人工智能技术结合的试验田.
 
 # 技术白皮书
- 
+  https://github.com/Bottos-project/bottos/blob/master/Bottos%20whitepaper.pdf
 
 # 联系我们
    botadmin@bottos.org
