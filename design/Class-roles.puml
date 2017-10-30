@@ -1,0 +1,25 @@
+@startuml
+
+class Role
+class Action
+Class RoleAction
+Class TargetObject
+class DataProviderRole
+class DataRecuritorRole
+class ArbitorRole
+class AuditorRole
+class OracleRole
+
+Role<-->RoleAction
+
+RoleAction <-->Action
+
+RoleAction<-->TargetObject
+
+Role<|-- DataProviderRole
+Role<|-- DataRecuritorRole
+Role<|-- ArbitorRole
+Role<|-- AuditorRole
+Role<|-- OracleRole
+
+@enduml

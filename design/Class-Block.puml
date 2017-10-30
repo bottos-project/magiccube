@@ -1,0 +1,15 @@
+@startuml
+
+
+
+class Block
+
+class BlockList
+
+class ListRecentBlocks
+
+BlockList o--Block
+
+ListRecentBlocks <|--BlockList
+
+@enduml

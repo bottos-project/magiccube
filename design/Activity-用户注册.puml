@@ -1,0 +1,17 @@
+@startuml
+
+
+       |Client|
+       start
+       :企业或组织用户;
+       :提交企业信息;
+       |#AntiqueWhite|backend service|
+
+       :审核企业信息;
+
+       :企业信息审核上链;
+       |blockchain|
+       :企业信息上链;
+
+       stop
+       @enduml

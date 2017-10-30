@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+:user:
+rectangle bottos {
+user-->(login)
+user-->(logout)
+user-->(register)
+user-->(query token info)
+user-->(query Block info)
+user-->(query transaction info)
+user-->(modify self info )
+user-->(query data requirements)
+user-->(role assignment)
+}
+
+note right of (user)
+  user of bottos
+end note
+
+@enduml

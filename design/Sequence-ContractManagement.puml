@@ -1,0 +1,44 @@
+@startuml
+
+actor user
+
+actor system
+
+box "client" #LightBlue
+	participant user
+	participant system
+end box
+
+
+==Oracle合约==
+
+system -> ContractManagement:delpoy 系统合约
+
+system -> ContractManagement:注销 某个合约
+
+ContractManagement-->Blockchain
+
+
+==合约命名==
+
+user -> ContractManagement:命名合约
+
+ContractManagement<-->Blockchain: call 系统合约
+
+Blockchain->Blockchain:call 系统合约
+
+ContractManagement-->user
+
+==合约部署===
+
+user -> ContractManagement:部署合约
+
+ContractManagement<-->Blockchain: call 部署合约
+
+==合约查询==
+
+user -> ContractManagement:查询合约
+
+ContractManagement<-->Blockchain: call 系统合约
+
+@enduml

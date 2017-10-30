@@ -1,0 +1,23 @@
+@startuml
+
+left to right direction
+
+:DataProvider:
+
+:DataRecruits:
+
+:Auditor:
+
+rectangle bottos {
+
+(Transaction-Appeal)
+
+}
+
+
+(DataProvider)-->(Transaction-Appeal)
+
+(DataRecruits)-->(Transaction-Appeal)
+(Auditor)-->(Transaction-Appeal)
+
+@enduml

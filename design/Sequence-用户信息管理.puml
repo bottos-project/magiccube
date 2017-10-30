@@ -1,0 +1,59 @@
+@startuml
+
+
+
+== login ==
+Client --> HttpServer: Http Request（login）
+
+HttpServer --> UserManagement:Login
+
+Client<--->UserManagement: Auth response
+
+==public user register ==
+
+Client--->UserManagement: register request
+UserManagement-->Blockchain: call SC(smart contract)
+
+Blockchain--->UserManagement: call response
+
+UserManagement--->Client: register success response
+
+==organization user register ==
+
+Client--->UserManagement: register request
+
+UserManagement-->Blockchain: call SC(smart contract)
+
+Blockchain--->UserManagement: call response
+
+UserManagement--->Client: register  response(待审核状态)
+
+Client--->UserManagement: get Auditing 企业用户（oracle）
+
+Client---->User: Audit 企业用户（oracle）
+
+User---->Blockchain: call SC(audit)
+
+Blockchain---->User: call response
+
+User--->Client: 审核完成
+
+==user info query ==
+
+Client<--->User: Query User info
+
+User<--->Blockchain:call SC
+Client<--->User: modify User info
+
+User<--->Blockchain:call SC
+
+
+box "Identification Management" #LightBlue
+	participant UserManagement
+	participant User
+end box
+
+
+
+
+@enduml

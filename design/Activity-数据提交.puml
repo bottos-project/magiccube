@@ -1,0 +1,21 @@
+@startuml
+
+
+       |Client|
+       start
+       :登录系统;
+       |#AntiqueWhite|backend service|
+       :验证用户;
+       |Client|
+        :查询数据需求;
+
+         :提交数据;
+         |#AntiqueWhite|backend service|
+       :验证基本数据的可靠性;
+       :提取数据特征;
+       |blockchain|
+       :数据关键信息上链;
+       |data store|
+       :数据存储;
+       stop
+       @enduml

@@ -1,0 +1,31 @@
+@startuml
+
+abstract class Transaction
+class DataAuditDeal
+class DataRecuritDeal
+class DataExchangeDeal
+class TokenTransferDeal
+class DataPostDeal
+class DataStorage
+
+Transaction<|-- DataAuditDeal
+
+Transaction<|-- DataRecuritDeal
+
+Transaction<|-- TokenTransferDeal
+
+Transaction<|-- DataExchangeDeal
+
+Transaction<|-- DataPostDeal
+
+Transaction<|-- DataStorage
+
+
+DataExchangeDeal<-->TokenTransferDeal :depend
+DataPostDeal<-->TokenTransferDeal  :depend
+DataAuditDeal<-->TokenTransferDeal  :depend
+DataStorage<-->TokenTransferDeal  :depend
+
+
+
+@enduml

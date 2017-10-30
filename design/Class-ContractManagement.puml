@@ -1,0 +1,31 @@
+@startuml
+
+class Contract{
+  String: ContractID
+  String：ContractName
+  String: OwnerName
+  Time:PublishedTime
+  enmu: Status::valid,invalid
+
+
+}
+
+class  ContractManagement{
+    List<contract>:ContractList
+
+    getContractNamebyID()
+    getAllContract()
+    getContractByID(const contractID)
+    getContractByName(const contractName)
+
+    registerContract(const contractID)
+
+}
+
+ContractManagement<|-- Contract
+
+
+
+
+
+@enduml

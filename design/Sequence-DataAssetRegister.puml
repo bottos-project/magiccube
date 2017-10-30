@@ -1,0 +1,66 @@
+@startuml
+
+box "client"
+	participant DataProvider
+    participant DataRecuritor
+end box
+
+==data Asset register ==
+DataProvider -> TransactionManagement: data Asset 注入请求
+
+create DataPostDeal
+TransactionManagement-->DataPostDeal:创建相关实例
+
+
+DataPostDeal-->DataAsset: 创建相关资产
+
+DataAsset-->DataPostDeal:创建成功，待上传数据
+
+DataPostDeal--->DataProvider:返回存储服务信息（位置，节点等）
+
+box "Transaction Service" #LightBlue
+
+    participant DataPostDeal
+	participant TransactionManagement
+	participant DataAsset
+end box
+
+
+DataProvider-->DataRestore:数据上传处理
+
+DataRestore<-->DBorFilesystem:数据存储
+
+DataPostDeal-->DataProvider:数据上传成功，待登记
+
+DataPostDeal-->Blockchain:call SC (登记资产信息)
+
+Blockchain-->DataPostDeal:call response
+
+DataPostDeal--> DataProvider:资产登记结果
+
+box "Storage service" #LightGreen
+	participant DataRestore
+	participant DBorFilesystem
+end box
+
+==data Asset query ==
+
+DataProvider-->DataAsset: 数据资产查询
+
+DataAsset<-->Blockchain
+
+DataAsset-->DataProvider
+
+==data Asset 获取 ==
+
+DataRecuritor-->DataAsset:获取数据资产
+
+DataAsset-->Blockchain: 获取数据资产
+
+Blockchain-->Blockchain:检查权限
+
+Blockchain-->DataAsset:返回数据资产信息以及获取秘钥
+
+DataAsset--->DataRecuritor:返回数据资产获取秘钥
+
+@enduml
