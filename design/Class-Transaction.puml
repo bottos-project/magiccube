@@ -26,6 +26,7 @@ DataPostDeal<-->TokenTransferDeal  :depend
 DataAuditDeal<-->TokenTransferDeal  :depend
 DataStorage<-->TokenTransferDeal  :depend
 
-
+DataExchangeDeal<-->ExchangeContract
+TokenTransferDeal<--->TokenTransferContract
 
 @enduml

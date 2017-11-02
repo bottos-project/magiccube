@@ -17,7 +17,6 @@ class  ContractManagement{
     getAllContract()
     getContractByID(const contractID)
     getContractByName(const contractName)
-
     registerContract(const contractID)
 
 }
