@@ -10,11 +10,11 @@ var TokenManager = artifacts.require("./TokenManager/TokenManager.sol");
 module.exports = function(deployer) {
   deployer.deploy(Migrations);
   deployer.deploy(AIDataAssetRegister);
-  deployer.deploy(BTOToken);
+  //deployer.deploy(BTOToken);
   deployer.deploy(DataExchangeManager);
   deployer.deploy(LibDataRequirement);
   deployer.link(LibDataRequirement, DataRequirementManager);
   deployer.deploy(DataRequirementManager);
-  deployer.deploy(DataStore);
-  deployer.deploy(TokenManager);
+  //deployer.deploy(DataStore);
+  //deployer.deploy(TokenManager);
 };
