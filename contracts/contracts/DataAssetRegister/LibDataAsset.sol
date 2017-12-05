@@ -44,16 +44,6 @@ library LibDataAsset {
     }  
     
 
-    function dataAssetInfoSave(DataAssetInfo storage  _self, address owner, string assetSignature, string  assetID, string dataStoreID, uint nonce, string dataRequirementID) internal {
-        _self.owner = owner;
-        _self.assetSignature = assetSignature;
-        _self.assetID = assetID;
-        _self.registerTime = now;
-        _self.dataStoreID = dataStoreID;
-        _self.nonce = nonce;
-        _self.dataRequirementID = dataRequirementID;
-        _self.dataAssetAllStatus.lastStatus = DataAssetStatus.VALID;
-    }
 
 
     function jsonParse(DataAssetInfo storage _self, string _strjson) internal returns (bool){

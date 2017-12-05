@@ -22,24 +22,41 @@ contract DataRequirementManager {
     }    
 
 
-    function createDataRequirement (string  _requirementJson) { 
+    function createDataRequirement (string  _requirementJson) returns (bool) { 
               
         string memory requirementSignature = _requirementJson.getStringValueByKey("requirementSignature");
+
+        if (requirementSignature.equals("")) return false;
 
         string  memory dataRequirementID = LibID.generateID(requirementSignature);
         
 
         LibDataRequirement.DataRequirement dataRequirement = dataRequirementMap[dataRequirementID];
 
+        if (!dataRequirement.dataRequirementID.equals("")) return false;
+
         bool result = LibDataRequirement.jsonParse(dataRequirement, _requirementJson);
         if (false == result) {
             delete dataRequirementMap[dataRequirementID];
-            return;
+            return false;
         }
 
         dataRequirement.dataRequirementID = dataRequirementID;        
 
         dataRequirementList.push(dataRequirementID);
+
+        return true;
+    } 
+
+    function aiAssetCount (string  dataRequirementID) { 
+
+        LibDataRequirement.DataRequirement dataRequirement = dataRequirementMap[dataRequirementID];
+
+        if (!dataRequirement.dataRequirementID.equals(dataRequirementID)) {
+            return;
+        }
+
+        LibDataRequirement.aiAssetCount(dataRequirement);        
     } 
 
     function queryDataRequirementbyID(string _id) constant public returns(string _json) {        
@@ -122,7 +139,7 @@ contract DataRequirementManager {
         _json = _json.concat("}");
     }
 
-    function queryDataRequirementbyDomain(LibDataRequirement.DataReqirementDomain domain) constant public returns(string _json) {     
+    function queryDataRequirementbyType(LibDataRequirement.DataRequirementType requirementType) constant public returns(string _json) {     
         
               
         string memory _jsonTmp;
@@ -131,7 +148,7 @@ contract DataRequirementManager {
         for (uint i=0; i<dataRequirementList.length; ++i) {
             //LibDataRequirement.DataRequirement tmpData = dataRequirementList[i];
             LibDataRequirement.DataRequirement dataRequirement = dataRequirementMap[dataRequirementList[i]];
-            if (dataRequirement.requirementDomain != domain) {
+            if (dataRequirement.requirementType != requirementType) {
                 continue;
             }
 
@@ -256,16 +273,16 @@ contract DataRequirementManager {
 
     function queryAllDataRequirement() constant public returns(string _json) {     
         
-        uint totolNum = dataRequirementList.length;
+        uint totalNum = dataRequirementList.length;
 
         _json = "{";            
 
-        _json = _json.concat(totolNum.toKeyValue("totalNum"));
+        _json = _json.concat(totalNum.toKeyValue("totalNum"));
 
-        if(totolNum > 0){
+        if(totalNum > 0){
             _json = _json.concat(", \"items\":[");
             
-            for(uint i= 0;i < totolNum;i++){
+            for(uint i= 0;i < totalNum;i++){
                 if (i>0){
                     _json = _json.concat(",");
                 }

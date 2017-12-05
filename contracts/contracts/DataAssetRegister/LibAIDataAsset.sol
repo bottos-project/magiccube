@@ -38,19 +38,6 @@ library LibAIDataAsset{
     }  
 
 
-    function aiDataAssetInfoSave(AiDataAssetInfo storage _self, address owner, string assetSinature, string  assetID, string dataStoreID, uint nonce, string dataPropertyDigest, string description, 
-                              LibAIDataAsset.ApplicationDomain domain, LibAIDataAsset.AssetDataType  assetDatatype, string dataRequirementID) internal {
-        
-        _self.aiDataModel.dataPropertyDigest = dataPropertyDigest;
-        _self.aiDataModel.description = description;
-        _self.aiDataModel.applicationDomain = domain;
-        _self.aiDataModel.assetDataType = assetDatatype;
-
-        LibDataAsset.dataAssetInfoSave(_self.dataAssetInfo, owner, assetSinature, assetID, dataStoreID, nonce, dataRequirementID);
-
-    }
-
-
     function queryAiAssetOwner(AiDataAssetInfo storage  aidataAssetInfo) internal  returns(address accountName){
         accountName = LibDataAsset.queryAssetOwner(aidataAssetInfo.dataAssetInfo);
     } 
@@ -77,7 +64,7 @@ library LibAIDataAsset{
         _json = _json.concat(_self.aiDataModel.dataPropertyDigest.toKeyValue("dataPropertyDigest"), ",");
         _json = _json.concat(_self.aiDataModel.description.toKeyValue("description"), ",");
         _json = _json.concat(uint(_self.aiDataModel.applicationDomain).toKeyValue("applicationDomain"), ",");
-        _json = _json.concat(uint(_self.aiDataModel.assetDataType).toKeyValue("dataPropertyDigest"), ",");
+        _json = _json.concat(uint(_self.aiDataModel.assetDataType).toKeyValue("assetDataType"), ",");
 
         _json = _json.concat("\"dataAssetInfo\":");
 

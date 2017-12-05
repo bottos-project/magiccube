@@ -14,7 +14,7 @@ library LibDataRequirement {
     }
 
 
-    enum DataReqirementDomain{
+    enum DataRequirementType{
         TYPE_AUDIT,
         TYPE_RECRUIT,
         TYPE_PURGE,
@@ -46,7 +46,7 @@ library LibDataRequirement {
         uint    bidMoney;
         uint    nonce;
         string  requirementSignature;
-        DataReqirementDomain requirementDomain;
+        DataRequirementType requirementType;
         string  description;
         DataType dataType;
         string  specifications;
@@ -54,6 +54,7 @@ library LibDataRequirement {
         string dataSample1;
         string dataSample2;
         string dataSample3;
+        uint   collectionNum;
 
     }
 
@@ -76,13 +77,13 @@ library LibDataRequirement {
         _self.nonce = nonce;
     }    
 
-    function dataRequirementSave3(DataRequirement storage _self, string  requirementSignature ,DataReqirementDomain requirementDomain,
+    function dataRequirementSave3(DataRequirement storage _self, string  requirementSignature ,DataRequirementType requirementType,
                              string description, DataType dataType, string  specifications, ApplicationDomain applicationDomain,
                              string dataSample1, string dataSample2, string dataSample3) internal {
         
         _self.requirementSignature = requirementSignature;
 
-        _self.requirementDomain = requirementDomain;
+        _self.requirementType = requirementType;
         _self.description = description;
         _self.dataType = dataType;
         _self.specifications = specifications;
@@ -108,7 +109,7 @@ library LibDataRequirement {
         _self.requirementSignature = _strjson.getStringValueByKey("requirementSignature");
 
 
-        _self.requirementDomain = DataReqirementDomain(_strjson.getIntValueByKey("requirementDomain"));
+        _self.requirementType = DataRequirementType(_strjson.getIntValueByKey("requirementType"));
         _self.description = _strjson.getStringValueByKey("description");
         _self.dataType = DataType(_strjson.getIntValueByKey("dataType"));
         _self.specifications = _strjson.getStringValueByKey("specifications");
@@ -117,13 +118,18 @@ library LibDataRequirement {
         _self.dataSample2 = _strjson.getStringValueByKey("dataSample2");
         _self.dataSample3 = _strjson.getStringValueByKey("dataSample3");
 
-        if (_self.requirementDomain >= DataReqirementDomain.DATA_REQUIREMENT_TYPE_MAX) return false;
+        if (_self.requirementType >= DataRequirementType.DATA_REQUIREMENT_TYPE_MAX) return false;
         if (_self.dataType >= DataType.DATA_TYPE_MAX) return false;
         if (_self.applicationDomain >= ApplicationDomain.APPLICATION_DOMAIN_MAX) return false;
 
         return true;
 
     }
+
+    function aiAssetCount (DataRequirement storage _self) internal { 
+
+        _self.collectionNum += 1;       
+    } 
 
 
     function toJson(DataRequirement storage _self) internal returns(string _json) {
@@ -139,7 +145,7 @@ library LibDataRequirement {
         _json = _json.concat(_self.bidMoney.toKeyValue("bidMoney"), ",");
         _json = _json.concat(_self.nonce.toKeyValue("nonce"), ",");
         _json = _json.concat(_self.requirementSignature.toKeyValue("requirementSignature"), ",");
-        _json = _json.concat(uint(_self.requirementDomain).toKeyValue("requirementDomain"), ",");
+        _json = _json.concat(uint(_self.requirementType).toKeyValue("requirementType"), ",");
         
         
         _json = _json.concat(_self.description.toKeyValue("description"), ",");
@@ -148,7 +154,8 @@ library LibDataRequirement {
          _json = _json.concat(uint(_self.applicationDomain).toKeyValue("applicationDomain"), ",");
         _json = _json.concat(_self.dataSample1.toKeyValue("dataSample1"), ",");
         _json = _json.concat(_self.dataSample2.toKeyValue("dataSample2"), ",");
-        _json = _json.concat(_self.dataSample3.toKeyValue("dataSample3"));
+        _json = _json.concat(_self.dataSample3.toKeyValue("dataSample3"), ",");
+        _json = _json.concat(_self.collectionNum.toKeyValue("collectionNum"));
 
         _json = _json.concat("}");  
         
