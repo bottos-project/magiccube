@@ -46,6 +46,8 @@ contract DataExchangeManager {
         DataExchangeDeal.addDataExchangeRcd(dataexchangeRcd, dataExchangeID, _firstParty,  _secondParty, _witnessess,  _dataRequirementID,  _dataAssetID);
 
         dataExchangeRcdList.push(dataExchangeID);
+
+        dataRequirementManagerAddr.aiAssetCount(_dataRequirementID);    
          
     }       
 
@@ -70,7 +72,7 @@ contract DataExchangeManager {
         tokenManagerAddr.transfer(_firstParty, owner, bidMoney);
 
 
-        DataExchangeDeal.setDataExchangeStatus4DealDone(dataexchangeRcd, _exchangeSignature);         
+        DataExchangeDeal.setDataExchangeStatus4DealDone(dataexchangeRcd, _exchangeSignature, bidMoney);         
     }
 
     function queryOwnerbyDataAssetID(string _dataAssetID) constant public returns (address addr) {
@@ -144,18 +146,18 @@ contract DataExchangeManager {
 
     function queryDataExchangebyDataRequirementIDAndStatus(string dataRequirementID, DataExchangeDeal.ExchangeStatus status) constant public returns(string _jsonOut) {     
         
-        uint totolNum = dataExchangeRcdList.length;
+        uint totalNum = dataExchangeRcdList.length;
 
         uint targetNum = 0;
 
         //_json = "{";            
 
-        //_json = _json.concat(totolNum.toKeyValue("totalNum"));
+        //_json = _json.concat(totalNum.toKeyValue("totalNum"));
 
-        if(totolNum > 0){
+        if(totalNum > 0){
             string memory  _json = ", \"items\":[";
             
-            for(uint i= 0;i < totolNum;i++){
+            for(uint i= 0;i < totalNum;i++){
 
                 DataExchangeDeal.DataExchangeRcd dataexchangeRcd = dataExchangeRcdMap[dataExchangeRcdList[i]];
 
@@ -165,7 +167,98 @@ contract DataExchangeManager {
                 if ((status < DataExchangeDeal.ExchangeStatus.EXCHANGE_STATUS_MAX) && (dataexchangeRcd.status != status))  continue;
                 
 
-                if (i>0){
+                if (targetNum>0){
+                    _json = _json.concat(",");
+                }                
+
+                string memory tempJson  = DataExchangeDeal.toJson(dataexchangeRcd);
+                _json = _json.concat(tempJson);
+
+                targetNum++;
+            }
+
+            _json = _json.concat("]");
+
+        }
+  
+
+        _jsonOut = "{";            
+
+        _jsonOut = _jsonOut.concat(targetNum.toKeyValue("totalNum"));
+
+        if(targetNum > 0){
+            _jsonOut = _jsonOut.concat(_json);
+        }
+
+        _jsonOut = _jsonOut.concat("}");
+    }
+
+
+    function queryDataExchangebyAssetOwner(address owner) constant public returns(string _jsonOut) {     
+        
+        uint totalNum = dataExchangeRcdList.length;
+
+        uint targetNum = 0;
+
+        //_json = "{";            
+
+        //_json = _json.concat(totalNum.toKeyValue("totalNum"));
+
+        if(totalNum > 0){
+            string memory  _json = ", \"items\":[";
+            
+            for(uint i= 0;i < totalNum;i++){
+
+                DataExchangeDeal.DataExchangeRcd dataexchangeRcd = dataExchangeRcdMap[dataExchangeRcdList[i]];
+
+                if (dataexchangeRcd.secondParty != owner) continue;              
+
+                if (targetNum>0){
+                    _json = _json.concat(",");
+                }                
+
+                string memory tempJson  = DataExchangeDeal.toJson(dataexchangeRcd);
+                _json = _json.concat(tempJson);
+
+                targetNum++;
+            }
+
+            _json = _json.concat("]");
+
+        }
+  
+
+        _jsonOut = "{";            
+
+        _jsonOut = _jsonOut.concat(targetNum.toKeyValue("totalNum"));
+
+        if(targetNum > 0){
+            _jsonOut = _jsonOut.concat(_json);
+        }
+
+        _jsonOut = _jsonOut.concat("}");
+    }
+
+    function queryDataExchangebyRequirementRecruiter(address recruiter) constant public returns(string _jsonOut) {     
+        
+        uint totalNum = dataExchangeRcdList.length;
+
+        uint targetNum = 0;
+
+        //_json = "{";            
+
+        //_json = _json.concat(totalNum.toKeyValue("totalNum"));
+
+        if(totalNum > 0){
+            string memory  _json = ", \"items\":[";
+            
+            for(uint i= 0;i < totalNum;i++){
+
+                DataExchangeDeal.DataExchangeRcd dataexchangeRcd = dataExchangeRcdMap[dataExchangeRcdList[i]];
+
+                if (dataexchangeRcd.firstParty != recruiter) continue;              
+
+                if (targetNum>0){
                     _json = _json.concat(",");
                 }                
 

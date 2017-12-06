@@ -65,10 +65,11 @@ library DataExchangeDeal {
 
     }
 
-    function setDataExchangeStatus4DealDone(DataExchangeRcd storage _self, string exchangeSignature)  internal{
+    function setDataExchangeStatus4DealDone(DataExchangeRcd storage _self, string exchangeSignature, uint  bidMoney)  internal{
         
         _self.status = ExchangeStatus.DEAL_DONE;
         _self.exchangeSignature = exchangeSignature;
+        _self.amout = bidMoney;
 
     }
 
