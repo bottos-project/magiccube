@@ -269,9 +269,18 @@ contract DataExchangeManager {
             }
 
             _json = _json.concat("]");
+        } 
 
+        _jsonOut = "{";            
+
+        _jsonOut = _jsonOut.concat(targetNum.toKeyValue("totalNum"));
+
+        if(targetNum > 0){
+            _jsonOut = _jsonOut.concat(_json);
         }
-  
+
+        _jsonOut = _jsonOut.concat("}");
+    }
 
         _jsonOut = "{";            
 
