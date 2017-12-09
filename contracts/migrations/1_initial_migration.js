@@ -16,5 +16,5 @@ module.exports = function(deployer) {
   deployer.link(LibDataRequirement, DataRequirementManager);
   deployer.deploy(DataRequirementManager);
   //deployer.deploy(DataStore);
-  //deployer.deploy(TokenManager);
+  deployer.deploy(TokenManager);
 };
