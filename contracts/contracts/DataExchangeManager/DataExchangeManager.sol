@@ -85,16 +85,16 @@ contract DataExchangeManager {
 
 
 
-    function setAIDataAssetRegisterAddr(AIDataAssetRegister addr) {
-        aiDataAssetRegisterAddr = addr;
+    function setAIDataAssetRegisterAddr(address addr) {
+        aiDataAssetRegisterAddr = AIDataAssetRegister(addr);
     }
 
     function queryAIDataAssetRegisterAddr() constant public returns (AIDataAssetRegister addr) {
         addr = aiDataAssetRegisterAddr;
     }
     
-    function setBTOTokenAddr(TokenManager addr) {
-        tokenManagerAddr = addr;
+    function setBTOTokenAddr(address addr) {
+        tokenManagerAddr = TokenManager(addr);
     }
 
     function queryBTOTokenAddr() constant public returns (TokenManager addr) {
@@ -102,8 +102,8 @@ contract DataExchangeManager {
     }
 
 
-    function setDataRequirementManagerAddr(DataRequirementManager addr) {
-        dataRequirementManagerAddr = addr;
+    function setDataRequirementManagerAddr(address addr) {
+        dataRequirementManagerAddr = DataRequirementManager(addr);
     }
 
     function querytDataRequirementManagerAddr() constant public returns (DataRequirementManager addr) {
