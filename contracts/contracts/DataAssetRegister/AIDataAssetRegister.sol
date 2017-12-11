@@ -50,8 +50,7 @@ contract AIDataAssetRegister {
         address owner = msg.sender;
         string[] owernAllAsset = aiDataAssetAddrMap[owner];
         owernAllAsset.push(assetID);
-
-        string memory dateRequirementID = _registInfoJson.getStringValueByKey("dataRequirementID");        
+		
         dataExchangeAddr.addDataExchange(owner, owner, aiDataAsset.dataAssetInfo.dataRequirementID, assetID);
 
         
@@ -77,18 +76,10 @@ contract AIDataAssetRegister {
 
         LibAIDataAsset.setAiAssetStatus(aiDataAsset, status);
     }
-
-
-    function setDataExchangeManagerAddr(DataExchangeManager addr) {
-        dataExchangeAddr = addr;
-    }
-
-    //function queryDataExchangeManagerAddr() constant public returns (DataExchangeManager addr) {
-    //    addr = dataExchangeAddr;
-    //}
-
-
-    
+	
+    function setDataExchangeManagerAddr(address addr) {
+        dataExchangeAddr = DataExchangeManager(addr);
+    }    
 
     function queryAiDataAssetOwner(string  assetID) constant public returns(address owner) {
        LibAIDataAsset.AiDataAssetInfo aiDataAsset = aiDataAssetMap[assetID];
