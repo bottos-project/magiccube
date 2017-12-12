@@ -281,6 +281,32 @@ contract DataExchangeManager {
 
         _jsonOut = _jsonOut.concat("}");
     }
+	
+    function queryDataExchangebyRecruiterOrOwner(address queryAddr) constant public returns(string _jsonOut) {     
+        
+        uint totalNum = dataExchangeRcdList.length;
+
+        uint targetNum = 0;
+        if(totalNum > 0){
+            string memory  _json = ", \"items\":[";
+            
+            for(uint i= 0;i < totalNum;i++){
+                DataExchangeDeal.DataExchangeRcd dataexchangeRcd = dataExchangeRcdMap[dataExchangeRcdList[i]];
+
+                if ((dataexchangeRcd.firstParty != queryAddr) && (dataexchangeRcd.secondParty != queryAddr)) continue;              
+
+                if (targetNum>0){
+                    _json = _json.concat(",");
+                }                
+
+                string memory tempJson  = DataExchangeDeal.toJson(dataexchangeRcd);
+                _json = _json.concat(tempJson);
+
+                targetNum++;
+            }
+
+            _json = _json.concat("]");
+        } 
 
         _jsonOut = "{";            
 
