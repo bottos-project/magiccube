@@ -99,37 +99,5 @@ public class WalletManagerController {
         }
     }
 
-   /* //**
-     * @param json
-     * @return Query market requirement
-     *//*
-    @ResponseBody
-    @RequestMapping(value = "/queryMarket", method = RequestMethod.POST)
-    public String queryMarketRequirement(@RequestBody String json) {
-
-        try {
-            logger.info("Start query market requirement. ", "param = ", json);
-
-            RequirementManagerBean requirementManagerBean = JSON.parseObject(json, RequirementManagerBean.class);
-
-            if (requirementManagerBean.getActionAccount().isEmpty()) {
-                return responseMsg.retToJson(CommonConst.FAILED, "");
-            }
-
-            String result = requirementManagerService.queryMarketRequirement(requirementManagerBean);
-
-            if (!result.isEmpty()) {
-                return responseMsg.retToJson(CommonConst.SUCCESS, result);
-            } else {
-                return responseMsg.retToJson(CommonConst.FAILED, "");
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return responseMsg.retToJson(CommonConst.FAILED, "");
-        }
-    }*/
-
 
 }
