@@ -6,20 +6,14 @@ import com.bottos.bottosapp.bean.UserInfo;
 import com.bottos.bottosapp.common.ConfigSettings;
 import com.bottos.bottosapp.common.Web3Manager;
 import com.bottos.bottosapp.common.Web3jUtils;
-import com.bottos.bottosapp.common.exception.EngineExceptionHelper;
-import com.bottos.bottosapp.common.utils.UserExcepFactor;
 import com.bottos.bottosapp.contract.TokenManager;
 import com.bottos.bottosapp.contract.UserManager;
-import com.bottos.bottosapp.dao.BaseDaoImpl;
 import com.bottos.bottosapp.mapper.UserRespository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.*;
@@ -27,31 +21,28 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
-import org.web3j.utils.Numeric;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static org.web3j.tx.Contract.GAS_LIMIT;
 import static org.web3j.tx.ManagedTransaction.GAS_PRICE;
 
 @Repository
-public class UserManagerServiceImpl extends BaseDaoImpl<UserManager, Object> {
+public class UserManagerServiceImpl {
     @Autowired
     private UserRespository userRespository;
     @Autowired
@@ -255,6 +246,7 @@ public class UserManagerServiceImpl extends BaseDaoImpl<UserManager, Object> {
         }
     }
 
+    //    @Async
     public String addUser(UserInfo creator, UserInfo newUser) {
 
         UserInfo existsUser = userRespository.findByName(newUser.getName());
@@ -299,9 +291,12 @@ public class UserManagerServiceImpl extends BaseDaoImpl<UserManager, Object> {
             Utf8String chainUserJson = new Utf8String(tmpJson);
 //            logger.info("tmpJson: " + 0);
 //         同步调用
-            logger.info("Start register user on contract");
+            logger.info("Start register user on contract. AccountName:" + accountName);
             long startTime = System.currentTimeMillis(); //获取开始时间
-            TransactionReceipt receipt = (userManager.registerUser(tmpJson)).send();
+
+//            TransactionReceipt receipt = userManager.registerUser(tmpJson).send();
+//            CompletableFuture<TransactionReceipt> receipt = userManager.registerUser(tmpJson).sendAsync();
+            TransactionReceipt receipt = (userManager.registerUser(tmpJson)).sendAsync().get();
 
             long endTime = System.currentTimeMillis(); //获取结束时间
             logger.info("get receipt " + "Time:" + (endTime - startTime) + "ms : ");
@@ -326,45 +321,19 @@ public class UserManagerServiceImpl extends BaseDaoImpl<UserManager, Object> {
 //            }
 //            add bobi amount
 //            add test
-            final String accountName2 = accountName;
 
-//            new Thread() {
-//                public void run() {
 //            addBobiAmount(accountName);
-//                }
-//            }.start();
+            CompletableFuture<String> addBobiResult = addBobiAmount(accountName);
+//            add Eth
+            String resTransfer = transfer(configSettings.getAdminAccountEth(), accountName, configSettings.getDefaultAmountEth());
 
-            new Thread() {
-                public void run() {
-                    try {
-                        addBobiAmount(accountName2);
-                        String resTransfer = transfer(configSettings.getAdminAccountEth(), accountName2, configSettings.getDefaultAmountEth());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (CipherException e) {
-                        e.printStackTrace();
-                    } catch (TransactionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
-            logger.info("eth nonce:" + getNonce(accountName).toString());
-//            logger.info("eth nonce:"+ getNonce(accountName).toString());
+//            final String accountName2 = accountName;
 //            new Thread(){
 //                public void run(){
 //                    addBobiAmount(accountName2);
 //                }
 //            }.start();
-//            logger.info("bobi nonce:"+ getNonce(accountName).toString());
 
-//            addBobiAmount(accountName);
-//          add eth amount
-//            String resTransfer = transfer1(configSettings.getAdminAccountEth(), accountName, configSettings.getDefaultAmountEth());
-            String resTransfer = "";
             if (resTransfer.equals("")) {
                 return "";
             } else {
@@ -390,17 +359,51 @@ public class UserManagerServiceImpl extends BaseDaoImpl<UserManager, Object> {
         return web3j;
     }
 
+    @Async
+    public CompletableFuture<String> addBobiAmount(String toAccout) {
+        TokenManager tokenManagerContract = null;
+        try {
+            tokenManagerContract = getContractToken(configSettings, configSettings.getAdminAccount());
+//            TransactionReceipt receipt = tokenManagerContract.addTokentoAccount(toAccout, configSettings.getDefaultAmountBo()).sendAsync().get();
+            CompletableFuture<TransactionReceipt> receipt = tokenManagerContract.addTokentoAccount(toAccout, configSettings.getDefaultAmountBo()).sendAsync();
+//            TransactionReceipt receipt = tokenManagerContract.addTokentoAccount(toAccout, configSettings.getDefaultAmountBo()).sendAsync().get();
+
+//            TransactionReceipt clientVersio = receipt.get();
+//            logger.info("receipt end. clientVersio ++" + clientVersio.toString());
+
+
+//        add test
+            BigInteger tokenValue = tokenManagerContract.getBalance(toAccout).send();
+            logger.info("Add BObi OK. Amount is :" + tokenValue);
+//            return "Add Amount success.";
+            return CompletableFuture.completedFuture("Add Amount success.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+//            return e.getMessage();
+            return CompletableFuture.completedFuture(e.getMessage());
+        }
+//        return "";
+
+        return CompletableFuture.completedFuture("");
+    }
+
+    @Async
     public String transfer(String fromAccount, String toAccount, double amount) throws InterruptedException, ExecutionException, IOException, CipherException, TransactionException {
-        logger.info("Start transfer Eth. Amount is:" + amount);
+        logger.info("Start transfer Eth. ToAccount:" + toAccount + " Amount is:" + amount);
         Web3j web3 = getWeb3jClient();
         String accountPasswd = userRespository.findByAccount(fromAccount).getPasswd();
         String accountFilePath = configSettings.getWalletPath() + System.getProperty("file.separator") + configSettings.getAdminAccountEth() + ".json";
         Credentials credentials = WalletUtils.loadCredentials(accountPasswd, accountFilePath);
 
         try {
-            TransactionReceipt transactionReceipt = Transfer.sendFunds(
+            CompletableFuture<TransactionReceipt> transactionReceipt = Transfer.sendFunds(
                     web3, credentials, toAccount, BigDecimal.valueOf(amount), Convert.Unit.ETHER)
-                    .send();
+                    .sendAsync();
+//            TransactionReceipt transactionReceipt = Transfer.sendFunds(
+//                    web3, credentials, toAccount, BigDecimal.valueOf(amount), Convert.Unit.ETHER)
+//                    .sendAsync().get();
             logger.info("Transfer Eth OK. Amount is: " + amount);
             return "";
            /* // get the next available nonce
@@ -461,27 +464,6 @@ public class UserManagerServiceImpl extends BaseDaoImpl<UserManager, Object> {
         return userRespository.save(user);
     }*/
 
-    private String addBobiAmount(String toAccout) {
-
-        TokenManager tokenManagerContract = null;
-        try {
-            tokenManagerContract = getContractToken(configSettings, configSettings.getAdminAccount());
-            TransactionReceipt receipt = tokenManagerContract.addTokentoAccount(toAccout, configSettings.getDefaultAmountBo())
-                    .send();
-//        add test
-            BigInteger tokenValue = tokenManagerContract.getBalance(toAccout).send();
-            logger.info("Add BObi OK. Amount is :" + tokenValue);
-            return "Add Amount success.";
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.getMessage();
-        }
-        return "";
-
-
-    }
 
     /**
      * @param configSettings read the param info
