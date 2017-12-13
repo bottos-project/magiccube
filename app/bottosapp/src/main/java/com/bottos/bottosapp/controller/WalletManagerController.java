@@ -37,38 +37,7 @@ public class WalletManagerController {
 
     ResponseMsg responseMsg = new ResponseMsg();
 
-  /*  *//**
-     * @param json
-     * @return
-     *//*
-    @ResponseBody
-    @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    public String register(@RequestBody String json) {
-
-        try {
-            logger.info("Start publish requirement. ", "param = ", json);
-
-            RequirementManagerBean requirementManagerBean = JSON.parseObject(json, RequirementManagerBean.class);
-
-            if (requirementManagerBean.getActionAccount().isEmpty()) {
-                return responseMsg.retToJson(CommonConst.FAILED, "");
-            }
-
-            String result = requirementManagerService.publishRequirement(requirementManagerBean);
-
-            if (!result.isEmpty()) {
-                return responseMsg.retToJson(CommonConst.SUCCESS, result);
-            } else {
-                return responseMsg.retToJson(CommonConst.FAILED, "");
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return responseMsg.retToJson(CommonConst.FAILED, "");
-        }
-    }*/
-
+  
 
     /**
      * @param json
