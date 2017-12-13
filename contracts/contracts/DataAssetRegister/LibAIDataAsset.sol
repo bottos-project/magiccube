@@ -13,7 +13,6 @@ library LibAIDataAsset{
         INDUSTRY,
         HUMAN_RECONGINIZATION,
         MEDICAL,
-        //EXCHANGED,
         APPLICATION_DOMAIN_MAX
     }
 
@@ -31,34 +30,25 @@ library LibAIDataAsset{
         AssetDataType assetDataType;
     }
 
-
     struct AiDataAssetInfo {
         LibDataAsset.DataAssetInfo dataAssetInfo;
         AiDataModel aiDataModel;
     }  
 
-
     function queryAiAssetOwner(AiDataAssetInfo storage  aidataAssetInfo) internal  returns(address accountName){
         accountName = LibDataAsset.queryAssetOwner(aidataAssetInfo.dataAssetInfo);
     } 
 
-
-    function addAiAuthorization(AiDataAssetInfo storage _self, address authorizationAddress) internal {
-        
-        LibDataAsset.addAuthorization(_self.dataAssetInfo, authorizationAddress);
-        
+    function addAiAuthorization(AiDataAssetInfo storage _self, address authorizationAddress) internal {        
+        LibDataAsset.addAuthorization(_self.dataAssetInfo, authorizationAddress);        
     }
 
-    function setAiAssetStatus(AiDataAssetInfo storage _self, LibDataAsset.DataAssetStatus status) internal {
-        
-        LibDataAsset.setStatus(_self.dataAssetInfo, status);
-        
+    function setAiAssetStatus(AiDataAssetInfo storage _self, LibDataAsset.DataAssetStatus status) internal {        
+        LibDataAsset.setStatus(_self.dataAssetInfo, status);        
     }
 
 
-    function toJson(AiDataAssetInfo storage _self) internal returns(string _json) {
-
-     
+    function toJson(AiDataAssetInfo storage _self) internal returns(string _json) {     
         _json = _json.concat("{");
 
         _json = _json.concat(_self.aiDataModel.dataPropertyDigest.toKeyValue("dataPropertyDigest"), ",");
@@ -70,10 +60,8 @@ library LibAIDataAsset{
 
         string memory tmpJson = LibDataAsset.toJson(_self.dataAssetInfo);      
         _json = _json.concat(tmpJson);
- 
 
-        _json = _json.concat("}");     
-		
+        _json = _json.concat("}");         
     }
 
 
@@ -88,6 +76,5 @@ library LibAIDataAsset{
         }
 
         return LibDataAsset.jsonParse(_self.dataAssetInfo, _strjson);
-
     }
 }

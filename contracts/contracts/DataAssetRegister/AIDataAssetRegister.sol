@@ -7,9 +7,6 @@ import "../lib/common/LibString.sol";
 import "../lib/common/LibInt.sol";
 import "../DataExchangeManager/DataExchangeManager.sol";
 
-
-
-
 contract AIDataAssetRegister {
     using LibString for *;
     using LibInt for *;
@@ -17,8 +14,7 @@ contract AIDataAssetRegister {
     using LibDataAsset for *;
     address    owner; 
 
-    DataExchangeManager public dataExchangeAddr;
-    
+    DataExchangeManager public dataExchangeAddr;    
     
     mapping(string => LibAIDataAsset.AiDataAssetInfo) aiDataAssetMap;
  
@@ -26,17 +22,14 @@ contract AIDataAssetRegister {
 
     mapping(string => string[]) dataRequirementToAssetMap;
 
-
     function AIDataAssetRegister(){
         owner = msg.sender;
     }       
 
     function aiDataRegist(string _registInfoJson) returns (bool){ 
-
         string memory assetSignature = _registInfoJson.getStringValueByKey("assetSignature"); 
         if (assetSignature.equals("")) return false;
-        string  memory assetID = LibID.generateID(assetSignature);
-        
+        string  memory assetID = LibID.generateID(assetSignature);        
         
         LibAIDataAsset.AiDataAssetInfo aiDataAsset = aiDataAssetMap[assetID];    
 
@@ -52,19 +45,12 @@ contract AIDataAssetRegister {
         owernAllAsset.push(assetID);
 		
         dataExchangeAddr.addDataExchange(owner, owner, aiDataAsset.dataAssetInfo.dataRequirementID, assetID);
-
         
         string[] requirementAllAsset = dataRequirementToAssetMap[aiDataAsset.dataAssetInfo.dataRequirementID];
         requirementAllAsset.push(assetID);
-        return true;
-        
+        return true;        
     } 
-
- 
-
-
-
-
+	
     function addAiDataAssetAuthorization(string  assetID, address authorizationAddress) {
         LibAIDataAsset.AiDataAssetInfo aiDataAsset = aiDataAssetMap[assetID];
 
@@ -82,7 +68,7 @@ contract AIDataAssetRegister {
     }    
 
     function queryAiDataAssetOwner(string  assetID) constant public returns(address owner) {
-       LibAIDataAsset.AiDataAssetInfo aiDataAsset = aiDataAssetMap[assetID];
+        LibAIDataAsset.AiDataAssetInfo aiDataAsset = aiDataAssetMap[assetID];
 
         owner = LibAIDataAsset.queryAiAssetOwner(aiDataAsset);
     }
@@ -92,19 +78,12 @@ contract AIDataAssetRegister {
 
         _json = LibAIDataAsset.toJson(aiDataAsset);
     }
-
-
-
-    
-    function queryAiAssetbyOwnerAndAttribute(address owner, LibAIDataAsset.AssetDataType dataType, string dataRequirementID) constant public returns (string _json) {
-         
+        
+    function queryAiAssetbyOwnerAndAttribute(address owner, LibAIDataAsset.AssetDataType dataType, string dataRequirementID) constant public returns (string _json) {         
         string[] owernAllAsset = aiDataAssetAddrMap[owner];
         
-        uint assetTotalNum = owernAllAsset.length;     
-        
-        
-
-        //_json = _json.concat(assetTotalNum.toKeyValue("totalNum"));
+        uint assetTotalNum = owernAllAsset.length;         
+		
         uint coutner = 0;
         if(assetTotalNum > 0){
             string memory _jsonTmp = _jsonTmp.concat("\"items\":[");
@@ -129,7 +108,7 @@ contract AIDataAssetRegister {
  
         _json = "{";
         
-        if(coutner>0)    {
+        if(coutner>0) {
             _json = _json.concat(coutner.toKeyValue("totalNum"), ",");
             _json = _json.concat(_jsonTmp);
         }else {
@@ -140,13 +119,11 @@ contract AIDataAssetRegister {
 
     }
 
-    function queryAssetbyRequirementID(string dataRequirementID) constant public returns(string _json) {
-         
+    function queryAssetbyRequirementID(string dataRequirementID) constant public returns(string _json) {         
         string[] requirementAllAsset = dataRequirementToAssetMap[dataRequirementID];
         
-        uint assetTotalNum = requirementAllAsset.length;           
-
-
+        uint assetTotalNum = requirementAllAsset.length;  
+		
         uint coutner = 0;
         if(assetTotalNum > 0){
             string memory _jsonTmp = _jsonTmp.concat("\"items\":[");
@@ -165,10 +142,8 @@ contract AIDataAssetRegister {
             }
 
             _jsonTmp = _jsonTmp.concat("]");
-
         }
-       
- 
+		
         _json = "{";
         
         if(coutner>0)    {
@@ -179,22 +154,5 @@ contract AIDataAssetRegister {
         }
 
         _json = _json.concat("}");
-
-    }
-
-
-    /*
-    function querybyStatus() constant {
-        
-    }
-
-    function querybyDataType() constant {
-        
-    }
-    */
-    
-       
-          
-    
-   
+    }  
 }

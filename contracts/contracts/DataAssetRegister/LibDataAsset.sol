@@ -3,7 +3,7 @@ pragma solidity ^0.4.2;
 
 import "../lib/common/LibString.sol";
 import "../lib/common/LibInt.sol";
-//import "./LibDecode.sol";
+
 library LibDataAsset {
     
     using LibString for *;
@@ -43,9 +43,6 @@ library LibDataAsset {
         address[] authorizationList;
     }  
     
-
-
-
     function jsonParse(DataAssetInfo storage _self, string _strjson) internal returns (bool){
         _self.owner = msg.sender;
         _self.assetSignature   = _strjson.getStringValueByKey("assetSignature");
@@ -66,14 +63,11 @@ library LibDataAsset {
         _self.expirationTime      = _strjson.getUintValueByKey("expirationTime");  
         
         return true;
-
     }
-    
     
     function queryAssetOwner(DataAssetInfo storage  dataAssetInfo) internal  returns(address accountName){
         accountName = dataAssetInfo.owner;
-    }    
-    
+    }       
     
     function setAccoutName(DataAssetInfo storage dataAssetInfo, address accountName)  internal {
         dataAssetInfo.owner = accountName;
@@ -96,23 +90,17 @@ library LibDataAsset {
         }
 
         dataAssetInfo.dataAssetAllStatus.lastStatus = assetStatus;
-    }   
-    
-
-
+    }
     
     function dataAssetValid(DataAssetInfo storage dataAssetInfo) internal  returns(bool){
         return DataAssetStatus.INVALID != dataAssetInfo.dataAssetAllStatus.lastStatus;
-    } 
-
-
+    }
+    
     function addAuthorization(DataAssetInfo storage dataAssetInfo, address authorizationAddress) internal {
         dataAssetInfo.authorizationMap[authorizationAddress] = 1;
         dataAssetInfo.authorizationList.push(authorizationAddress);
 
     }
-
-
 
     function toJson(DataAssetInfo storage _self) internal returns(string _json) {
 
@@ -154,9 +142,6 @@ library LibDataAsset {
         
         }
 
-
         _json = _json.concat("}");  
-        
-		
     }
 }
