@@ -13,7 +13,6 @@ library DataExchangeDeal {
         EXCHANGE_STATUS_MAX
     }
 
-
     struct DataExchangeRcd {
         string exchangeID;
         uint exchangeTime;
@@ -27,15 +26,13 @@ library DataExchangeDeal {
         ExchangeStatus status;
     }
 
-
     function addDataExchangeRcd(DataExchangeRcd storage _self, string _exchangeID,address _firstParty, address _secondParty,  address _witnessess, string _dataRequirementID, string _dataAssetID)  internal{
         _self.exchangeID = _exchangeID;
         _self.exchangeTime = now;
         _self.firstParty = _firstParty;
         _self.secondParty = _secondParty;
         _self.witnesses = _witnessess;
-        //_self.exchangeSignature = _exchangeSignature;
-        //_self.amout=_amout;
+		
         _self.dataRequirementID = _dataRequirementID;
         _self.dataAssetID = _dataAssetID;
 
@@ -43,39 +40,31 @@ library DataExchangeDeal {
 
     }
 
-    function isDataExchangeValid(DataExchangeRcd storage _self)  internal returns (bool) {
-        
+    function isDataExchangeValid(DataExchangeRcd storage _self)  internal returns (bool) {        
         if(_self.status != ExchangeStatus.INVALID){
             return true;
         }
         else{
             return false;
         }
-
     }
 
-    function isDataExchangeReadyBuy(DataExchangeRcd storage _self)  internal returns (bool) {
-        
+    function isDataExchangeReadyBuy(DataExchangeRcd storage _self)  internal returns (bool) {        
         if(_self.status == ExchangeStatus.SUBMITTED){
             return true;
         }
         else{
             return false;
         }
-
     }
 
-    function setDataExchangeStatus4DealDone(DataExchangeRcd storage _self, string exchangeSignature, uint  bidMoney)  internal{
-        
+    function setDataExchangeStatus4DealDone(DataExchangeRcd storage _self, string exchangeSignature, uint  bidMoney)  internal{        
         _self.status = ExchangeStatus.DEAL_DONE;
         _self.exchangeSignature = exchangeSignature;
         _self.amout = bidMoney;
-
     }
-
-
+	
     function toJson(DataExchangeRcd storage _self) internal returns(string _json) {
-
         _json = "{";
 
         _json = _json.concat(_self.exchangeID.toKeyValue("exchangeID"), ",");
@@ -99,29 +88,6 @@ library DataExchangeDeal {
         _json = _json.concat(_self.dataAssetID.toKeyValue("dataAssetID"), ",");
         _json = _json.concat(uint(_self.status).toKeyValue("status"));
 
-        _json = _json.concat("}");         
-		
+        _json = _json.concat("}");                 
     }
-
-
- 
-
-/*
-    function aiDataAssetInfoSave(AiDataAssetInfo _self, string assetSinature, string  assetID, string dataStoreID, uint nonce, string dataPropertyDigest, string subscription, 
-                              LibAIDataAsset.ApplicationDomain domain, LibAIDataAsset.AssetDataType  assetDatatype) internal {
-        
-        _self.aiDataModel.dataPropertyDigest = dataPropertyDigest;
-        _self.aiDataModel.subscription = subscription;
-        _self.aiDataModel.applicationDomain = domain;
-        _self.aiDataModel.assetDataType = assetDatatype;
-
-        LibDataAsset.dataAssetInfoSave(_self.dataAssetInfo, assetSinature, assetID, dataStoreID, nonce);
-
-    }
-
-
-    
-    function getDataItem() {       
-    }   
-    */
 }
