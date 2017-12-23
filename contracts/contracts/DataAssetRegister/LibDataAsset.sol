@@ -130,7 +130,7 @@ library LibDataAsset {
             _json = _json.concat(_self.authorizationList.length.toKeyValue("authorizationList"),",\"elem\":[");
             for(uint loop = 0;loop < _self.authorizationList.length;loop++){
                 if (loop>0)_json = _json.concat(",");
-                _json = _json.concat("\"");
+                _json = _json.concat("\"0x");
                 _json = _json.concat(_self.authorizationList[loop].addrToAsciiString());        
                 _json = _json.concat("\"");
 

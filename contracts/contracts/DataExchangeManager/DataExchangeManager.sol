@@ -3,7 +3,7 @@ pragma solidity ^0.4.2;
 
 import "./DataExchangeDeal.sol";
 import "../DataAssetRegister/AIDataAssetRegister.sol";
-import "../TokenManager/TokenManager.sol";
+import "../BTOToken/BTOToken.sol";
 import "../DataRequirement/DataRequirementManager.sol";
 import "../lib/common/LibID.sol";
 import "../lib/common/LibString.sol";
@@ -15,7 +15,7 @@ contract DataExchangeManager {
     using LibInt for *;
 
     AIDataAssetRegister aiDataAssetRegisterAddr;
-    TokenManager tokenManagerAddr;
+    BTOToken tokenManagerAddr;
     DataRequirementManager dataRequirementManagerAddr;
 
     address    owner;
@@ -78,10 +78,10 @@ contract DataExchangeManager {
     }
 
     function setBTOTokenAddr(address addr) {
-        tokenManagerAddr = TokenManager(addr);
+        tokenManagerAddr = BTOToken(addr);
     }
 
-    function queryBTOTokenAddr() constant public returns (TokenManager addr) {
+    function queryBTOTokenAddr() constant public returns (BTOToken addr) {
         addr = tokenManagerAddr;
     }
 
