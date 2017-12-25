@@ -1,5 +1,6 @@
 # BRIEF INTRODUCTION
 BOTTOS is the decentralized data sharing network protocol based on the blockchain technology. It is also a consensus-based one-stop platform to implement the registration, distribution and transformation of the data among different participants within the broad-based AI ecosystem.
+
  Our Vision
  
 ● To build and become the largest global data sharing network to evolve AI ecosystem via smart data contracts on a blockchain infrastructure.  
@@ -12,12 +13,13 @@ Our Goals
 ● To implement the hardware sharing network to streamline the AI product registration and communication
 
 # WhitePaper
-  
+  https://github.com/Bottos-project/bottos/blob/master/Bottos%20whitepaper%20English%20final.pdf
 
 # Contact us:
    botadmin@bottos.org
    
 # Our Official website:
    www.bottos.org
+   
    www.botfans.org
 
