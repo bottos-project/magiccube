@@ -72,7 +72,7 @@ public class RequirementManagerServiceImpl {
 
             RequirementManager requirementManagerContract = getContract(configSettings, requirementManagerBean.getActionAccount());
 
-            CompletableFuture<TransactionReceipt> receipt = requirementManagerContract.createDataRequirement(createRequirementParaJson).sendAsync();
+            TransactionReceipt receipt = requirementManagerContract.createDataRequirement(createRequirementParaJson).send();
 
             // TODO: need check whether the requirement is published succeeded
             logger.info("Publish Requirement OK.");
@@ -85,74 +85,27 @@ public class RequirementManagerServiceImpl {
         }
     }
 
-    
-
-    /**
-     * @param configSettings read the param info
-     * @param accountName
-     * @return
-     * @throws IOException
-     */
-    private RequirementManager getContract(ConfigSettings configSettings, String accountName) throws IOException {
-        Credentials credentials = null;
-        BigInteger gasPriceBig = null;
-        BigInteger gasLimitBig = null;
-        Web3j web3j = null;
-
-        String accountPasswd = userRespository.findByAccount(accountName).getPasswd();
-
-        Web3Manager web3Manager = new Web3Manager();
-
+    // query my requirement
+    public String queryMyRequirement(RequirementManagerBean requirementManagerBean) {
         try {
-            this.logger.info("start createContractInstance");
 
-//            Web3jService httpService = new HttpService(configSettings.getHttpUrl());
-//            web3j = Web3j.build(httpService);
-//            Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
-//            String clientVersion = web3ClientVersion.getWeb3ClientVersion();
-            web3j = getWeb3jClient();
+            String requirementJson = "";
+            RequirementManager requirementManagerContract = getContract(configSettings, requirementManagerBean.getActionAccount());
 
-            String accountFilePath = configSettings.getWalletPath() + File.separator + accountName + ".json";
-            credentials = WalletUtils.loadCredentials(accountPasswd, accountFilePath);
+            if (requirementManagerBean.getOwnerAccount().equals(requirementManagerBean.getActionAccount())) {
 
-            gasPriceBig = new BigInteger(configSettings.getGasPrice());
-            gasLimitBig = new BigInteger(configSettings.getGasLimit());
+                //query all my requirement
+                requirementJson = requirementManagerContract.queryDataRequirementbyOwner(requirementManagerBean.getOwnerAccount()).send();
+            }
+            logger.info("query My Requirement End.");
+            return convertDisplayString(requirementJson);
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
+
+            e.printStackTrace();
+            return "";
         }
-
-        RequirementManager manager = new RequirementManager(configSettings.getRequirementManagerContractAddr(), web3j, credentials, gasPriceBig, gasLimitBig);
-
-        return manager;
     }
 
-    public BigInteger getNonce(String address) throws Exception {
-
-//        Web3jService httpService = new HttpService(configSettings.getHttpUrl());
-//        Web3j web3j = Web3j.build(httpService);
-
-        Web3j web3j = getWeb3jClient();
-
-//        Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
-//        String clientVersion = web3ClientVersion.getWeb3ClientVersion();
-
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(address, DefaultBlockParameterName.LATEST).send();
-
-        return ethGetTransactionCount.getTransactionCount();
-    }
-
-    private volatile static Web3j web3j;
-
-    public Web3j getWeb3jClient() {
-        if (web3j == null) {
-            synchronized (Web3jUtils.class) {
-                if (web3j == null) {
-                    web3j = Web3j.build(new HttpService(configSettings.getHttpUrl()));
-                }
-            }
-        }
-        return web3j;
-    }
 
 }
