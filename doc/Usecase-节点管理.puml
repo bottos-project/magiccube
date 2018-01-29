@@ -1,1 +1,0 @@
-@startumlleft to right direction:node:rectangle bottos {    node-->(deploy)    node-->(register)    node-->(exit)    node-->(find)}note right of (node)  node of bottosend note@enduml
