@@ -1,1 +1,1 @@
-# api-gateway
+# API gateway
