@@ -1,0 +1,38 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "userinfo",
+      "base": "",
+      "fields": {
+        "user_type": "uint8",
+        "email": "string",
+        "role_type":"uint8",
+        "signature": "string",
+      }
+    },{
+      "name": "adduserreq",
+      "base": "",
+      "fields": {
+        "user_name": "string",
+        "info": "userinfo"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "adduser",
+      "type": "adduserreq"
+    }
+  ],
+  "tables": [{
+      "table_name": "userreginfo",
+      "index_type": "str",
+      "key_names": [
+        "user_name"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "adduserreq"
+    }
+  ]
+}
