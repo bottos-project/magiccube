@@ -5,7 +5,7 @@
 #include <eoslib/eos.hpp>
 #include <eoslib/string.hpp>
 
-struct user_Info {
+struct user_base_Info {
    uint8_t  user_type;  /* personal or company */
    eosio::string email;
    uint8_t   role_type; /* provider, consumer, arbiter, provider+consumer */
@@ -20,6 +20,6 @@ struct user_Info {
 */
 struct add_user_req {
    eosio::string user_name;
-   user_Info info;
+   user_base_Info info;
 };
 

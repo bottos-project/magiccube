@@ -8,6 +8,8 @@
         "email": "string",
         "role_type":"uint8",
         "signature": "string",
+        "active_key": "string",
+        "owner_key": "string"
       }
     },{
       "name": "adduserreq",
@@ -19,7 +21,7 @@
     }
   ],
   "actions": [{
-      "action_name": "adduser",
+      "action_name": "reguser",
       "type": "adduserreq"
     }
   ],
