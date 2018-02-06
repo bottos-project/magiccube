@@ -1,17 +1,36 @@
 package main
 
 import (
-	_ "fmt"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 	"strings"
 )
 
-const (
-
-)
-var million int = 1e6
+const url = "http://www.yinyuetai.com/mv/get-bigpic"
 
 func main()  {
-	a, b, c := "a", "b", "c"
-	s := strings.Join([]string{ a, b, c }, ",")
-	println(s)
+	post()
+}
+
+func get()  {
+	resp, _ := http.Get(url)
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(body))
+}
+
+func post()  {
+	resp, err := http.Post(url, "application/json",
+		strings.NewReader("name=cjb"))
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+	}
+
+	fmt.Println(string(body))
 }
