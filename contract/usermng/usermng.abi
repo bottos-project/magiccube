@@ -1,28 +1,23 @@
 {
   "types": [],
   "structs": [{
-      "name": "userinfo",
+      "name": "user_basic_info",
       "base": "",
       "fields": {
-        "user_type": "uint8",
-        "email": "string",
-        "role_type":"uint8",
-        "signature": "string",
-        "active_key": "string",
-        "owner_key": "string"
+        "info": "string"
       }
     },{
-      "name": "adduserreq",
+      "name": "user_req_info",
       "base": "",
       "fields": {
         "user_name": "string",
-        "info": "userinfo"
+        "basic_info": "user_basic_info"
       }
     }
   ],
   "actions": [{
       "action_name": "reguser",
-      "type": "adduserreq"
+      "type": "user_req_info"
     }
   ],
   "tables": [{
@@ -34,7 +29,7 @@
       "key_types": [
         "string"
       ],
-      "type": "adduserreq"
+      "type": "user_req_info"
     }
   ]
 }
