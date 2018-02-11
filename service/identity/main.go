@@ -32,6 +32,21 @@ func WriteChain(req *restful.Request, rsp *restful.Response) error {
 	return nil
 }
 
+func GetBolckNum() (int, int, error) {
+	req := curl.NewRequest()
+	resp, err := req.SetUrl(GET_INFO_URL).Get()
+	if err != nil {
+		return 0, resp.Raw.StatusCode, err
+	}
+	if resp.IsOk() {
+		js, _ := simplejson.NewJson([]byte(resp.Body))
+		block_num := js.Get("head_block_num").MustInt()
+		return block_num, resp.Raw.StatusCode, err
+	} else {
+		return 0, resp.Raw.StatusCode, err
+	}
+}
+
 func main() {
 	service := micro.NewService(
 		micro.Name("go.micro.srv.user"),
