@@ -22,4 +22,5 @@ Our Goals
    www.bottos.org
    
    www.botfans.org
-
+# License
+Bottos is GPLv3 licensed.
