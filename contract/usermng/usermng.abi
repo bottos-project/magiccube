@@ -13,11 +13,21 @@
         "user_name": "string",
         "basic_info": "user_basic_info"
       }
+    },{
+      "name": "login_info",
+      "base": "",
+      "fields": {
+        "user_name": "string",
+        "random_num": "uint32"
+      }
     }
   ],
   "actions": [{
       "action_name": "reguser",
       "type": "user_req_info"
+    },{
+      "action_name": "userlogin",
+      "type": "login_info"
     }
   ],
   "tables": [{
