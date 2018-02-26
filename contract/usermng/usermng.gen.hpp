@@ -19,6 +19,15 @@ namespace eosio { namespace raw {
         raw::unpack(s, value.user_name);
         raw::unpack(s, value.info);
     }
+
+    template<typename Stream> inline void pack( Stream& s, const user_login& value ) {
+        raw::pack(s, value.user_name);
+        raw::pack(s, value.random_num);
+    }
+    template<typename Stream> inline void unpack( Stream& s, user_login& value ) {
+        raw::unpack(s, value.user_name);
+        raw::unpack(s, value.random_num);
+    }
 } }
 
 #include <eoslib/raw.hpp>
@@ -49,6 +58,11 @@ namespace eosio {
     template<>
     reg_user_req current_message<reg_user_req>() {
         return current_message_ex<reg_user_req>();
+    }
+    
+    template<>
+    user_login current_message<user_login>() {
+        return current_message_ex<user_login>();
     }
 } //eosio
 

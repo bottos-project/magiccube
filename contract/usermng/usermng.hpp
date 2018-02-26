@@ -18,3 +18,12 @@ struct reg_user_req {
     user_basic_Info info;
 };
 
+
+
+/* @abi action login
+ * @abi table
+*/
+struct user_login {
+    eosio::string user_name;
+    uint32_t random_num;
+};
