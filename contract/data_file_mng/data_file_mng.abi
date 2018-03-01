@@ -1,0 +1,41 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "data_file_info",
+      "base": "",
+      "fields": {
+        "user_name"  : "string",
+        "session_id" : "string",
+        "file_size"  : "uint32",
+        "file_name"  : "string"
+        "file_policy": "string"
+        "file_number": "uint32"
+        "signature"  : "string"
+      }
+    },{
+      "name": "data_file_req_info",
+      "base": "",
+      "fields": {
+        "file_hash": "string",
+        "basic_info": "data_file_info"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "datafilereg",
+      "type": "data_file_req_info"
+    }
+  ],
+  "tables": [{
+      "table_name": "datafileinfo",
+      "index_type": "str",
+      "key_names": [
+        "file_hash"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "data_file_req_info"
+    }
+  ]
+}
