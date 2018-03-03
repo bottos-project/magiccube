@@ -2,8 +2,8 @@
  *  @file
  *  @copyright defined in eos/LICENSE.txt
  */
-#include "usermng.hpp"
-#include "usermng.gen.hpp"
+#include "user_mng.hpp"
+#include "user_mng.gen.hpp"
 
 #include <eoslib/db.hpp>
 #include <eoslib/types.hpp>
