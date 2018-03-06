@@ -11,8 +11,23 @@ import (
 type User struct{}
 
 func (u *User) Register(ctx context.Context, req *proto.RegisterRequest, rsp *proto.RegisterResponse) error {
-	rsp.Code = 1
-	rsp.Msg = "OK"
+	body := req.Body
+	log.Println(body)
+	//transfer to struct
+	var registerRequest user.RegisterRequest
+	json.Unmarshal([]byte(body), &registerRequest)
+	
+	response, err := u.Client.Register(ctx, &registerRequest)
+	if err != nil {
+		return err
+	}
+	rsp.StatusCode = 200
+	b, _ := json.Marshal(map[string]interface{}{
+		"code": response.Code,
+		"msg": response.Msg,
+	})
+
+	rsp.Body = string(b)
 	return nil
 }
 
