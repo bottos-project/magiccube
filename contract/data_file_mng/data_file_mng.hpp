@@ -11,10 +11,10 @@
 struct data_file_info {
     eosio::string user_name;
     eosio::string session_id;
-    uint32_t      file_size;
+    uint64_t      file_size;
     eosio::string file_name;
     eosio::string file_policy;
-    uint32_t      file_number;
+    uint64_t      file_number;
     eosio::string signature;
 };
 
