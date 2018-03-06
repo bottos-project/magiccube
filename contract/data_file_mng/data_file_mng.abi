@@ -6,10 +6,10 @@
       "fields": {
         "user_name"  : "string",
         "session_id" : "string",
-        "file_size"  : "uint32",
-        "file_name"  : "string"
-        "file_policy": "string"
-        "file_number": "uint32"
+        "file_size"  : "uint64",
+        "file_name"  : "string",
+        "file_policy": "string",
+        "file_number": "uint64",
         "signature"  : "string"
       }
     },{
