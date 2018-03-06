@@ -20,9 +20,7 @@ extern "C" {
                 eosio::print("reg data file begin\n");
                 auto req_Info = eosio::current_message<reg_data_file_req>();
 
-                eosio::require_auth( eosio::string_to_name(req_Info.info.user_name.get_data()) );
-
-                //eosio::require_auth( eosio::string_to_name(req_Info.user_name.get_data()) );
+                //eosio::require_auth( eosio::string_to_name(req_Info.info.user_name.get_data()) );               
 
                 eosio::dump(req_Info);
                 bytes b = eosio::raw::pack(req_Info.info);
