@@ -1,0 +1,48 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "asset_info",
+      "base": "",
+      "fields": {
+        "user_name"           :"string",
+        "session_id"         :"string",
+        "asset_name"         :"string",
+        "feature_tag"        :"uint64",
+        "sample_path"  :"string",
+        "sample_hash"  :"string",
+        "storage_path" :"string",
+        "storage_hash" :"string",
+        "expire_time"        :"uint32",
+        "price"              :"uint64",
+        "description"        :"string",
+        "upload_date"        :"uint32",
+        "signature"          :"string"
+      }
+    },{
+      "name": "asset_req_info",
+      "base": "",
+      "fields": {
+        "asset_id": "string",
+        "basic_info": "asset_info"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "assetreg",
+      "type": "asset_req_info"
+    }
+  ],
+  "tables": [{
+      "table_name": "assetinfo",
+      "index_type": "str",
+      "key_names": [
+        "asset_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "asset_req_info"
+    }
+  ]
+}
+
