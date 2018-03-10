@@ -1,0 +1,115 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "asset_info",
+      "base": "",
+      "fields": {
+        "user_name"           :"string",
+        "session_id"         :"string",
+        "asset_name"         :"string",
+        "feature_tag"        :"uint64",
+        "sample_path"  :"string",
+        "sample_hash"  :"string",
+        "storage_path" :"string",
+        "storage_hash" :"string",
+        "expire_time"        :"uint32",
+        "price"              :"uint64",
+        "description"        :"string",
+        "upload_date"        :"uint32",
+        "signature"          :"string"
+      }
+    },{
+      "name": "asset_req_info",
+      "base": "",
+      "fields": {
+        "asset_id": "string",
+        "basic_info": "asset_info"
+      }
+    },{
+      "name": "transfer",
+      "base": "",
+      "fields": {
+        "from": "account_name",
+        "to": "account_name",
+        "quantity": "uint64"
+      }
+    },{
+      "name": "data_deal_base_info",
+      "base": "",
+      "fields": {
+        "user_name"       :"string",
+        "session_id"      :"string",
+        "asset_id"        :"string",
+        "random_num"      :"uint64",        
+        "signature"       :"string"
+      }
+    },{
+      "name": "data_deal_info",
+      "base": "",
+      "fields": {
+        "data_deal_id": "string",
+        "basic_info": "data_deal_base_info"
+      }
+    },{
+      "name": "data_presale_info",
+      "base": "",
+      "fields": {
+        "user_name"  :"string",
+        "session_id" :"string",
+        "asset_id"   :"string",
+        "data_req_id":"string",
+        "consumer"   :"string",
+        "random_num" :"uint64",
+        "signature"  :"string"
+      }
+    },{
+      "name": "data_presale_req",
+      "base": "",
+      "fields": {
+        "data_presale_id": "string",
+        "basic_info": "data_presale_info"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "datapurchase",
+      "type": "data_deal_info"
+    },{
+      "action_name": "datapresale",
+      "type": "data_presale_req"
+    }
+  ],
+  "tables": [{
+      "table_name": "datadealinfo",
+      "index_type": "str",
+      "key_names": [
+        "data_deal_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "data_deal_info"
+    },{
+      "table_name": "presaleinfo",
+      "index_type": "str",
+      "key_names": [
+        "data_presale_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "data_presale_req"
+    },{
+      "table_name": "assetinfo",
+      "index_type": "str",
+      "key_names": [
+        "asset_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "asset_req_info"
+    }
+  ]
+}
+
