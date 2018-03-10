@@ -1,0 +1,46 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "data_requirement_info",
+      "base": "",
+      "fields": {
+        "user_name"       :"string",
+        "session_id"      :"string",
+        "requirement_name":"string",
+        "feature_tag"     :"uint64",
+        "sample_path"     :"string",
+        "sample_hash"     :"string",
+        "expire_time"     :"uint32",
+        "price"           :"uint64",
+        "description"     :"string",
+        "publish_date"    :"uint32",
+        "signature"       :"string"
+      }
+    },{
+      "name": "data_requirement_req_info",
+      "base": "",
+      "fields": {
+        "data_req_id": "string",
+        "basic_info": "data_requirement_info"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "datareqreg",
+      "type": "data_requirement_req_info"
+    }
+  ],
+  "tables": [{
+      "table_name": "datareqinfo",
+      "index_type": "str",
+      "key_names": [
+        "data_req_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "data_requirement_req_info"
+    }
+  ]
+}
+
