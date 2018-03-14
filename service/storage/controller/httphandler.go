@@ -1,14 +1,16 @@
 package controller
+
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
 	"github.com/code/bottos/service/storage/util"
 )
 
 var (
-	serverurl= "10.104.14.169:8888"
+	serverurl = "10.104.14.169:8689"
 )
 
 //https://github.com/ethereum/wiki/wiki/JSON-RPC
@@ -16,10 +18,10 @@ var (
 func SetServer(newServer string) {
 	serverurl = newServer
 }
-func GetInfo()(*util.Info,error){
-	resp, err := http.Get("http://"+serverurl+"/v1/chain/get_info")
+func GetInfo() (*util.Info, error) {
+	resp, err := http.Get("http://" + serverurl + "/v1/chain/get_info")
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
@@ -35,19 +37,19 @@ func GetInfo()(*util.Info,error){
 		return nil, err
 	}
 
-	return jResp,nil
+	return jResp, nil
 }
-func GetBlock(num_or_id string)(*util.Block,error){
-	body := strings.NewReader(`{"block_num_or_id":`+num_or_id+`}`)
+func GetBlock(num_or_id string) (*util.Block, error) {
+	body := strings.NewReader(`{"block_num_or_id":` + num_or_id + `}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/chain/get_block", body)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
@@ -63,9 +65,9 @@ func GetBlock(num_or_id string)(*util.Block,error){
 		return nil, err
 	}
 
-	return block,nil
+	return block, nil
 }
-func GetAccountInfo()(*util.AccountInfo,error){
+func GetAccountInfo() (*util.AccountInfo, error) {
 
 	body := strings.NewReader(`{"account_name":"inita"}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/chain/get_account", body)
@@ -91,9 +93,9 @@ func GetAccountInfo()(*util.AccountInfo,error){
 		return nil, err
 	}
 
-	return account,nil
+	return account, nil
 }
-func GetTxInfo()(*util.TxInfo,error){
+func GetTxInfo() (*util.TxInfo, error) {
 	body := strings.NewReader(`{"transaction_id":"06ffce7503d82a4e19bd7cdfb9c507c5c3c40fda3bd316ee35f344d42807db6e"}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/account_history/get_transaction", body)
 	if err != nil {
@@ -118,12 +120,11 @@ func GetTxInfo()(*util.TxInfo,error){
 		return nil, err
 	}
 
-	return tx,nil
+	return tx, nil
 
 }
 
-
-func GetCodeInfo()(string, error){
+func GetCodeInfo() (string, error) {
 	body := strings.NewReader(`{"account_name":"currency"}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/chain/get_code", body)
 	if err != nil {
@@ -136,5 +137,5 @@ func GetCodeInfo()(string, error){
 		// handle err
 	}
 	defer resp.Body.Close()
-	return "",nil
+	return "", nil
 }
