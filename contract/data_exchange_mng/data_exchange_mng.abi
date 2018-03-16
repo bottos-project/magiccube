@@ -59,7 +59,9 @@
         "user_name"  :"string",
         "session_id" :"string",
         "asset_id"   :"string",
+        "asset_name" :"string",
         "data_req_id":"string",
+        "data_req_name":"string",
         "consumer"   :"string",
         "random_num" :"uint64",
         "signature"  :"string"
