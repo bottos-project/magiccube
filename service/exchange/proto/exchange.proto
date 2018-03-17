@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+service Exchange {
+	rpc ConsumerBuy(ConsumerBuyRequest) returns(ConsumerBuyResponse) {};
+	rpc QueryTx(QueryTxRequest) returns(QueryTxResponse) {};
+
+
+}
+
+message ConsumerBuyRequest {
+	string postBody = 1;
+}
+message ConsumerBuyResponse {
+	uint32 code = 1;
+	string data = 2;
+	string msg = 3;
+}
+
+message QueryTxRequest {
+	uint64 pageSize = 1;
+	uint64 pageNum = 2;
+	string username = 3;
+}
+message QueryTxResponse {
+	uint32 code = 1;
+	QueryTxData data = 2;
+	string msg = 3;
+}
+
+message QueryTxData {
+	uint64 pageNum = 1;
+	uint64 rowCount = 2;
+	repeated TxRow row = 3;
+}
+
+message TxRow {
+	string transaction_id = 1;
+	string from = 2;
+	string to = 3;
+	uint64 price = 4;
+	uint64 type = 5;
+	string date = 6;
+	uint64 block_id = 7;
+}
+
+message TransferRequest {
+	string postBody = 1;
+}
+message TransferResponse {
+	uint32 code = 1;
+	string data = 2;
+	string msg = 3;
+}
+
+message QueryTransferRequest {
+	string username = 1;
+	string session_id = 2;
+	string random = 3;
+	string signature = 4;
+}
+message QueryTransferResponse {
+	uint32 code = 1;
+	string data = 2;
+	string msg = 3;
+}
+
+
+
+
+
