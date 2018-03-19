@@ -18,9 +18,10 @@ type Asset struct {
 }
 
 func (s *Asset) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("Start Get File URL!")
 	//header, _ := json.Marshal(req.Header)
 	response, err := s.Client.GetFileUploadURL(ctx, &asset.GetFileUploadURLRequest{
-		PostBody:   req.Body,
+		PostBody: req.Body,
 	})
 	if err != nil {
 		return err
@@ -28,8 +29,8 @@ func (s *Asset) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api
 
 	rsp.StatusCode = 200
 	b, _ := json.Marshal(map[string]interface{}{
-		"code":  response.Code,
-		"msg": response.Msg,
+		"code": response.Code,
+		"msg":  response.Msg,
 		"data": response.Data,
 	})
 	rsp.Body = string(b)
