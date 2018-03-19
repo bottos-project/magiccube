@@ -5,9 +5,11 @@
       "base": "",
       "fields": {
         "user_name"           :"string",
-        "session_id"         :"string",
         "asset_name"         :"string",
-        "feature_tag"        :"uint64",
+        "asset_type"         :"string",
+        "feature_tag1"       :"string",
+        "feature_tag2"       :"string",
+        "feature_tag3"       :"string",
         "sample_path"  :"string",
         "sample_hash"  :"string",
         "storage_path" :"string",
