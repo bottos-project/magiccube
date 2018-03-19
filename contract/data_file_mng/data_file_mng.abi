@@ -10,6 +10,7 @@
         "file_name"  : "string",
         "file_policy": "string",
         "file_number": "uint64",
+        "auth_path"  : "string",
         "signature"  : "string"
       }
     },{
