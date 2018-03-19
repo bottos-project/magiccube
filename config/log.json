@@ -1,0 +1,76 @@
+{
+    "console": {
+        "enable": true,
+        "level": "FINE",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M"
+    },
+    "files": [{
+        "enable": true,
+        "level": "DEBUG",
+        "filename":"./requirement_api.log",
+        "category": "requirement.api",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": false,
+        "maxsize": "50M",
+        "maxlines": "10K",
+        "daily": false
+    },{
+        "enable": true,
+        "level": "DEBUG",
+        "filename":"./requirement_srv.log",
+        "category": "requirement.srv",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": false,
+        "maxsize": "50M",
+        "maxlines": "10K",
+        "daily": false
+    },{
+        "enable": true,
+        "level": "DEBUG",
+        "filename":"./dashboard_api.log",
+        "category": "dashboard.api",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": false,
+        "maxsize": "50M",
+        "maxlines": "10K",
+        "daily": false
+    },{
+        "enable": true,
+        "level": "DEBUG",
+        "filename":"./dashboard_srv.log",
+        "category": "dashboard.srv",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": false,
+        "maxsize": "50M",
+        "maxlines": "10K",
+        "daily": false
+    },{
+        "enable": true,
+        "level": "DEBUG",
+        "filename":"./user_api.log",
+        "category": "user.api",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": false,
+        "maxsize": "50M",
+        "maxlines": "10K",
+        "daily": false
+    },{
+        "enable": true,
+        "level": "DEBUG",
+        "filename":"./user_srv.log",
+        "category": "user.srv",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": false,
+        "maxsize": "50M",
+        "maxlines": "10K",
+        "daily": false
+    }],
+    "sockets": [{
+        "enable": false,
+        "level": "DEBUG",
+        "category": "TestSocket",
+        "pattern": "[%D %T] [%C] [%L] (%S) %M",
+        "addr": "127.0.0.1:12124",
+        "protocol":"udp"
+    }]
+}
