@@ -20,11 +20,36 @@
         "file_hash": "string",
         "basic_info": "data_file_info"
       }
+    },{
+      "name": "auth_basic_info",
+      "base": "",
+      "fields": {
+        "auth_type": "string",
+        "auth_path": "string"
+      }
+    },{
+      "name": "data_file_auth_info",
+      "base": "",
+      "fields": {
+        "hashusername": "string",
+        "basic_info": "auth_basic_info"
     }
+    },{
+      "name": "data_file_auth_req",
+      "base": "",
+      "fields": {
+        "storge_hash": "string",
+        "user_name"  : "string"
+      }
+    }
+    
   ],
   "actions": [{
       "action_name": "datafilereg",
       "type": "data_file_req_info"
+    },{
+      "action_name": "fileauthreq",
+      "type": "data_file_auth_req"
     }
   ],
   "tables": [{
