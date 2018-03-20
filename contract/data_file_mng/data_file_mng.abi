@@ -62,6 +62,17 @@
         "string"
       ],
       "type": "data_file_req_info"
+    },{
+
+    "table_name": "fileauthinfo",
+      "index_type": "str",
+      "key_names": [
+        "hashusername"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "data_file_auth_info"
     }
   ]
 }
