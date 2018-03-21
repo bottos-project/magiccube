@@ -1,0 +1,29 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "goods_base_info",
+      "base": "",
+      "fields": {        
+        "user_name" : "string",
+        "session_id": "string",
+        "goods_type": "string",        
+        "signature" : "string"       
+      }
+    },{
+      "name": "goods_info",
+      "base": "",
+      "fields": {
+        "goods_id"  : "string",
+        "info" : "goods_base_info"   
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "favoritepro",
+      "type": "good_process_info"
+    }
+  ],
+  "tables": [
+  ]
+}
+
