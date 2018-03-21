@@ -16,6 +16,17 @@
         "goods_id"  : "string",
         "info" : "goods_base_info"   
       }
+    },{
+      "name": "good_process_info",
+      "base": "",
+      "fields": {
+        "user_name"  : "string",
+        "session_id" : "string",
+        "op_type"    : "string",
+        "goods_type" : "string",
+        "goods_id"   : "string",
+        "signature"  : "string"        
+      }
     }
   ],
   "actions": [{
@@ -23,7 +34,17 @@
       "type": "good_process_info"
     }
   ],
-  "tables": [
+  "tables": [{
+      "table_name": "favoriteinfo",
+      "index_type": "str",
+      "key_names": [
+        "goods_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "goods_info"
+    }
   ]
 }
 
