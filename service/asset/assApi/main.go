@@ -41,10 +41,10 @@ func (s *Asset) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api
 func (u *Asset) GetFileUploadStat(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var queryRequest asset.GetFileUploadStatRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(queryRequest)
 	ok, err := govalidator.ValidateStruct(queryRequest);
@@ -96,10 +96,10 @@ func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Res
 func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var queryRequest asset.QueryUploadedDataRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(queryRequest)
 	ok, err := govalidator.ValidateStruct(queryRequest);
@@ -131,10 +131,10 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *ap
 func (u *Asset) GetDownLoadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var downLoadRequest asset.GetDownLoadURLRequest
 	json.Unmarshal([]byte(body), &downLoadRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(downLoadRequest)
 	ok, err := govalidator.ValidateStruct(downLoadRequest);
@@ -186,10 +186,10 @@ func (u *Asset) Register(ctx context.Context, req *api.Request, rsp *api.Respons
 func (u *Asset) Query(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var queryRequest asset.QueryRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(queryRequest)
 	ok, err := govalidator.ValidateStruct(queryRequest);
@@ -221,10 +221,10 @@ func (u *Asset) Query(ctx context.Context, req *api.Request, rsp *api.Response) 
 func (u *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var queryRequest asset.QueryAllAssetRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(queryRequest)
 	ok, err := govalidator.ValidateStruct(queryRequest)
@@ -276,10 +276,10 @@ func (u *Asset) Modify(ctx context.Context, req *api.Request, rsp *api.Response)
 func (u *Asset) QueryByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var queryRequest asset.QueryByIDRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(queryRequest)
 	ok, err := govalidator.ValidateStruct(queryRequest);
@@ -310,10 +310,10 @@ func (u *Asset) QueryByID(ctx context.Context, req *api.Request, rsp *api.Respon
 func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	//转换为结构体
+	//transfer to struct
 	var queryRequest asset.GetUserPurchaseAssetListRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	log.Info(queryRequest)
 	ok, err := govalidator.ValidateStruct(queryRequest);
@@ -345,7 +345,7 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 func main() {
 	log.LoadConfiguration(config.BASE_LOG_CONF)
 	defer log.Close()
-	log.LOGGER("asset.srv")
+	log.LOGGER("asset.api")
 
 	service := micro.NewService(
 		micro.Name("go.micro.api.v2.asset"),

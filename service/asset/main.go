@@ -38,11 +38,12 @@ const (
 type Asset struct{}
 
 func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadURLRequest, rsp *proto.GetFileUploadURLResponse) error {
+	log.Info("Start Get File URL!")
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
 	//dataBody, signValue, userName := "fd","","13"
 	dataBody, signValue, userName := GetSignAndData(req.PostBody)
-	log.Info(userName)
+	//log.Info(userName)
 	//get Public Key
 	pubKey := GetPublicKey("userName")
 	//Verify Sign Local
@@ -54,7 +55,7 @@ func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadUR
 		rsp.Msg = "Verify Signature Failed."
 		return nil
 	}
-	log.Info(ok)
+	//log.Info(ok)
 	//get strore Address
 	js, _ := simplejson.NewJson([]byte(req.PostBody))
 	log.Info("js", js)
@@ -79,8 +80,7 @@ func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadUR
 	resp, err := http.Post(STORAGE_RPC_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(s))
 
-	log.Info(resp)
-	log.Info("err", err)
+	log.Error("Get Data from Chain err:", err)
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadUR
 		rsp.Code = 1
 		rsp.Msg = "get FileUploadURL Successful!"
 		rsp.Data = presigned_put_url
-		log.Info(presigned_put_url)
+		log.Debug(presigned_put_url)
 		return nil
 	}
 	log.Info(string(body))
