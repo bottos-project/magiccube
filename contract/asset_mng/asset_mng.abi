@@ -4,16 +4,16 @@
       "name": "asset_info",
       "base": "",
       "fields": {
-        "user_name"           :"string",
+        "user_name"          :"string",
         "asset_name"         :"string",
         "asset_type"         :"string",
         "feature_tag1"       :"string",
         "feature_tag2"       :"string",
         "feature_tag3"       :"string",
-        "sample_path"  :"string",
-        "sample_hash"  :"string",
-        "storage_path" :"string",
-        "storage_hash" :"string",
+        "sample_path"        :"string",
+        "sample_hash"        :"string",
+        "storage_path"       :"string",
+        "storage_hash"       :"string",
         "expire_time"        :"uint32",
         "price"              :"uint64",
         "description"        :"string",
@@ -24,14 +24,14 @@
       "name": "asset_req_info",
       "base": "",
       "fields": {
-        "asset_id": "string",
+        "asset_id"  : "string",
         "basic_info": "asset_info"
       }
     }
   ],
   "actions": [{
       "action_name": "assetreg",
-      "type": "asset_req_info"
+      "type"       : "asset_req_info"
     }
   ],
   "tables": [{
