@@ -24,7 +24,7 @@
       "name": "asset_req_info",
       "base": "",
       "fields": {
-        "asset_id": "string",
+        "asset_id"  : "string",
         "basic_info": "asset_info"
       }
     },{
@@ -32,7 +32,7 @@
       "base": "",
       "fields": {
         "from": "account_name",
-        "to": "account_name",
+        "to"  : "account_name",
         "quantity": "uint64"
       }
     },{
@@ -50,7 +50,7 @@
       "base": "",
       "fields": {
         "data_deal_id": "string",
-        "basic_info": "data_deal_base_info"
+        "basic_info"  : "data_deal_base_info"
       }
     },{
       "name": "data_presale_info",
@@ -71,16 +71,16 @@
       "base": "",
       "fields": {
         "data_presale_id": "string",
-        "basic_info": "data_presale_info"
+        "basic_info"     : "data_presale_info"
       }
     }
   ],
   "actions": [{
       "action_name": "datapurchase",
-      "type": "data_deal_info"
+      "type"       : "data_deal_info"
     },{
       "action_name": "datapresale",
-      "type": "data_presale_req"
+      "type"       : "data_presale_req"
     }
   ],
   "tables": [{
