@@ -18,10 +18,10 @@ type User struct {
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var registerRequest user.RegisterRequest
 	json.Unmarshal([]byte(body), &registerRequest)
-	//数据格式校验
+	//Checkout data format
 	ok, err := govalidator.ValidateStruct(registerRequest);
 	if !ok {
 		b, _ := json.Marshal(map[string]interface{}{
@@ -32,9 +32,17 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		rsp.Body = string(b)
 		return nil
 	}
-
-	//userType, _ := strconv.ParseUint(strings.Join(user_type.Values, " "), 0, 64)
-	//roleType, _ := strconv.ParseUint(strings.Join(role_type.Values, " "), 0, 64)
+	match,_:=regexp.MatchString("^[1-5a-z.]{3,13}$",registerRequest.Username)
+	log.Info(match)
+	if !match {
+		b, _ := json.Marshal(map[string]interface{}{
+			"code": -9,
+			"msg": "Username is illegal",
+		})
+		rsp.StatusCode = 200
+		rsp.Body = string(b)
+		return nil
+	}
 
 	response, err := u.Client.Register(ctx, &registerRequest)
 	if err != nil {
