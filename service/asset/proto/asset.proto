@@ -69,11 +69,13 @@ message QueryUploadedData {
 }
 message QueryUploadedRow {
     string username = 1;
-    string file_name = 2;
-    uint64 file_size = 3;
-    string file_policy = 4;
-    uint64 file_number = 5;
-    string auth_path = 6;
+    string file_hash = 2;
+    string file_name = 3;
+    uint64 file_size = 4;
+    string file_policy = 5;
+    uint64 file_number = 6;
+    string auth_path = 7;
+    string create_time = 8;
 }
 
 
@@ -133,7 +135,7 @@ message QueryRow {
     uint64 price = 13;
     string description = 14;
     uint32 upload_date = 15;
-    uint64  create_time = 16;
+    string create_time = 16;
 }
 
 message QueryAllAssetRequest {

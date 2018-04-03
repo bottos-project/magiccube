@@ -43,12 +43,6 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import (
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
-	context "golang.org/x/net/context"
-)
-
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
@@ -68,7 +62,7 @@ type GetFileUploadURLRequest struct {
 	//    int32 fileNumber = 5;
 	//    string fileash = 6;
 	//    string signature = 7;
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody,omitempty"`
+	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
 }
 
 func (m *GetFileUploadURLRequest) Reset()                    { *m = GetFileUploadURLRequest{} }
@@ -84,9 +78,9 @@ func (m *GetFileUploadURLRequest) GetPostBody() string {
 }
 
 type GetFileUploadURLResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *GetFileUploadURLResponse) Reset()                    { *m = GetFileUploadURLResponse{} }
@@ -116,7 +110,7 @@ func (m *GetFileUploadURLResponse) GetData() string {
 }
 
 type RegisterFileRequest struct {
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody,omitempty"`
+	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
 }
 
 func (m *RegisterFileRequest) Reset()                    { *m = RegisterFileRequest{} }
@@ -132,9 +126,9 @@ func (m *RegisterFileRequest) GetPostBody() string {
 }
 
 type RegisterFileResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *RegisterFileResponse) Reset()                    { *m = RegisterFileResponse{} }
@@ -164,9 +158,9 @@ func (m *RegisterFileResponse) GetData() string {
 }
 
 type QueryUploadedDataRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize,omitempty"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum,omitempty"`
-	Username string `protobuf:"bytes,3,opt,name=username" json:"username,omitempty"`
+	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
+	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
+	Username string `protobuf:"bytes,3,opt,name=username" json:"username"`
 }
 
 func (m *QueryUploadedDataRequest) Reset()                    { *m = QueryUploadedDataRequest{} }
@@ -196,9 +190,9 @@ func (m *QueryUploadedDataRequest) GetUsername() string {
 }
 
 type QueryUploadedDataResponse struct {
-	Code int32              `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Data *QueryUploadedData `protobuf:"bytes,2,opt,name=data" json:"data,omitempty"`
-	Msg  string             `protobuf:"bytes,3,opt,name=msg" json:"msg,omitempty"`
+	Code int32              `protobuf:"varint,1,opt,name=code" json:"code"`
+	Data *QueryUploadedData `protobuf:"bytes,2,opt,name=data" json:"data"`
+	Msg  string             `protobuf:"bytes,3,opt,name=msg" json:"msg"`
 }
 
 func (m *QueryUploadedDataResponse) Reset()                    { *m = QueryUploadedDataResponse{} }
@@ -228,9 +222,9 @@ func (m *QueryUploadedDataResponse) GetMsg() string {
 }
 
 type QueryUploadedData struct {
-	PageNum  uint64              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum,omitempty"`
-	RowCount uint64              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount,omitempty"`
-	Row      []*QueryUploadedRow `protobuf:"bytes,3,rep,name=row" json:"row,omitempty"`
+	PageNum  uint64              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
+	RowCount uint64              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
+	Row      []*QueryUploadedRow `protobuf:"bytes,3,rep,name=row" json:"row"`
 }
 
 func (m *QueryUploadedData) Reset()                    { *m = QueryUploadedData{} }
@@ -260,12 +254,14 @@ func (m *QueryUploadedData) GetRow() []*QueryUploadedRow {
 }
 
 type QueryUploadedRow struct {
-	Username   string `protobuf:"bytes,1,opt,name=username" json:"username,omitempty"`
-	FileName   string `protobuf:"bytes,2,opt,name=file_name,json=fileName" json:"file_name,omitempty"`
-	FileSize   uint64 `protobuf:"varint,3,opt,name=file_size,json=fileSize" json:"file_size,omitempty"`
-	FilePolicy string `protobuf:"bytes,4,opt,name=file_policy,json=filePolicy" json:"file_policy,omitempty"`
-	FileNumber uint64 `protobuf:"varint,5,opt,name=file_number,json=fileNumber" json:"file_number,omitempty"`
-	AuthPath   string `protobuf:"bytes,6,opt,name=auth_path,json=authPath" json:"auth_path,omitempty"`
+	Username   string `protobuf:"bytes,1,opt,name=username" json:"username"`
+	FileHash   string `protobuf:"bytes,2,opt,name=file_hash,json=fileHash" json:"file_hash"`
+	FileName   string `protobuf:"bytes,3,opt,name=file_name,json=fileName" json:"file_name"`
+	FileSize   uint64 `protobuf:"varint,4,opt,name=file_size,json=fileSize" json:"file_size"`
+	FilePolicy string `protobuf:"bytes,5,opt,name=file_policy,json=filePolicy" json:"file_policy"`
+	FileNumber uint64 `protobuf:"varint,6,opt,name=file_number,json=fileNumber" json:"file_number"`
+	AuthPath   string `protobuf:"bytes,7,opt,name=auth_path,json=authPath" json:"auth_path"`
+	CreateTime string `protobuf:"bytes,8,opt,name=create_time,json=createTime" json:"create_time"`
 }
 
 func (m *QueryUploadedRow) Reset()                    { *m = QueryUploadedRow{} }
@@ -276,6 +272,13 @@ func (*QueryUploadedRow) Descriptor() ([]byte, []int) { return fileDescriptor0, 
 func (m *QueryUploadedRow) GetUsername() string {
 	if m != nil {
 		return m.Username
+	}
+	return ""
+}
+
+func (m *QueryUploadedRow) GetFileHash() string {
+	if m != nil {
+		return m.FileHash
 	}
 	return ""
 }
@@ -315,6 +318,13 @@ func (m *QueryUploadedRow) GetAuthPath() string {
 	return ""
 }
 
+func (m *QueryUploadedRow) GetCreateTime() string {
+	if m != nil {
+		return m.CreateTime
+	}
+	return ""
+}
+
 type RegisterRequest struct {
 	// string username = 1;
 	// string asset_id = 2;
@@ -330,7 +340,7 @@ type RegisterRequest struct {
 	// string description = 12;
 	// string upload_date = 13;
 	// string signature = 14;
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody,omitempty"`
+	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
 }
 
 func (m *RegisterRequest) Reset()                    { *m = RegisterRequest{} }
@@ -346,9 +356,9 @@ func (m *RegisterRequest) GetPostBody() string {
 }
 
 type RegisterResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *RegisterResponse) Reset()                    { *m = RegisterResponse{} }
@@ -378,10 +388,10 @@ func (m *RegisterResponse) GetData() string {
 }
 
 type QueryRequest struct {
-	PageSize   int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize,omitempty"`
-	PageNum    int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum,omitempty"`
-	Username   string `protobuf:"bytes,3,opt,name=username" json:"username,omitempty"`
-	FeatureTag uint64 `protobuf:"varint,4,opt,name=featureTag" json:"featureTag,omitempty"`
+	PageSize   int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
+	PageNum    int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
+	Username   string `protobuf:"bytes,3,opt,name=username" json:"username"`
+	FeatureTag uint64 `protobuf:"varint,4,opt,name=featureTag" json:"featureTag"`
 }
 
 func (m *QueryRequest) Reset()                    { *m = QueryRequest{} }
@@ -418,9 +428,9 @@ func (m *QueryRequest) GetFeatureTag() uint64 {
 }
 
 type QueryResponse struct {
-	Code int32      `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Data *QueryData `protobuf:"bytes,2,opt,name=data" json:"data,omitempty"`
-	Msg  string     `protobuf:"bytes,3,opt,name=msg" json:"msg,omitempty"`
+	Code int32      `protobuf:"varint,1,opt,name=code" json:"code"`
+	Data *QueryData `protobuf:"bytes,2,opt,name=data" json:"data"`
+	Msg  string     `protobuf:"bytes,3,opt,name=msg" json:"msg"`
 }
 
 func (m *QueryResponse) Reset()                    { *m = QueryResponse{} }
@@ -450,9 +460,9 @@ func (m *QueryResponse) GetMsg() string {
 }
 
 type QueryData struct {
-	PageNum  uint64      `protobuf:"varint,1,opt,name=pageNum" json:"pageNum,omitempty"`
-	RowCount uint64      `protobuf:"varint,2,opt,name=rowCount" json:"rowCount,omitempty"`
-	Row      []*QueryRow `protobuf:"bytes,3,rep,name=row" json:"row,omitempty"`
+	PageNum  uint64      `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
+	RowCount uint64      `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
+	Row      []*QueryRow `protobuf:"bytes,3,rep,name=row" json:"row"`
 }
 
 func (m *QueryData) Reset()                    { *m = QueryData{} }
@@ -482,22 +492,22 @@ func (m *QueryData) GetRow() []*QueryRow {
 }
 
 type QueryRow struct {
-	AssetId     string `protobuf:"bytes,1,opt,name=asset_id,json=assetId" json:"asset_id,omitempty"`
-	Username    string `protobuf:"bytes,2,opt,name=username" json:"username,omitempty"`
-	AssetName   string `protobuf:"bytes,3,opt,name=asset_name,json=assetName" json:"asset_name,omitempty"`
-	AssetType   string `protobuf:"bytes,4,opt,name=asset_type,json=assetType" json:"asset_type,omitempty"`
-	FeatureTag1 string `protobuf:"bytes,5,opt,name=feature_tag1,json=featureTag1" json:"feature_tag1,omitempty"`
-	FeatureTag2 string `protobuf:"bytes,6,opt,name=feature_tag2,json=featureTag2" json:"feature_tag2,omitempty"`
-	FeatureTag3 string `protobuf:"bytes,7,opt,name=feature_tag3,json=featureTag3" json:"feature_tag3,omitempty"`
-	SamplePath  string `protobuf:"bytes,8,opt,name=sample_path,json=samplePath" json:"sample_path,omitempty"`
-	SampleHash  string `protobuf:"bytes,9,opt,name=sample_hash,json=sampleHash" json:"sample_hash,omitempty"`
-	StoragePath string `protobuf:"bytes,10,opt,name=storage_path,json=storagePath" json:"storage_path,omitempty"`
-	StorageHash string `protobuf:"bytes,11,opt,name=storage_hash,json=storageHash" json:"storage_hash,omitempty"`
-	ExpireTime  uint32 `protobuf:"varint,12,opt,name=expire_time,json=expireTime" json:"expire_time,omitempty"`
-	Price       uint64 `protobuf:"varint,13,opt,name=price" json:"price,omitempty"`
-	Description string `protobuf:"bytes,14,opt,name=description" json:"description,omitempty"`
-	UploadDate  uint32 `protobuf:"varint,15,opt,name=upload_date,json=uploadDate" json:"upload_date,omitempty"`
-	CreateTime  uint64 `protobuf:"varint,16,opt,name=create_time,json=createTime" json:"create_time,omitempty"`
+	AssetId     string `protobuf:"bytes,1,opt,name=asset_id,json=assetId" json:"asset_id"`
+	Username    string `protobuf:"bytes,2,opt,name=username" json:"username"`
+	AssetName   string `protobuf:"bytes,3,opt,name=asset_name,json=assetName" json:"asset_name"`
+	AssetType   string `protobuf:"bytes,4,opt,name=asset_type,json=assetType" json:"asset_type"`
+	FeatureTag1 string `protobuf:"bytes,5,opt,name=feature_tag1,json=featureTag1" json:"feature_tag1"`
+	FeatureTag2 string `protobuf:"bytes,6,opt,name=feature_tag2,json=featureTag2" json:"feature_tag2"`
+	FeatureTag3 string `protobuf:"bytes,7,opt,name=feature_tag3,json=featureTag3" json:"feature_tag3"`
+	SamplePath  string `protobuf:"bytes,8,opt,name=sample_path,json=samplePath" json:"sample_path"`
+	SampleHash  string `protobuf:"bytes,9,opt,name=sample_hash,json=sampleHash" json:"sample_hash"`
+	StoragePath string `protobuf:"bytes,10,opt,name=storage_path,json=storagePath" json:"storage_path"`
+	StorageHash string `protobuf:"bytes,11,opt,name=storage_hash,json=storageHash" json:"storage_hash"`
+	ExpireTime  uint32 `protobuf:"varint,12,opt,name=expire_time,json=expireTime" json:"expire_time"`
+	Price       uint64 `protobuf:"varint,13,opt,name=price" json:"price"`
+	Description string `protobuf:"bytes,14,opt,name=description" json:"description"`
+	UploadDate  uint32 `protobuf:"varint,15,opt,name=upload_date,json=uploadDate" json:"upload_date"`
+	CreateTime  string `protobuf:"bytes,16,opt,name=create_time,json=createTime" json:"create_time"`
 }
 
 func (m *QueryRow) Reset()                    { *m = QueryRow{} }
@@ -610,17 +620,17 @@ func (m *QueryRow) GetUploadDate() uint32 {
 	return 0
 }
 
-func (m *QueryRow) GetCreateTime() uint64 {
+func (m *QueryRow) GetCreateTime() string {
 	if m != nil {
 		return m.CreateTime
 	}
-	return 0
+	return ""
 }
 
 type QueryAllAssetRequest struct {
-	Username  string     `protobuf:"bytes,1,opt,name=username" json:"username,omitempty"`
-	SessionId string     `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	QueryPara *QueryPara `protobuf:"bytes,3,opt,name=query_para,json=queryPara" json:"query_para,omitempty"`
+	Username  string     `protobuf:"bytes,1,opt,name=username" json:"username"`
+	SessionId string     `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id"`
+	QueryPara *QueryPara `protobuf:"bytes,3,opt,name=query_para,json=queryPara" json:"query_para"`
 }
 
 func (m *QueryAllAssetRequest) Reset()                    { *m = QueryAllAssetRequest{} }
@@ -650,8 +660,8 @@ func (m *QueryAllAssetRequest) GetQueryPara() *QueryPara {
 }
 
 type QueryPara struct {
-	Username  string `protobuf:"bytes,1,opt,name=username" json:"username,omitempty"`
-	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id,omitempty"`
+	Username  string `protobuf:"bytes,1,opt,name=username" json:"username"`
+	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id"`
 }
 
 func (m *QueryPara) Reset()                    { *m = QueryPara{} }
@@ -674,9 +684,9 @@ func (m *QueryPara) GetSessionId() string {
 }
 
 type QueryAllAssetResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *QueryAllAssetResponse) Reset()                    { *m = QueryAllAssetResponse{} }
@@ -708,7 +718,7 @@ func (m *QueryAllAssetResponse) GetData() string {
 type ModifyRequest struct {
 	//    string username = 1;
 	//    string signature = 2;
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody,omitempty"`
+	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
 }
 
 func (m *ModifyRequest) Reset()                    { *m = ModifyRequest{} }
@@ -724,9 +734,9 @@ func (m *ModifyRequest) GetPostBody() string {
 }
 
 type ModifyResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *ModifyResponse) Reset()                    { *m = ModifyResponse{} }
@@ -756,8 +766,8 @@ func (m *ModifyResponse) GetData() string {
 }
 
 type GetFileUploadStatRequest struct {
-	Username string `protobuf:"bytes,1,opt,name=username" json:"username,omitempty"`
-	FileName string `protobuf:"bytes,2,opt,name=fileName" json:"fileName,omitempty"`
+	Username string `protobuf:"bytes,1,opt,name=username" json:"username"`
+	FileName string `protobuf:"bytes,2,opt,name=fileName" json:"fileName"`
 }
 
 func (m *GetFileUploadStatRequest) Reset()                    { *m = GetFileUploadStatRequest{} }
@@ -780,9 +790,9 @@ func (m *GetFileUploadStatRequest) GetFileName() string {
 }
 
 type GetFileUploadStatResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *GetFileUploadStatResponse) Reset()                    { *m = GetFileUploadStatResponse{} }
@@ -812,8 +822,8 @@ func (m *GetFileUploadStatResponse) GetData() string {
 }
 
 type GetDownLoadURLRequest struct {
-	Username string `protobuf:"bytes,1,opt,name=username" json:"username,omitempty"`
-	FileName string `protobuf:"bytes,2,opt,name=fileName" json:"fileName,omitempty"`
+	Username string `protobuf:"bytes,1,opt,name=username" json:"username"`
+	FileName string `protobuf:"bytes,2,opt,name=fileName" json:"fileName"`
 }
 
 func (m *GetDownLoadURLRequest) Reset()                    { *m = GetDownLoadURLRequest{} }
@@ -836,9 +846,9 @@ func (m *GetDownLoadURLRequest) GetFileName() string {
 }
 
 type GetDownLoadURLResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
+	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
+	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
 }
 
 func (m *GetDownLoadURLResponse) Reset()                    { *m = GetDownLoadURLResponse{} }
@@ -868,9 +878,9 @@ func (m *GetDownLoadURLResponse) GetData() string {
 }
 
 type QueryByIDRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize,omitempty"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum,omitempty"`
-	AssetID  string `protobuf:"bytes,3,opt,name=assetID" json:"assetID,omitempty"`
+	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
+	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
+	AssetID  string `protobuf:"bytes,3,opt,name=assetID" json:"assetID"`
 }
 
 func (m *QueryByIDRequest) Reset()                    { *m = QueryByIDRequest{} }
@@ -900,9 +910,9 @@ func (m *QueryByIDRequest) GetAssetID() string {
 }
 
 type GetUserPurchaseAssetListRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize,omitempty"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum,omitempty"`
-	Username string `protobuf:"bytes,3,opt,name=username" json:"username,omitempty"`
+	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
+	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
+	Username string `protobuf:"bytes,3,opt,name=username" json:"username"`
 }
 
 func (m *GetUserPurchaseAssetListRequest) Reset()         { *m = GetUserPurchaseAssetListRequest{} }
@@ -934,9 +944,9 @@ func (m *GetUserPurchaseAssetListRequest) GetUsername() string {
 }
 
 type GetUserPurchaseAssetListResponse struct {
-	Code int32              `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
-	Data *QueryPurchaseData `protobuf:"bytes,2,opt,name=data" json:"data,omitempty"`
-	Msg  string             `protobuf:"bytes,3,opt,name=msg" json:"msg,omitempty"`
+	Code int32              `protobuf:"varint,1,opt,name=code" json:"code"`
+	Data *QueryPurchaseData `protobuf:"bytes,2,opt,name=data" json:"data"`
+	Msg  string             `protobuf:"bytes,3,opt,name=msg" json:"msg"`
 }
 
 func (m *GetUserPurchaseAssetListResponse) Reset()         { *m = GetUserPurchaseAssetListResponse{} }
@@ -968,9 +978,9 @@ func (m *GetUserPurchaseAssetListResponse) GetMsg() string {
 }
 
 type QueryPurchaseData struct {
-	PageNum  uint64              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum,omitempty"`
-	RowCount uint64              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount,omitempty"`
-	Row      []*QueryPurchaseRow `protobuf:"bytes,3,rep,name=row" json:"row,omitempty"`
+	PageNum  uint64              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
+	RowCount uint64              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
+	Row      []*QueryPurchaseRow `protobuf:"bytes,3,rep,name=row" json:"row"`
 }
 
 func (m *QueryPurchaseData) Reset()                    { *m = QueryPurchaseData{} }
@@ -1000,11 +1010,11 @@ func (m *QueryPurchaseData) GetRow() []*QueryPurchaseRow {
 }
 
 type QueryPurchaseRow struct {
-	Username  string `protobuf:"bytes,1,opt,name=username" json:"username,omitempty"`
-	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	AssetId   string `protobuf:"bytes,3,opt,name=asset_id,json=assetId" json:"asset_id,omitempty"`
-	DataReqId string `protobuf:"bytes,4,opt,name=data_req_id,json=dataReqId" json:"data_req_id,omitempty"`
-	Consumer  string `protobuf:"bytes,5,opt,name=consumer" json:"consumer,omitempty"`
+	Username  string `protobuf:"bytes,1,opt,name=username" json:"username"`
+	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id"`
+	AssetId   string `protobuf:"bytes,3,opt,name=asset_id,json=assetId" json:"asset_id"`
+	DataReqId string `protobuf:"bytes,4,opt,name=data_req_id,json=dataReqId" json:"data_req_id"`
+	Consumer  string `protobuf:"bytes,5,opt,name=consumer" json:"consumer"`
 }
 
 func (m *QueryPurchaseRow) Reset()                    { *m = QueryPurchaseRow{} }
@@ -1078,295 +1088,78 @@ func init() {
 	proto.RegisterType((*QueryPurchaseRow)(nil), "QueryPurchaseRow")
 }
 
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ client.Option
-var _ server.Option
-
-// Client API for Asset service
-
-type AssetClient interface {
-	GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, opts ...client.CallOption) (*GetFileUploadURLResponse, error)
-	GetFileUploadStat(ctx context.Context, in *GetFileUploadStatRequest, opts ...client.CallOption) (*GetFileUploadStatResponse, error)
-	RegisterFile(ctx context.Context, in *RegisterFileRequest, opts ...client.CallOption) (*RegisterFileResponse, error)
-	QueryUploadedData(ctx context.Context, in *QueryUploadedDataRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error)
-	GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error)
-	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
-	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error)
-	QueryAllAsset(ctx context.Context, in *QueryAllAssetRequest, opts ...client.CallOption) (*QueryAllAssetResponse, error)
-	Modify(ctx context.Context, in *ModifyRequest, opts ...client.CallOption) (*ModifyResponse, error)
-	QueryByID(ctx context.Context, in *QueryByIDRequest, opts ...client.CallOption) (*QueryResponse, error)
-	GetUserPurchaseAssetList(ctx context.Context, in *GetUserPurchaseAssetListRequest, opts ...client.CallOption) (*QueryResponse, error)
-}
-
-type assetClient struct {
-	c           client.Client
-	serviceName string
-}
-
-func NewAssetClient(serviceName string, c client.Client) AssetClient {
-	if c == nil {
-		c = client.NewClient()
-	}
-	if len(serviceName) == 0 {
-		serviceName = "asset"
-	}
-	return &assetClient{
-		c:           c,
-		serviceName: serviceName,
-	}
-}
-
-func (c *assetClient) GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, opts ...client.CallOption) (*GetFileUploadURLResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetFileUploadURL", in)
-	out := new(GetFileUploadURLResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) GetFileUploadStat(ctx context.Context, in *GetFileUploadStatRequest, opts ...client.CallOption) (*GetFileUploadStatResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetFileUploadStat", in)
-	out := new(GetFileUploadStatResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) RegisterFile(ctx context.Context, in *RegisterFileRequest, opts ...client.CallOption) (*RegisterFileResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.RegisterFile", in)
-	out := new(RegisterFileResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) QueryUploadedData(ctx context.Context, in *QueryUploadedDataRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.QueryUploadedData", in)
-	out := new(QueryUploadedDataResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetDownLoadURL", in)
-	out := new(GetDownLoadURLResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.Register", in)
-	out := new(RegisterResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.Query", in)
-	out := new(QueryResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) QueryAllAsset(ctx context.Context, in *QueryAllAssetRequest, opts ...client.CallOption) (*QueryAllAssetResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.QueryAllAsset", in)
-	out := new(QueryAllAssetResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) Modify(ctx context.Context, in *ModifyRequest, opts ...client.CallOption) (*ModifyResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.Modify", in)
-	out := new(ModifyResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) QueryByID(ctx context.Context, in *QueryByIDRequest, opts ...client.CallOption) (*QueryResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.QueryByID", in)
-	out := new(QueryResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) GetUserPurchaseAssetList(ctx context.Context, in *GetUserPurchaseAssetListRequest, opts ...client.CallOption) (*QueryResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetUserPurchaseAssetList", in)
-	out := new(QueryResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// Server API for Asset service
-
-type AssetHandler interface {
-	GetFileUploadURL(context.Context, *GetFileUploadURLRequest, *GetFileUploadURLResponse) error
-	GetFileUploadStat(context.Context, *GetFileUploadStatRequest, *GetFileUploadStatResponse) error
-	RegisterFile(context.Context, *RegisterFileRequest, *RegisterFileResponse) error
-	QueryUploadedData(context.Context, *QueryUploadedDataRequest, *QueryUploadedDataResponse) error
-	GetDownLoadURL(context.Context, *GetDownLoadURLRequest, *GetDownLoadURLResponse) error
-	Register(context.Context, *RegisterRequest, *RegisterResponse) error
-	Query(context.Context, *QueryRequest, *QueryResponse) error
-	QueryAllAsset(context.Context, *QueryAllAssetRequest, *QueryAllAssetResponse) error
-	Modify(context.Context, *ModifyRequest, *ModifyResponse) error
-	QueryByID(context.Context, *QueryByIDRequest, *QueryResponse) error
-	GetUserPurchaseAssetList(context.Context, *GetUserPurchaseAssetListRequest, *QueryResponse) error
-}
-
-func RegisterAssetHandler(s server.Server, hdlr AssetHandler, opts ...server.HandlerOption) {
-	s.Handle(s.NewHandler(&Asset{hdlr}, opts...))
-}
-
-type Asset struct {
-	AssetHandler
-}
-
-func (h *Asset) GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, out *GetFileUploadURLResponse) error {
-	return h.AssetHandler.GetFileUploadURL(ctx, in, out)
-}
-
-func (h *Asset) GetFileUploadStat(ctx context.Context, in *GetFileUploadStatRequest, out *GetFileUploadStatResponse) error {
-	return h.AssetHandler.GetFileUploadStat(ctx, in, out)
-}
-
-func (h *Asset) RegisterFile(ctx context.Context, in *RegisterFileRequest, out *RegisterFileResponse) error {
-	return h.AssetHandler.RegisterFile(ctx, in, out)
-}
-
-func (h *Asset) QueryUploadedData(ctx context.Context, in *QueryUploadedDataRequest, out *QueryUploadedDataResponse) error {
-	return h.AssetHandler.QueryUploadedData(ctx, in, out)
-}
-
-func (h *Asset) GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, out *GetDownLoadURLResponse) error {
-	return h.AssetHandler.GetDownLoadURL(ctx, in, out)
-}
-
-func (h *Asset) Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error {
-	return h.AssetHandler.Register(ctx, in, out)
-}
-
-func (h *Asset) Query(ctx context.Context, in *QueryRequest, out *QueryResponse) error {
-	return h.AssetHandler.Query(ctx, in, out)
-}
-
-func (h *Asset) QueryAllAsset(ctx context.Context, in *QueryAllAssetRequest, out *QueryAllAssetResponse) error {
-	return h.AssetHandler.QueryAllAsset(ctx, in, out)
-}
-
-func (h *Asset) Modify(ctx context.Context, in *ModifyRequest, out *ModifyResponse) error {
-	return h.AssetHandler.Modify(ctx, in, out)
-}
-
-func (h *Asset) QueryByID(ctx context.Context, in *QueryByIDRequest, out *QueryResponse) error {
-	return h.AssetHandler.QueryByID(ctx, in, out)
-}
-
-func (h *Asset) GetUserPurchaseAssetList(ctx context.Context, in *GetUserPurchaseAssetListRequest, out *QueryResponse) error {
-	return h.AssetHandler.GetUserPurchaseAssetList(ctx, in, out)
-}
-
 func init() { proto.RegisterFile("asset.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 1107 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x57, 0xcd, 0x6e, 0xdb, 0xc6,
-	0x13, 0x97, 0x23, 0xcb, 0x16, 0x47, 0xfe, 0x90, 0xf7, 0x6f, 0x3b, 0x34, 0x83, 0xd8, 0xfe, 0x6f,
-	0x81, 0xc2, 0x45, 0xd0, 0x45, 0x2d, 0xa3, 0xc7, 0x02, 0x4d, 0x22, 0xc4, 0x75, 0xa1, 0xaa, 0x0a,
-	0x63, 0x5d, 0x2b, 0xac, 0xc5, 0xb5, 0x44, 0x40, 0x12, 0x69, 0xee, 0x12, 0xae, 0x8a, 0x1e, 0x7a,
-	0xef, 0x6b, 0xf4, 0x41, 0x7a, 0xeb, 0x6b, 0x15, 0xfb, 0x41, 0x86, 0xa4, 0xa8, 0x54, 0x8d, 0x9a,
-	0xdb, 0xce, 0xc7, 0xce, 0xcc, 0xce, 0xfe, 0x76, 0x66, 0x16, 0x1a, 0x94, 0x73, 0x26, 0x48, 0x18,
-	0x05, 0x22, 0xc0, 0x5f, 0xc3, 0xd3, 0x6b, 0x26, 0xde, 0xf8, 0x13, 0xd6, 0x0f, 0x27, 0x01, 0xf5,
-	0xfa, 0x6e, 0xc7, 0x65, 0x0f, 0x31, 0xe3, 0x02, 0x39, 0x50, 0x0f, 0x03, 0x2e, 0x5e, 0x05, 0xde,
-	0xdc, 0xde, 0x38, 0xdf, 0xb8, 0xb0, 0xdc, 0x94, 0xc6, 0xb7, 0x60, 0x2f, 0x6e, 0xe3, 0x61, 0x30,
-	0xe3, 0x0c, 0x21, 0xd8, 0x1c, 0x06, 0x1e, 0x53, 0x7b, 0x76, 0x5d, 0xb5, 0x46, 0x4d, 0xa8, 0x4e,
-	0xf9, 0xc8, 0x7e, 0xa2, 0xcc, 0xc8, 0xa5, 0xd4, 0xf2, 0xa8, 0xa0, 0x76, 0x55, 0xb1, 0xd4, 0x1a,
-	0x5f, 0xc2, 0xff, 0x5c, 0x36, 0xf2, 0xb9, 0x60, 0x91, 0x34, 0xbd, 0x4a, 0x20, 0x3d, 0x38, 0xcc,
-	0x6f, 0x59, 0x3b, 0x88, 0x09, 0xd8, 0x6f, 0x63, 0x16, 0xcd, 0xf5, 0xc1, 0x98, 0xd7, 0xa6, 0x82,
-	0x66, 0x23, 0xa1, 0x23, 0xf6, 0xce, 0xff, 0x45, 0x5b, 0xae, 0xb9, 0x29, 0x8d, 0x6c, 0xd8, 0x96,
-	0xeb, 0x6e, 0x3c, 0x55, 0x1e, 0x6a, 0x6e, 0x42, 0xca, 0x5d, 0x31, 0x67, 0xd1, 0x8c, 0x4e, 0x99,
-	0xf1, 0x94, 0xd2, 0xd8, 0x87, 0x93, 0x12, 0x6f, 0x25, 0x87, 0xa8, 0x99, 0x43, 0x7c, 0x6e, 0x42,
-	0x96, 0x3e, 0x1a, 0x2d, 0x44, 0x16, 0x77, 0x2b, 0x79, 0x72, 0xd8, 0x6a, 0x7a, 0x58, 0x3c, 0x83,
-	0x83, 0x05, 0xe5, 0x6c, 0xd4, 0xd2, 0xcb, 0x66, 0x2e, 0xea, 0x28, 0x78, 0x7c, 0x1d, 0xc4, 0x33,
-	0xa1, 0x9c, 0x6d, 0xba, 0x29, 0x8d, 0x3e, 0x83, 0x6a, 0x14, 0x3c, 0xda, 0xd5, 0xf3, 0xea, 0x45,
-	0xa3, 0x75, 0x90, 0x8f, 0xc1, 0x0d, 0x1e, 0x5d, 0x29, 0xc5, 0x7f, 0x6d, 0x40, 0xb3, 0x28, 0xc9,
-	0xe5, 0x62, 0x23, 0x9f, 0x0b, 0xf4, 0x0c, 0xac, 0x7b, 0x7f, 0xc2, 0x06, 0x4a, 0xa8, 0x6f, 0xa9,
-	0x2e, 0x19, 0xdd, 0xac, 0x90, 0xcb, 0xdc, 0x57, 0x75, 0x3c, 0x92, 0xa1, 0x72, 0x7f, 0x06, 0x0d,
-	0x25, 0x0c, 0x83, 0x89, 0x3f, 0x9c, 0xdb, 0x9b, 0x6a, 0x2f, 0x48, 0x56, 0x4f, 0x71, 0x52, 0x85,
-	0x59, 0x3c, 0xbd, 0x63, 0x91, 0x5d, 0x53, 0xfb, 0x95, 0x42, 0x57, 0x71, 0xa4, 0x79, 0x1a, 0x8b,
-	0xf1, 0x20, 0xa4, 0x62, 0x6c, 0x6f, 0x69, 0xdf, 0x92, 0xd1, 0xa3, 0x62, 0x8c, 0xbf, 0x84, 0xfd,
-	0x04, 0x64, 0xab, 0x60, 0xb2, 0x03, 0xcd, 0xf7, 0xea, 0x6b, 0xe3, 0xf1, 0xb7, 0x0d, 0xd8, 0x51,
-	0x69, 0xfc, 0x64, 0x20, 0x44, 0xa7, 0x00, 0xf7, 0x8c, 0x8a, 0x38, 0x62, 0xb7, 0x74, 0xa4, 0xb2,
-	0x27, 0x93, 0x93, 0x72, 0x70, 0x1f, 0x76, 0x4d, 0x04, 0x1f, 0x00, 0xe6, 0x69, 0x0e, 0x98, 0xa0,
-	0x41, 0xf1, 0x41, 0x40, 0xfe, 0x04, 0x56, 0xaa, 0xf4, 0x91, 0x40, 0x7c, 0x96, 0x05, 0xa2, 0xa5,
-	0x7d, 0xa6, 0x00, 0xfc, 0x7d, 0x13, 0xea, 0x09, 0x07, 0x9d, 0x40, 0x5d, 0xd5, 0xbd, 0x81, 0xef,
-	0x99, 0x0b, 0xdb, 0x56, 0xf4, 0x8d, 0x97, 0x4b, 0xcd, 0x93, 0x42, 0x6a, 0x9e, 0x03, 0xe8, 0x6d,
-	0x99, 0xc4, 0x59, 0x8a, 0xd3, 0xcd, 0x89, 0xc5, 0x3c, 0x64, 0x06, 0x77, 0x5a, 0x7c, 0x3b, 0x0f,
-	0x19, 0xfa, 0x3f, 0xec, 0x98, 0x34, 0x0e, 0x04, 0x1d, 0x5d, 0x2a, 0xdc, 0x59, 0x6e, 0xe3, 0x7d,
-	0x6a, 0x2f, 0x0b, 0x2a, 0x2d, 0x83, 0xbd, 0x8c, 0x4a, 0xab, 0xa0, 0x72, 0x65, 0x6f, 0x17, 0x55,
-	0xae, 0x24, 0xbe, 0x39, 0x9d, 0x86, 0xf2, 0x09, 0x48, 0x00, 0xd7, 0xf5, 0x03, 0xd0, 0x2c, 0x09,
-	0xe1, 0x8c, 0xc2, 0x98, 0xf2, 0xb1, 0x6d, 0x65, 0x15, 0xbe, 0xa3, 0x7c, 0x2c, 0x9d, 0x70, 0x11,
-	0x44, 0x74, 0x64, 0x4c, 0x80, 0x76, 0x62, 0x78, 0xca, 0x46, 0x46, 0x45, 0x19, 0x69, 0xe4, 0x54,
-	0x94, 0x95, 0x33, 0x68, 0xb0, 0x9f, 0x43, 0x5f, 0x46, 0xea, 0x4f, 0x99, 0xbd, 0xa3, 0xd0, 0x0e,
-	0x9a, 0x75, 0xeb, 0x4f, 0x19, 0x3a, 0x84, 0x5a, 0x18, 0xf9, 0x43, 0x66, 0xef, 0xaa, 0x9b, 0xd4,
-	0x04, 0x3a, 0x87, 0x86, 0xc7, 0xf8, 0x30, 0xf2, 0x43, 0xe1, 0x07, 0x33, 0x7b, 0x4f, 0x1b, 0xce,
-	0xb0, 0xa4, 0xe1, 0x58, 0x95, 0x91, 0x81, 0x47, 0x05, 0xb3, 0xf7, 0xb5, 0x61, 0xcd, 0x6a, 0x53,
-	0xa1, 0x4a, 0xc0, 0x30, 0x62, 0x54, 0x18, 0xcf, 0x4d, 0x0d, 0x62, 0xcd, 0x92, 0x9e, 0xf1, 0xaf,
-	0x70, 0xa8, 0xc0, 0xf0, 0x72, 0x32, 0x79, 0x29, 0x2f, 0x28, 0xf3, 0x9c, 0x96, 0x56, 0xa4, 0xe7,
-	0x00, 0x9c, 0x71, 0xee, 0x07, 0x33, 0x09, 0x1b, 0x8d, 0x0d, 0xcb, 0x70, 0x6e, 0x3c, 0xf4, 0x05,
-	0xc0, 0x83, 0x34, 0x39, 0x08, 0x69, 0xa4, 0x1f, 0x6d, 0x0a, 0xfc, 0x1e, 0x8d, 0xa8, 0x6b, 0x3d,
-	0x24, 0x4b, 0xfc, 0xc6, 0x60, 0x5d, 0x12, 0x6b, 0xb8, 0xc4, 0x6f, 0xe1, 0xa8, 0x70, 0x8a, 0xb5,
-	0x0b, 0xcc, 0x0b, 0xd8, 0xfd, 0x21, 0xf0, 0xfc, 0xfb, 0xf9, 0x2a, 0xb5, 0xed, 0x7b, 0xd8, 0x4b,
-	0x94, 0xd7, 0x76, 0xec, 0x16, 0x86, 0x88, 0x77, 0x82, 0xae, 0x74, 0x2b, 0x0e, 0xa4, 0x6d, 0xa1,
-	0xd8, 0x26, 0x70, 0x1f, 0x4e, 0x4a, 0x6c, 0xae, 0x1d, 0xea, 0x8f, 0x70, 0x74, 0xcd, 0x44, 0x3b,
-	0x78, 0x9c, 0x75, 0x16, 0x86, 0xa4, 0x8f, 0x8a, 0xd3, 0x85, 0xe3, 0xa2, 0xc1, 0xb5, 0x83, 0xbc,
-	0x33, 0xfd, 0xf6, 0xd5, 0xfc, 0xa6, 0xbd, 0x5e, 0xb3, 0xb0, 0xc1, 0x14, 0xc7, 0xb6, 0x71, 0x90,
-	0x90, 0x98, 0xc3, 0xd9, 0x35, 0x13, 0x7d, 0xce, 0xa2, 0x5e, 0x1c, 0x0d, 0xc7, 0x94, 0x33, 0x05,
-	0xc3, 0x8e, 0xcf, 0xc5, 0xa7, 0x1b, 0x92, 0x42, 0x38, 0x5f, 0xee, 0xf4, 0xdf, 0xce, 0x4a, 0x89,
-	0x89, 0x95, 0x66, 0xa5, 0xac, 0xf2, 0x7f, 0x38, 0x2b, 0x25, 0x66, 0xd3, 0x56, 0xf5, 0x47, 0x32,
-	0x2b, 0x65, 0x24, 0xeb, 0x54, 0xa6, 0x6c, 0xb7, 0xab, 0xe6, 0xbb, 0xdd, 0x29, 0x34, 0xe4, 0xa1,
-	0x07, 0x11, 0x7b, 0x90, 0x52, 0xd3, 0xb3, 0x3c, 0x3d, 0xe5, 0xea, 0x6e, 0x38, 0x0c, 0x66, 0x3c,
-	0x9e, 0x9a, 0x39, 0xc9, 0x72, 0x53, 0xba, 0xf5, 0x67, 0x0d, 0x6a, 0x2a, 0xf5, 0xe8, 0x06, 0x9a,
-	0xc5, 0x0f, 0x00, 0xb2, 0xc9, 0x92, 0xaf, 0x84, 0x73, 0x42, 0x96, 0xfd, 0x16, 0x70, 0x05, 0x75,
-	0xe0, 0x60, 0xe1, 0xc9, 0xa2, 0xc2, 0x8e, 0x4c, 0x69, 0x70, 0x1c, 0xb2, 0xf4, 0x85, 0xe3, 0x0a,
-	0xfa, 0x06, 0x76, 0xb2, 0x1f, 0x02, 0x74, 0x48, 0x4a, 0xbe, 0x14, 0xce, 0x11, 0x29, 0xfb, 0x35,
-	0xe8, 0x60, 0x16, 0x87, 0xe4, 0x13, 0xb2, 0xec, 0x47, 0xe0, 0x38, 0x64, 0xe9, 0xf8, 0x8e, 0x2b,
-	0xe8, 0x35, 0xec, 0xe5, 0x5f, 0x39, 0x3a, 0x26, 0xa5, 0x75, 0xc4, 0x79, 0x4a, 0xca, 0xcb, 0x01,
-	0xae, 0xa0, 0x4b, 0xa8, 0x27, 0xc1, 0xa2, 0x26, 0x29, 0x0c, 0xa2, 0xce, 0x01, 0x29, 0xce, 0x9a,
-	0xb8, 0x82, 0x2e, 0xa0, 0xa6, 0xc2, 0x42, 0xbb, 0x24, 0x3b, 0x3a, 0x3a, 0x7b, 0x24, 0x37, 0xc7,
-	0xe1, 0x0a, 0xfa, 0xd6, 0x8c, 0x76, 0x49, 0x3f, 0x41, 0x47, 0xa4, 0xac, 0x4b, 0x3a, 0xc7, 0xa4,
-	0xb4, 0xed, 0xe0, 0x0a, 0x7a, 0x01, 0x5b, 0xba, 0x23, 0xa0, 0x3d, 0x92, 0xeb, 0x23, 0xce, 0x3e,
-	0xc9, 0xb7, 0x0a, 0x5c, 0x41, 0x5f, 0x99, 0x36, 0x28, 0x4b, 0x14, 0x32, 0x8f, 0x21, 0x53, 0xae,
-	0x4a, 0x02, 0xec, 0xaa, 0x26, 0x51, 0xfa, 0xf6, 0xd1, 0x39, 0xf9, 0x87, 0x5a, 0xb4, 0x68, 0xef,
-	0x6e, 0x4b, 0xfd, 0x7b, 0xaf, 0xfe, 0x0e, 0x00, 0x00, 0xff, 0xff, 0x70, 0x6c, 0x0b, 0xba, 0x06,
-	0x0f, 0x00, 0x00,
+	// 1117 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x57, 0x5b, 0x6f, 0xdb, 0x36,
+	0x14, 0x76, 0xe2, 0x38, 0xb1, 0x8f, 0x73, 0x71, 0xb8, 0x24, 0x55, 0x54, 0x34, 0x49, 0x39, 0x60,
+	0xc8, 0x50, 0x8c, 0x58, 0x12, 0xec, 0x71, 0xc0, 0xda, 0x06, 0xcd, 0x32, 0x64, 0x9e, 0xab, 0xc6,
+	0xaf, 0x33, 0x18, 0x8b, 0xb1, 0x05, 0xd8, 0x96, 0x22, 0x52, 0xc8, 0x3c, 0xec, 0x61, 0x2f, 0x7b,
+	0xda, 0xdf, 0xd8, 0x0f, 0xd9, 0x4f, 0x1b, 0x78, 0x91, 0x4a, 0xc9, 0x72, 0xe7, 0xd5, 0xeb, 0x1b,
+	0xcf, 0xe1, 0xb9, 0x91, 0xfc, 0xce, 0x85, 0xd0, 0xa4, 0x9c, 0x33, 0x41, 0xa2, 0x38, 0x14, 0x21,
+	0xfe, 0x06, 0x9e, 0x5c, 0x31, 0xf1, 0x26, 0x18, 0xb1, 0x6e, 0x34, 0x0a, 0xa9, 0xdf, 0xf5, 0x6e,
+	0x3c, 0xf6, 0x90, 0x30, 0x2e, 0x90, 0x0b, 0xf5, 0x28, 0xe4, 0xe2, 0x55, 0xe8, 0x4f, 0x9d, 0x95,
+	0x93, 0x95, 0xd3, 0x86, 0x97, 0xd1, 0xf8, 0x16, 0x9c, 0x59, 0x35, 0x1e, 0x85, 0x13, 0xce, 0x10,
+	0x82, 0xb5, 0x7e, 0xe8, 0x33, 0xa5, 0xb3, 0xe5, 0xa9, 0x35, 0x6a, 0x41, 0x75, 0xcc, 0x07, 0xce,
+	0xaa, 0x32, 0x23, 0x97, 0x52, 0xca, 0xa7, 0x82, 0x3a, 0x55, 0xc5, 0x52, 0x6b, 0x7c, 0x06, 0x9f,
+	0x79, 0x6c, 0x10, 0x70, 0xc1, 0x62, 0x69, 0x7a, 0x91, 0x40, 0x3a, 0xb0, 0x97, 0x57, 0x59, 0x3a,
+	0x88, 0x11, 0x38, 0x6f, 0x13, 0x16, 0x4f, 0xf5, 0xc1, 0x98, 0x7f, 0x49, 0x05, 0xb5, 0x23, 0xa1,
+	0x03, 0xf6, 0x2e, 0xf8, 0x55, 0x5b, 0xae, 0x79, 0x19, 0x8d, 0x1c, 0xd8, 0x90, 0xeb, 0x76, 0x32,
+	0x56, 0x1e, 0x6a, 0x5e, 0x4a, 0x4a, 0xad, 0x84, 0xb3, 0x78, 0x42, 0xc7, 0xcc, 0x78, 0xca, 0x68,
+	0x1c, 0xc0, 0x61, 0x89, 0xb7, 0x92, 0x43, 0xd4, 0xcc, 0x21, 0xbe, 0x30, 0x21, 0x4b, 0x1f, 0xcd,
+	0x73, 0x44, 0x66, 0xb5, 0xd5, 0x7e, 0x7a, 0xd8, 0x6a, 0x76, 0x58, 0x3c, 0x81, 0xdd, 0x19, 0x61,
+	0x3b, 0x6a, 0xe9, 0x65, 0x2d, 0x17, 0x75, 0x1c, 0x3e, 0xbe, 0x0e, 0x93, 0x89, 0x50, 0xce, 0xd6,
+	0xbc, 0x8c, 0x46, 0x9f, 0x43, 0x35, 0x0e, 0x1f, 0x9d, 0xea, 0x49, 0xf5, 0xb4, 0x79, 0xbe, 0x9b,
+	0x8f, 0xc1, 0x0b, 0x1f, 0x3d, 0xb9, 0x8b, 0xff, 0x58, 0x85, 0x56, 0x71, 0x27, 0x77, 0x17, 0x2b,
+	0xf9, 0xbb, 0x40, 0x4f, 0xa1, 0x71, 0x1f, 0x8c, 0x58, 0x6f, 0x48, 0xf9, 0xd0, 0xbc, 0x52, 0x5d,
+	0x32, 0xbe, 0xa7, 0x7c, 0x98, 0x6d, 0xda, 0xb7, 0x28, 0x19, 0x6d, 0x5b, 0x93, 0xcb, 0x87, 0x59,
+	0xd3, 0xc1, 0x4a, 0x86, 0x7a, 0x98, 0x63, 0x68, 0xaa, 0xcd, 0x28, 0x1c, 0x05, 0xfd, 0xa9, 0x53,
+	0x53, 0xba, 0x20, 0x59, 0x1d, 0xc5, 0xc9, 0x04, 0x26, 0xc9, 0xf8, 0x8e, 0xc5, 0xce, 0xba, 0xd2,
+	0x57, 0x02, 0x6d, 0xc5, 0x91, 0xe6, 0x69, 0x22, 0x86, 0xbd, 0x88, 0x8a, 0xa1, 0xb3, 0xa1, 0x7d,
+	0x4b, 0x46, 0x87, 0x8a, 0xa1, 0xd4, 0xee, 0xc7, 0x8c, 0x0a, 0xd6, 0x13, 0xc1, 0x98, 0x39, 0x75,
+	0x6d, 0x5e, 0xb3, 0x6e, 0x83, 0x31, 0xc3, 0x5f, 0xc1, 0x4e, 0x0a, 0xd1, 0x45, 0x10, 0x7d, 0x03,
+	0xad, 0xf7, 0xe2, 0x4b, 0xa3, 0xf9, 0xf7, 0x15, 0xd8, 0x54, 0x8f, 0xf0, 0xc9, 0x20, 0x8c, 0x8e,
+	0x00, 0xee, 0x19, 0x15, 0x49, 0xcc, 0x6e, 0xe9, 0xc0, 0xdc, 0xbe, 0xc5, 0xc1, 0x5d, 0xd8, 0x32,
+	0x11, 0x7c, 0x00, 0xd6, 0x47, 0x39, 0x58, 0x83, 0x86, 0xd4, 0x07, 0xe1, 0xfc, 0x33, 0x34, 0x32,
+	0xa1, 0x8f, 0x84, 0xf1, 0x53, 0x1b, 0xc6, 0x0d, 0xed, 0x33, 0x83, 0xef, 0x9f, 0x6b, 0x50, 0x4f,
+	0x39, 0xe8, 0x10, 0xea, 0xaa, 0x6a, 0xf6, 0x02, 0xdf, 0x3c, 0xd8, 0x86, 0xa2, 0xaf, 0xfd, 0xdc,
+	0xd5, 0xac, 0x16, 0xae, 0xe6, 0x19, 0x80, 0x56, 0xb3, 0x2e, 0xae, 0xa1, 0x38, 0xed, 0xdc, 0xb6,
+	0x98, 0x46, 0x1a, 0xb7, 0xe9, 0xf6, 0xed, 0x34, 0x62, 0xe8, 0x39, 0x6c, 0x9a, 0x6b, 0xec, 0x09,
+	0x3a, 0x38, 0x33, 0xc8, 0x6d, 0xbe, 0xbf, 0xda, 0xb3, 0x82, 0xc8, 0xb9, 0xc2, 0x6e, 0x4e, 0xe4,
+	0xbc, 0x20, 0x72, 0x61, 0xf0, 0x6b, 0x89, 0x5c, 0x48, 0x08, 0x73, 0x3a, 0x8e, 0x64, 0x8e, 0x48,
+	0x84, 0x1b, 0x08, 0x6b, 0x56, 0x8a, 0x71, 0x23, 0xa0, 0x72, 0xb3, 0x61, 0x0b, 0xa8, 0xec, 0x7c,
+	0x0e, 0x9b, 0x5c, 0x84, 0x31, 0x1d, 0x18, 0x13, 0xa0, 0x9d, 0x18, 0x9e, 0xb2, 0x61, 0x89, 0x28,
+	0x23, 0xcd, 0x9c, 0x88, 0xb2, 0x72, 0x0c, 0x4d, 0xf6, 0x4b, 0x14, 0xc4, 0x26, 0x95, 0x36, 0x15,
+	0xda, 0x41, 0xb3, 0x64, 0x2a, 0xa1, 0x3d, 0xa8, 0x45, 0x71, 0xd0, 0x67, 0xce, 0x96, 0x7a, 0x49,
+	0x4d, 0xa0, 0x13, 0x68, 0xfa, 0x8c, 0xf7, 0xe3, 0x20, 0x12, 0x41, 0x38, 0x71, 0xb6, 0xb5, 0x61,
+	0x8b, 0x25, 0x0d, 0x27, 0xaa, 0x08, 0xf5, 0x7c, 0x2a, 0x98, 0xb3, 0xa3, 0x0d, 0x6b, 0xd6, 0x25,
+	0x15, 0xac, 0x98, 0xc4, 0xad, 0x99, 0x24, 0xfe, 0x0d, 0xf6, 0x14, 0x18, 0x5e, 0x8e, 0x46, 0x2f,
+	0xe5, 0x03, 0x59, 0xe9, 0x34, 0xb7, 0x9e, 0x3d, 0x03, 0xe0, 0x8c, 0xf3, 0x20, 0x9c, 0x48, 0xd8,
+	0x68, 0x6c, 0x34, 0x0c, 0xe7, 0xda, 0x47, 0x5f, 0x02, 0x3c, 0x48, 0x93, 0xbd, 0x88, 0xc6, 0x3a,
+	0x69, 0x33, 0xe0, 0x77, 0x68, 0x4c, 0xbd, 0xc6, 0x43, 0xba, 0xc4, 0x6f, 0x0c, 0xd6, 0x25, 0xb1,
+	0x84, 0x4b, 0xfc, 0x16, 0xf6, 0x0b, 0xa7, 0x58, 0xba, 0xc0, 0xbc, 0x80, 0xad, 0x1f, 0x43, 0x3f,
+	0xb8, 0x9f, 0x2e, 0x52, 0xdb, 0x7e, 0x80, 0xed, 0x54, 0x78, 0x69, 0xc7, 0x5e, 0x61, 0x04, 0x79,
+	0x27, 0xe8, 0x42, 0xaf, 0xe2, 0x42, 0xd6, 0x37, 0xec, 0x26, 0x23, 0x69, 0xdc, 0x85, 0xc3, 0x12,
+	0x9b, 0x4b, 0x87, 0xfa, 0x13, 0xec, 0x5f, 0x31, 0x71, 0x19, 0x3e, 0x4e, 0x6e, 0x66, 0x46, 0xac,
+	0x8f, 0x8a, 0xd3, 0x83, 0x83, 0xa2, 0xc1, 0xa5, 0x83, 0xbc, 0x33, 0xdd, 0xfa, 0xd5, 0xf4, 0xfa,
+	0x72, 0xb9, 0x66, 0xe1, 0x80, 0x29, 0x8e, 0x97, 0xc6, 0x41, 0x4a, 0x62, 0x0e, 0xc7, 0x57, 0x4c,
+	0x74, 0x39, 0x8b, 0x3b, 0x49, 0xdc, 0x1f, 0x52, 0xce, 0x14, 0x0c, 0x6f, 0x02, 0x2e, 0x3e, 0xdd,
+	0x88, 0x15, 0xc1, 0xc9, 0x7c, 0xa7, 0xff, 0x75, 0xd2, 0x4a, 0x4d, 0x2c, 0x34, 0x69, 0xd9, 0xc2,
+	0xff, 0xe3, 0xa4, 0x95, 0x9a, 0xcd, 0x5a, 0xd5, 0x5f, 0x2b, 0xe6, 0xed, 0xac, 0x9d, 0x65, 0x2a,
+	0x93, 0xdd, 0xed, 0xaa, 0xf9, 0x6e, 0x77, 0x04, 0x4d, 0x79, 0xe8, 0x5e, 0xcc, 0x1e, 0xe4, 0xae,
+	0xe9, 0x59, 0xbe, 0x9e, 0x91, 0x75, 0x37, 0xec, 0x87, 0x13, 0x9e, 0x8c, 0x59, 0x6c, 0xfa, 0x55,
+	0x46, 0x9f, 0xff, 0x5d, 0x83, 0x9a, 0xba, 0x7a, 0x74, 0x0d, 0xad, 0xe2, 0xf7, 0x01, 0x39, 0x64,
+	0xce, 0x47, 0xc4, 0x3d, 0x24, 0xf3, 0xfe, 0x1a, 0xb8, 0x82, 0x6e, 0x60, 0x77, 0x26, 0x65, 0x51,
+	0x41, 0xc3, 0x2a, 0x0d, 0xae, 0x4b, 0xe6, 0x66, 0x38, 0xae, 0xa0, 0x6f, 0x61, 0xd3, 0xfe, 0x4e,
+	0xa0, 0x3d, 0x52, 0xf2, 0x21, 0x71, 0xf7, 0x49, 0xd9, 0x9f, 0x43, 0x07, 0x33, 0x3b, 0x62, 0x1f,
+	0x92, 0x79, 0xff, 0x09, 0xd7, 0x25, 0x73, 0x87, 0x7f, 0x5c, 0x41, 0xaf, 0x61, 0x3b, 0x9f, 0xe5,
+	0xe8, 0x80, 0x94, 0xd6, 0x11, 0xf7, 0x09, 0x29, 0x2f, 0x07, 0xb8, 0x82, 0xce, 0xa0, 0x9e, 0x06,
+	0x8b, 0x5a, 0xa4, 0x30, 0x88, 0xba, 0xbb, 0xa4, 0x38, 0x6b, 0xe2, 0x0a, 0x3a, 0x85, 0x9a, 0x0a,
+	0x0b, 0x6d, 0x11, 0x7b, 0x74, 0x74, 0xb7, 0x49, 0x6e, 0x8e, 0xc3, 0x15, 0xf4, 0x9d, 0x19, 0xed,
+	0xd2, 0x7e, 0x82, 0xf6, 0x49, 0x59, 0x97, 0x74, 0x0f, 0x48, 0x69, 0xdb, 0xc1, 0x15, 0xf4, 0x02,
+	0xd6, 0x75, 0x47, 0x40, 0xdb, 0x24, 0xd7, 0x47, 0xdc, 0x1d, 0x92, 0x6f, 0x15, 0xb8, 0x82, 0xbe,
+	0x36, 0x6d, 0x50, 0x96, 0x28, 0x64, 0x92, 0xc1, 0x2a, 0x57, 0x25, 0x01, 0xb6, 0x55, 0x93, 0x28,
+	0xcd, 0x7d, 0x74, 0x42, 0xfe, 0xa5, 0x16, 0xcd, 0xda, 0xbb, 0x5b, 0x57, 0xbf, 0xe6, 0x8b, 0x7f,
+	0x02, 0x00, 0x00, 0xff, 0xff, 0x37, 0xf9, 0x1b, 0x8a, 0x44, 0x0f, 0x00, 0x00,
 }
