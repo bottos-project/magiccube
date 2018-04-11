@@ -12,8 +12,8 @@ Our Goals
 ● To build the AI model sharing network “ModelMarket” to facilitate the effective management of the AI development cycle  
 ● To implement the hardware sharing network to streamline the AI product registration and communication
 
-# More about Bottos
-  [WhitePaper](https://github.com/Bottos-project/bottos/blob/master/Bottos%20whitepaper%20English%20final.pdf) 
+# Learn about Bottos
+  Read our [WhitePaper](https://github.com/Bottos-project/bottos/blob/master/Bottos%20whitepaper%20English%20final.pdf) 
 
 # Contact us:
    botadmin@bottos.org
