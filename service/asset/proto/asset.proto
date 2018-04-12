@@ -196,6 +196,7 @@ message GetUserPurchaseAssetListRequest {
     int32 pageSize = 1;
     int32 pageNum = 2;
     string username = 3;
+    string asset_id = 4;
 }
 message GetUserPurchaseAssetListResponse {
     int32 code = 1;
