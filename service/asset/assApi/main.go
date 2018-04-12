@@ -1,4 +1,4 @@
-﻿package main
+package main
 
 import (
 	"encoding/json"
@@ -76,7 +76,7 @@ func (u *Asset) GetFileUploadStat(ctx context.Context, req *api.Request, rsp *ap
 func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//header, _ := json.Marshal(req.Header)
 	response, err := s.Client.RegisterFile(ctx, &asset.RegisterFileRequest{
-		PostBody:   req.Body,
+		PostBody: req.Body,
 	})
 	if err != nil {
 		return err
@@ -84,8 +84,8 @@ func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Res
 
 	rsp.StatusCode = 200
 	b, _ := json.Marshal(map[string]interface{}{
-		"code":  response.Code,
-		"msg": response.Msg,
+		"code": response.Code,
+		"msg":  response.Msg,
 		"data": response.Data,
 	})
 	rsp.Body = string(b)
@@ -166,7 +166,7 @@ func (u *Asset) GetDownLoadURL(ctx context.Context, req *api.Request, rsp *api.R
 func (u *Asset) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//header, _ := json.Marshal(req.Header)
 	response, err := u.Client.Register(ctx, &asset.RegisterRequest{
-		PostBody:   req.Body,
+		PostBody: req.Body,
 	})
 	if err != nil {
 		return err
@@ -174,8 +174,8 @@ func (u *Asset) Register(ctx context.Context, req *api.Request, rsp *api.Respons
 
 	rsp.StatusCode = 200
 	b, _ := json.Marshal(map[string]interface{}{
-		"code":  response.Code,
-		"msg": response.Msg,
+		"code": response.Code,
+		"msg":  response.Msg,
 		"data": response.Data,
 	})
 	rsp.Body = string(b)
@@ -256,7 +256,7 @@ func (u *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Re
 func (u *Asset) Modify(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//header, _ := json.Marshal(req.Header)
 	response, err := u.Client.Modify(ctx, &asset.ModifyRequest{
-		PostBody:   req.Body,
+		PostBody: req.Body,
 	})
 	if err != nil {
 		return err
@@ -264,8 +264,8 @@ func (u *Asset) Modify(ctx context.Context, req *api.Request, rsp *api.Response)
 
 	rsp.StatusCode = 200
 	b, _ := json.Marshal(map[string]interface{}{
-		"code":  response.Code,
-		"msg": response.Msg,
+		"code": response.Code,
+		"msg":  response.Msg,
 		"data": response.Data,
 	})
 	rsp.Body = string(b)
