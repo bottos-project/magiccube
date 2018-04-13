@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package storemanagement;
+
+service Storagemanagement {
+	rpc GetTx(Request) returns (Response) {}
+	rpc GetFileUploadURL(FileUploadRequest) returns (FileUploadResponse) {}
+	rpc GetDownLoadURL(DownLoadRequest) returns (DownLoadResponse) {}
+}
+
+message Request {
+	string txid = 1;
+	string account = 2;
+}
+
+message Response {
+	string msg = 1;
+}
+message FileUploadRequest{
+    string username =1;
+    string fileName =2;
+    int64  fileSize =3;
+    string filePolicy =4;
+    string numOfFiles =5;
+    string signature = 6;
+}
+message FileUploadResponse{
+    string result = 1;
+    string message = 2;
+    string presignedPutURL = 3;
+}
+message DownLoadRequest{
+    string username =1;
+    string fileName =2;
+}
+message DownLoadResponse{
+    string result = 1;
+    string message = 2;
+    string presignedGetURL = 3;
+}
