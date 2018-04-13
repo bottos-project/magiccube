@@ -173,15 +173,15 @@ type BlockBean struct {
 }
 
 type RecordNumLog struct {
-	ID             bson.ObjectId `bson:"_id,omitempty"`
-	TxNum          int           `bson:"tx_num"`
-	TxAmount       int           `bson:"tx_amount"`
-	RequirementNum int           `bson:"requirement_num"`
-	AssetNum       int           `bson:"asset_num"`
-	AccountNum     int           `bson:"account_num"`
-	Date           string        `bson:"date"`
-	Timestamp      int           `bson:"timestamp"`
-	CreatedAt      time.Time     `bson:"createdAt"`
+	ID                    	bson.ObjectId 	`bson:"_id,omitempty"`
+	TxNum              		int   			`bson:"tx_num"`
+	TxAmount 				uint64   		`bson:"tx_amount"`
+	RequirementNum			int   			`bson:"requirement_num"`
+	AssetNum				int   			`bson:"asset_num"`
+	AccountNum  			int   			`bson:"account_num"`
+	Date					string   		`bson:"date"`
+	Timestamp				int   			`bson:"timestamp"`
+	CreatedAt 			  	time.Time		`bson:"createdAt"`
 }
 
 

@@ -275,7 +275,7 @@ func (u *Dashboard) GetTxAmountByDay(ctx context.Context, req *dashboard_proto.G
 	timeSlice :=getRecent7DayTimeSlice()
 	log.Info(timeSlice)
 	var ret []bean.TxBean
-	var ret2 []bean.AssetBean
+	var ret2 bean.AssetBean
 	var amount uint64 = 0
 	var data []*dashboard_proto.TxAmountByDay
 	var mgo = mgo.Session()
@@ -289,17 +289,10 @@ func (u *Dashboard) GetTxAmountByDay(ctx context.Context, req *dashboard_proto.G
 		if err!= nil {
 			log.Error(err)
 		}
-		var assetIdArr []string;
+
 		for _, v := range ret {
-			assetIdArr = append(assetIdArr, v.Data.BasicInfo.AssetID)
-		}
-
-		log.Info(assetIdArr)
-
-		mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "assetreg", "data.asset_id": bson.M{"$in": assetIdArr}}).All(&ret2)
-		for _, v := range ret2 {
-			log.Info(v.Data.BasicInfo.Price)
-			amount += v.Data.BasicInfo.Price
+			mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "assetreg", "data.asset_id":  v.Data.BasicInfo.AssetID}).One(&ret2)
+			amount += ret2.Data.BasicInfo.Price
 		}
 
 		log.Info(amount)
@@ -316,7 +309,8 @@ func (u *Dashboard) GetTxAmountByDay(ctx context.Context, req *dashboard_proto.G
 }
 
 func (u *Dashboard) GetAllTypeTotal(ctx context.Context, req *dashboard_proto.GetAllTypeTotalRequest, rsp *dashboard_proto.GetAllTypeTotalResponse) error {
-	var accountNum, assetNum, requirementNum, txAmount, txNum int= 0, 0, 0, 0, 0
+	var accountNum, assetNum, requirementNum, txNum int= 0, 0, 0, 0
+	var txAmount uint64 = 0
 	min, max := query.TodayTimeSolt()
 	accountNum = accountNum + query.AccountNum(min, max)
 	assetNum = assetNum + query.AssetNum(min, max)
