@@ -1,4 +1,4 @@
-﻿﻿package main
+﻿package main
 
 import (
 	"encoding/json"
@@ -9,6 +9,7 @@ import (
 	"golang.org/x/net/context"
 	"github.com/asaskevich/govalidator"
 	"strconv"
+	"regexp"
 	"github.com/code/bottos/config"
 )
 
@@ -79,23 +80,20 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 }
 
 func (s *User) Logout(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	body := req.Body
-	//转换为结构体
-	var logoutRequest user.LogoutRequest
-	json.Unmarshal([]byte(body), &logoutRequest)
-	//数据格式校验
-	ok, err := govalidator.ValidateStruct(logoutRequest);
-	if !ok {
-		b, _ := json.Marshal(map[string]interface{}{
-			"code": -7,
-			"msg": err.Error(),
-		})
+	token := req.Header["Token"]
+
+	if token == nil {
 		rsp.StatusCode = 200
+		b, _ := json.Marshal(map[string]interface{}{
+			"code": "4001",
+			"msg":"Token is nil",
+		})
 		rsp.Body = string(b)
 		return nil
 	}
-
-	response, err := s.Client.Logout(ctx, &logoutRequest)
+	response, err := s.Client.Logout(ctx, &user.LogoutRequest{
+		Token: token.Values[0],
+	})
 	if err != nil {
 		return err
 	}
@@ -112,10 +110,10 @@ func (s *User) Logout(ctx context.Context, req *api.Request, rsp *api.Response) 
 
 func (u *User) GetUserInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var queryRequest user.GetUserInfoRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 	ok, err := govalidator.ValidateStruct(queryRequest);
 	if !ok {
 		b, _ := json.Marshal(map[string]interface{}{
@@ -144,10 +142,10 @@ func (u *User) GetUserInfo(ctx context.Context, req *api.Request, rsp *api.Respo
 
 func (u *User) UpdateUserInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var updateUserInfoRequest user.UpdateUserInfoRequest
 	json.Unmarshal([]byte(body), &updateUserInfoRequest)
-	//数据格式校验
+	//Checkout data format
 	ok, err := govalidator.ValidateStruct(updateUserInfoRequest);
 	if !ok {
 		b, _ := json.Marshal(map[string]interface{}{
@@ -158,9 +156,6 @@ func (u *User) UpdateUserInfo(ctx context.Context, req *api.Request, rsp *api.Re
 		rsp.Body = string(b)
 		return nil
 	}
-
-	//userType, _ := strconv.ParseUint(strings.Join(user_type.Values, " "), 0, 64)
-	//roleType, _ := strconv.ParseUint(strings.Join(role_type.Values, " "), 0, 64)
 
 	response, err := u.Client.UpdateUserInfo(ctx, &updateUserInfoRequest)
 	if err != nil {
@@ -197,10 +192,10 @@ func (u *User) FavoriteMng(ctx context.Context, req *api.Request, rsp *api.Respo
 }
 func (u *User) QueryFavorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var queryRequest user.QueryFavoriteRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 
 	ok, err := govalidator.ValidateStruct(queryRequest);
 	if !ok {
@@ -228,7 +223,6 @@ func (u *User) QueryFavorite(ctx context.Context, req *api.Request, rsp *api.Res
 	return nil
 }
 func (u *User) AddNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	//header, _ := json.Marshal(req.Header)
 	response, err := u.Client.AddNotice(ctx, &user.AddNoticeRequest{
 		PostBody:   req.Body,
 	})
@@ -248,10 +242,10 @@ func (u *User) AddNotice(ctx context.Context, req *api.Request, rsp *api.Respons
 }
 func (u *User) QueryNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var queryRequest user.QueryNoticeRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 	ok, err := govalidator.ValidateStruct(queryRequest);
 	if !ok {
 		b, _ := json.Marshal(map[string]string{
@@ -268,7 +262,7 @@ func (u *User) QueryNotice(ctx context.Context, req *api.Request, rsp *api.Respo
 		return err
 	}
 
-	b, _ := json.Marshal(map[string]string{
+	b, _ := json.Marshal(map[string]interface{}{
 		"code": strconv.Itoa(int(response.Code)),
 		"msg":  response.Msg,
 		"data": response.Data,
@@ -280,10 +274,10 @@ func (u *User) QueryNotice(ctx context.Context, req *api.Request, rsp *api.Respo
 
 func (u *User) GetAccount(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var queryRequest user.GetAccountRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 	ok, err := govalidator.ValidateStruct(queryRequest);
 	if !ok {
 		b, _ := json.Marshal(map[string]string{
@@ -300,7 +294,7 @@ func (u *User) GetAccount(ctx context.Context, req *api.Request, rsp *api.Respon
 		return err
 	}
 
-	b, _ := json.Marshal(map[string]string{
+	b, _ := json.Marshal(map[string]interface{}{
 		"code": strconv.Itoa(int(response.Code)),
 		"msg":  response.Msg,
 		"data": response.Data,
@@ -330,10 +324,10 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 }
 func (u *User) QueryTransfer(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	//转换为结构体
+	//transfer to struct
 	var queryRequest user.QueryTransferRequest
 	json.Unmarshal([]byte(body), &queryRequest)
-	//数据格式校验
+	//Checkout data format
 	ok, err := govalidator.ValidateStruct(queryRequest);
 	if !ok {
 		b, _ := json.Marshal(map[string]string{

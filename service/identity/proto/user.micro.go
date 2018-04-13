@@ -43,6 +43,8 @@ It has these top-level messages:
 	ShopCarRow
 	QueryNoticeRequest
 	QueryNoticeResponse
+	QueryNoticeData
+	QueryNoticeRow
 	GetAccountRequest
 	GetAccountResponse
 	TransferRequest
