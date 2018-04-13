@@ -5,65 +5,105 @@
         "pattern": "[%D %T] [%C] [%L] [%S]: %M"
     },
     "files": [{
-        "enable": true,
+        "enable": false,
+        "level": "DEBUG",
+        "filename":"./asset_api.log",
+        "category": "asset.api",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": true,
+        "maxsize": "20M",
+        "maxlines": "10K",
+        "daily": true
+    },{
+        "enable": false,
+        "level": "DEBUG",
+        "filename":"./asset_srv.log",
+        "category": "asset.srv",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": true,
+        "maxsize": "20M",
+        "maxlines": "10K",
+        "daily": true
+    },{
+        "enable": false,
+        "level": "DEBUG",
+        "filename":"./exchange_api.log",
+        "category": "exchange.api",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": true,
+        "maxsize": "20M",
+        "maxlines": "10K",
+        "daily": true
+    },{
+        "enable": false,
+        "level": "DEBUG",
+        "filename":"./exchange_srv.log",
+        "category": "exchange.srv",
+        "pattern": "[%D %T] [%C] [%L] [%S]: %M",
+        "rotate": true,
+        "maxsize": "20M",
+        "maxlines": "10K",
+        "daily": true
+    },{
+        "enable": false,
         "level": "DEBUG",
         "filename":"./requirement_api.log",
         "category": "requirement.api",
         "pattern": "[%D %T] [%C] [%L] [%S]: %M",
-        "rotate": false,
-        "maxsize": "50M",
+        "rotate": true,
+        "maxsize": "20M",
         "maxlines": "10K",
-        "daily": false
+        "daily": true
     },{
-        "enable": true,
+        "enable": false,
         "level": "DEBUG",
         "filename":"./requirement_srv.log",
         "category": "requirement.srv",
         "pattern": "[%D %T] [%C] [%L] [%S]: %M",
-        "rotate": false,
-        "maxsize": "50M",
+        "rotate": true,
+        "maxsize": "20M",
         "maxlines": "10K",
-        "daily": false
+        "daily": true
     },{
-        "enable": true,
+        "enable": false,
         "level": "DEBUG",
         "filename":"./dashboard_api.log",
         "category": "dashboard.api",
         "pattern": "[%D %T] [%C] [%L] [%S]: %M",
-        "rotate": false,
-        "maxsize": "50M",
+        "rotate": true,
+        "maxsize": "20M",
         "maxlines": "10K",
-        "daily": false
+        "daily": true
     },{
-        "enable": true,
+        "enable": false,
         "level": "DEBUG",
         "filename":"./dashboard_srv.log",
         "category": "dashboard.srv",
         "pattern": "[%D %T] [%C] [%L] [%S]: %M",
-        "rotate": false,
-        "maxsize": "50M",
+        "rotate": true,
+        "maxsize": "20M",
         "maxlines": "10K",
-        "daily": false
+        "daily": true
     },{
-        "enable": true,
+        "enable": false,
         "level": "DEBUG",
         "filename":"./user_api.log",
         "category": "user.api",
         "pattern": "[%D %T] [%C] [%L] [%S]: %M",
-        "rotate": false,
-        "maxsize": "50M",
+        "rotate": true,
+        "maxsize": "20M",
         "maxlines": "10K",
-        "daily": false
+        "daily": true
     },{
-        "enable": true,
+        "enable": false,
         "level": "DEBUG",
         "filename":"./user_srv.log",
         "category": "user.srv",
         "pattern": "[%D %T] [%C] [%L] [%S]: %M",
-        "rotate": false,
-        "maxsize": "50M",
+        "rotate": true,
+        "maxsize": "20M",
         "maxlines": "10K",
-        "daily": false
+        "daily": true
     }],
     "sockets": [{
         "enable": false,

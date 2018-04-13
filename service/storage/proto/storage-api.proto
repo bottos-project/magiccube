@@ -1,0 +1,332 @@
+syntax = "proto3";
+
+package storage;
+
+service Storage {
+	rpc GetFileUploadURL(FileUploadRequest) returns (FileUploadResponse) {}
+	rpc GetFileUploadStat(FileUploadStatRequest) returns (FileUploadStatResponse) {}
+	rpc GetDownLoadURL(DownLoadRequest) returns (DownLoadResponse) {}
+	rpc GetUserFileList(UserFileListRequest) returns (UserFileListResponse) {}
+	rpc GetTx(Request) returns (Response) {}
+//	rpc GetUserInfo(UserInfoRequest) returns (UserInfoResponse) {}
+//	rpc GetUserNum(UserNumRequest) returns (UserNumResponse) {}
+	rpc InsertUserToken(InsertTokenRequest) returns (InsertTokenResponse) {}
+	rpc GetUserToken(TokenRequest) returns (TokenResponse) {}
+	rpc DelUserToken(DelTokenRequest) returns (DelTokenResponse) {}
+	rpc AgeUserToken(AgeTokenRequest) returns (AgeTokenResponse) {}
+	rpc GetUserRequirementList(UserRequireListRequest)returns(UserRequireListResponse){}
+	rpc GetRequirementListByFeature(FeatureRequireListRequest)returns(FeatureRequireListResponse){}
+	rpc GetAllRequirementList(AllRequest)returns(AllRequireListResponse){}
+	rpc GetUserAssetList(UserAssetListRequest)returns(UserAssetListResponse){}
+	rpc GetUserPurchaseAssetList(UserRequest)returns(UserAssetListResponse){}
+	rpc GetAssetByAssetId(AssetIdRequest)returns(AssetInfoResponse){}
+	rpc GetAllAssetList(AssetListRequest)returns(AssetListResponse){}
+	rpc GetRecentTxList(RecentTxListRequest)returns(RecentTxListResponse){}
+	rpc GetUserTxList(UserRequest)returns(UserTxListResponse){}	
+	rpc GetRecentTransferList(AllRequest)returns(TransferListResponse){}
+	rpc GetAllTxNum(AllRequest)returns(AllTxNumResponse){}
+	rpc GetTxNumByDay(AllRequest)returns(DayTxNumResponse){}
+	rpc GetTxNumByWeek(AllRequest)returns(WeekTxNumResponse){}
+	rpc GetAssetNumByDay(AllRequest)returns(DayAssetNumResponse){}
+	rpc GetAssetNumByWeek(AllRequest)returns(WeekAssetNumResponse){}
+	rpc GetRequirementNumByDay(AllRequest)returns(DayRequirementNumResponse){}
+	rpc GetRequirementNumByWeek(AllRequest)returns(WeekRequirementNumResponse){}
+	rpc GetSumTxAmount(AllRequest)returns(SumTxAmountResponse){}
+	rpc GetNodeInfos(AllRequest)returns(NodeInfosResponse){}
+	rpc GetUserFavorit(UserRequest)returns(UserFavoritResponse){}
+	rpc GetUserDataPresale(UserRequest)returns(UserDataPresaleResponse){}
+}
+message AllRequest{
+	
+}
+message UserRequest{
+	string username = 1;
+}
+message FileUploadRequest{
+    string username =1;
+    string file_name =2;
+    uint64  file_size =3;
+    string file_policy =4;
+    uint64 file_number =5;
+    string signature = 6;
+}
+message FileUploadResponse{
+    string result = 1;
+    string message = 2;
+    string presigned_put_url = 3;
+}
+
+message FileUploadStatRequest{
+    string username =1;
+    string file_name =2;
+}
+message FileUploadStatResponse{
+    string result = 1;
+    string message = 2;
+    int64 size = 3;
+}
+message DownLoadRequest{
+    string username =1;
+    string file_name =2;
+}
+message DownLoadResponse{
+    string result = 1;
+    string message = 2;
+    string presigned_get_url = 3;
+}
+
+message Request {
+	string txid = 1;
+	string account = 2;
+}
+
+message Response {
+	string msg = 1;
+}
+
+message InsertTokenRequest{
+    string username =1;
+    string token =2;
+}
+
+message InsertTokenResponse{
+    uint32 code =1;
+}
+message TokenRequest{
+	string username =1;
+    string token =2;
+}
+
+message TokenResponse{
+	string username =1;
+    string token =2;
+	int64 insert_time =3;
+    uint32 code =4;
+}
+message DelTokenRequest{
+	string username =1;
+    string token =2;
+}
+
+message DelTokenResponse{
+    uint32 code =1;
+}
+message AgeTokenRequest{
+    int64 timeout =1;
+}
+
+message AgeTokenResponse{
+    uint32 code =1;
+}
+message UserFileListRequest{
+	string username =1;
+}
+message File{
+	string file_name =1;
+    uint64 file_size =2;
+    string file_policy =3;
+    uint64 file_number =4;
+	string file_hash =5;
+    string authorized_storage = 6;
+}
+message UserFileListResponse{
+	uint32 code =1;
+	repeated File FileList =2;
+}
+message UserRequireListRequest{
+    string username =1;
+}
+message Requirement{
+    string requirement_id = 1;
+	string username=2;
+    string requirement_name = 3;
+    uint64 feature_tag =4;
+    string sample_path= 5;
+    string sample_hash =6;
+    uint32 expire_time =7;
+    uint64 price =8;
+    string description = 9;
+    uint32 publish_date = 10;
+}
+message UserRequireListResponse{
+    uint32 code = 1;
+    repeated Requirement RequireList =2;
+}
+
+message AllRequireListResponse{
+	uint32 code = 1;
+    repeated Requirement RequireList =2;
+}
+message FeatureRequireListRequest{
+    uint64 feature_tag =1;
+}
+message FeatureRequireListResponse{
+	uint32 code = 1;
+	repeated Requirement RequireList =2;
+}
+
+
+message UserAssetListRequest{
+    string username =1;
+}
+message UserAsset{
+    string asset_id = 1;
+    string asset_name = 2;
+    uint64 feature_tag =3;
+    string sample_path=4;
+    string sample_hash =5;
+	string storage_path=6;
+    string storage_hash =7;
+    uint32 expire_time =8;
+    uint64 price =9;
+    string description = 10;
+    uint32 upload_date = 11;
+}
+message UserAssetListResponse{
+    uint32 code = 1;
+    repeated UserAsset UserAssetList =2;
+}
+message Asset{
+    string asset_id = 1;
+	string username =2;
+    string asset_name = 3;
+    uint64 feature_tag =4;
+    string sample_path=5;
+    string sample_hash =6;
+	string storage_path=7;
+    string storage_hash =8;
+    uint32 expire_time =9;
+    uint64 price =10;
+    string description = 11;
+    uint32 upload_date = 12;
+}
+message AssetListRequest{
+}
+message AssetListResponse{
+    uint32 code = 1;
+    repeated Asset AssetList =2;
+}
+message RecentTx{
+    string transaction_id =1;
+    string from =2;
+    string to = 3;
+    uint64 price =4;
+    uint64 type = 5;
+    string date = 6;
+    uint64 block_id = 7;
+}
+message RecentTxListRequest{
+	
+}
+message RecentTxListResponse{
+    uint32 code =1;
+    repeated RecentTx RecentTxList =2;
+}
+message UserTxListResponse{
+	uint32 code =1;
+    repeated RecentTx RecentTxList =2;
+}
+
+message AllTxNumResponse{
+	uint32 code =1;
+	uint64 tx_num =2;
+}
+message SumTxAmountRequest{
+	
+}
+message SumTxAmountResponse{
+	uint32 code =1;
+	uint64 amount_sum =2;
+}
+message  DayTxNumRequest{
+}
+message  DayTxNumResponse{
+	uint32 code =1;
+	uint64 day_tx_num =2;
+}
+
+message  WeekTxNumResponse{
+	uint32 code =1;
+	repeated uint64 week_tx_num =2;
+}
+
+message  DayAssetNumResponse{
+	uint32 code =1;
+	uint64 day_asset_num =2;
+}
+
+message  WeekAssetNumResponse{
+	uint32 code =1;
+	repeated uint64 week_asset_num =2;
+}
+
+message  DayRequirementNumResponse{
+	uint32 code =1;
+	uint64 day_requirement_num =2;
+}
+
+message  WeekRequirementNumResponse{
+	uint32 code =1;
+	repeated uint64 week_requirement_num =2;
+}
+message Node{
+	string node_id = 1;
+	string node_ip = 2;
+	string node_port =3;
+}
+
+message  NodeInfosResponse{
+	uint32 code =1;
+	uint64 node_num =2;
+	repeated Node node_list = 3;
+}
+
+message Transfer{
+	string tx_id = 1;
+	string tx_time =2;
+	uint64 price =3;
+	string from =4;
+	string to =5;
+	uint64 block_num =6;	
+}
+message TransferListResponse{
+	uint32 code =1;
+	repeated Transfer transfer_list = 2;
+	
+}
+
+message Favorit{
+	string username =1;
+	string op_type = 2;
+	string goods_type = 3;
+	string goods_id =4;
+	
+}
+message UserFavoritResponse{
+	uint32 code =1;
+	repeated Favorit favorit_list = 2;	
+}
+
+
+message DataPresale{
+	string data_presale_id = 1; 
+	string user_name = 2;
+	string asset_id =3;
+	string data_req_id =4;
+	string consumer = 5;	
+}
+message UserDataPresaleResponse{
+	uint32 code =1;
+	repeated DataPresale data_presale_list = 2;	
+}
+
+
+message AssetIdRequest{
+	string asset_id = 1;
+}
+message AssetInfoResponse{
+	uint32 code =1;
+	Asset asset_info = 2;
+	
+}
+

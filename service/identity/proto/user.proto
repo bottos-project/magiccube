@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 service User {
 	rpc Register(RegisterRequest) returns(RegisterResponse) {};
@@ -211,15 +211,28 @@ message ShopCarRow {
 }
 
 message QueryNoticeRequest {
-	string username = 1;
-	string session_id = 2;
-	string random = 3;
-	string signature = 4;
+	int32 pageSize = 1;
+	int32 pageNum = 2;
+	string username = 3;
 }
 message QueryNoticeResponse {
-	uint32 code = 1;
-	string msg = 2;
-	string data = 3;
+	int32 code = 1;
+	QueryNoticeData data = 2;
+	string msg = 3;
+}
+message QueryNoticeData {
+	uint64 pageNum = 1;
+	uint64 rowCount = 2;
+	repeated QueryNoticeRow row = 3;
+}
+message QueryNoticeRow {
+	string username = 1;
+	string asset_id = 2;
+	string asset_name = 3;
+	string data_req_id = 4;
+	string data_req_name = 5;
+	string consumer = 6;
+	string createTime = 7;
 }
 
 
@@ -227,7 +240,7 @@ message GetAccountRequest {
 	string username = 1;
 //	string session_id = 2;
 //	string random = 3;
-//	string signature = 4;
+//	string signature = 4;protoc --micro_out=. --go_out=. *.proto
 }
 message GetAccountResponse {
 	uint32 code = 1;
