@@ -1,4 +1,4 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
 service User {
 	rpc Register(RegisterRequest) returns(RegisterResponse) {};
@@ -31,6 +31,8 @@ message RegisterRequest {
 	string signature_user = 4;
 	string active_pub_key = 5;
 	string owner_pub_key = 6;
+	string id_key = 7;
+	string verify_value = 8;
 }
 
 message UserInfo {
