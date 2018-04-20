@@ -11,11 +11,33 @@ import (
 	"strconv"
 	"regexp"
 	"github.com/code/bottos/config"
+	"github.com/mojocn/base64Captcha"
 )
 
 type User struct {
 	Client user.UserClient
 }
+
+func (u *User) GetVerificationCode(ctx context.Context, req *api.Request, rsp *api.Response) error {
+
+	idKeyD, capD := base64Captcha.GenerateCaptcha("", configCode)
+	//以base64编码
+	base64stringD := base64Captcha.CaptchaWriteToBase64Encoding(capD)
+
+	rsp.StatusCode = 200
+	b, _ := json.Marshal(map[string]interface{}{
+		"code": 1,
+		"data": map[string]interface{}{
+			"id_key": idKeyD,
+			"img_data": base64stringD,
+		},
+		"msg": "OK",
+	})
+
+	rsp.Body = string(b)
+	return nil
+}
+
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
