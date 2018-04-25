@@ -31,12 +31,12 @@ import (
 
 type ErrorCode struct {
 	Code    int64 `json:"code"`
-	Details string  `json:"details"`
 	Lv      string  `json:"lv"`
 	Msg     struct {
 		Cn string `json:"cn"`
 		En string `json:"en"`
 	} `json:"msg"`
+	Details string  `json:"details"`
 }
 
 
