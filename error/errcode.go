@@ -17,8 +17,8 @@
 
 /*
  * file description:  provide a interface error definition for all modules
- * @Author: Charles
- * @Date:   2017-12-29
+ * @Author: zl
+ * @Date: 2018-4-25
  * @Last Modified by:
  * @Last Modified time:
 */
