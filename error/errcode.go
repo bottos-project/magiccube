@@ -43,7 +43,7 @@ func GetErrorInfo(code int64, serviceName string) ErrorCode {
 	d := GetAllErrorInfos(serviceName)
 	for _, v := range d {
 		if code == v.Code {
-			v.Code = getServerId(serviceName)<<4 + code
+			v.Code = getServerId(serviceName)*10000 + code
 			return v
 		}
 	}
