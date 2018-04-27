@@ -11,17 +11,72 @@ import (
 	"strconv"
 	"regexp"
 	"github.com/code/bottos/config"
+	"github.com/mojocn/base64Captcha"
 )
+
+var configCode = base64Captcha.ConfigDigit{
+	Height:     80,
+	Width:      240,
+	MaxSkew:    0.7,
+	DotCount:   80,
+	CaptchaLen: 5,
+}
+
+//var configCode = base64Captcha.ConfigCharacter{
+//	Height:             60,
+//	Width:              240,
+////	//const CaptchaModeNumber:数字,CaptchaModeAlphabet:字母,CaptchaModeArithmetic:算术,CaptchaModeNumberAlphabet:数字字母混合.
+//	Mode:               base64Captcha.CaptchaModeNumber,
+//	ComplexOfNoiseText: base64Captcha.CaptchaComplexLower,
+//	ComplexOfNoiseDot:  base64Captcha.CaptchaComplexLower,
+//	IsShowHollowLine:   false,
+//	IsShowNoiseDot:     false,
+//	IsShowNoiseText:    false,
+//	IsShowSlimeLine:    false,
+//	IsShowSineLine:     false,
+//	CaptchaLen:         6,
+//}
 
 type User struct {
 	Client user.UserClient
 }
+
+func (u *User) GetVerificationCode(ctx context.Context, req *api.Request, rsp *api.Response) error {
+
+	idKeyD, capD := base64Captcha.GenerateCaptcha("", configCode)
+	//以base64编码
+	base64stringD := base64Captcha.CaptchaWriteToBase64Encoding(capD)
+
+	rsp.StatusCode = 200
+	b, _ := json.Marshal(map[string]interface{}{
+		"code": 1,
+		"data": map[string]interface{}{
+			"id_key": idKeyD,
+			"img_data": base64stringD,
+		},
+		"msg": "OK",
+	})
+
+	rsp.Body = string(b)
+	return nil
+}
+
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	//transfer to struct
 	var registerRequest user.RegisterRequest
 	json.Unmarshal([]byte(body), &registerRequest)
+
+	if !base64Captcha.VerifyCaptcha(registerRequest.IdKey, registerRequest.VerifyValue) {
+		b, _ := json.Marshal(map[string]interface{}{
+			"code": -8,
+			"msg": "Verification code error",
+		})
+		rsp.StatusCode = 200
+		rsp.Body = string(b)
+		return nil
+	}
 	//Checkout data format
 	ok, err := govalidator.ValidateStruct(registerRequest);
 	if !ok {

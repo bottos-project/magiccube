@@ -1,0 +1,18 @@
+[{
+    "code": 1001,
+    "lv": "ERROR",
+    "msg": {
+      "en": "username over length",
+      "cn": "用户名过长"
+    },
+    "details": "over length"
+  },{
+    "code": 1002,
+    "lv": "ERROR",
+    "msg": {
+      "en": "input tooshor",
+      "cn": "密码太短"
+    },
+    "details": "input tooshort"
+  }
+]
