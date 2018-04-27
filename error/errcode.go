@@ -51,14 +51,14 @@ func GetErrorInfo(code int64) ErrorCode {
 	return ErrorCode{}
 }
 
-func GetAllErrorInfos() []ErrorCode {
-	fr, err := ioutil.ReadFile("./ErrorCode.json")
+func GetAllErrorInfos(selfServiceName string) []ErrorCode {
+	fr, err := ioutil.ReadFile("./"+"selfServiceName"+"ErrorCode"+".json")
 	if err != nil {
 		panic(err)
 	}
 
 	var d []ErrorCode
-	err = json.Unmarshal(fr, &d)
+	err = json.Unmarshal(fr, &d+mapID(selfServiceName)&&0Xffffffffff00)
 	if err != nil {
 		panic(err)
 	}
