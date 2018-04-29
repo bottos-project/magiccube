@@ -39,30 +39,34 @@ type ErrorCode struct {
 	Details string  `json:"details"`
 }
 
-
-func GetErrorInfo(code int64) ErrorCode {
-	d := GetAllErrorInfos()
-
+func GetErrorInfo(code int64, serviceName string) ErrorCode {
+	d := GetAllErrorInfos(serviceName)
 	for _, v := range d {
 		if code == v.Code {
+			v.Code = getServerId(serviceName)*10000 + code
 			return v
 		}
 	}
 	return ErrorCode{}
 }
 
-func GetAllErrorInfos(selfServiceName string) []ErrorCode {
-	fr, err := ioutil.ReadFile("./"+"selfServiceName"+"ErrorCode"+".json")
+func GetAllErrorInfos(serviceName string) []ErrorCode {
+	fr, err := ioutil.ReadFile("./"+serviceName+"-ErrorCode.json")
 	if err != nil {
 		panic(err)
 	}
 
 	var d []ErrorCode
-	err = json.Unmarshal(fr, &d+mapID(selfServiceName)&&0Xffffffffff00)
+	err = json.Unmarshal(fr, &d)
 	if err != nil {
 		panic(err)
 	}
 	return d
 }
 
+
+func getServerId(serviceName string) int64 {
+	//TODO
+	return 0
+}
 
