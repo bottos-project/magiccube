@@ -56,6 +56,8 @@ func (c *SqliteContext) insertTxInfo(dbtag util.TxDBInfo) error {
 }
 
 // Read
+/*This function may exist SQL query security problem. We didn't adopt it in this version,and we plan to support
+it in a future point release.*/
 func (c *SqliteContext) readOneTx(tx string) (*util.TxDBInfo, error) {
 	rows, err := c.db.Query("SELECT * FROM txinfo where TransactionID=" + tx)
 	if err != nil {
