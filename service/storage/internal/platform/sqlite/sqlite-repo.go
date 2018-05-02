@@ -1,6 +1,3 @@
-/*The functions of the Sqlite database that provided here are not ready yet，they should never be exposed to users.They are 
-in the Bottos's service layer,which delivering database service pluggable to provide users with queries.And we plan to support
-it in a future point release.At present, we only support mongodb to provide users with queries.*/
 package sqlite
 
 import (
