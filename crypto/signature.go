@@ -2,7 +2,7 @@ package crypto
 
 import(
 	"crypto/ecdsa"
-	"github.com/code/bottos/crypto/secp256k1"
+	"github.com/bottos-project/bottos/crypto/secp256k1"
 	"crypto/rand"
 	"crypto/elliptic"
 	"math/big"
