@@ -13,7 +13,7 @@ Our Goals
 ● To implement the hardware sharing network to streamline the AI product registration and communication
 
 # Learn about Bottos
-  Read our [WhitePaper](https://github.com/Bottos-project/bottos/blob/master/Bottos%20whitepaper%20English%20final.pdf) 
+  Read our [WhitePaper](https://www.bottos.org/pdf/Bottos%20whitepaper%20English%20final.pdf) 
 
 # Contact us:
    botadmin@bottos.org

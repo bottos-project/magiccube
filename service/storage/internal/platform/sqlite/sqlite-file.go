@@ -1,3 +1,6 @@
+/*The functions of the Sqlite database that provided here are not ready yet，they should never be exposed to users.They are 
+in the Bottos's service layer,which delivering database service pluggable to provide users with queries.And we plan to support
+it in a future point release.At present, we only support mongodb to provide users with queries.*/
 package sqlite
 
 import (
@@ -47,7 +50,8 @@ func (c *SqliteContext) InsertUserfile(file util.FileDBInfo) error {
 	return nil
 }
 
-
+/*This function may exist SQL query security problem. We didn't adopt it in this version,and we plan to support
+it in a future point release.*/
 func (c *SqliteContext) getUserfile(username string )([]*util.FileDBInfo, error) {
 	sql := "select * from fileinfo where Username= '" + username + "';"
 	rows, err := c.db.Query(sql)
