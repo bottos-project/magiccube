@@ -1,6 +1,3 @@
-/*The functions of the Sqlite database that provided here are not ready yet，they should never be exposed to users。They are 
-in the Bottos's service layer,which delivering database service pluggable to provide users with queries.And we plan to support
-it in a future point release.At present, we only support mongodb to provide users with queries.*/
 package sqlite
 
 import (
@@ -8,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 func (c *SqliteContext) createTx() {
@@ -56,8 +53,6 @@ func (c *SqliteContext) insertTxInfo(dbtag util.TxDBInfo) error {
 }
 
 // Read
-/*This function may exist SQL query security problem. We didn't adopt it in this version,and we plan to support
-it in a future point release.*/
 func (c *SqliteContext) readOneTx(tx string) (*util.TxDBInfo, error) {
 	rows, err := c.db.Query("SELECT * FROM txinfo where TransactionID=" + tx)
 	if err != nil {

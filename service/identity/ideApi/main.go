@@ -3,14 +3,14 @@
 import (
 	"encoding/json"
 	log "github.com/jeanphorn/log4go"
-	"github.com/code/bottos/service/identity/proto"
+	"github.com/bottos-project/bottos/service/identity/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"github.com/asaskevich/govalidator"
 	"strconv"
 	"regexp"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/config"
 	"github.com/mojocn/base64Captcha"
 )
 

@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/code/bottos/service/storage/proto"
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/proto"
+	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 func (c *StorageService) GetUserRequirementList(ctx context.Context, request *storage.UserRequireListRequest, response *storage.UserRequireListResponse) error {

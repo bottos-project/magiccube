@@ -6,8 +6,8 @@ import (
 
 	"time"
 
-	//	"github.com/code/bottos/service/storage/blockchain"
-	"github.com/code/bottos/service/storage/util"
+	//	"github.com/bottos-project/bottos/service/storage/blockchain"
+	"github.com/bottos-project/bottos/service/storage/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )

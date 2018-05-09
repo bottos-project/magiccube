@@ -1,16 +1,16 @@
-package main
+﻿package main
 
 import (
 	"encoding/json"
 	log "github.com/jeanphorn/log4go"
 
-	"github.com/code/bottos/service/asset/proto"
+	"github.com/bottos-project/bottos/service/asset/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"strconv"
 	"github.com/asaskevich/govalidator"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/config"
 )
 
 type Asset struct {

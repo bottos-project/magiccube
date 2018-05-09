@@ -3,7 +3,7 @@ package controller
 import (
 	"testing"
 	"fmt"
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 

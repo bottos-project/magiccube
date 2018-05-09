@@ -3,13 +3,13 @@
 import (
 	"encoding/json"
 	log "github.com/jeanphorn/log4go"
-	"github.com/code/bottos/service/exchange/proto"
+	"github.com/bottos-project/bottos/service/exchange/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"github.com/asaskevich/govalidator"
 	"strconv"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/config"
 )
 
 

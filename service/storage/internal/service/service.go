@@ -1,11 +1,11 @@
 package service
 
 import (
-	//"github.com/code/bottos/service/storage/controller"
+	//"github.com/bottos-project/bottos/service/storage/controller"
 	"time"
 
-	"github.com/code/bottos/service/storage/proto"
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/proto"
+	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 type StorageService struct {

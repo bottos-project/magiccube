@@ -3,10 +3,10 @@ package query
 import (
 	"gopkg.in/mgo.v2/bson"
 	"time"
-	"github.com/code/bottos/tools/db/mongodb"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
 	log "github.com/jeanphorn/log4go"
-	"github.com/code/bottos/service/bean"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/config"
 )
 
 func TimestampToUTC(timestamp int64) time.Time {

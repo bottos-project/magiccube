@@ -3,18 +3,18 @@
 import (
 	log "github.com/jeanphorn/log4go"
 	"github.com/micro/go-micro"
-	proto "github.com/code/bottos/service/exchange/proto"
+	proto "github.com/bottos-project/bottos/service/exchange/proto"
 	"golang.org/x/net/context"
 	"github.com/bitly/go-simplejson"
 	"time"
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	cbb "github.com/code/bottos/service/asset/cbb"
-	"github.com/code/bottos/tools/db/mongodb"
+	cbb "github.com/bottos-project/bottos/service/asset/cbb"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/code/bottos/service/bean"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/config"
 	"strings"
 )
 

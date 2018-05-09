@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/code/bottos/service/storage/proto"
+	"github.com/bottos-project/bottos/service/storage/proto"
 )
 
 func (c *StorageService) GetDownLoadURL(ctx context.Context, request *storage.DownLoadRequest, response *storage.DownLoadResponse) error {

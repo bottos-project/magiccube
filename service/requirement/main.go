@@ -3,15 +3,15 @@
 import (
 	log "github.com/jeanphorn/log4go"
 	"github.com/micro/go-micro"
-	requirement_proto "github.com/code/bottos/service/requirement/proto"
+	requirement_proto "github.com/bottos-project/bottos/service/requirement/proto"
 	"golang.org/x/net/context"
-	"github.com/code/bottos/tools/db/mongodb"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"net/http"
 	"bytes"
-	"github.com/code/bottos/service/bean"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/config"
 )
 
 const (

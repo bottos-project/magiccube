@@ -3,7 +3,7 @@
 import (
 	log "github.com/jeanphorn/log4go"
 	"github.com/micro/go-micro"
-	user_proto "github.com/code/bottos/service/identity/proto"
+	user_proto "github.com/bottos-project/bottos/service/identity/proto"
 	"golang.org/x/net/context"
 	"github.com/mikemintang/go-curl"
 	"github.com/bitly/go-simplejson"
@@ -16,12 +16,12 @@ import (
 	"encoding/json"
 	"bytes"
 	"fmt"
-	cbb "github.com/code/bottos/service/asset/cbb"
+	cbb "github.com/bottos-project/bottos/service/asset/cbb"
 	"strconv"
-	"github.com/code/bottos/tools/db/mongodb"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/code/bottos/service/bean"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/config"
 	"sort"
 )
 

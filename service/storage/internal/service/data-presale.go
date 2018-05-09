@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/code/bottos/service/storage/proto"
+	"github.com/bottos-project/bottos/service/storage/proto"
 )
 
 func (c *StorageService) GetUserDataPresale(ctx context.Context, request *storage.UserRequest, response *storage.UserDataPresaleResponse) error {

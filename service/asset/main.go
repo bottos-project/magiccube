@@ -3,12 +3,12 @@
 import (
 	log "github.com/jeanphorn/log4go"
 	"github.com/micro/go-micro"
-	proto "github.com/code/bottos/service/asset/proto"
+	proto "github.com/bottos-project/bottos/service/asset/proto"
 	"golang.org/x/net/context"
 	"github.com/mikemintang/go-curl"
 	"github.com/bitly/go-simplejson"
 	"time"
-	storage "github.com/code/bottos/service/storage/proto"
+	storage "github.com/bottos-project/bottos/service/storage/proto"
 	"github.com/micro/go-micro/client"
 	"bytes"
 	"io/ioutil"
@@ -18,12 +18,12 @@ import (
 	"strconv"
 	"golang.org/x/net/html/atom"
 	"encoding/json"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/config"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/code/bottos/service/bean"
-	"github.com/code/bottos/tools/db/mongodb"
+	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"errors"
-	cbb "github.com/code/bottos/service/asset/cbb"
+	cbb "github.com/bottos-project/bottos/service/asset/cbb"
 )
 
 const (
@@ -703,21 +703,21 @@ func (u *Asset) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 	log.Info("ret:", ret)
 
 
-/*	Remove Duplicates
-	a_len := len(ret) - 1
-	log.Info(a_len)
-	if a_len == 0 {
-		ret1 = append(ret1, ret[a_len])
-	} else {
-		for i := a_len; i >= 0; i-- {
-			if (i < a_len && ret[i+1].Data.AssetID == ret[i].Data.AssetID) || len(ret) == 0 {
-				continue
+	/*	Remove Duplicates
+		a_len := len(ret) - 1
+		log.Info(a_len)
+		if a_len == 0 {
+			ret1 = append(ret1, ret[a_len])
+		} else {
+			for i := a_len; i >= 0; i-- {
+				if (i < a_len && ret[i+1].Data.AssetID == ret[i].Data.AssetID) || len(ret) == 0 {
+					continue
+				}
+				ret1 = append(ret1, ret[i])
 			}
-			ret1 = append(ret1, ret[i])
 		}
-	}
 
-	log.Info("ret1:", ret1)*/
+		log.Info("ret1:", ret1)*/
 
 
 	var rows = []*proto.QueryRow{}
@@ -1159,12 +1159,12 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *proto.GetUser
 	var where interface{}
 	where = &bson.M{"type": "datapurchase"}
 	log.Info(req.Username)
-	if req.Username != "" && req.AssetId != ""{
-		where = &bson.M{"type": "datapurchase", "data.basic_info.user_name": req.Username, "data.basic_info.asset_id":req.AssetId}
-	}else if req.Username != ""{
+	if req.Username != "" && req.AssetId != "" {
+		where = &bson.M{"type": "datapurchase", "data.basic_info.user_name": req.Username, "data.basic_info.asset_id": req.AssetId}
+	} else if req.Username != "" {
 		where = &bson.M{"type": "datapurchase", "data.basic_info.user_name": req.Username}
-	}else if req.AssetId != ""{
-		where = &bson.M{"type": "datapurchase", "data.basic_info.asset_id":req.AssetId}
+	} else if req.AssetId != "" {
+		where = &bson.M{"type": "datapurchase", "data.basic_info.asset_id": req.AssetId}
 	}
 
 	log.Info("where:", where)

@@ -1,7 +1,7 @@
 package sqlite
 import(
 	"testing"
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/util"
 	"fmt"
 )
 

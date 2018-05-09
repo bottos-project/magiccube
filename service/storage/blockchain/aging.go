@@ -5,9 +5,9 @@ import (
 	//	"log"
 	//	"time"
 
-	//"github.com/code/bottos/service/storage/controller"
-	"github.com/code/bottos/service/storage/internal/service"
-	//	"github.com/code/bottos/service/storage/util"
+	//"github.com/bottos-project/bottos/service/storage/controller"
+	"github.com/bottos-project/bottos/service/storage/internal/service"
+	//	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 func tokenAging(timeout int64, stat service.StateRepository, c chan int) {

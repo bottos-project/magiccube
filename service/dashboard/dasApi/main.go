@@ -2,12 +2,12 @@
 
 import (
 	"encoding/json"
-	"github.com/code/bottos/service/dashboard/proto"
+	"github.com/bottos-project/bottos/service/dashboard/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	log "github.com/jeanphorn/log4go"
-	"github.com/code/bottos/config"
+	"github.com/bottos-project/bottos/config"
 )
 
 type Dashboard struct {

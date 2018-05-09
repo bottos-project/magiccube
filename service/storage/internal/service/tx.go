@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/code/bottos/service/storage/proto"
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/proto"
+	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 type Transaction struct {

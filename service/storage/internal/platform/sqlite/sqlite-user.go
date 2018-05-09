@@ -1,6 +1,3 @@
-/*The functions of the Sqlite database that provided here are not ready yet，they should never be exposed to users.They are 
-in the Bottos's service layer,which delivering database service pluggable to provide users with queries.And we plan to support
-it in a future point release.At present, we only support mongodb to provide users with queries.*/
 package sqlite
 
 import (
@@ -10,10 +7,10 @@ import (
 
 	"errors"
 
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/util"
 	_ "github.com/mattn/go-sqlite3"
 
-	//	"github.com/code/bottos/service/storage/proto"
+	//	"github.com/bottos-project/bottos/service/storage/proto"
 )
 
 func (c *SqliteContext) createUser() {
@@ -59,8 +56,6 @@ func (c *SqliteContext) insertUserInfo(dbtag util.UserDBInfo) error {
 }
 
 // Read
-/*This function may exist SQL query security problem. We didn't adopt it in this version,and we plan to support
-it in a future point release.*/
 func (c *SqliteContext) readOne(user string) (*util.UserDBInfo, error) {
 	rows, err := c.db.Query("SELECT * FROM userinfo where Username=" + user)
 	if err != nil {
@@ -167,8 +162,6 @@ func (c *SqliteContext) insertUserToken(username string, token string) error {
 	return nil
 
 }
-/*This function may exist SQL query security problem. We didn't adopt it in this version,and we plan to support
-it in a future point release.*/
 func (c *SqliteContext) getToken(username string, token string) (*util.TokenDBInfo, error) {
 	if username == "" && token == "" {
 		return nil, errors.New("para error")
@@ -190,8 +183,6 @@ func (c *SqliteContext) getToken(username string, token string) (*util.TokenDBIn
 	}
 	return nil, nil
 }
-/*This function may exist SQL query security problem. We didn't adopt it in this version,and we plan to support
-it in a future point release.*/
 func (c *SqliteContext) delToken(username string, token string) (uint32, error) {
 	if username == "" && token == "" {
 		return 0, errors.New("para error")
@@ -226,7 +217,6 @@ func (r *SqliteRepository) CallInsertUserToken(username string, token string) (u
 	}
 	return 1, nil
 }
-
 func (r *SqliteRepository) CallGetUserToken(username string, token string) (*util.TokenDBInfo, error) {
 	db, err := ConnectDB()
 	if err != nil {

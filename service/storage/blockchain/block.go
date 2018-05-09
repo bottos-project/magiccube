@@ -2,7 +2,7 @@ package blockchain
 
 import (
 
-	"github.com/code/bottos/service/storage/controller"
+	"github.com/bottos-project/bottos/service/storage/controller"
 )
 
 func GetLatestBlockNumber() uint64 {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/code/bottos/service/storage/util"
+	"github.com/bottos-project/bottos/service/storage/util"
 )
 
 func TestSqliteRepository_CallInsertUserFileList(t *testing.T) {

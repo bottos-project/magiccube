@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 service User {
 	rpc Register(RegisterRequest) returns(RegisterResponse) {};

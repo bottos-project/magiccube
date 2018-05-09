@@ -2,7 +2,7 @@ package controller
 
 //import (
 //	server "github.com/micro/go-micro/server"
-//	"github.com/code/bottos/service/storage/proto"
+//	"github.com/bottos-project/bottos/service/storage/proto"
 //)
 //type StorageProto struct{
 //	StorageProtoHandler

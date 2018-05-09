@@ -3,14 +3,14 @@
 import (
 	log "github.com/jeanphorn/log4go"
 	"github.com/micro/go-micro"
-	dashboard_proto "github.com/code/bottos/service/dashboard/proto"
+	dashboard_proto "github.com/bottos-project/bottos/service/dashboard/proto"
 	"golang.org/x/net/context"
-	"github.com/code/bottos/tools/db/mongodb"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/code/bottos/service/bean"
+	"github.com/bottos-project/bottos/service/bean"
 	"time"
-	"github.com/code/bottos/config"
-	"github.com/code/bottos/service/query"
+	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/bottos/service/query"
 )
 
 type Dashboard struct {}
@@ -295,8 +295,6 @@ func (u *Dashboard) GetTxAmountByDay(ctx context.Context, req *dashboard_proto.G
 			amount += ret2.Data.BasicInfo.Price
 		}
 
-		log.Info(amount)
-		log.Info(query.TimestampToUTC(int64(timeSlice[i+1])))
 		data = append(data, &dashboard_proto.TxAmountByDay{
 			Time:int64(timeSlice[i]),
 			Count:int64(amount),

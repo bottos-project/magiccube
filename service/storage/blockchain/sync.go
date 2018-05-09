@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/code/bottos/service/storage/controller"
-	"github.com/code/bottos/service/storage/internal/service"
+	"github.com/bottos-project/bottos/service/storage/controller"
+	"github.com/bottos-project/bottos/service/storage/internal/service"
 )
 
 func InsertTransaction(tx interface{}) error {

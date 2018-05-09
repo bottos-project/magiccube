@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 service Asset {
     rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
