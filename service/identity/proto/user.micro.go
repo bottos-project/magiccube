@@ -9,6 +9,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	RegisterRequest
+	AccountInfo
 	UserInfo
 	RegisterResponse
 	LoginRequest

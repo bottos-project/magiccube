@@ -25,22 +25,30 @@ service User {
 }
 
 message RegisterRequest {
-	string username = 1;
-	UserInfo user_info = 2;
-	string signature_account = 3;
-	string signature_user = 4;
-	string active_pub_key = 5;
-	string owner_pub_key = 6;
-	string id_key = 7;
-	string verify_value = 8;
+	AccountInfo account = 1;
+	UserInfo user = 2;
+	string verify_code = 3;
+	string verify_value = 4;
+}
+
+message AccountInfo {
+	string creator = 1;
+    string name = 2;
+	string pubkey = 3;
+    uint64 deposit = 4;
 }
 
 message UserInfo {
-	string encypted_info = 1;
-	int32 user_type = 2;
-    int32 role_type = 3;
-    string company_name = 4;
-    string company_address = 5;
+	 uint64 version = 1;
+     uint64 cursor_num = 2;
+     uint64 cursor_label = 3;
+	 uint64 lifetime = 4;
+	 string sender = 5;
+     string contract = 6;
+	 string method = 7;
+	 repeated int32 param = 8;
+	 uint64 sig_alg = 9;
+	 string signatures =10;
 }
 
 message RegisterResponse {

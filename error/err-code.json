@@ -1,0 +1,23 @@
+[{
+    "code": 1000,
+    "msg": {
+      "en": "Verify signature failure",
+      "cn": "验签失败"
+    },
+    "details": ""
+  },{
+    "code": 1001,
+    "msg": {
+      "en": "Verification code error",
+      "cn": "验证码错误"
+    },
+    "details": ""
+  },{
+    "code": 1002,
+    "msg": {
+      "en": "Account is illegal",
+      "cn": "账号格式错误"
+    },
+    "details": ""
+  }
+]

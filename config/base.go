@@ -18,8 +18,11 @@ const (
 	BASE_MINIO_SECRET_KEY = ""
 
 	BASE_LOG_CONF	= "config/log.json"
-	
 
-	
+	//Token expired
 	TOKEN_EXPIRE_TIME = 2 * 60 * 60
+
+	//Enable/Disable verification code
+	Enable_verification = false
+
 )

@@ -31,7 +31,6 @@ import (
 
 type ErrorCode struct {
 	Code    int64 `json:"code"`
-	Lv      string  `json:"lv"`
 	Msg     struct {
 		Cn string `json:"cn"`
 		En string `json:"en"`
@@ -39,19 +38,36 @@ type ErrorCode struct {
 	Details string  `json:"details"`
 }
 
-func GetErrorInfo(code int64, serviceName string) ErrorCode {
-	d := GetAllErrorInfos(serviceName)
+func GetErrorInfo(code int64) ErrorCode {
+	d := GetAllErrorInfos()
 	for _, v := range d {
 		if code == v.Code {
-			v.Code = getServerId(serviceName)*10000 + code
 			return v
 		}
 	}
 	return ErrorCode{}
 }
 
-func GetAllErrorInfos(serviceName string) []ErrorCode {
-	fr, err := ioutil.ReadFile("./"+serviceName+"-ErrorCode.json")
+func ReturnError(code int64) string {
+	d := GetAllErrorInfos()
+	for _, v := range d {
+		if code == v.Code {
+			json, err := json.Marshal(v)
+			if err != nil {
+				panic(err)
+			}
+			return string(json)
+		}
+	}
+	json, err := json.Marshal(ErrorCode{})
+	if err != nil {
+		panic(err)
+	}
+	return string(json)
+}
+
+func GetAllErrorInfos() []ErrorCode {
+	fr, err := ioutil.ReadFile("./error/err-code.json")
 	if err != nil {
 		panic(err)
 	}
@@ -64,9 +80,4 @@ func GetAllErrorInfos(serviceName string) []ErrorCode {
 	return d
 }
 
-
-func getServerId(serviceName string) int64 {
-	//TODO
-	return 0
-}
 

@@ -1,7 +1,7 @@
 ﻿package main
 
 import (
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	user_proto "github.com/bottos-project/bottos/service/identity/proto"
 	"golang.org/x/net/context"
@@ -41,66 +41,67 @@ var index int = 0
 type User struct{}
 
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
-	ref_block_num := GetBolckNum()
-	log.Info("ref_block_num:", ref_block_num)
-	time.Sleep(1)
-	if ref_block_num < 0 {
-		rsp.Code = 1131
-		rsp.Msg = "Data[ref_block_num] exception"
-		return nil
-	}
-
-	ref_block_prefix, timestamp := GetBlockPrefix(ref_block_num)
-	log.Info("ref_block_prefix:", ref_block_prefix)
-	log.Info("timestamp:", timestamp)
-	time.Sleep(1)
-	if ref_block_prefix < 0 {
-		rsp.Code = 1132
-		rsp.Msg = "Data[ref_block_prefix] exception"
-		return nil
-	}
-
-	accoutBin := AccountGetBin(req.Username, req.OwnerPubKey, req.ActivePubKey)
-	log.Info("accoutBin:", accoutBin)
-	time.Sleep(1)
-	if accoutBin == "" {
-		rsp.Code = 1133
-		rsp.Msg = "Data[account_bin] exception"
-		return nil
-	}
-
-	expirationTime := ExpirationTime(timestamp, 20)
-	accountInfo, msg := AccountPushTransaction(ref_block_num, ref_block_prefix, expirationTime, accoutBin)
-	log.Info("accountInfo:", accountInfo)
-	if !accountInfo {
-		if msg == "Already" {
-			rsp.Code = 1103
-			rsp.Msg = "Account has already existed"
-			return nil
-		}
-		rsp.Code = 1101
-		rsp.Msg = msg
-		return nil
-	}
-	time.Sleep(1)
-	b, _ := json.Marshal(req.UserInfo)
-	userBin := UserGetBin(req.Username, string(b))
-	log.Info("userBin:", userBin)
-	time.Sleep(1)
-	if userBin == "" {
-		rsp.Code = 1104
-		rsp.Msg = "Data[user_bin] exception"
-		return nil
-	}
-	userInfo := UserPushTransaction(ref_block_num, ref_block_prefix, expirationTime, userBin, req.Username)
-	log.Info("userInfo:", userInfo)
-	if userInfo != "" {
-		rsp.Code = 0
-		rsp.Msg = "Registered user success"
-	} else {
-		rsp.Code = 1102
-		rsp.Msg = "Registered user failure"
-	}
+	log.Info("req:", req);
+	//ref_block_num := GetBolckNum()
+	//log.Info("ref_block_num:", ref_block_num)
+	//time.Sleep(1)
+	//if ref_block_num < 0 {
+	//	rsp.Code = 1131
+	//	rsp.Msg = "Data[ref_block_num] exception"
+	//	return nil
+	//}
+	//
+	//ref_block_prefix, timestamp := GetBlockPrefix(ref_block_num)
+	//log.Info("ref_block_prefix:", ref_block_prefix)
+	//log.Info("timestamp:", timestamp)
+	//time.Sleep(1)
+	//if ref_block_prefix < 0 {
+	//	rsp.Code = 1132
+	//	rsp.Msg = "Data[ref_block_prefix] exception"
+	//	return nil
+	//}
+	//
+	//accoutBin := AccountGetBin(req.Username, req.OwnerPubKey, req.ActivePubKey)
+	//log.Info("accoutBin:", accoutBin)
+	//time.Sleep(1)
+	//if accoutBin == "" {
+	//	rsp.Code = 1133
+	//	rsp.Msg = "Data[account_bin] exception"
+	//	return nil
+	//}
+	//
+	//expirationTime := ExpirationTime(timestamp, 20)
+	//accountInfo, msg := AccountPushTransaction(ref_block_num, ref_block_prefix, expirationTime, accoutBin)
+	//log.Info("accountInfo:", accountInfo)
+	//if !accountInfo {
+	//	if msg == "Already" {
+	//		rsp.Code = 1103
+	//		rsp.Msg = "Account has already existed"
+	//		return nil
+	//	}
+	//	rsp.Code = 1101
+	//	rsp.Msg = msg
+	//	return nil
+	//}
+	//time.Sleep(1)
+	//b, _ := json.Marshal(req.UserInfo)
+	//userBin := UserGetBin(req.Username, string(b))
+	//log.Info("userBin:", userBin)
+	//time.Sleep(1)
+	//if userBin == "" {
+	//	rsp.Code = 1104
+	//	rsp.Msg = "Data[user_bin] exception"
+	//	return nil
+	//}
+	//userInfo := UserPushTransaction(ref_block_num, ref_block_prefix, expirationTime, userBin, req.Username)
+	//log.Info("userInfo:", userInfo)
+	//if userInfo != "" {
+	//	rsp.Code = 0
+	//	rsp.Msg = "Registered user success"
+	//} else {
+	//	rsp.Code = 1102
+	//	rsp.Msg = "Registered user failure"
+	//}
 	return nil
 }
 
@@ -1432,14 +1433,19 @@ func ExpirationTime(toBeChargeTime string, delayTime int64) (string) {
 	return dataTimeStr
 }
 
-func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("user.srv")
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/api-user-log.xml")
+	if err != nil{
+		log.Error(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
+}
 
+func main() {
 	service := micro.NewService(
-		micro.Name("go.micro.srv.user"),
-		micro.Version("2.0.0"),
+		micro.Name("bottos.srv.user"),
+		micro.Version("3.0.0"),
 	)
 
 	service.Init()
@@ -1447,7 +1453,7 @@ func main() {
 	user_proto.RegisterUserHandler(service.Server(), new(User))
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		log.Critical(err)
 	}
 
 }
