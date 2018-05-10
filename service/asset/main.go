@@ -1,7 +1,6 @@
 ﻿package main
 
 import (
-	log "github.com/jeanphorn/log4go"
 	"github.com/micro/go-micro"
 	proto "github.com/bottos-project/bottos/service/asset/proto"
 	"golang.org/x/net/context"
@@ -24,6 +23,8 @@ import (
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"errors"
 	cbb "github.com/bottos-project/bottos/service/asset/cbb"
+	log "github.com/cihub/seelog"
+	"os"
 )
 
 const (
@@ -702,7 +703,6 @@ func (u *Asset) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 	mgo.DB(config.DB_NAME).C("Messages").Find(where).Sort("-createdAt").Skip(skip).Limit(pageSize).All(&ret)
 	log.Info("ret:", ret)
 
-
 	/*	Remove Duplicates
 		a_len := len(ret) - 1
 		log.Info(a_len)
@@ -718,7 +718,6 @@ func (u *Asset) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 		}
 
 		log.Info("ret1:", ret1)*/
-
 
 	var rows = []*proto.QueryRow{}
 	for _, v := range ret {
@@ -1392,10 +1391,18 @@ func UserGetBin(username string, info string) (string, int, error) {
 	}
 }
 
+func init() {
+	defer log.Flush()
+	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
+	if err != nil {
+		log.Critical("err parsing config log file", err)
+		os.Exit(1)
+		return
+	}
+	log.ReplaceLogger(logger)
+}
 func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("asset.srv")
+	log.Info("Asset Service Start")
 
 	service := micro.NewService(
 		micro.Name("go.micro.srv.v2.asset"),
@@ -1404,11 +1411,9 @@ func main() {
 
 	service.Init()
 
-	//proto.RegisterUserHandler(service.Server(), new(Asset))
-	//user_proto.RegisterUserHandler(service.Server(), new(User))
 	proto.RegisterAssetHandler(service.Server(), new(Asset))
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		log.Critical("Asset Service Run Failed",err)
 	}
 }

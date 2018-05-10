@@ -2,7 +2,7 @@
 
 import (
 	"encoding/json"
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 
 	"github.com/bottos-project/bottos/service/asset/proto"
 	"github.com/micro/go-micro"
@@ -10,7 +10,8 @@ import (
 	"golang.org/x/net/context"
 	"strconv"
 	"github.com/asaskevich/govalidator"
-	"github.com/bottos-project/bottos/config"
+	//"github.com/bottos-project/bottos/config"
+	"os"
 )
 
 type Asset struct {
@@ -342,10 +343,18 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 	return nil
 }
 
+func init() {
+	defer log.Flush()
+	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
+	if err != nil {
+		log.Critical("err parsing config log file", err)
+		os.Exit(1)
+		return
+	}
+	log.ReplaceLogger(logger)
+}
 func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("asset.api")
+	log.Info("Asset API Service Start")
 
 	service := micro.NewService(
 		micro.Name("go.micro.api.v2.asset"),
@@ -361,6 +370,6 @@ func main() {
 	)
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		log.Critical("Asset API Service Run Failed",err)
 	}
 }
