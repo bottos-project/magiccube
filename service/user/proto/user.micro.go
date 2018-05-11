@@ -16,8 +16,8 @@ It has these top-level messages:
 	LoginResponse
 	LogoutRequest
 	LogoutResponse
-	QueryBlockHeaderRequest
-	QueryBlockHeaderResponse
+	GetBlockHeaderRequest
+	GetBlockHeaderResponse
 	BlockHeader
 */
 package user
@@ -54,7 +54,7 @@ type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...client.CallOption) (*LogoutResponse, error)
-	QueryBlockHeader(ctx context.Context, in *QueryBlockHeaderRequest, opts ...client.CallOption) (*QueryBlockHeaderResponse, error)
+	GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, opts ...client.CallOption) (*GetBlockHeaderResponse, error)
 }
 
 type userClient struct {
@@ -105,9 +105,9 @@ func (c *userClient) Logout(ctx context.Context, in *LogoutRequest, opts ...clie
 	return out, nil
 }
 
-func (c *userClient) QueryBlockHeader(ctx context.Context, in *QueryBlockHeaderRequest, opts ...client.CallOption) (*QueryBlockHeaderResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "User.QueryBlockHeader", in)
-	out := new(QueryBlockHeaderResponse)
+func (c *userClient) GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, opts ...client.CallOption) (*GetBlockHeaderResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.GetBlockHeader", in)
+	out := new(GetBlockHeaderResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -121,7 +121,7 @@ type UserHandler interface {
 	Register(context.Context, *RegisterRequest, *RegisterResponse) error
 	Login(context.Context, *LoginRequest, *LoginResponse) error
 	Logout(context.Context, *LogoutRequest, *LogoutResponse) error
-	QueryBlockHeader(context.Context, *QueryBlockHeaderRequest, *QueryBlockHeaderResponse) error
+	GetBlockHeader(context.Context, *GetBlockHeaderRequest, *GetBlockHeaderResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -144,6 +144,6 @@ func (h *User) Logout(ctx context.Context, in *LogoutRequest, out *LogoutRespons
 	return h.UserHandler.Logout(ctx, in, out)
 }
 
-func (h *User) QueryBlockHeader(ctx context.Context, in *QueryBlockHeaderRequest, out *QueryBlockHeaderResponse) error {
-	return h.UserHandler.QueryBlockHeader(ctx, in, out)
+func (h *User) GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, out *GetBlockHeaderResponse) error {
+	return h.UserHandler.GetBlockHeader(ctx, in, out)
 }

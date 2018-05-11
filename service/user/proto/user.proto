@@ -4,7 +4,7 @@ service User {
 	rpc Register(RegisterRequest) returns(RegisterResponse) {};
 	rpc Login(LoginRequest) returns(LoginResponse) {};
 	rpc Logout(LogoutRequest) returns(LogoutResponse) {};
-	rpc QueryBlockHeader(QueryBlockHeaderRequest) returns(QueryBlockHeaderResponse) {};
+	rpc GetBlockHeader(GetBlockHeaderRequest) returns(GetBlockHeaderResponse) {};
 }
 
 message RegisterRequest {
@@ -60,8 +60,8 @@ message LogoutResponse {
 	string msg = 2;
 }
 
-message QueryBlockHeaderRequest{}
-message QueryBlockHeaderResponse {
+message GetBlockHeaderRequest{}
+message GetBlockHeaderResponse {
 	int64 code = 1;
 	string msg = 2;
 	BlockHeader data = 3;

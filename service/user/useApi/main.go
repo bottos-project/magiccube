@@ -60,10 +60,11 @@ func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Respons
 	return nil
 }
 
-func (u *User) QueryBlockHeader(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
-	response, err := u.Client.QueryBlockHeader(ctx, &user.QueryBlockHeaderRequest{})
+	response, err := u.Client.GetBlockHeader(ctx, &user.GetBlockHeaderRequest{})
 	if err != nil {
+
 		return err
 	}
 

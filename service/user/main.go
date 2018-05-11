@@ -12,7 +12,7 @@ import (
 )
 type User struct{}
 
-func (u *User) QueryBlockHeader(ctx context.Context, req *user_proto.QueryBlockHeaderRequest, rsp *user_proto.QueryBlockHeaderResponse) error {
+func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
 	block_header, err:= data.BlockHeader()
 	if block_header != nil {
 		rsp.Data = block_header
