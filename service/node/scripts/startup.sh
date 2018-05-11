@@ -316,7 +316,7 @@ function stopserv()
 	ps -ef | grep ${SERVER_PATH}"core" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	sleep 1
 
-	ps -ef | grep -w ${SERVER_PATH}"node" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+	ps -ef | grep -w ${SERVER_PATH}"./node" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	sleep 1
 
 	ps -ef | grep "mongodb" | grep -v grep | cut -c 9-15 | xargs kill -s 9
