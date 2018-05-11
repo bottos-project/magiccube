@@ -1,0 +1,77 @@
+﻿syntax = "proto3";
+
+service User {
+	rpc Register(RegisterRequest) returns(RegisterResponse) {};
+	rpc Login(LoginRequest) returns(LoginResponse) {};
+	rpc Logout(LogoutRequest) returns(LogoutResponse) {};
+	rpc QueryBlockHeader(QueryBlockHeaderRequest) returns(QueryBlockHeaderResponse) {};
+}
+
+message RegisterRequest {
+	AccountInfo account = 1;
+	UserInfo user = 2;
+	string verify_id = 3;
+	string verify_value = 4;
+}
+
+message AccountInfo {
+	string creator = 1;
+    string name = 2;
+	string pubkey = 3;
+    uint64 deposit = 4;
+}
+
+message UserInfo {
+	 uint64 version = 1;
+     uint64 cursor_num = 2;
+     uint64 cursor_label = 3;
+	 uint64 lifetime = 4;
+	 string sender = 5;
+     string contract = 6;
+	 string method = 7;
+	 repeated int32 param = 8;
+	 uint64 sig_alg = 9;
+	 string signatures =10;
+}
+
+message RegisterResponse {
+	int32 code = 1;
+	string msg = 2;
+}
+
+message LoginRequest {
+	string body = 1;
+    string header = 2;
+}
+
+message LoginResponse {
+	int64 code = 1;
+	string token = 2;
+	string msg = 3;
+}
+
+message LogoutRequest {
+	string username = 1;
+	string token = 2;
+}
+
+message LogoutResponse {
+	int64 code = 1;
+	string msg = 2;
+}
+
+message QueryBlockHeaderRequest{}
+message QueryBlockHeaderResponse {
+	int64 code = 1;
+	string msg = 2;
+	BlockHeader data = 3;
+}
+
+message BlockHeader {
+	uint64 head_block_num = 1;
+	string head_block_hash = 2;
+	uint64 head_block_time = 3;
+	string head_block_delegate = 4;
+	uint64 cursor_label = 5;
+	uint64 last_consensus_block_num = 6;
+}

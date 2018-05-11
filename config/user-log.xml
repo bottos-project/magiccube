@@ -1,7 +1,7 @@
 <seelog type="sync">
     <outputs formatid="log">
         <console />
-        <rollingfile type="size" filename="./log/api-user.log" maxsize="20971520" maxrolls="3" />
+        <rollingfile type="size" filename="./log/user.log" maxsize="20971520" maxrolls="3" />
     </outputs>
     <formats>
         <format id="log" format="%Date %Time [%LEV] %RelFile:%Line %FuncShort(): %Msg%n"/>

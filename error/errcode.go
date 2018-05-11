@@ -27,6 +27,7 @@ package error
 import (
 	"io/ioutil"
 	"encoding/json"
+	log "github.com/cihub/seelog"
 )
 
 type ErrorCode struct {
@@ -36,6 +37,12 @@ type ErrorCode struct {
 		En string `json:"en"`
 	} `json:"msg"`
 	Details string  `json:"details"`
+}
+
+type Ret struct {
+	Code    int64 		`json:"code"`
+	Data 	interface{} `json:"data"`
+	Msg     string		`json:"msg"`
 }
 
 func GetErrorInfo(code int64) ErrorCode {
@@ -48,12 +55,55 @@ func GetErrorInfo(code int64) ErrorCode {
 	return ErrorCode{}
 }
 
+func Return(b interface{}) string {
+	buf, err:= json.Marshal(b)
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+	var ret Ret
+	json.Unmarshal(buf, &ret)
+	if(ret.Code == 0 || ret.Code == 1){
+		ret.Code = 1
+		ret.Msg = "ok"
+
+		body, err:= json.Marshal(ret)
+		if err != nil {
+			log.Error(err)
+			panic(err)
+		}
+		return string(body)
+	}
+
+
+	d := GetAllErrorInfos()
+	for _, v := range d {
+		if ret.Code == v.Code {
+			v.Details = ret.Msg
+			json, err := json.Marshal(v)
+			if err != nil {
+				log.Error(err)
+				panic(err)
+			}
+			return string(json)
+		}
+	}
+
+	json, err := json.Marshal(ErrorCode{})
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+	return string(json)
+}
+
 func ReturnError(code int64) string {
 	d := GetAllErrorInfos()
 	for _, v := range d {
 		if code == v.Code {
 			json, err := json.Marshal(v)
 			if err != nil {
+				log.Error(err)
 				panic(err)
 			}
 			return string(json)
@@ -61,6 +111,7 @@ func ReturnError(code int64) string {
 	}
 	json, err := json.Marshal(ErrorCode{})
 	if err != nil {
+		log.Error(err)
 		panic(err)
 	}
 	return string(json)
@@ -69,12 +120,14 @@ func ReturnError(code int64) string {
 func GetAllErrorInfos() []ErrorCode {
 	fr, err := ioutil.ReadFile("./error/err-code.json")
 	if err != nil {
+		log.Error(err)
 		panic(err)
 	}
 
 	var d []ErrorCode
 	err = json.Unmarshal(fr, &d)
 	if err != nil {
+		log.Error(err)
 		panic(err)
 	}
 	return d
