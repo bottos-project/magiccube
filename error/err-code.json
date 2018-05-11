@@ -19,5 +19,12 @@
       "cn": "账号格式错误"
     },
     "details": ""
-  }
+  },{
+  "code": 1003,
+  "msg": {
+    "en": "Getting block information failed",
+    "cn": "获取区块信息信息失败"
+  },
+  "details": ""
+}
 ]
