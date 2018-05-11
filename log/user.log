@@ -7,3 +7,719 @@
 2018-05-11 14:35:51 [INF] service/common/data/data.go:21 BlockHeader(): &{500 Internal Server Error 500 HTTP/1.1 1 1 map[Date:[Fri, 11 May 2018 06:35:48 GMT] Content-Length:[94] Access-Control-Allow-Credentials:[true] Access-Control-Allow-Headers:[Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization] Access-Control-Allow-Methods:[POST, GET, OPTIONS, PUT, DELETE] Content-Type:[application/json]] 0xc042032780 94 [] false false map[] 0xc0424a6100 <nil>}
 2018-05-11 14:36:59 [INF] service/common/data/data.go:21 BlockHeader(): &{500 Internal Server Error 500 HTTP/1.1 1 1 map[Date:[Fri, 11 May 2018 06:36:56 GMT] Content-Length:[94] Access-Control-Allow-Credentials:[true] Access-Control-Allow-Headers:[Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization] Access-Control-Allow-Methods:[POST, GET, OPTIONS, PUT, DELETE] Content-Type:[application/json]] 0xc042146640 94 [] false false map[] 0xc0420c0400 <nil>}
 2018-05-11 14:41:15 [INF] service/common/data/data.go:21 BlockHeader(): &{500 Internal Server Error 500 HTTP/1.1 1 1 map[Date:[Fri, 11 May 2018 06:41:12 GMT] Content-Length:[94] Access-Control-Allow-Credentials:[true] Access-Control-Allow-Headers:[Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization] Access-Control-Allow-Methods:[POST, GET, OPTIONS, PUT, DELETE] Content-Type:[application/json]] 0xc0420a8200 94 [] false false map[] 0xc0424a6000 <nil>}
+2018-05-11 16:30:36 [INF] service/user/useApi/main.go:77 Register(): method:"POST" path:"/v3/user/register" header:<key:"Accept" value:<key:"Accept" values:"*/*" > > header:<key:"Accept-Encoding" value:<key:"Accept-Encoding" values:"gzip, deflate" > > header:<key:"Accept-Language" value:<key:"Accept-Language" values:"zh-CN" > > header:<key:"Connection" value:<key:"Connection" values:"keep-alive" > > header:<key:"Content-Length" value:<key:"Content-Length" values:"1834" > > header:<key:"Content-Type" value:<key:"Content-Type" values:"application/json" > > header:<key:"Host" value:<key:"Host" values:"10.104.20.36:8080" > > header:<key:"Origin" value:<key:"Origin" values:"http://localhost:3000" > > header:<key:"Referer" value:<key:"Referer" values:"http://localhost:3000/" > > header:<key:"Token" value:<key:"Token" values:"" > > header:<key:"User-Agent" value:<key:"User-Agent" values:"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) wallet/3.0.0-alpha.0 Chrome/59.0.3071.115 Electron/1.8.6 Safari/537.36" > > header:<key:"X-Devtools-Request-Id" value:<key:"X-Devtools-Request-Id" values:"1319.82" > > header:<key:"X-Forwarded-For" value:<key:"X-Forwarded-For" values:"10.104.11.241" > > body:"{\"newaccount\":{\"Creator\":\"bottos\",\"Name\":\"testyuan\",\"Pubkey\":\"0435766f54f5a01009ac602a8b70f710e3cc38ee3dea032000915fbd12bfc3645c554d41d45778e680322709d24bfc3abb47d015ae1b5b47d38b6c284d92c38efd\",\"Deposit\":10000},\"newuser\":{\"version\":1,\"cursor_num\":10811,\"cursor_label\":908354822,\"lifetime\":1524833964,\"sender\":\"bottos\",\"contract\":\"bottos\",\"method\":\"newuser\",\"param\":{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":\"{\\\"@context\\\":\\\"https://bottos.org/did/v1\\\",\\\"nameBase58\\\":\\\"bottos1\\\",\\\"version\\\":\\\"0.1\\\",\\\"botid\\\":\\\"did:bot:21tDAKCERh95uGgKbJNHYp\\\",\\\"account\\\":[{\\\"nameBase58\\\":\\\"bottos1\\\",\\\"role\\\":\\\"owner\\\",\\\"expires\\\":\\\"2017-02-08T16:02:20Z\\\",\\\"publicKey\\\":\\\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\\\"},{\\\"accountName\\\":\\\"bottos2\\\",\\\"role\\\":\\\"producer\\\",\\\"expires\\\":\\\"2017-03-22T00:00:00Z\\\",\\\"publicKey\\\":\\\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\\\"},{\\\"name\\\":\\\"bottos3\\\",\\\"role\\\":\\\"general\\\",\\\"expires\\\":\\\"2017-02-08T16:02:20Z\\\",\\\"publicKey\\\":\\\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\\\"}],\\\"control\\\":[{\\\"type\\\":\\\"OrControl\\\",\\\"controller\\\":[{\\\"botid\\\":\\\"did:bot:21tDAKCERh95uGgKbJNHYp\\\",\\\"type\\\":\\\"Ed25519VerificationKey2018\\\",\\\"owner\\\":\\\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\\\",\\\"publicKeyBase58\\\":\\\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\\\"}]}],\\\"service\\\":{},\\\"created\\\":\\\"2012-10-10T17:00:00Z\\\",\\\"updated\\\":\\\"2017-10-17T02:41:00Z\\\",\\\"signature\\\":{\\\"type\\\":\\\"RsaSignature2016\\\",\\\"created\\\":\\\"2018-02-08T16:02:20Z\\\",\\\"creator\\\":\\\"did:bot:21tDAKCERh95uGgKbJNHYp\\\",\\\"signatureValue\\\":\\\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\\\"}}\"},\"sig_alg\":1,\"signatures\":[\"055e26e863e875aae193d575f5e9cd40688cb0b09b2a3a0b5e853f8006d1ef420ea96f10a99daf7857daa04113eb5266573648945f8e826efbc63e1ccde53444\"]},\"verify_id\":\"123456789\",\"verify_value\":\"abc123\"}" 
+2018-05-11 16:30:36 [INF] service/user/useApi/main.go:84 Register(): {<nil> <nil> 123456789 abc123}
+2018-05-11 16:31:44 [INF] service/user/useApi/main.go:77 Register(): statusCode:200 
+2018-05-11 16:31:44 [INF] service/user/useApi/main.go:84 Register(): {<nil> <nil> 123456789 abc123}
+2018-05-11 16:31:55 [INF] service/user/useApi/main.go:77 Register(): {"newaccount":{"Creator":"bottos","Name":"testyuan","Pubkey":"04e69c6fec481d8242acb3303664cd2fc257a2386176edc337233a97410e0fca1b5e33cdee1e6a5b7cc1665b33efff9c0ccd1db0a1a0754839e2be9d7a01b5526c","Deposit":10000},"newuser":{"version":1,"cursor_num":10968,"cursor_label":594271745,"lifetime":1524834435,"sender":"bottos","contract":"bottos","method":"newuser","param":{"didid":"did:bot:21tDAKCERh95uGgKbJNHYp","didStr":"{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}"},"sig_alg":1,"signatures":["e45baaab7f54d8475e0f7009448fc887cfe4607143e0eceb3a84dee7b1c54a503fdf205155ae567336ad6ff68e93663005cc096021b5bd07a40f911e9e2207a0"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:31:55 [INF] service/user/useApi/main.go:84 Register(): {<nil> <nil> 123456789 abc123}
+2018-05-11 16:43:30 [INF] service/user/useApi/main.go:77 Register(): {"newaccount":{"Creator":"bottos","Name":"testyuan","Pubkey":"04fce7955deded9b145d30c868055549b455c3704da7fd79567cf28c05eb734a051e2aae63a2f596f5acea58d23fc6091b9f5eb0accf47b6590285953ddd235901","Deposit":10000},"newuser":{"version":1,"cursor_num":12355,"cursor_label":910530129,"lifetime":1524838596,"sender":"bottos","contract":"bottos","method":"newuser","param":{"didid":"did:bot:21tDAKCERh95uGgKbJNHYp","didStr":"{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}"},"sig_alg":1,"signatures":["84910332b88d5b647a75c505cd5c14aba605f2d3d9c5e328fad504582b147760193aa1f518b107e1f77cb652d7df1844316161e58eecbc12b905615207af6df1"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:43:30 [INF] service/user/useApi/main.go:84 Register(): {<nil> <nil> 123456789 abc123}
+2018-05-11 16:44:57 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04ccf63eb70e7e5e7d10e2ede02c224ad9416b05fe78d9701f5980612aa625d97caa5b29773ba1c08f17abc1c372786bd94819318ef14221e92172253094daaa41","Deposit":10000},"user":{"version":1,"cursor_num":12527,"cursor_label":1129697196,"lifetime":1524839112,"sender":"bottos","contract":"bottos","method":"newuser","param":{"didid":"did:bot:21tDAKCERh95uGgKbJNHYp","didStr":"{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}"},"sig_alg":1,"signatures":["e61db1e1fee87132fc1a8886d387a399efb1cef2efc58c5a9f5ec526ac6c423d7c80ce55af33650a4e8878fb436612e28e86d44d38959b293b69c3ad135b32fb"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:44:57 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal object into Go struct field UserInfo.param of type string
+2018-05-11 16:45:51 [INF] service/user/useApi/main.go:77 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 31031,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":'{
+			"didid": "did:bot:21tDAKCERh95uGgKbJNHYp",
+			"didStr": "{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}"
+		}',
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 16:45:51 [ERR] service/user/useApi/main.go:82 Register(): invalid character '\'' looking for beginning of value
+2018-05-11 16:47:18 [INF] service/user/useApi/main.go:77 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 31031,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 16:47:18 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:31031 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1 signatures:"111110"   abc123}
+2018-05-11 16:49:13 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04628d6144e40ae23b90f4e89f0f6f63ccbb444824c503adb7382abc2c21866bec25f13d6148dbbb06970aca8ecd15ec8393ec83d6a0af2728508fc8fd8cd11823","Deposit":10000},"user":{"version":1,"cursor_num":13037,"cursor_label":1081953855,"lifetime":1524840642,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["df2cdac100776d064d929fdb1d724fc65afeff7087f67daada65dd38c9858e4438e8dc8c508baacab902f419c770d5a4f0545b67aff67138f48d9d101770bd74"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:49:13 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:49:34 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"0448ffe5e0ff65bdbdebfeb34946fa8748cb7f63f6e71a6e05c313cf94bd8442357f7d4af6415b5402b3393140690e85db80bf5044fe36934bcf0b22e73ac99403","Deposit":10000},"user":{"version":1,"cursor_num":13081,"cursor_label":620051835,"lifetime":1524840774,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["a8ddad1418f6f44c325cf1600b5f11d39a00b8bf2a34a82e10115a861a60bef9170a05d4adebb4b04f7657e2dffed726617e35de958a25a0baef32ba48b2385e"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:49:34 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:50:13 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"0453e03160463a289400f5e6b2e00751c09bbcb49fc0a9a3d0e9a5cdc365fdf982e31c262fd2d2513a2ea0243445f2f42f68801093cd2cdaf6cbf4f25f66b88184","Deposit":10000},"user":{"version":1,"cursor_num":13159,"cursor_label":3832805712,"lifetime":1524841008,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["7a447c4c4e582d02f0415aa50f09ba19447fe9138176f75f810f0755c68333791153ba6da6b8829ca20749a8ea1af29b90b87e2441046e3f134de7023c22db69"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:50:13 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:50:14 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04a3ae54fe73c2268750945eab4150d2c55527d13e0db3df32d9dae7ccd13e669601b73e559cb68f1582b185d83708e5c96d756fcaa226fdf1c1ddc950223e32f6","Deposit":10000},"user":{"version":1,"cursor_num":13161,"cursor_label":1084077466,"lifetime":1524841014,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["4edd5aa6157890639373fe5796745d0e28aedc692b8ba4d515506b435fa3440f00d30354aa47d30583de48be5d8da701f7784a49716f0a327273052df9390207"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:50:14 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:50:15 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04a3a62fc3100350299129bf076ca26de2be887ed980bbdf9da5ba24ce163f635ce1015783cffd3391238f5128b222732290e74992930d81b8e6bb7c94510a6d8d","Deposit":10000},"user":{"version":1,"cursor_num":13162,"cursor_label":1049380407,"lifetime":1524841017,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["fef1eb2bca1045ac6cb2313f947863fe061a2fe807d75eb598f1e01cc580631617b4ed392593964793e81a7c948ae4343ae8ab657141b29be4d8b09e247f0c83"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:50:15 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:50:16 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04e6950c5f2dd3952ac1a047cb4fa0416660b046e3242e814565fb3ce70b85105f7013b8e2d351d7d8cfb4b139ebb765625f6d3eb4f2b36be805cb048272ecfbd5","Deposit":10000},"user":{"version":1,"cursor_num":13163,"cursor_label":2235471716,"lifetime":1524841020,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["b7c2cf89ca966a61b03ea3b8d945be6a7366979bc0e03eaab4a1bcf937fe6880719e16c6a12288f328531b4884d6d098c6d1075edb2cc5c10a7ed6e4b11cc070"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:50:16 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:50:16 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"0430ee12a4d59e7b06cdeff688f8c91e7786952474f6d1a514da7bcec64259b59e4dca24bfb47af7b0c4115c54a17e6579614c0066020880507600d776b01fb791","Deposit":10000},"user":{"version":1,"cursor_num":13164,"cursor_label":2171224913,"lifetime":1524841023,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":["5e1460342d60e8286df81086bc0006d1fa7fa30204c309de221936e539fbf45b7da650ae57e2d50cb5dfdc4be2b5e37939a46c3a27943cbea00e948e72320ed2"]},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:50:16 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal array into Go struct field UserInfo.signatures of type string
+2018-05-11 16:51:46 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04c45d2a6d7420721b3ce417ff72638161284256fae67c04aec2071965fecb86e8a072b3474423c034b7699ab7203d54b5779be7935a302533467300ca3962233e","Deposit":10000},"user":{"version":1,"cursor_num":13343,"cursor_label":2598119624,"lifetime":1524841560,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":"","signature":{"type":"Buffer","data":[43,36,74,240,180,50,96,57,164,163,148,234,193,74,37,245,193,200,34,138,244,248,39,212,122,65,252,82,40,28,250,137,36,113,174,202,253,162,130,151,169,126,44,90,105,226,39,74,23,150,185,8,78,126,61,70,234,124,114,247,228,171,231,232]}},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:51:46 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testyuan" pubkey:"04c45d2a6d7420721b3ce417ff72638161284256fae67c04aec2071965fecb86e8a072b3474423c034b7699ab7203d54b5779be7935a302533467300ca3962233e" deposit:10000  version:1 cursor_num:13343 cursor_label:2598119624 lifetime:1524841560 sender:"bottos" contract:"bottos" method:"newuser" param:"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}" sig_alg:1  123456789 abc123}
+2018-05-11 16:56:19 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"048ecb62b1d49bdc97efab4cb0e6670638bab337ff9379bdd680df8d8ddcb492b8a373781ac3b60bfee81bd461bdfcbaf09b1d49d8908025dae97187f4cb95b54e","Deposit":10000},"user":{"version":1,"cursor_num":13888,"cursor_label":456303724,"lifetime":1524843195,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":{"type":"Buffer","data":[70,177,119,143,137,154,110,186,240,189,4,20,233,143,111,196,188,22,238,248,212,18,212,179,188,83,159,62,58,190,28,156,64,252,134,61,109,51,122,207,101,250,4,236,101,25,86,73,10,193,213,140,16,68,61,88,81,157,171,245,142,146,209,158]}},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:56:19 [ERR] service/user/useApi/main.go:82 Register(): json: cannot unmarshal object into Go struct field UserInfo.signatures of type string
+2018-05-11 16:56:58 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04296bc59dd4d95bb64349524880f7e99b62dadc5fb401c8354dd7aef9dc19b2b197e85947350e1105dc4b5b40aac06f489eb115b0aae2951bf30f1e4c710cca2d","Deposit":10000},"user":{"version":1,"cursor_num":13965,"cursor_label":2518735469,"lifetime":1524843426,"sender":"bottos","contract":"bottos","method":"newuser","param":"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}","sig_alg":1,"signatures":"0b331966042f051bd5c5f4e2c0ed7f0f18b9860e2cdea1e26e5accfaa4263d015b722cbde5a9ef4a68fc48a40c5274aebef4b4856b2e11d531782a60e23c7f76"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:56:58 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testyuan" pubkey:"04296bc59dd4d95bb64349524880f7e99b62dadc5fb401c8354dd7aef9dc19b2b197e85947350e1105dc4b5b40aac06f489eb115b0aae2951bf30f1e4c710cca2d" deposit:10000  version:1 cursor_num:13965 cursor_label:2518735469 lifetime:1524843426 sender:"bottos" contract:"bottos" method:"newuser" param:"{\"didid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"didStr\":{\"@context\":\"https://bottos.org/did/v1\",\"nameBase58\":\"bottos1\",\"version\":\"0.1\",\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"account\":[{\"nameBase58\":\"bottos1\",\"role\":\"owner\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM1=\"},{\"accountName\":\"bottos2\",\"role\":\"producer\",\"expires\":\"2017-03-22T00:00:00Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM2=\"},{\"name\":\"bottos3\",\"role\":\"general\",\"expires\":\"2017-02-08T16:02:20Z\",\"publicKey\":\"lji9qTtkCydxtez/bt1zdLxVMMbz4SzWvlqgOBmURoM3=\"}],\"control\":[{\"type\":\"OrControl\",\"controller\":[{\"botid\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"type\":\"Ed25519VerificationKey2018\",\"owner\":\"did:bot:6SGmENsr9EujGc9VfEkAqSWHfdCzdVeh5ytKUTcwgPMN\",\"publicKeyBase58\":\"5aS1G6kqd3MZXBHT1vj3xDvj32j69F497WtqtRmYocz8\"}]}],\"service\":{},\"created\":\"2012-10-10T17:00:00Z\",\"updated\":\"2017-10-17T02:41:00Z\",\"signature\":{\"type\":\"RsaSignature2016\",\"created\":\"2018-02-08T16:02:20Z\",\"creator\":\"did:bot:21tDAKCERh95uGgKbJNHYp\",\"signatureValue\":\"IOmA4R7TfhkYTYW87z640O3GYFldw0yqie9Wl1kZ5OBYNAKOwG5uOsPRK8/2C4STOWF+83cMcbZ3CBMq2/gi25s=\"}}}" sig_alg:1 signatures:"0b331966042f051bd5c5f4e2c0ed7f0f18b9860e2cdea1e26e5accfaa4263d015b722cbde5a9ef4a68fc48a40c5274aebef4b4856b2e11d531782a60e23c7f76"  123456789 abc123}
+2018-05-11 16:58:00 [INF] service/user/useApi/main.go:77 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04be4f30df17e11c07c91da88fc716410286bc52ca90e5057b6dc135919297139f16406f592167c77cf1cca2084f7bf9128764cdaceb8289ad3e8cd8c3cd25843b","Deposit":10000},"user":{"version":1,"cursor_num":14089,"cursor_label":366741237,"lifetime":1524843798,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signatures":"73f99c82a8afff1ab48372e9920f65514cface348ff88796124dbf430206eaca775627f23ef1115a979663216a3cb2601e6d0ca577f39150450d1d9d05bea234"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 16:58:00 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testyuan" pubkey:"04be4f30df17e11c07c91da88fc716410286bc52ca90e5057b6dc135919297139f16406f592167c77cf1cca2084f7bf9128764cdaceb8289ad3e8cd8c3cd25843b" deposit:10000  version:1 cursor_num:14089 cursor_label:366741237 lifetime:1524843798 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signatures:"73f99c82a8afff1ab48372e9920f65514cface348ff88796124dbf430206eaca775627f23ef1115a979663216a3cb2601e6d0ca577f39150450d1d9d05bea234"  123456789 abc123}
+2018-05-11 17:06:48 [INF] service/user/useApi/main.go:78 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"043b24bd40a91b9cef26a289d7a59dd2e1ebf99b80fbfe6bceabc0e4f49512cfdbfad6ab6db17f10c629d05c17fb152223a6bc6795ffb8e0e535470a0f6b0e50cb","Deposit":10000},"user":{"version":1,"cursor_num":15143,"cursor_label":3365097071,"lifetime":1524846960,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"8880619e7de75e0ebd8b9d6cc8b012f94bd187d589de0336577a5c8ffb98e58457eeaa5198edfe84db84a89ce2abadfac44b5a17426a90ecaebc9b17d2727fb8"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:06:48 [INF] service/user/useApi/main.go:86 Register(): {creator:"bottos" name:"testyuan" pubkey:"043b24bd40a91b9cef26a289d7a59dd2e1ebf99b80fbfe6bceabc0e4f49512cfdbfad6ab6db17f10c629d05c17fb152223a6bc6795ffb8e0e535470a0f6b0e50cb" deposit:10000  version:1 cursor_num:15143 cursor_label:3365097071 lifetime:1524846960 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"8880619e7de75e0ebd8b9d6cc8b012f94bd187d589de0336577a5c8ffb98e58457eeaa5198edfe84db84a89ce2abadfac44b5a17426a90ecaebc9b17d2727fb8"  123456789 abc123}
+2018-05-11 17:06:48 [INF] service/user/useApi/main.go:126 Register(): [8 1 16 167 118 24 239 156 205 196 12 32 240 162 141 215 5 42 6 98 111 116 116 111 115 50 6 98 111 116 116 111 115 58 7 110 101 119 117 115 101 114 66 6 116 101 115 116 101 116 72 1 82 0]
+2018-05-11 17:07:57 [INF] service/user/useApi/main.go:78 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04f536d9f8cbb08c9443e93823a942354304a311879ee858e707aa0d9877f6d49b82924291f72378a3165c90bdb0a0a73604c94c1f470001dad673d497ad5e367d","Deposit":10000},"user":{"version":1,"cursor_num":15279,"cursor_label":4123537986,"lifetime":1524847368,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"74186f5e6d403f32d86717d2e708024d5c61f69f2cc7089fa5180f37e51d63cb3f2ff996ba2be6e1c3622f537934288c2014db9cf3ea9a9e83e708574a9923cc"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:07:57 [INF] service/user/useApi/main.go:86 Register(): {creator:"bottos" name:"testyuan" pubkey:"04f536d9f8cbb08c9443e93823a942354304a311879ee858e707aa0d9877f6d49b82924291f72378a3165c90bdb0a0a73604c94c1f470001dad673d497ad5e367d" deposit:10000  version:1 cursor_num:15279 cursor_label:4123537986 lifetime:1524847368 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"74186f5e6d403f32d86717d2e708024d5c61f69f2cc7089fa5180f37e51d63cb3f2ff996ba2be6e1c3622f537934288c2014db9cf3ea9a9e83e708574a9923cc"  123456789 abc123}
+2018-05-11 17:07:57 [INF] service/user/useApi/main.go:126 Register(): [8 1 16 175 119 24 194 228 160 174 15 32 136 166 141 215 5 42 6 98 111 116 116 111 115 50 6 98 111 116 116 111 115 58 7 110 101 119 117 115 101 114 66 6 116 101 115 116 101 116 72 1 82 0]
+2018-05-11 17:08:30 [INF] service/user/useApi/main.go:78 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04e31d7f005d68d358a736c160ad6b4256fbdff05edeacee0c8ff8e539294f76ca6a35f28d956faf069a0bf9ef4a01dd6fcc79a5533e5ff8a709182af1dcc679b0","Deposit":10000},"user":{"version":1,"cursor_num":15346,"cursor_label":2658945613,"lifetime":1524847569,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"39b61dc0553040752f7b2696cff490ae6199f4b2ba9ebb16a1317a11e53238c52d9a78c022a06c9b2aed46e3d0a6751b92e4788162a84640bc83a92242b265b3"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:08:30 [INF] service/user/useApi/main.go:86 Register(): {creator:"bottos" name:"testyuan" pubkey:"04e31d7f005d68d358a736c160ad6b4256fbdff05edeacee0c8ff8e539294f76ca6a35f28d956faf069a0bf9ef4a01dd6fcc79a5533e5ff8a709182af1dcc679b0" deposit:10000  version:1 cursor_num:15346 cursor_label:2658945613 lifetime:1524847569 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"39b61dc0553040752f7b2696cff490ae6199f4b2ba9ebb16a1317a11e53238c52d9a78c022a06c9b2aed46e3d0a6751b92e4788162a84640bc83a92242b265b3"  123456789 abc123}
+2018-05-11 17:08:30 [INF] service/user/useApi/main.go:126 Register(): [8 1 16 242 119 24 205 148 241 243 9 32 209 167 141 215 5 42 6 98 111 116 116 111 115 50 6 98 111 116 116 111 115 58 7 110 101 119 117 115 101 114 66 6 116 101 115 116 101 116 72 1 82 0]
+2018-05-11 17:08:50 [INF] service/user/useApi/main.go:78 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04624de4174bd642e7d517eec94e1ecd9788c6bdecb7d0e46934d3a875f78bf0b3cbec651d65e4ace76b4b307f260d61e81b9db32a9820b161fdd5ca4fcc92dd10","Deposit":10000},"user":{"version":1,"cursor_num":15386,"cursor_label":2918666183,"lifetime":1524847689,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"72909be6ea6e66a54b6d1928435063e0c41b3d1b1db752223ff9ac989bce77b552a537da9b48bef9e4357021c6fe1f15e71f6e45e5ee0e4e6056f602feaca8fa"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:08:50 [INF] service/user/useApi/main.go:86 Register(): {creator:"bottos" name:"testyuan" pubkey:"04624de4174bd642e7d517eec94e1ecd9788c6bdecb7d0e46934d3a875f78bf0b3cbec651d65e4ace76b4b307f260d61e81b9db32a9820b161fdd5ca4fcc92dd10" deposit:10000  version:1 cursor_num:15386 cursor_label:2918666183 lifetime:1524847689 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"72909be6ea6e66a54b6d1928435063e0c41b3d1b1db752223ff9ac989bce77b552a537da9b48bef9e4357021c6fe1f15e71f6e45e5ee0e4e6056f602feaca8fa"  123456789 abc123}
+2018-05-11 17:08:50 [INF] service/user/useApi/main.go:126 Register(): 0801109a7818c79fddef0a20c9a88dd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 17:09:45 [INF] service/user/useApi/main.go:78 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04951c1e4b354c9a057fa22db2fb0401d655b4f1e58ee281cc102372acb2b99c94eb28dd916826bab26148dc88d3d4afa63dc4a6e9c2247eaa36cea690b18c5848","Deposit":10000},"user":{"version":1,"cursor_num":15495,"cursor_label":3549593878,"lifetime":1524848016,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"011fc82c738c2e0b4837a484059dd329c88fa711f53a9d650593b35d25a237af77e6721b022907672c01f6aa20aea32088db800ad9e5be0b3d46fbdf9b6a4b40"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:09:45 [INF] service/user/useApi/main.go:86 Register(): {creator:"bottos" name:"testyuan" pubkey:"04951c1e4b354c9a057fa22db2fb0401d655b4f1e58ee281cc102372acb2b99c94eb28dd916826bab26148dc88d3d4afa63dc4a6e9c2247eaa36cea690b18c5848" deposit:10000  version:1 cursor_num:15495 cursor_label:3549593878 lifetime:1524848016 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"011fc82c738c2e0b4837a484059dd329c88fa711f53a9d650593b35d25a237af77e6721b022907672c01f6aa20aea32088db800ad9e5be0b3d46fbdf9b6a4b40"  123456789 abc123}
+2018-05-11 17:09:45 [INF] service/user/useApi/main.go:126 Register(): 0801108779189682ca9c0d2090ab8dd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 17:29:20 [INF] service/user/useApi/main.go:78 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04fcaf4279df2ddbbc7fc943baccdb1cc03fad3c157a13f039274d9be86565abdb088084deeddaed451a31b42a684d5ef9abddd1aeb0a79554e638f1853d4b376a","Deposit":10000},"user":{"version":1,"cursor_num":17842,"cursor_label":488645319,"lifetime":1524855057,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"10da72d18c08c80960a223e84462efc90ebb9891f85761bed1a73f531990941f01f8d243670a25e2026a00e83291bd23f8df93b2f8d169afcd15281162f535c5"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:29:20 [INF] service/user/useApi/main.go:86 Register(): {creator:"bottos" name:"testyuan" pubkey:"04fcaf4279df2ddbbc7fc943baccdb1cc03fad3c157a13f039274d9be86565abdb088084deeddaed451a31b42a684d5ef9abddd1aeb0a79554e638f1853d4b376a" deposit:10000  version:1 cursor_num:17842 cursor_label:488645319 lifetime:1524855057 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"10da72d18c08c80960a223e84462efc90ebb9891f85761bed1a73f531990941f01f8d243670a25e2026a00e83291bd23f8df93b2f8d169afcd15281162f535c5"  123456789 abc123}
+2018-05-11 17:29:20 [INF] service/user/useApi/main.go:126 Register(): 080110b28b0118c7c580e9012091e28dd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 17:34:22 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"040824eb8db2d56d4c28eccc834a6102f33cf06bd8265de17213fcd181d65f2416eb883e2ea5f56b568d00df77a2b785fdde4509f7e4297297fdef2da74b89c2a6","Deposit":10000},"user":{"version":1,"cursor_num":18446,"cursor_label":3655967702,"lifetime":1524856869,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"cc29702260e4696ab16a4d007c8e218c99b2370e5f2f9956d6fbc426588434a405244b76118d0107548300694366d2d6b8304267e44338f6a0816157b718243a"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:34:22 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"040824eb8db2d56d4c28eccc834a6102f33cf06bd8265de17213fcd181d65f2416eb883e2ea5f56b568d00df77a2b785fdde4509f7e4297297fdef2da74b89c2a6" deposit:10000  version:1 cursor_num:18446 cursor_label:3655967702 lifetime:1524856869 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"cc29702260e4696ab16a4d007c8e218c99b2370e5f2f9956d6fbc426588434a405244b76118d0107548300694366d2d6b8304267e44338f6a0816157b718243a"  123456789 abc123}
+2018-05-11 17:34:22 [INF] service/user/useApi/main.go:143 Register(): 0801108e900118d6c7a6cf0d20a5f08dd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04b663b87efc30e2716431f9230f358b2223b8d3f673e8fe17f399729ea9854af8a5c577244ab42e422eb5ab7c193bc4f313b68b0615c0dc2cbb253ba281bc8fbd","Deposit":10000},"user":{"version":1,"cursor_num":19585,"cursor_label":1765813,"lifetime":1524860286,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"80f163b5e7f682e95f56f0ae3c33ce696c2db83b99569b5e2749d0f8a40e4bcf6746f4113144b7ccd0f5de7498b411857c3fa7e95e2aec27d32a7c0726583486"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"04b663b87efc30e2716431f9230f358b2223b8d3f673e8fe17f399729ea9854af8a5c577244ab42e422eb5ab7c193bc4f313b68b0615c0dc2cbb253ba281bc8fbd" deposit:10000  version:1 cursor_num:19585 cursor_label:1765813 lifetime:1524860286 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"80f163b5e7f682e95f56f0ae3c33ce696c2db83b99569b5e2749d0f8a40e4bcf6746f4113144b7ccd0f5de7498b411857c3fa7e95e2aec27d32a7c0726583486"  123456789 abc123}
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:120 Register(): CursorNum:19585
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:1765813
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:122 Register(): Lifetime:1524860286
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:126 Register(): Param:testet
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 17:43:53 [INF] service/user/useApi/main.go:154 Register(): 08011081990118b5e36b20fe8a8ed7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 31031,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:31031 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:120 Register(): CursorNum:31031
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:122 Register(): Lifetime:153208592491
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:126 Register(): Param:454545
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:154 Register(): {1 31031 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-11 18:02:37 [INF] service/user/useApi/main.go:159 Register(): 080110b7f20118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e657775736572420634353435343548015200
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04e4020e77af6515ffe6ad5bb33be5a28ed57c28de9d55c1048e51509f339a4161e683078b6ce863e4b51aadf6443fa0719065a41cb843be60cb7c1340adf2fcee","Deposit":10000},"user":{"version":1,"cursor_num":21856,"cursor_label":1669802687,"lifetime":1524867099,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"25a386de7ef551d5805c0514f81fc907034d79c7b01cec2148fb7c0377f887f45d3158609fe3a1222cc3360071bff2c832564711a12cd349769ab637b0bb471c"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"04e4020e77af6515ffe6ad5bb33be5a28ed57c28de9d55c1048e51509f339a4161e683078b6ce863e4b51aadf6443fa0719065a41cb843be60cb7c1340adf2fcee" deposit:10000  version:1 cursor_num:21856 cursor_label:1669802687 lifetime:1524867099 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"25a386de7ef551d5805c0514f81fc907034d79c7b01cec2148fb7c0377f887f45d3158609fe3a1222cc3360071bff2c832564711a12cd349769ab637b0bb471c"  123456789 abc123}
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:120 Register(): CursorNum:21856
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:1669802687
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:122 Register(): Lifetime:1524867099
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:126 Register(): Param:testet
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:154 Register(): {1 21856 1669802687 1524867099 bottos bottos newuser testet 1 }
+2018-05-11 18:02:52 [INF] service/user/useApi/main.go:159 Register(): 080110e0aa0118bfd59c9c06209bc08ed7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:120 Register(): CursorNum:19585
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:122 Register(): Lifetime:153208592491
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:126 Register(): Param:454545
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:154 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-11 18:03:17 [INF] service/user/useApi/main.go:159 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e657775736572420634353435343548015200
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04d20e1372ab1f192ba005835365814a55bb7b20a9f95f4b664c13cc9e512c107f668c623c1b4c4bce19a69792bd4772084ea1273493821de73e240297122b4516","Deposit":10000},"user":{"version":1,"cursor_num":22510,"cursor_label":3585795417,"lifetime":1524869061,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"d7324ae9f8b6421ac77155f8ebb605a863209800e4c2ce65203b90bd3decd6d828dfdb77b1007b8990060b303dfaef84b607d29f6292593c2a7a74ffe0cd8112"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"04d20e1372ab1f192ba005835365814a55bb7b20a9f95f4b664c13cc9e512c107f668c623c1b4c4bce19a69792bd4772084ea1273493821de73e240297122b4516" deposit:10000  version:1 cursor_num:22510 cursor_label:3585795417 lifetime:1524869061 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"d7324ae9f8b6421ac77155f8ebb605a863209800e4c2ce65203b90bd3decd6d828dfdb77b1007b8990060b303dfaef84b607d29f6292593c2a7a74ffe0cd8112"  123456789 abc123}
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:120 Register(): CursorNum:22510
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3585795417
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:122 Register(): Lifetime:1524869061
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:126 Register(): Param:testet
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:154 Register(): {1 22510 3585795417 1524869061 bottos bottos newuser testet 1 }
+2018-05-11 18:08:20 [INF] service/user/useApi/main.go:159 Register(): 080110eeaf0118d9caebad0d20c5cf8ed7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"042480a1946760310d3c9be1819a4b3d93650d7ecb23e8a36cbeb65e9f96d0c5dbc8358bef0525f8208b6d684e1cd336b0acb8a403f32c62303e68f64e367235a3","Deposit":10000},"user":{"version":1,"cursornum":25489,"cursorlabel":2663909147,"lifetime":1524877998,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sigalg":1,"signature":"169bf8c63322fec06dfc2b8a7038338f1dd8a5ee8e6f398e3405dd9c0b386d8853cd19e9fab38994443212a5501882a96c3d86fc55003f47ef40342e8d29e0e1"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"042480a1946760310d3c9be1819a4b3d93650d7ecb23e8a36cbeb65e9f96d0c5dbc8358bef0525f8208b6d684e1cd336b0acb8a403f32c62303e68f64e367235a3" deposit:10000  version:1 lifetime:1524877998 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" signature:"169bf8c63322fec06dfc2b8a7038338f1dd8a5ee8e6f398e3405dd9c0b386d8853cd19e9fab38994443212a5501882a96c3d86fc55003f47ef40342e8d29e0e1"  123456789 abc123}
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:120 Register(): CursorNum:0
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:0
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:122 Register(): Lifetime:1524877998
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:126 Register(): Param:testet
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:127 Register(): SigAlg:0
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:154 Register(): {1 0 0 1524877998 bottos bottos newuser testet 0 }
+2018-05-11 18:33:14 [INF] service/user/useApi/main.go:159 Register(): 08011000180020ae958fd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448005200
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04d33f14db9cfe1a5a2aaecdd2123d11ca0d2e912799b1a34f32be3037dd21fdb46415cae5afff82bfc2b731cb7ba28569e559db0b211d42fcb5665b214fdfc707","Deposit":10000},"user":{"version":1,"cursornum":25652,"cursorlabel":3502409419,"lifetime":1524878487,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sigalg":1,"signature":"99a01e8818c1da3d7fec95fcd9909e1aab1c96050f231e5d24354c9162d858664aea7a4e903951c5fedea60117947cbe50874ae30657f2e0609f2bdc45826fba"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"04d33f14db9cfe1a5a2aaecdd2123d11ca0d2e912799b1a34f32be3037dd21fdb46415cae5afff82bfc2b731cb7ba28569e559db0b211d42fcb5665b214fdfc707" deposit:10000  version:1 lifetime:1524878487 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" signature:"99a01e8818c1da3d7fec95fcd9909e1aab1c96050f231e5d24354c9162d858664aea7a4e903951c5fedea60117947cbe50874ae30657f2e0609f2bdc45826fba"  123456789 abc123}
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:120 Register(): CursorNum:0
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:0
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:122 Register(): Lifetime:1524878487
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:126 Register(): Param:testet
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:127 Register(): SigAlg:0
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:154 Register(): {1 0 0 1524878487 bottos bottos newuser testet 0 }
+2018-05-11 18:34:35 [INF] service/user/useApi/main.go:159 Register(): 0801100018002097998fd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448005200
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"043eb4e1a699ec336ac0188fbf8af2ba3e39306ab539238982279dc39c61764cd89a14ee245b57acd5df7a52db45f10689657bd5269aafa5b1047dc5f344c56007","Deposit":10000},"user":{"version":1,"cursornum":26160,"cursorlabel":2370333429,"lifetime":1524880011,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sigalg":1,"signature":"072a3d96aceb97bb69dc3eae016ec72ce44d53a5b5deae145096bef0da7e939217406467378af2b1621d48801894071c2e64d95b6097a2a0b2fee80555aace57"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"043eb4e1a699ec336ac0188fbf8af2ba3e39306ab539238982279dc39c61764cd89a14ee245b57acd5df7a52db45f10689657bd5269aafa5b1047dc5f344c56007" deposit:10000  version:1 lifetime:1524880011 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" signature:"072a3d96aceb97bb69dc3eae016ec72ce44d53a5b5deae145096bef0da7e939217406467378af2b1621d48801894071c2e64d95b6097a2a0b2fee80555aace57"  123456789 abc123}
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:120 Register(): CursorNum:0
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:0
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:122 Register(): Lifetime:1524880011
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:126 Register(): Param:testet
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:127 Register(): SigAlg:0
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:154 Register(): {1 0 0 1524880011 bottos bottos newuser testet 0 }
+2018-05-11 18:38:50 [INF] service/user/useApi/main.go:159 Register(): 080110001800208ba58fd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448005200
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:120 Register(): CursorNum:19585
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:122 Register(): Lifetime:153208592491
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:126 Register(): Param:454545
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:164 Register(): {1 25652 3502409419 1524878487 bottos bottos newuser testet 1 }
+2018-05-11 19:26:03 [INF] service/user/useApi/main.go:169 Register(): 080110b4c80118cb8d8a860d2097998fd7052a06626f74746f733206626f74746f733a076e657775736572420674657374657448015200
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:119 Register(): Version:1
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:120 Register(): CursorNum:19585
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:122 Register(): Lifetime:153208592491
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:123 Register(): Sender:bottos
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:124 Register(): Contract:bottos
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:125 Register(): Method:newuser
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:126 Register(): Param:454545
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:127 Register(): SigAlg:1
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:164 Register(): {1 25652 3502409419 1524878487 bottos bottos newuser testet 1 a}
+2018-05-11 19:27:56 [INF] service/user/useApi/main.go:169 Register(): 080110b4c80118cb8d8a860d2097998fd7052a06626f74746f733206626f74746f733a076e65777573657242067465737465744801520161
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:164 Register(): {1 25652 3502409419 1524878487 bottos bottos newuser testet 1 a}
+2018-05-11 19:31:15 [INF] service/user/useApi/main.go:169 Register(): 080110b4c80118cb8d8a860d2097998fd7052a06626f74746f733206626f74746f733a076e65777573657242067465737465744801520161
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:164 Register(): {1 22 123 888 bottos bottos newuser testet 1 a}
+2018-05-11 19:35:05 [INF] service/user/useApi/main.go:169 Register(): 08011016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744801520161
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:164 Register(): {22 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:36:57 [INF] service/user/useApi/main.go:169 Register(): 08161016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:164 Register(): {22 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:40:56 [INF] service/user/useApi/main.go:169 Register(): 08161016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:164 Register(): {22 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:42:01 [INF] service/user/useApi/main.go:169 Register(): 08161016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:164 Register(): {22 22 123 888 bottos bottos newuser testet 22 }
+2018-05-11 19:42:43 [INF] service/user/useApi/main.go:169 Register(): 08161016187b20f8062a06626f74746f733206626f74746f733a076e657775736572420674657374657448165200
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:164 Register(): {22 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:45:55 [INF] service/user/useApi/main.go:169 Register(): 08161016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:164 Register(): {0 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:49:12 [INF] service/user/useApi/main.go:169 Register(): 08001016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:164 Register(): {0 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:49:22 [INF] service/user/useApi/main.go:169 Register(): 08001016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:164 Register(): {0 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 19:52:57 [INF] service/user/useApi/main.go:169 Register(): 08001016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:164 Register(): {0 22 123 888 bottos bottos newuser testet 22 a}
+2018-05-11 20:01:45 [INF] service/user/useApi/main.go:169 Register(): 1016187b20f8062a06626f74746f733206626f74746f733a076e65777573657242067465737465744816520161
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"04fd1cd361eb622cc424c27477821c7bf60a0b2c04bb0130573aea19eeb923ccc02a97f9dbb8e64d242e1af99b61476bccc6cba4f3214157b0a65850fa4e5ecc43","Deposit":10000},"user":{"version":1,"cursor_num":36507,"cursor_label":1961511000,"lifetime":1524911052,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"8ab6b0af55907a468a9ec0185bd5632c78817d241b7a0a3f8abb923ede1a4c9c1756d72a24f33c1846964903ee0a1659bad43ffbd3e6ef78baa237c7cc953b74"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"04fd1cd361eb622cc424c27477821c7bf60a0b2c04bb0130573aea19eeb923ccc02a97f9dbb8e64d242e1af99b61476bccc6cba4f3214157b0a65850fa4e5ecc43" deposit:10000  version:1 cursor_num:36507 cursor_label:1961511000 lifetime:1524911052 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"8ab6b0af55907a468a9ec0185bd5632c78817d241b7a0a3f8abb923ede1a4c9c1756d72a24f33c1846964903ee0a1659bad43ffbd3e6ef78baa237c7cc953b74"  123456789 abc123}
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  36507
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:1961511000
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   1524911052
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:126 Register(): Param:      testet
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:151 Register(): {1 36507 1961511000 1524911052 bottos bottos newuser testet 1 }
+2018-05-11 20:05:27 [INF] service/user/useApi/main.go:156 Register(): 0801109b9d0218d890a9a70720cc9791d7052a06626f74746f733206626f74746f733a076e65777573657242067465737465744801
+2018-05-11 20:05:27 [INF] service/user/main.go:89 Register(): req:account:<creator:"bottos" name:"testyuan" pubkey:"04fd1cd361eb622cc424c27477821c7bf60a0b2c04bb0130573aea19eeb923ccc02a97f9dbb8e64d242e1af99b61476bccc6cba4f3214157b0a65850fa4e5ecc43" deposit:10000 > user:<version:1 cursor_num:36507 cursor_label:1961511000 lifetime:1524911052 sender:"bottos" contract:"bottos" method:"newuser" param:116 param:101 param:115 param:116 param:101 param:116 sig_alg:1 > verify_id:"123456789" verify_value:"abc123" 
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:79 Register(): {"account":{"Creator":"bottos","Name":"testyuan","Pubkey":"040de2b94d69b9d21bebea722b53b68a7e260e3e1e565f9396b2ff82bfeeed9e151a833cdad7ea014be507f826876e352931b1ffc3db73db58dc573b190ec74ed9","Deposit":10000},"user":{"version":1,"cursor_num":36667,"cursor_label":2800514898,"lifetime":1524911532,"sender":"bottos","contract":"bottos","method":"newuser","param":"testet","sig_alg":1,"signature":"6cf407ae048d935f4f48f5579b96b8af2fbd0df194c9b3850a8143bb9d429da12ab70932dad928da14a0fc47555ec9755a9300fa91c5bdf2f580c5c5d5a70cc7"},"verify_id":"123456789","verify_value":"abc123"}
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testyuan" pubkey:"040de2b94d69b9d21bebea722b53b68a7e260e3e1e565f9396b2ff82bfeeed9e151a833cdad7ea014be507f826876e352931b1ffc3db73db58dc573b190ec74ed9" deposit:10000  version:1 cursor_num:36667 cursor_label:2800514898 lifetime:1524911532 sender:"bottos" contract:"bottos" method:"newuser" param:"testet" sig_alg:1 signature:"6cf407ae048d935f4f48f5579b96b8af2fbd0df194c9b3850a8143bb9d429da12ab70932dad928da14a0fc47555ec9755a9300fa91c5bdf2f580c5c5d5a70cc7"  123456789 abc123}
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  36667
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:2800514898
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   1524911532
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:126 Register(): Param:      testet
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:151 Register(): {1 36667 2800514898 1524911532 bottos bottos newuser testet 1 }
+2018-05-11 20:06:47 [INF] service/user/useApi/main.go:154 Register(): 080110bb9e0218d2eeb1b70a20ac9b91d7052a06626f74746f733206626f74746f733a076e65777573657242067465737465744801

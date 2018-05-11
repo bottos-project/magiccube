@@ -11,11 +11,12 @@ import (
 	"os"
 	"github.com/bottos-project/bottos/config"
 	"regexp"
-	"github.com/gogo/protobuf/proto"
+	"github.com/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
 	errcode "github.com/bottos-project/bottos/error"
 	"crypto/sha256"
 	"encoding/hex"
+	"github.com/bottos-project/bottos/service/common/proto"
 )
 
 type User struct {
@@ -74,12 +75,16 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
+
+	log.Info(req.Body)
+
 	var registerRequest user.RegisterRequest
 	err := json.Unmarshal([]byte(req.Body), &registerRequest)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+	log.Info(registerRequest)
 
 	if config.Enable_verification {
 		if !base64Captcha.VerifyCaptcha(registerRequest.VerifyId, registerRequest.VerifyValue) {
@@ -104,36 +109,65 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	signature,err := hex.DecodeString(registerRequest.User.Signatures)
+	signature,err := hex.DecodeString(registerRequest.User.Signature)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	registerRequest.User.Signatures = ""
+	registerRequest.User.Signature = ""
 
-	serializeData, err := proto.Marshal(registerRequest.User)
+	log.Info("Version:    ", registerRequest.User.Version)
+	log.Info("CursorNum:  ", registerRequest.User.CursorNum)
+	log.Info("CursorLabel:", registerRequest.User.CursorLabel)
+	log.Info("Lifetime:   ", registerRequest.User.Lifetime)
+	log.Info("Sender:     ", registerRequest.User.Sender)
+	log.Info("Contract:   ", registerRequest.User.Contract)
+	log.Info("Method:     ", registerRequest.User.Method)
+	log.Info("Param:      ", registerRequest.User.Param)
+	log.Info("SigAlg:     ", registerRequest.User.SigAlg)
+
+
+	var proto_data = &sign.Message{
+			Version: registerRequest.User.Version,
+			CursorNum: registerRequest.User.CursorNum,
+			CursorLabel: registerRequest.User.CursorLabel,
+			Lifetime: registerRequest.User.Lifetime,
+			Sender: registerRequest.User.Sender,
+			Contract: registerRequest.User.Contract,
+			Method: registerRequest.User.Method,
+			Param : registerRequest.User.Param,
+			SigAlg: registerRequest.User.SigAlg,
+			Signature: "",
+	}
+
+	serializeData, err := proto.Marshal(proto_data)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+
+	var d sign.Message;
+	proto.Unmarshal(serializeData, &d)
+	log.Info(d)
+	log.Info(hex.EncodeToString(serializeData))
+
 	h := sha256.New()
 	h.Write([]byte(hex.EncodeToString(serializeData)))
 	hash := h.Sum(nil)
-
 
 	if !crypto.VerifySign(pubkey, hash, signature) {
 		rsp.Body = errcode.ReturnError(1000)
 		return nil
 	}
 
-	response, err := u.Client.Register(ctx, &registerRequest)
-	if err != nil {
-		return err
-	}
+	//response, err := u.Client.Register(ctx, &registerRequest)
+	//if err != nil {
+	//	return err
+	//}
 
 	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"msg": response.Msg,
+		"code": 1,
+		"msg": "ok",
 	})
 	rsp.Body = string(b)
 	return nil
