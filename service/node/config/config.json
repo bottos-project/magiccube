@@ -2,15 +2,15 @@
   "node": [
     {
       "nodeName":    "node1",
-      "ipAddr":      "10.104.10.184",
+      "ipAddr":      "10.104.11.184",
       "userName":    "xxxx",
       "passWord":    "xxxx",
       "btoPort":    "8888",
       "btoUser":     "xxxx",
       "prodUser":    "xxxx",
       "btoPath":     "/home/bot/workspace",
-      "walletIP":    "10.104.10.184",
-      "keyPath":     "/home/bot/keystone.bto",
+      "walletIP":    "10.104.11.184",
+      "keyPath":     "/home/bot",
       "dbUser":      "xxxx",
       "dbPass":      "xxxx",
       "storageSize": "1T",
