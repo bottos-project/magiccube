@@ -1,6 +1,7 @@
 package main
 
 import (
+    "time"
     "bufio"
 	"fmt"
 	"github.com/code/bottos/service/node/config"
@@ -183,7 +184,6 @@ func InitServer(nodeinfo api.NodeInfos) error {
 
 	for i := 0;i < len(nodeinfo.Node[0].ServLst);i++ {
 		command := config.SCRIPT_PATH+" setserv "+"\""+nodeinfo.Node[0].ServPath+"\" "+"\""+nodeinfo.Node[0].ServLst[i]+"\""
-		fmt.Println("command = ",command)
 		if "windows" == config.RUN_PLATFORM {
 			//command := config.SCRIPT_PATH+" setserv "+"\""+nodeinfo.Node[0].ServPath+"\" "+"\""+nodeinfo.Node[0].ServLst[i]+"\""
 			//fmt.Println("command = ",command)
@@ -197,7 +197,7 @@ func InitServer(nodeinfo api.NodeInfos) error {
 		}else if "linux" == config.RUN_PLATFORM {
 			//wg.Add(1)
 			go exec_shell(command)
-
+                        time.Sleep(1 * time.Second)
 		}
 	}
 	//wg.Wait()
