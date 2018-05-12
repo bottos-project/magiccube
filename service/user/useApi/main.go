@@ -76,8 +76,6 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
-	log.Info(req.Body)
-
 	var registerRequest user.RegisterRequest
 	err := json.Unmarshal([]byte(req.Body), &registerRequest)
 	if err != nil {
@@ -135,16 +133,12 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return nil
 	}
 
-	//response, err := u.Client.Register(ctx, &registerRequest)
-	//if err != nil {
-	//	return err
-	//}
+	response, err := u.Client.Register(ctx, &registerRequest)
+	if err != nil {
+		return err
+	}
 
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": 1,
-		"msg": "ok",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
