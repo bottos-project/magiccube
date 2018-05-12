@@ -29,9 +29,9 @@ message UserInfo {
 	 string sender = 5;
      string contract = 6;
 	 string method = 7;
-	 repeated int32 param = 8;
+	 string param = 8;
 	 uint64 sig_alg = 9;
-	 string signatures =10;
+	 string signature =10;
 }
 
 message RegisterResponse {

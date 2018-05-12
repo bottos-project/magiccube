@@ -11,11 +11,11 @@ import (
 	"os"
 	"github.com/bottos-project/bottos/config"
 	"regexp"
-	"github.com/gogo/protobuf/proto"
+	"github.com/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
 	errcode "github.com/bottos-project/bottos/error"
-	"crypto/sha256"
 	"encoding/hex"
+	"github.com/bottos-project/bottos/service/common/util"
 )
 
 type User struct {
@@ -74,12 +74,14 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
+
 	var registerRequest user.RegisterRequest
 	err := json.Unmarshal([]byte(req.Body), &registerRequest)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
+	log.Info(registerRequest)
 
 	if config.Enable_verification {
 		if !base64Captcha.VerifyCaptcha(registerRequest.VerifyId, registerRequest.VerifyValue) {
@@ -104,24 +106,19 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	signature,err := hex.DecodeString(registerRequest.User.Signatures)
+	signature,err := hex.DecodeString(registerRequest.User.Signature)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	registerRequest.User.Signatures = ""
-
+	registerRequest.User.Signature = ""
 	serializeData, err := proto.Marshal(registerRequest.User)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	h := sha256.New()
-	h.Write([]byte(hex.EncodeToString(serializeData)))
-	hash := h.Sum(nil)
 
-
-	if !crypto.VerifySign(pubkey, hash, signature) {
+	if !crypto.VerifySign(pubkey, util.Sha256(serializeData), signature) {
 		rsp.Body = errcode.ReturnError(1000)
 		return nil
 	}
@@ -131,11 +128,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"msg": response.Msg,
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
