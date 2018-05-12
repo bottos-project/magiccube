@@ -577,7 +577,7 @@ func accountCreate(ctx *cli.Context) error {
 	}
     
     scryptN, scryptP, keydir := NodeCfg.AccountConfig()
-    fmt.Println("===> parameters is:", os.Args, ", data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir)
+    //fmt.Println("===> parameters is:", os.Args, ", data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir)
 
 	password := getPassPhrase("Your new account is locked with a password. Please give a password. Do not forget this password.", true, 0, MakePasswordList(ctx))
     
