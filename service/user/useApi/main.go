@@ -115,32 +115,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 	registerRequest.User.Signature = ""
-
-	log.Info("Version:    ", registerRequest.User.Version)
-	log.Info("CursorNum:  ", registerRequest.User.CursorNum)
-	log.Info("CursorLabel:", registerRequest.User.CursorLabel)
-	log.Info("Lifetime:   ", registerRequest.User.Lifetime)
-	log.Info("Sender:     ", registerRequest.User.Sender)
-	log.Info("Contract:   ", registerRequest.User.Contract)
-	log.Info("Method:     ", registerRequest.User.Method)
-	log.Info("Param:      ", registerRequest.User.Param)
-	log.Info("SigAlg:     ", registerRequest.User.SigAlg)
-
-
-	var proto_data = &sign.Message{
-			Version: registerRequest.User.Version,
-			CursorNum: registerRequest.User.CursorNum,
-			CursorLabel: registerRequest.User.CursorLabel,
-			Lifetime: registerRequest.User.Lifetime,
-			Sender: registerRequest.User.Sender,
-			Contract: registerRequest.User.Contract,
-			Method: registerRequest.User.Method,
-			Param : registerRequest.User.Param,
-			SigAlg: registerRequest.User.SigAlg,
-			Signature: "",
-	}
-
-	serializeData, err := proto.Marshal(proto_data)
+	serializeData, err := proto.Marshal(registerRequest.User)
 	if err != nil {
 		log.Error(err)
 		return err

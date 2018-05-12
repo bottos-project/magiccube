@@ -723,3 +723,71 @@
 2018-05-11 20:06:47 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
 2018-05-11 20:06:47 [INF] service/user/useApi/main.go:151 Register(): {1 36667 2800514898 1524911532 bottos bottos newuser testet 1 }
 2018-05-11 20:06:47 [INF] service/user/useApi/main.go:154 Register(): 080110bb9e0218d2eeb1b70a20ac9b91d7052a06626f74746f733206626f74746f733a076e65777573657242067465737465744801
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:151 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-12 10:15:46 [INF] service/user/useApi/main.go:154 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:119 Register(): Version:    1
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:120 Register(): CursorNum:  19585
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:121 Register(): CursorLabel:3208592491
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:122 Register(): Lifetime:   153208592491
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:123 Register(): Sender:     bottos
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:124 Register(): Contract:   bottos
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:125 Register(): Method:     newuser
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:126 Register(): Param:      454545
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:152 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-12 10:17:13 [INF] service/user/useApi/main.go:155 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
