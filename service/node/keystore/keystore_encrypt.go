@@ -602,7 +602,7 @@ func AccountCreate_Ex( datadir string , keydir string, password string) error {
     NodeCfg.KeyStoreDir = keydir
     
     scryptN, scryptP, keydir := NodeCfg.AccountConfig()
-    log.Println("===>  data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir, ", password is:", password)
+    //log.Println("===>  data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir, ", password is:", password)
     
     UserPwd = password
 
