@@ -14,9 +14,8 @@ import (
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
 	errcode "github.com/bottos-project/bottos/error"
-	"crypto/sha256"
 	"encoding/hex"
-	"github.com/bottos-project/bottos/service/common/proto"
+	"github.com/bottos-project/bottos/service/common/util"
 )
 
 type User struct {
@@ -119,16 +118,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	var d sign.Message;
-	proto.Unmarshal(serializeData, &d)
-	log.Info(d)
-	log.Info(hex.EncodeToString(serializeData))
-
-	h := sha256.New()
-	h.Write([]byte(hex.EncodeToString(serializeData)))
-	hash := h.Sum(nil)
-
-	if !crypto.VerifySign(pubkey, hash, signature) {
+	if !crypto.VerifySign(pubkey, util.Sha256(serializeData), signature) {
 		rsp.Body = errcode.ReturnError(1000)
 		return nil
 	}

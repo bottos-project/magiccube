@@ -2,10 +2,11 @@ package test
 
 import(
 	"testing"
-	"github.com/bottos-project/bottos/service/common/data"
-	"github.com/bottos-project/bottos/service/user/proto"
+	sign "github.com/bottos-project/bottos/service/common/proto"
 	"github.com/bottos-project/bottos/crypto"
 	"encoding/hex"
+	"github.com/bottos-project/bottos/service/common/util"
+	"github.com/protobuf/proto"
 )
 
 func TestRegitser(t *testing.T) {
@@ -13,19 +14,26 @@ func TestRegitser(t *testing.T) {
 }
 
 
-func TestS(t *testing.T){
-	t.Log(data.PushTransaction(user.UserInfo{
+func TestSignature(t *testing.T){
+	data := &sign.Signature{
 		Version: 1,
 		CursorNum: 28,
 		CursorLabel: 3745260307,
 		Lifetime: 1524802615,
 		Sender: "bottos",
 		Contract: "bottos",
-		Method: "newaccount",
-		Param: "",
+		Method: "newuser",
+		Param: "test",
 		SigAlg:1,
-		Signature:"20d8a374aee4099acd776dd59dc54d29effc2f697d4ba70562fd0f1726a31ac5",
-	}))
+		Signature:"",
+	}
+	msg, _ := proto.Marshal(data)
+	seckey,_ := hex.DecodeString("e4877f7665e3c22d4e5acb1a24a2fc3554ceaa575e2a3a9e794a98d9c4c3940f")
+	t.Log(msg)
+	t.Log(seckey)
+	sign, _ := crypto.Sign(util.Sha256(msg), seckey)
+
+	t.Log(hex.EncodeToString(sign))
 }
 
 

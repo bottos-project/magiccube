@@ -791,3 +791,53 @@
 2018-05-12 10:17:13 [INF] service/user/useApi/main.go:127 Register(): SigAlg:     1
 2018-05-12 10:17:13 [INF] service/user/useApi/main.go:152 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
 2018-05-12 10:17:13 [INF] service/user/useApi/main.go:155 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
+2018-05-12 10:19:01 [INF] service/user/useApi/main.go:79 Register(): {
+    "account": {
+        "creator": "bottos",
+        "name": "testuser",
+        "pubkey": "1111",
+        "deposit": 10000
+    },
+    "user": {
+        "version": 1,
+        "cursor_num": 19585,
+        "cursor_label": 3208592491,
+        "lifetime": 153208592491,
+        "sender": "bottos",
+        "contract": "bottos",
+        "method": "newuser",
+        "param":"454545",
+        "sig_alg": 1,
+        "signatures": "111110"
+    },
+    "verify_code": "123456789",
+    "verify_value": "abc123"
+}
+2018-05-12 10:19:01 [INF] service/user/useApi/main.go:87 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-12 10:19:01 [INF] service/user/useApi/main.go:126 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-12 10:19:01 [INF] service/user/useApi/main.go:129 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
+2018-05-12 10:22:21 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-12 10:22:21 [INF] service/user/useApi/main.go:124 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-12 10:22:21 [INF] service/user/useApi/main.go:127 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
+2018-05-12 10:22:24 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-12 10:22:24 [INF] service/user/useApi/main.go:124 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-12 10:22:24 [INF] service/user/useApi/main.go:127 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
+2018-05-12 10:27:29 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:19585 cursor_label:3208592491 lifetime:153208592491 sender:"bottos" contract:"bottos" method:"newuser" param:"454545" sig_alg:1   abc123}
+2018-05-12 10:27:29 [INF] service/user/useApi/main.go:124 Register(): {1 19585 3208592491 153208592491 bottos bottos newuser 454545 1 }
+2018-05-12 10:27:29 [INF] service/user/useApi/main.go:125 Register(): 08011081990118ebf8fcf90b20ebb0c6dfba042a06626f74746f733206626f74746f733a076e65777573657242063435343534354801
+2018-05-12 10:39:03 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1   abc123}
+2018-05-12 10:39:03 [INF] service/user/useApi/main.go:124 Register(): {1 28 3745260307 1524802615 bottos bottos newuser test 1 }
+2018-05-12 10:39:03 [INF] service/user/useApi/main.go:125 Register(): 0801101c1893c6f0f90d20b7c88ad7052a06626f74746f733206626f74746f733a076e6577757365724204746573744801
+2018-05-12 10:39:26 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"1111" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 signature:"00d9f0763d3c835653092f8f7d83941e50ceb144573492c5c8287358597af33e1b770535ce7c3400adba7a86ea59a0cde0d2c9d499fd4543b55c8ed88f414af5"   abc123}
+2018-05-12 10:39:26 [INF] service/user/useApi/main.go:124 Register(): {1 28 3745260307 1524802615 bottos bottos newuser test 1 }
+2018-05-12 10:39:26 [INF] service/user/useApi/main.go:125 Register(): 0801101c1893c6f0f90d20b7c88ad7052a06626f74746f733206626f74746f733a076e6577757365724204746573744801
+2018-05-12 10:40:00 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"04eb2a646ccd798646d02a0c0b17a9627bd32a0825b5393e6bbf8737090d8996ee786ee4ea2676c6e0736376b8cfa363ae985d6eb587220f773b511b8db64301ea" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 signature:"00d9f0763d3c835653092f8f7d83941e50ceb144573492c5c8287358597af33e1b770535ce7c3400adba7a86ea59a0cde0d2c9d499fd4543b55c8ed88f414af5"   abc123}
+2018-05-12 10:40:00 [INF] service/user/useApi/main.go:124 Register(): {1 28 3745260307 1524802615 bottos bottos newuser test 1 }
+2018-05-12 10:40:00 [INF] service/user/useApi/main.go:125 Register(): 0801101c1893c6f0f90d20b7c88ad7052a06626f74746f733206626f74746f733a076e6577757365724204746573744801
+2018-05-12 10:41:04 [INF] service/user/useApi/main.go:85 Register(): {creator:"bottos" name:"testuser" pubkey:"04eb2a646ccd798646d02a0c0b17a9627bd32a0825b5393e6bbf8737090d8996ee786ee4ea2676c6e0736376b8cfa363ae985d6eb587220f773b511b8db64301ea" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 signature:"8cc56c73223029eaffaaa281a443df8e00c846f8b0e84bfdd909c3d333ebf0fc31b6df466cd3254d8bbb1d7c8149b0d1b787a0d4865b95a728753b440e341807"   abc123}
+2018-05-12 10:41:04 [INF] service/user/useApi/main.go:124 Register(): {1 28 3745260307 1524802615 bottos bottos newuser test 1 }
+2018-05-12 10:41:04 [INF] service/user/useApi/main.go:125 Register(): 0801101c1893c6f0f90d20b7c88ad7052a06626f74746f733206626f74746f733a076e6577757365724204746573744801
+2018-05-12 10:42:31 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testuser" pubkey:"04eb2a646ccd798646d02a0c0b17a9627bd32a0825b5393e6bbf8737090d8996ee786ee4ea2676c6e0736376b8cfa363ae985d6eb587220f773b511b8db64301ea" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 signature:"8cc56c73223029eaffaaa281a443df8e00c846f8b0e84bfdd909c3d333ebf0fc31b6df466cd3254d8bbb1d7c8149b0d1b787a0d4865b95a728753b440e341807"   abc123}
+2018-05-12 10:43:55 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testuser" pubkey:"04eb2a646ccd798646d02a0c0b17a9627bd32a0825b5393e6bbf8737090d8996ee786ee4ea2676c6e0736376b8cfa363ae985d6eb587220f773b511b8db64301ea" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 signature:"8cc56c73223029eaffaaa281a443df8e00c846f8b0e84bfdd909c3d333ebf0fc31b6df466cd3254d8bbb1d7c8149b0d1b787a0d4865b95a728753b440e341807"   abc123}
+2018-05-12 10:45:03 [INF] service/user/useApi/main.go:84 Register(): {creator:"bottos" name:"testuser" pubkey:"04eb2a646ccd798646d02a0c0b17a9627bd32a0825b5393e6bbf8737090d8996ee786ee4ea2676c6e0736376b8cfa363ae985d6eb587220f773b511b8db64301ea" deposit:10000  version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 signature:"8cc56c73223029eaffaaa281a443df8e00c846f8b0e84bfdd909c3d333ebf0fc31b6df466cd3254d8bbb1d7c8149b0d1b787a0d4865b95a728753b440e341807"   abc123}
+2018-05-12 10:45:03 [INF] service/user/main.go:89 Register(): req:account:<creator:"bottos" name:"testuser" pubkey:"04eb2a646ccd798646d02a0c0b17a9627bd32a0825b5393e6bbf8737090d8996ee786ee4ea2676c6e0736376b8cfa363ae985d6eb587220f773b511b8db64301ea" deposit:10000 > user:<version:1 cursor_num:28 cursor_label:3745260307 lifetime:1524802615 sender:"bottos" contract:"bottos" method:"newuser" param:"test" sig_alg:1 > verify_value:"abc123" 

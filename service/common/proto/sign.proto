@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-message Message {
+message Signature {
     uint64 version = 1;
     uint64 cursor_num = 2;
     uint64 cursor_label = 3;
