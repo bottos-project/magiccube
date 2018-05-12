@@ -9,6 +9,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/bottos/config"
 	"github.com/bottos-project/bottos/service/common/data"
+	sign "github.com/bottos-project/bottos/service/common/proto"
+	"encoding/json"
+	"encoding/hex"
+	"github.com/bottos-project/bottos/crypto"
+	"github.com/protobuf/proto"
+	"github.com/bottos-project/bottos/service/common/util"
 )
 type User struct{}
 
@@ -25,67 +31,64 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
 
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
 	log.Info("req:", req);
+	block_header, err:= data.BlockHeader()
+	if err != nil {
+		rsp.Code = 1003
+		rsp.Msg = err.Error()
+		return nil
+	}
+	//注册账号
+	rsp.Code = 1004
+	account_buf,err := json.Marshal(req.Account)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+	tx_account := &sign.Signature{
+		Version:1,
+		CursorNum: block_header.HeadBlockNum,
+		CursorLabel: block_header.CursorLabel,
+		Lifetime: block_header.HeadBlockTime +20,
+		Sender: req.Account.Name,
+		Contract: "bottos",
+		Method: "bottos",
+		Param: hex.EncodeToString(account_buf),
+		SigAlg: 1,
+		Signature: "",
+	}
+	msg, err := proto.Marshal(tx_account)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
+	seckey, err := hex.DecodeString("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
 
-	//ref_block_num := GetBolckNum()
-	//log.Info("ref_block_num:", ref_block_num)
-	//time.Sleep(1)
-	//if ref_block_num < 0 {
-	//	rsp.Code = 1131
-	//	rsp.Msg = "Data[ref_block_num] exception"
-	//	return nil
-	//}
-	//
-	//ref_block_prefix, timestamp := GetBlockPrefix(ref_block_num)
-	//log.Info("ref_block_prefix:", ref_block_prefix)
-	//log.Info("timestamp:", timestamp)
-	//time.Sleep(1)
-	//if ref_block_prefix < 0 {
-	//	rsp.Code = 1132
-	//	rsp.Msg = "Data[ref_block_prefix] exception"
-	//	return nil
-	//}
-	//
-	//accoutBin := AccountGetBin(req.Username, req.OwnerPubKey, req.ActivePubKey)
-	//log.Info("accoutBin:", accoutBin)
-	//time.Sleep(1)
-	//if accoutBin == "" {
-	//	rsp.Code = 1133
-	//	rsp.Msg = "Data[account_bin] exception"
-	//	return nil
-	//}
-	//
-	//expirationTime := ExpirationTime(timestamp, 20)
-	//accountInfo, msg := AccountPushTransaction(ref_block_num, ref_block_prefix, expirationTime, accoutBin)
-	//log.Info("accountInfo:", accountInfo)
-	//if !accountInfo {
-	//	if msg == "Already" {
-	//		rsp.Code = 1103
-	//		rsp.Msg = "Account has already existed"
-	//		return nil
-	//	}
-	//	rsp.Code = 1101
-	//	rsp.Msg = msg
-	//	return nil
-	//}
-	//time.Sleep(1)
-	//b, _ := json.Marshal(req.UserInfo)
-	//userBin := UserGetBin(req.Username, string(b))
-	//log.Info("userBin:", userBin)
-	//time.Sleep(1)
-	//if userBin == "" {
-	//	rsp.Code = 1104
-	//	rsp.Msg = "Data[user_bin] exception"
-	//	return nil
-	//}
-	//userInfo := UserPushTransaction(ref_block_num, ref_block_prefix, expirationTime, userBin, req.Username)
-	//log.Info("userInfo:", userInfo)
-	//if userInfo != "" {
-	//	rsp.Code = 0
-	//	rsp.Msg = "Registered user success"
-	//} else {
-	//	rsp.Code = 1102
-	//	rsp.Msg = "Registered user failure"
-	//}
+	sign, err := crypto.Sign(util.Sha256(msg), seckey)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+
+	tx_account.Signature = hex.EncodeToString(sign)
+	ret, err := data.PushTransaction(&tx_account)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+	log.Info("ret-account:", ret)
+
+	//注册用户
+	ret_user, err := data.PushTransaction(&req.User)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+	log.Info("ret-user:", ret_user)
 	return nil
 }
 

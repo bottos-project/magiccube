@@ -15,9 +15,9 @@ type TxBean struct {
 	Sender      string  `protobuf:"bytes,5,opt,name=sender" json:"sender"`
 	Contract    string  `protobuf:"bytes,6,opt,name=contract" json:"contract"`
 	Method      string  `protobuf:"bytes,7,opt,name=method" json:"method"`
-	Param       []int32 `protobuf:"varint,8,rep,packed,name=param" json:"param"`
-	SigAlg      uint64  `protobuf:"varint,9,opt,name=sig_alg,json=sigAlg" json:"sig_alg"`
-	Signatures  string  `protobuf:"bytes,10,opt,name=signatures" json:"signatures"`
+	Param       string `protobuf:"bytes,8,opt,name=param" json:"param"`
+	SigAlg      uint64 `protobuf:"varint,9,opt,name=sig_alg,json=sigAlg" json:"sig_alg"`
+	Signature   string `protobuf:"bytes,10,opt,name=signature" json:"signature"`
 }
 
 type UserTokenBean struct {
