@@ -11,14 +11,17 @@ import (
 	"encoding/json"
 )
 
-func VerifySignBot(pubkeyStr string, jsonstr string) bool {
-	var req sign_proto.Test
+func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
+	var req test_proto.Transaction
 	json.Unmarshal([]byte(jsonstr), &req)
 	log.Info(req)
 
-	dataByte, _ := hex.DecodeString(req.Param)
+	dataByte, err := hex.DecodeString(req.Param)
 	log.Info(dataByte)
-	testMsg := &sign_proto.BasicTest{
+	if err != nil {
+		return false, err
+	}
+	msg := &test_proto.BasicTransaction{
 		Version:     req.Version,
 		CursorNum:   req.CursorNum,
 		CursorLabel: req.CursorLabel,
@@ -29,10 +32,13 @@ func VerifySignBot(pubkeyStr string, jsonstr string) bool {
 		Param:       dataByte,
 		SigAlg:      req.SigAlg,
 	}
-	log.Info("testMsg:", testMsg)
+	log.Info("testMsg:", msg)
 	//data serialization
-	data, _ := proto.Marshal(testMsg)
+	data, err := proto.Marshal(msg)
 	log.Info("data:", data)
+	if err != nil {
+		return false, err
+	}
 
 	//generate Hash
 	h := sha256.New()
@@ -40,10 +46,16 @@ func VerifySignBot(pubkeyStr string, jsonstr string) bool {
 	bs := h.Sum(nil)
 	log.Info("bs:", bs)
 
-	sign, _ := hex.DecodeString(req.Signature)
+	sign, err := hex.DecodeString(req.Signature)
+	if err != nil {
+		return false, err
+	}
 	//hex string to byte[]
-	pub_key, _ := hex.DecodeString(pubkeyStr)
+	pub_key, err := hex.DecodeString(pubkeyStr)
 	log.Info(pub_key)
+	if err != nil {
+		return false, err
+	}
 
-	return crypto.VerifySign(pub_key, bs, sign)
+	return crypto.VerifySign(pub_key, bs, sign), err
 }
