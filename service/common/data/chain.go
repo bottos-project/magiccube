@@ -42,6 +42,9 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 		log.Error(err)
 		return nil, err
 	}
+	if common_ret.Errcode != 0 {
+		return nil, errors.New(string(body))
+	}
 
 	result_buf, err := json.Marshal(common_ret.Result)
 	if err != nil {
@@ -66,6 +69,7 @@ func PushTransaction (i interface{}) (interface{}, error) {
 		return nil, err
 	}
 
+	log.Info(fmt.Sprintf(TX_PARAMS, string(r)))
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf(TX_PARAMS, string(r))))
 	if err != nil {
@@ -83,7 +87,7 @@ func PushTransaction (i interface{}) (interface{}, error) {
 	if (resp.StatusCode != 200) {
 		return nil, errors.New(string(body))
 	}
-
+	log.Info("body:", string(body))
 	var common_ret = &bean.CoreCommonReturn{}
 	err = json.Unmarshal(body, common_ret)
 	if err != nil {
@@ -95,4 +99,49 @@ func PushTransaction (i interface{}) (interface{}, error) {
 	}
 
 	return nil, errors.New(string(body))
+}
+
+func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
+	params := `service=core&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
+	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
+		strings.NewReader(fmt.Sprintf(params, string(account))))
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if (resp.StatusCode != 200) {
+		return nil, errors.New(string(body))
+	}
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	var common_ret = &bean.CoreCommonReturn{}
+	err = json.Unmarshal(body, common_ret)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	if common_ret.Errcode != 0 {
+		return nil, errors.New(string(body))
+	}
+
+	result_buf, err := json.Marshal(common_ret.Result)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var account_info = &user_proto.AccountInfoData{}
+	err = json.Unmarshal(result_buf, account_info)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return account_info, nil
 }

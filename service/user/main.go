@@ -9,12 +9,12 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/bottos/config"
 	"github.com/bottos-project/bottos/service/common/data"
-	sign "github.com/bottos-project/bottos/service/common/proto"
-	"encoding/json"
-	"encoding/hex"
-	"github.com/bottos-project/bottos/crypto"
-	"github.com/protobuf/proto"
-	"github.com/bottos-project/bottos/service/common/util"
+	//sign "github.com/bottos-project/bottos/service/common/signature/proto"
+	//"encoding/hex"
+	//"github.com/bottos-project/bottos/crypto"
+	//"github.com/protobuf/proto"
+	//"github.com/bottos-project/bottos/service/common/util"
+	//pack "github.com/bottos-project/bottos/core/contract/msgpack"
 )
 type User struct{}
 
@@ -31,64 +31,92 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
 
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
 	log.Info("req:", req);
-	block_header, err:= data.BlockHeader()
-	if err != nil {
-		rsp.Code = 1003
-		rsp.Msg = err.Error()
-		return nil
-	}
-	//注册账号
-	rsp.Code = 1004
-	account_buf,err := json.Marshal(req.Account)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-	tx_account := &sign.Signature{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime +20,
-		Sender: req.Account.Name,
-		Contract: "bottos",
-		Method: "bottos",
-		Param: hex.EncodeToString(account_buf),
-		SigAlg: 1,
-		Signature: "",
-	}
-	msg, err := proto.Marshal(tx_account)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
-	seckey, err := hex.DecodeString("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
+	//block_header, err:= data.BlockHeader()
+	//if err != nil {
+	//	rsp.Code = 1003
+	//	rsp.Msg = err.Error()
+	//	return nil
+	//}
+	////注册账号
+	//rsp.Code = 1004
+	//account_buf,err := pack.Marshal(req.Account)
+	//if err != nil {
+	//	rsp.Msg = err.Error()
+	//	return nil
+	//}
+	//tx_account_sign := &sign.BasicTransaction{
+	//	Version:1,
+	//	CursorNum: block_header.HeadBlockNum,
+	//	CursorLabel: block_header.CursorLabel,
+	//	Lifetime: block_header.HeadBlockTime + 20,
+	//	Sender: "bottos",
+	//	Contract: "bottos",
+	//	Method: "newaccount",
+	//	Param: account_buf,
+	//	SigAlg: 1,
+	//}
+	//
+	//
+	//msg, err := proto.Marshal(tx_account_sign)
+	//if err != nil {
+	//	rsp.Msg = err.Error()
+	//	return nil
+	//}
+	////配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
+	//seckey, err := hex.DecodeString("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
+	//if err != nil {
+	//	rsp.Msg = err.Error()
+	//	return nil
+	//}
+	//
+	//signature, err := crypto.Sign(util.Sha256(msg), seckey)
+	//if err != nil {
+	//	rsp.Msg = err.Error()
+	//	return nil
+	//}
+	//
+	//tx_account := &sign.Transaction{
+	//	Version:1,
+	//	CursorNum: block_header.HeadBlockNum,
+	//	CursorLabel: block_header.CursorLabel,
+	//	Lifetime: block_header.HeadBlockTime + 20,
+	//	Sender: "bottos",
+	//	Contract: "bottos",
+	//	Method: "newaccount",
+	//	Param: hex.EncodeToString(account_buf),
+	//	SigAlg: 1,
+	//	Signature: hex.EncodeToString(signature),
+	//}
+	//
+	//ret, err := data.PushTransaction(tx_account)
+	//if err != nil {
+	//	rsp.Msg = err.Error()
+	//	return nil
+	//}
+	//log.Info("ret-account:", ret)
+	//
 
-	sign, err := crypto.Sign(util.Sha256(msg), seckey)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-
-	tx_account.Signature = hex.EncodeToString(sign)
-	ret, err := data.PushTransaction(&tx_account)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-	log.Info("ret-account:", ret)
 
 	//注册用户
+	rsp.Code = 1005
 	ret_user, err := data.PushTransaction(&req.User)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
 	log.Info("ret-user:", ret_user)
+	return nil
+}
+
+
+func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
+	account_info, err:= data.AccountInfo(req.AccountName)
+	if account_info != nil {
+		rsp.Data = account_info
+	} else {
+		rsp.Code = 1006
+		rsp.Msg = err.Error()
+	}
 	return nil
 }
 

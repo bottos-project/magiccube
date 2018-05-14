@@ -25,3 +25,9 @@ type UserTokenBean struct {
 	Token    string `bson:"token"`
 	Ctime    int64  `bson:"ctime"`
 }
+
+type Did struct {
+	Didid string
+	Didstr string
+}
+

@@ -5,6 +5,7 @@ service User {
 	rpc Login(LoginRequest) returns(LoginResponse) {};
 	rpc Logout(LogoutRequest) returns(LogoutResponse) {};
 	rpc GetBlockHeader(GetBlockHeaderRequest) returns(GetBlockHeaderResponse) {};
+	rpc GetAccountInfo(GetAccountInfoRequest) returns(GetAccountInfoResponse) {};
 }
 
 message RegisterRequest {
@@ -15,27 +16,25 @@ message RegisterRequest {
 }
 
 message AccountInfo {
-	string creator = 1;
     string name = 2;
 	string pubkey = 3;
-    uint64 deposit = 4;
 }
 
 message UserInfo {
-	 uint64 version = 1;
-     uint64 cursor_num = 2;
-     uint64 cursor_label = 3;
+	 uint32 version = 1;
+     uint32 cursor_num = 2;
+     uint32 cursor_label = 3;
 	 uint64 lifetime = 4;
 	 string sender = 5;
      string contract = 6;
 	 string method = 7;
 	 string param = 8;
-	 uint64 sig_alg = 9;
+	 uint32 sig_alg = 9;
 	 string signature =10;
 }
 
 message RegisterResponse {
-	int32 code = 1;
+	uint32 code = 1;
 	string msg = 2;
 }
 
@@ -45,7 +44,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-	int64 code = 1;
+	uint32 code = 1;
 	string token = 2;
 	string msg = 3;
 }
@@ -56,22 +55,39 @@ message LogoutRequest {
 }
 
 message LogoutResponse {
-	int64 code = 1;
+	int32 code = 1;
 	string msg = 2;
 }
 
 message GetBlockHeaderRequest{}
 message GetBlockHeaderResponse {
-	int64 code = 1;
-	string msg = 2;
-	BlockHeader data = 3;
+	uint32 code = 1;
+	BlockHeader data = 2;
+	string msg = 3;
 }
 
 message BlockHeader {
-	uint64 head_block_num = 1;
+	uint32 head_block_num = 1;
 	string head_block_hash = 2;
 	uint64 head_block_time = 3;
 	string head_block_delegate = 4;
-	uint64 cursor_label = 5;
-	uint64 last_consensus_block_num = 6;
+	uint32 cursor_label = 5;
+	uint32 last_consensus_block_num = 6;
+}
+
+message GetAccountInfoRequest {
+	string account_name = 1;
+}
+
+message GetAccountInfoResponse {
+	uint32 code = 1;
+	AccountInfoData data = 2;
+	string msg = 3;
+}
+
+message AccountInfoData {
+	string account_name = 1;
+	string pubkey = 2;
+	uint64 balance = 3;
+	uint64 staked_balance = 4;
 }
