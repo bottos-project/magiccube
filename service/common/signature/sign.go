@@ -13,12 +13,15 @@ import (
 
 func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
 	var req sign_proto.Transaction
-	json.Unmarshal([]byte(jsonstr), &req)
-	log.Info(req)
+	err:=json.Unmarshal([]byte(jsonstr), &req)
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
 
 	dataByte, err := hex.DecodeString(req.Param)
-	log.Info(dataByte)
 	if err != nil {
+		log.Error(err)
 		return false, err
 	}
 	msg := &sign_proto.BasicTransaction{
@@ -32,11 +35,11 @@ func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
 		Param:       dataByte,
 		SigAlg:      req.SigAlg,
 	}
-	log.Info("testMsg:", msg)
+
 	//data serialization
 	data, err := proto.Marshal(msg)
-	log.Info("data:", data)
 	if err != nil {
+		log.Error(err)
 		return false, err
 	}
 
@@ -48,12 +51,13 @@ func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
 
 	sign, err := hex.DecodeString(req.Signature)
 	if err != nil {
+		log.Error(err)
 		return false, err
 	}
 	//hex string to byte[]
 	pub_key, err := hex.DecodeString(pubkeyStr)
-	log.Info(pub_key)
 	if err != nil {
+		log.Error(err)
 		return false, err
 	}
 
