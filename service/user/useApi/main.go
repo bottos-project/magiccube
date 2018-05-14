@@ -11,11 +11,8 @@ import (
 	"os"
 	"github.com/bottos-project/bottos/config"
 	"regexp"
-	"github.com/protobuf/proto"
-	"github.com/bottos-project/crypto-go/crypto"
 	errcode "github.com/bottos-project/bottos/error"
-	"encoding/hex"
-	"github.com/bottos-project/bottos/service/common/util"
+	sign "github.com/bottos-project/bottos/service/common/signature"
 )
 
 type User struct {
@@ -100,31 +97,38 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return nil
 	}
 
-	pubkey,err := hex.DecodeString(registerRequest.Account.Pubkey)
+	user_json_buf, err := json.Marshal(registerRequest.User)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	signature,err := hex.DecodeString(registerRequest.User.Signature)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	registerRequest.User.Signature = ""
-	serializeData, err := proto.Marshal(registerRequest.User)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	if !crypto.VerifySign(pubkey, util.Sha256(serializeData), signature) {
-		rsp.Body = errcode.ReturnError(1000)
+	is_true, err := sign.VerifySignBot(registerRequest.Account.Pubkey, string(user_json_buf))
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
 	response, err := u.Client.Register(ctx, &registerRequest)
 	if err != nil {
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	var getAccountInfoRequest user.GetAccountInfoRequest
+	err := json.Unmarshal([]byte(req.Body), &getAccountInfoRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	response, err := u.Client.GetAccountInfo(ctx, &getAccountInfoRequest)
+	if err != nil {
+
 		return err
 	}
 

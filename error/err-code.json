@@ -33,5 +33,19 @@
     "cn": "注册账号失败"
   },
   "details": ""
+},{
+  "code": 1005,
+  "msg": {
+    "en": "Registered user failure",
+    "cn": "注册用户失败"
+  },
+  "details": ""
+},{
+  "code": 1006,
+  "msg": {
+    "en": "Access to account information failed",
+    "cn": "获取账号信息失败"
+  },
+  "details": ""
 }
 ]

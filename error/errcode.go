@@ -98,6 +98,7 @@ func Return(b interface{}) string {
 }
 
 func ReturnError(code int64, e ...error) string {
+	log.Info(e)
 	d := GetAllErrorInfos()
 	for _, v := range d {
 		if code == v.Code {
@@ -109,6 +110,7 @@ func ReturnError(code int64, e ...error) string {
 				log.Error(err)
 				panic(err)
 			}
+			log.Error(json)
 			return string(json)
 		}
 	}

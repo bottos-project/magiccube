@@ -19,6 +19,9 @@ It has these top-level messages:
 	GetBlockHeaderRequest
 	GetBlockHeaderResponse
 	BlockHeader
+	GetAccountInfoRequest
+	GetAccountInfoResponse
+	AccountInfoData
 */
 package user
 
@@ -55,6 +58,7 @@ type UserClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...client.CallOption) (*LogoutResponse, error)
 	GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, opts ...client.CallOption) (*GetBlockHeaderResponse, error)
+	GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...client.CallOption) (*GetAccountInfoResponse, error)
 }
 
 type userClient struct {
@@ -115,6 +119,16 @@ func (c *userClient) GetBlockHeader(ctx context.Context, in *GetBlockHeaderReque
 	return out, nil
 }
 
+func (c *userClient) GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...client.CallOption) (*GetAccountInfoResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.GetAccountInfo", in)
+	out := new(GetAccountInfoResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -122,6 +136,7 @@ type UserHandler interface {
 	Login(context.Context, *LoginRequest, *LoginResponse) error
 	Logout(context.Context, *LogoutRequest, *LogoutResponse) error
 	GetBlockHeader(context.Context, *GetBlockHeaderRequest, *GetBlockHeaderResponse) error
+	GetAccountInfo(context.Context, *GetAccountInfoRequest, *GetAccountInfoResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -146,4 +161,8 @@ func (h *User) Logout(ctx context.Context, in *LogoutRequest, out *LogoutRespons
 
 func (h *User) GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, out *GetBlockHeaderResponse) error {
 	return h.UserHandler.GetBlockHeader(ctx, in, out)
+}
+
+func (h *User) GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, out *GetAccountInfoResponse) error {
+	return h.UserHandler.GetAccountInfo(ctx, in, out)
 }
