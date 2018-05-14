@@ -97,10 +97,13 @@ func Return(b interface{}) string {
 	return string(json)
 }
 
-func ReturnError(code int64) string {
+func ReturnError(code int64, e ...error) string {
 	d := GetAllErrorInfos()
 	for _, v := range d {
 		if code == v.Code {
+			if len(e) > 0 {
+				v.Details = e[0].Error()
+			}
 			json, err := json.Marshal(v)
 			if err != nil {
 				log.Error(err)
