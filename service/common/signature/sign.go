@@ -1,7 +1,7 @@
 package signature
 
 import (
-	sign_proto "./proto"
+	sign_proto "github.com/bottos-project/bottos/service/common/signature/proto"
 	"github.com/golang/protobuf/proto"
 	"crypto/sha256"
 	"github.com/bottos-project/crypto-go/crypto"
@@ -12,7 +12,7 @@ import (
 )
 
 func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
-	var req test_proto.Transaction
+	var req sign_proto.Transaction
 	json.Unmarshal([]byte(jsonstr), &req)
 	log.Info(req)
 
@@ -21,7 +21,7 @@ func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	msg := &test_proto.BasicTransaction{
+	msg := &sign_proto.BasicTransaction{
 		Version:     req.Version,
 		CursorNum:   req.CursorNum,
 		CursorLabel: req.CursorLabel,
