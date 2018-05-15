@@ -62,7 +62,7 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	return block_header, nil
 }
 
-func PushTransaction (i interface{}) (interface{}, error) {
+func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 	var params = ""
 	switch i.(type) {
 		case string:
@@ -75,7 +75,7 @@ func PushTransaction (i interface{}) (interface{}, error) {
 			}
 			params = fmt.Sprintf(TX_PARAMS, string(r))
 	}
-
+	log.Info(params)
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(params))
 	if err != nil {
