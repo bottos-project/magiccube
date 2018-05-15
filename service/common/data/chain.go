@@ -63,15 +63,21 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 }
 
 func PushTransaction (i interface{}) (interface{}, error) {
-	r, err := json.Marshal(i)
-	if err != nil {
-		log.Error(err)
-		return nil, err
+	var params = ""
+	switch i.(type) {
+		case string:
+			params = fmt.Sprintf(TX_PARAMS, i.(string))
+		default:
+			r, err := json.Marshal(i)
+			if err != nil {
+				log.Error(err)
+				return nil, err
+			}
+			params = fmt.Sprintf(TX_PARAMS, string(r))
 	}
 
-	log.Info(fmt.Sprintf(TX_PARAMS, string(r)))
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
-		strings.NewReader(fmt.Sprintf(TX_PARAMS, string(r))))
+		strings.NewReader(params))
 	if err != nil {
 		log.Error(err)
 		return nil, err
