@@ -9,7 +9,7 @@ import (
 	log "github.com/cihub/seelog"
 	"encoding/json"
 	"github.com/bottos-project/bottos/service/common/util"
-	"github.com/smartwalle/errors"
+	"errors"
 )
 
 func VerifySignBot(pubkeyStr string, jsonstr string) (bool, error) {
