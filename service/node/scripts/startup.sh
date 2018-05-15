@@ -24,7 +24,7 @@ MINIO_OPTS_ENV="MINIO_OPTS=\"-C "$MINIO_COF" --address "$SERVER_IPADR":"$SERVER_
 
 MINIO_VOLUMES="/usr/local/share/minio"
 MINIO_OPTS="-C /etc/minio --address "$SERVER_IPADR":"$SERVER_PORT
-CORE_PROC_FILE_DIR=${GO_PATH}/bin
+CORE_PROC_FILE_DIR=${GO_PATH}/bin/core
 
 function miniocheck(){
     if [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
@@ -158,12 +158,15 @@ function startcore()
 		exit 1
 	fi
 	
-	if  [ ! -d ${CORE_PROC_FILE_DIR} ] || [ ! -f ${CORE_PROC_FILE_DIR}/config.json ] || [ ! -f ${CORE_PROC_FILE_DIR}/genesis.json ];
+	if  [ ! -d ${CORE_PROC_FILE_DIR} ] || [ ! -f ${CORE_PROC_FILE_DIR}/chainconfig.json ] || [ ! -f ${CORE_PROC_FILE_DIR}/genesis.json ];
 	then
 		echo -e "\033[31m *ERROR* Fail to find core proess's configuration item : config.json or genesis.json under :"${CORE_PROC_FILE_DIR}" \033[0m"
 		exit 1
 	fi
 	
+	sudo rm -r ${CORE_PROC_FILE_DIR}/datadir 2>/dev/null
+	sudo rm -r $GO_PATH/bin/datadir 2>/dev/null
+
 	#GENESIS_JSON=`cat ${GO_PATH}/bin/data-dir/config.ini | grep -e ^genesis-json | awk '{print $3}'`
 	#if [ ! -f "$GENESIS_JSON" ];
 	#then
@@ -175,9 +178,9 @@ function startcore()
 	if [ "$CHK_CORE" -lt 1 ];
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
-        nohup ${CORE_PROC_FILE_DIR}/core 2>&1 & 
-        #--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
-        sleep 3
+		sudo nohup ${CORE_PROC_FILE_DIR}/core 2>&1 & 
+        	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
+        	sleep 3
 	fi
     return
 }
@@ -256,6 +259,13 @@ function prepcheck()
 	return
 }
 
+function startcontract()
+{
+	sudo ${CORE_PROC_FILE_DIR}/./cmd newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
+	sudo ${CORE_PROC_FILE_DIR}/./cmd deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+	echo "===CONTRACT DONE==="
+}
+
 function startserv()
 {
 	echo -e "\033[32m ==================================== \033[0m"
@@ -280,11 +290,14 @@ function startserv()
 
 	# start micro service
 	nohup ${SERVER_PATH}micro api > micro.log 2>&1 &
-
 	# start mongodb service
 	#service mongodb start
-    startcore
-
+	sleep 3
+	echo `ps -ef|grep micro`
+        echo "startcore"
+        startcore
+	
+	echo "start minio"
 	# setup minio
 	if [ ! -e /usr/local/bin/minio ];
 	then
@@ -295,8 +308,10 @@ function startserv()
 	startminio
 
 	# start node service , other services will be started by node server
-    #nohup ${SERVER_PATH}node > node.file 2>&1
-    ${SERVER_PATH}./node
+    	#nohup ${SERVER_PATH}node > node.file 2>&1
+    	${SERVER_PATH}./node
+	
+	startcontract
 }
 
 function stopserv()
