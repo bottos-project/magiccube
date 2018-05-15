@@ -15,6 +15,7 @@ import (
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/bottos/service/common/util"
 	pack "github.com/bottos-project/bottos/core/contract/msgpack"
+	"github.com/bottos-project/bottos/service/common/bean"
 )
 type User struct{}
 
@@ -93,18 +94,23 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		rsp.Msg = err.Error()
 		return nil
 	}
-	log.Info("ret-account:", ret)
 
-
-
+	log.Info("ret-account:", ret.Result.TrxHash)
+	//time.Sleep(time.Duration(3)*time.Second)
 	//注册用户
 	rsp.Code = 1005
 	ret_user, err := data.PushTransaction(&req.User)
+	var did bean.Did
+	buf, _ := hex.DecodeString(req.User.Param)
+	pack.Unmarshal(buf, &did)
+	log.Info(did.Didid)
+	log.Info(did.Didinfo)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
 	log.Info("ret-user:", ret_user)
+	rsp.Code = 1
 	return nil
 }
 
