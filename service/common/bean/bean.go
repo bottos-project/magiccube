@@ -4,7 +4,21 @@
 type CoreCommonReturn struct {
 	Errcode int64 		`json:"errcode"`
 	Msg     string  	`json:"msg"`
-	Result  interface{} `json:"result"`
+	Result  struct {
+		Trx struct {
+			Version     uint32 `json:"version"`
+			CursorNum   uint32 `json:"cursor_num"`
+			CursorLabel int64  `json:"cursor_label"`
+			Lifetime    uint32 `json:"lifetime"`
+			Sender      string `json:"sender"`
+			Contract    string `json:"contract"`
+			Method      string `json:"method"`
+			Param       string `json:"param"`
+			SigAlg      uint32 `json:"sig_alg"`
+			Signature   string `json:"signature"`
+		} `json:"trx"`
+		TrxHash string `json:"trx_hash"`
+	} `json:"result"`
 }
 
 type TxBean struct {
@@ -15,9 +29,9 @@ type TxBean struct {
 	Sender      string  `protobuf:"bytes,5,opt,name=sender" json:"sender"`
 	Contract    string  `protobuf:"bytes,6,opt,name=contract" json:"contract"`
 	Method      string  `protobuf:"bytes,7,opt,name=method" json:"method"`
-	Param       string `protobuf:"bytes,8,opt,name=param" json:"param"`
-	SigAlg      uint64 `protobuf:"varint,9,opt,name=sig_alg,json=sigAlg" json:"sig_alg"`
-	Signature   string `protobuf:"bytes,10,opt,name=signature" json:"signature"`
+	Param       string  `protobuf:"bytes,8,opt,name=param" json:"param"`
+	SigAlg      uint64  `protobuf:"varint,9,opt,name=sig_alg,json=sigAlg" json:"sig_alg"`
+	Signature   string  `protobuf:"bytes,10,opt,name=signature" json:"signature"`
 }
 
 type UserTokenBean struct {
@@ -28,6 +42,15 @@ type UserTokenBean struct {
 
 type Did struct {
 	Didid string
-	Didstr string
+	Didinfo string
+}
+
+type File struct {
+	user_name string
+	file_size uint64
+	file_name string
+	file_policy string
+	auth_path string
+	file_number uint64
 }
 
