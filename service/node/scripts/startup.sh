@@ -176,8 +176,6 @@ function unpackpackages() {
 
     source ~/.profile
 }
-=======
->>>>>>> 0347ff98b8d08846c48ad3f828210d0230f89145
 
 function miniocheck(){
     if [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
