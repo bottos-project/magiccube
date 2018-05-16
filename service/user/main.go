@@ -5,15 +5,12 @@ import (
 	"github.com/micro/go-micro"
 	user_proto "github.com/bottos-project/bottos/service/user/proto"
 	"golang.org/x/net/context"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
-	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/config"
 	"github.com/bottos-project/bottos/service/common/data"
-	sign "github.com/bottos-project/bottos/service/common/signature/proto"
 	"encoding/hex"
 	"github.com/bottos-project/bottos/crypto"
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/bottos/service/common/util"
+	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
 	pack "github.com/bottos-project/bottos/core/contract/msgpack"
 	"github.com/bottos-project/bottos/service/common/bean"
 )
@@ -45,7 +42,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		rsp.Msg = err.Error()
 		return nil
 	}
-	tx_account_sign := &sign.BasicTransaction{
+	tx_account_sign := &push_sign.TransactionSign{
 		Version:1,
 		CursorNum: block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
@@ -76,7 +73,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		return nil
 	}
 
-	tx_account := &sign.Transaction{
+	tx_account := &bean.TxBean{
 		Version:1,
 		CursorNum: block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
@@ -100,11 +97,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	//注册用户
 	rsp.Code = 1005
 	ret_user, err := data.PushTransaction(&req.User)
-	var did bean.Did
-	buf, _ := hex.DecodeString(req.User.Param)
-	pack.Unmarshal(buf, &did)
-	log.Info(did.Didid)
-	log.Info(did.Didinfo)
+
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
@@ -145,67 +138,6 @@ func (u *User) Login(ctx context.Context, req *user_proto.LoginRequest, rsp *use
 	//	rsp.Msg = "Access to account information failure"
 	//}
 	return nil
-}
-
-func (u *User) Logout(ctx context.Context, req *user_proto.LogoutRequest, rsp *user_proto.LogoutResponse) error {
-	is_logout := UserLogout(req.Token)
-	log.Info(req.Token);
-	if is_logout {
-		rsp.Code = 0
-		rsp.Msg = "OK"
-	} else {
-		rsp.Code = -1
-		rsp.Msg = "Error"
-	}
-	return nil
-}
-
-//func (u *User) VerifyToken(ctx context.Context, req *user_proto.VerifyTokenRequest, rsp *user_proto.VerifyTokenResponse) error {
-//	log.Info(req.Token)
-//	if req.Token == "" {
-//		rsp.Code = 1999
-//		rsp.Msg = "Token is nil"
-//		return nil
-//	}
-//
-//	checkToken := CheckToken(req.Token)
-//	if checkToken {
-//		rsp.Code = 0
-//		rsp.Msg = "OK"
-//	} else {
-//		rsp.Code = 1999
-//		rsp.Msg = "Invalid Token"
-//	}
-//	return nil
-//}
-
-//func CheckToken(token string) bool {
-//	var mgo = mgo.Session()
-//	defer mgo.Close()
-//	var ret UserTokenBean
-//	err := mgo.DB(config.DB_NAME).C("user_token").Find(&bson.M{"token": token}).One(&ret)
-//	if err != nil {
-//		log.Error(err)
-//		return false
-//	}
-//
-//	if ret.Token == token {
-//		if (ret.Ctime + config.TOKEN_EXPIRE_TIME > time.Now().Unix()) {
-//			return true
-//		}
-//	}
-//	return false
-//}
-
-func UserLogout(token string) bool {
-	var mgo = mgo.Session()
-	defer mgo.Close()
-	err := mgo.DB(config.DB_NAME).C("user_token").Remove(&bson.M{"token": token})
-	if err != nil {
-		log.Error(err)
-		return false
-	}
-	return true
 }
 
 func init() {
