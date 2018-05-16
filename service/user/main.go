@@ -18,6 +18,7 @@ type User struct{}
 
 func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
 	block_header, err:= data.BlockHeader()
+	log.Info(block_header)
 	if block_header != nil {
 		rsp.Data = block_header
 	} else {
@@ -94,9 +95,17 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 
 	log.Info("ret-account:", ret.Result.TrxHash)
 	//time.Sleep(time.Duration(3)*time.Second)
+
+	//did
+	var did bean.Did
+	d, _:= hex.DecodeString(req.User.Param)
+	pack.Unmarshal(d, &did)
+	log.Info("did:", did)
+
 	//注册用户
 	rsp.Code = 1005
 	ret_user, err := data.PushTransaction(&req.User)
+
 
 	if err != nil {
 		rsp.Msg = err.Error()
