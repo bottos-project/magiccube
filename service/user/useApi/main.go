@@ -138,20 +138,28 @@ func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Re
 
 func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
+
 	var loginRequest user.LoginRequest
 	err := json.Unmarshal([]byte(req.Body), &loginRequest)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	log.Info(loginRequest)
 
-	response, err := s.Client.Login(ctx, &loginRequest)
-	if err != nil {
-		return err
+	if config.Enable_verification {
+		if !base64Captcha.VerifyCaptcha(loginRequest.VerifyId, loginRequest.VerifyValue) {
+			rsp.Body = errcode.ReturnError(1001)
+			return nil
+		}
 	}
 
-	rsp.Body = errcode.Return(response)
+	is, err:=sign.QueryVerifySign(req.Body)
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	rsp.Body = errcode.ReturnError(1)
 	return nil
 }
 
