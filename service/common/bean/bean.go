@@ -1,5 +1,10 @@
 ﻿package bean
 
+type CoreBaseReturn struct {
+	Errcode int64 		`json:"errcode"`
+	Msg     string  	`json:"msg"`
+	Result  interface{} `json:"result"`
+}
 
 type CoreCommonReturn struct {
 	Errcode int64 		`json:"errcode"`
