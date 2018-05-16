@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+
 message QuerySign {
     string username = 1;
     string random = 2;
