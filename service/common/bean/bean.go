@@ -59,3 +59,7 @@ type File struct {
 	file_number uint64
 }
 
+type TxPublic struct {
+	Sender string `json:"sender"`
+}
+
