@@ -105,7 +105,6 @@ func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Res
 	response, err := s.Client.RegisterFile(ctx, &asset.RegisterFileRequest{
 		PostBody: req.Body,
 	})
-
 	if err != nil {
 		return err
 	}
@@ -184,23 +183,38 @@ func (u *Asset) GetDownLoadURL(ctx context.Context, req *api.Request, rsp *api.R
 	return nil
 }
 
-func (u *Asset) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	//header, _ := json.Marshal(req.Header)
-	response, err := u.Client.Register(ctx, &asset.RegisterRequest{
+func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+
+	body := req.Body
+	log.Info(body)
+	//transfer to struct
+	var queryRequest bean.TxPublic
+	json.Unmarshal([]byte(body), &queryRequest)
+
+	log.Info(queryRequest.Sender)
+	//check signature
+	accountInfo, err := chain.AccountInfo(queryRequest.Sender)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	is_true, err := sign.PushVerifySign(accountInfo.Pubkey, req.Body)
+	is_true=true
+	log.Info(is_true,err)
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := s.Client.RegisterAsset(ctx, &asset.RegisterRequest{
 		PostBody: req.Body,
 	})
 	if err != nil {
 		return err
 	}
 
-	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
-	rsp.Body = string(b)
-
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
