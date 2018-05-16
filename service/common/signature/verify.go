@@ -75,6 +75,7 @@ func QueryVerifySign(b string) (bool, error) {
 		log.Error(err)
 		return false, err
 	}
+	log.Info(commonQuery)
 
 	if len(commonQuery.Username) < 1 {
 		return false, errors.New("The Username can not be empty")
@@ -110,7 +111,7 @@ func QueryVerifySign(b string) (bool, error) {
 		log.Error(err)
 		return false, err
 	}
-
+	log.Info("accountInfo:", accountInfo)
 	pub_key, err := hex.DecodeString(accountInfo.Pubkey)
 	if err != nil {
 		log.Error(err)
