@@ -103,7 +103,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is_true, err := sign.VerifySignBot(registerRequest.Account.Pubkey, string(user_json_buf))
+	is_true, err := sign.PushVerifySign(registerRequest.Account.Pubkey, string(user_json_buf))
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -137,51 +137,21 @@ func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Re
 }
 
 func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	header, _ := json.Marshal(req.Header)
-	response, err := s.Client.Login(ctx, &user.LoginRequest{
-		Body: req.Body,
-		Header:string(header),
-	})
+	rsp.StatusCode = 200
+	var loginRequest user.LoginRequest
+	err := json.Unmarshal([]byte(req.Body), &loginRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	log.Info(loginRequest)
+
+	response, err := s.Client.Login(ctx, &loginRequest)
 	if err != nil {
 		return err
 	}
 
-	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"token":response.Token,
-	})
-	rsp.Body = string(b)
-
-	return nil
-}
-
-func (s *User) Logout(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	token := req.Header["Token"]
-
-	if token == nil {
-		rsp.StatusCode = 200
-		b, _ := json.Marshal(map[string]interface{}{
-			"code": "4001",
-			"msg":"Token is nil",
-		})
-		rsp.Body = string(b)
-		return nil
-	}
-	response, err := s.Client.Logout(ctx, &user.LogoutRequest{
-		Token: token.Values[0],
-	})
-	if err != nil {
-		return err
-	}
-
-	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"msg":response.Msg,
-	})
-	rsp.Body = string(b)
-
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
