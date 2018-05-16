@@ -3,7 +3,6 @@
 service User {
 	rpc Register(RegisterRequest) returns(RegisterResponse) {};
 	rpc Login(LoginRequest) returns(LoginResponse) {};
-	rpc Logout(LogoutRequest) returns(LogoutResponse) {};
 	rpc GetBlockHeader(GetBlockHeaderRequest) returns(GetBlockHeaderResponse) {};
 	rpc GetAccountInfo(GetAccountInfoRequest) returns(GetAccountInfoResponse) {};
 }
@@ -39,25 +38,18 @@ message RegisterResponse {
 }
 
 message LoginRequest {
-	string body = 1;
-    string header = 2;
+	string username = 1;
+	string random = 2;
+	string verify_id = 3;
+	string verify_value = 4;
+	string signture = 5;
 }
 
 message LoginResponse {
 	uint32 code = 1;
-	string token = 2;
-	string msg = 3;
-}
-
-message LogoutRequest {
-	string username = 1;
-	string token = 2;
-}
-
-message LogoutResponse {
-	int32 code = 1;
 	string msg = 2;
 }
+
 
 message GetBlockHeaderRequest{}
 message GetBlockHeaderResponse {
