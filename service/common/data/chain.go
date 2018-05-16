@@ -30,13 +30,14 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if (resp.StatusCode != 200) {
+		log.Error(resp.Status)
 		return nil, errors.New(string(body))
 	}
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreCommonReturn{}
+	var common_ret = &bean.CoreBaseReturn{}
 	err = json.Unmarshal(body, common_ret)
 	if err != nil {
 		log.Error(err)
