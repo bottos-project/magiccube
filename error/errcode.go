@@ -110,7 +110,7 @@ func ReturnError(code int64, e ...error) string {
 				log.Error(err)
 				panic(err)
 			}
-			log.Error(json)
+			log.Error(string(json))
 			return string(json)
 		}
 	}

@@ -1,7 +1,6 @@
 syntax = "proto3";
-package transaction;
 
-message BasicTransaction {
+message TransactionSign {
     uint32 version = 1;
     uint32 cursor_num = 2;
     uint32 cursor_label = 3;

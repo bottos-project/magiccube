@@ -15,7 +15,6 @@ import (
 	"strings"
 	"fmt"
 	"strconv"
-	"golang.org/x/net/html/atom"
 	"encoding/json"
 	"github.com/bottos-project/bottos/config"
 	"gopkg.in/mgo.v2/bson"
@@ -25,6 +24,7 @@ import (
 	cbb "github.com/bottos-project/bottos/service/asset/cbb"
 	log "github.com/cihub/seelog"
 	"os"
+	"github.com/bottos-project/bottos/service/common/data"
 )
 
 const (
@@ -152,22 +152,45 @@ func GetSignAndData(postBody string) (string, string, string) {
 func (u *Asset) RegisterFile(ctx context.Context, req *proto.RegisterFileRequest, rsp *proto.RegisterFileResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
-	dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
-	log.Info(account, data)
-	//get Public Key
-	pubKey := GetPublicKey("account")
-	//Verify Sign Local
-	ok, _ := VerifySign(dataBody, signValue, pubKey)
-	log.Info(ok)
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
+
+	rsp.Code = 1005
+	//var requestStruct sign_proto.Transaction
+	//json.Unmarshal([]byte(req.PostBody), &requestStruct)
+
+	ret, err := data.PushTransaction(req.PostBody)
+	if err != nil {
+		rsp.Msg = err.Error()
 		return nil
 	}
+	log.Info("ret-file:", ret)
+	log.Info(ret.Result.TrxHash)
+
+	//Check the chain for packaging results.
+	params := `service=core&method=CoreApi.QueryObject&request={
+	"contract":"%s",
+	"object":"%s",
+	"key":"%s"
+	}`
+	s := fmt.Sprintf(params, "datafilemng", "datafilereg", ret.Result.TrxHash)
+	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
+		strings.NewReader(s))
+
+	log.Info("resp:", resp)
+	log.Info("err", err)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	log.Info(body)
+	//test
+	rsp.Code = 0
+	end_time := time.Now().UnixNano() / int64(time.Millisecond)
+	log.Info("Time:", end_time-start_time)
+	return nil
 
 	//Write to BlockChain
-	flag, result := cbb.WriteToBlockChain(req.PostBody, PUSH_TRANSACTION_URL)
+	/*flag, result := cbb.WriteToBlockChain(req.PostBody, PUSH_TRANSACTION_URL)
 	log.Info("OK1:", result)
 
 	end_time := time.Now().UnixNano() / int64(time.Millisecond)
@@ -183,45 +206,8 @@ func (u *Asset) RegisterFile(ctx context.Context, req *proto.RegisterFileRequest
 		rsp.Msg = "Register File Successful!"
 		rsp.Data = string(result)
 		return nil
-	}
-
-	/*	获取data JSON格式数据
-	postData1 := map[string]interface{}{
-			"code":    "bto",
-			"action":  "newaccount",
-			"binargs": data,
-		}
-		reqBinToJson := curl.NewRequest()
-		resp, err := reqBinToJson.SetUrl(ABI_BIN_TO_JSON_URL).SetPostData(postData1).Post()
-
-		if err != nil {
-			return nil
 		}*/
-}
-func WriteToBlockChain(post string, url string) []byte {
-	log.Info(url, post)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(post)))
-	// req.Header.Set("X-Custom-Header", "myvalue")
-	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	log.Info(resp.Status)
-	if resp.StatusCode/100 == 2 {
-		body, _ := ioutil.ReadAll(resp.Body)
-		js, _ := simplejson.NewJson([]byte(body))
-		log.Info(atom.String(body))
-		log.Info(string(body))
-		log.Info(js)
-		js.Get("result").MustString()
-		return body
-	} else {
-		return nil
-	}
 }
 
 func GetPublicKey(post string) string {
@@ -1406,7 +1392,7 @@ func main() {
 
 	service := micro.NewService(
 		micro.Name("go.micro.srv.v2.asset"),
-		micro.Version("2.0.0"),
+		micro.Version("3.0.0"),
 	)
 
 	service.Init()

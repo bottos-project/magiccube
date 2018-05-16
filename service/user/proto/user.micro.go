@@ -14,8 +14,6 @@ It has these top-level messages:
 	RegisterResponse
 	LoginRequest
 	LoginResponse
-	LogoutRequest
-	LogoutResponse
 	GetBlockHeaderRequest
 	GetBlockHeaderResponse
 	BlockHeader
@@ -56,7 +54,6 @@ var _ server.Option
 type UserClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
-	Logout(ctx context.Context, in *LogoutRequest, opts ...client.CallOption) (*LogoutResponse, error)
 	GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, opts ...client.CallOption) (*GetBlockHeaderResponse, error)
 	GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...client.CallOption) (*GetAccountInfoResponse, error)
 }
@@ -99,16 +96,6 @@ func (c *userClient) Login(ctx context.Context, in *LoginRequest, opts ...client
 	return out, nil
 }
 
-func (c *userClient) Logout(ctx context.Context, in *LogoutRequest, opts ...client.CallOption) (*LogoutResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "User.Logout", in)
-	out := new(LogoutResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userClient) GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, opts ...client.CallOption) (*GetBlockHeaderResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "User.GetBlockHeader", in)
 	out := new(GetBlockHeaderResponse)
@@ -134,7 +121,6 @@ func (c *userClient) GetAccountInfo(ctx context.Context, in *GetAccountInfoReque
 type UserHandler interface {
 	Register(context.Context, *RegisterRequest, *RegisterResponse) error
 	Login(context.Context, *LoginRequest, *LoginResponse) error
-	Logout(context.Context, *LogoutRequest, *LogoutResponse) error
 	GetBlockHeader(context.Context, *GetBlockHeaderRequest, *GetBlockHeaderResponse) error
 	GetAccountInfo(context.Context, *GetAccountInfoRequest, *GetAccountInfoResponse) error
 }
@@ -153,10 +139,6 @@ func (h *User) Register(ctx context.Context, in *RegisterRequest, out *RegisterR
 
 func (h *User) Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error {
 	return h.UserHandler.Login(ctx, in, out)
-}
-
-func (h *User) Logout(ctx context.Context, in *LogoutRequest, out *LogoutResponse) error {
-	return h.UserHandler.Logout(ctx, in, out)
 }
 
 func (h *User) GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, out *GetBlockHeaderResponse) error {

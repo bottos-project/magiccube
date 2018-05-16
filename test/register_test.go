@@ -1,14 +1,15 @@
 package test
 
-import(
+import (
 	"testing"
-	sign "github.com/bottos-project/bottos/service/common/signature/proto"
-	"github.com/bottos-project/bottos/crypto"
 	"encoding/hex"
+	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
+	"github.com/bottos-project/bottos/crypto"
 	"github.com/bottos-project/bottos/service/common/util"
 	"github.com/protobuf/proto"
 	pack "github.com/bottos-project/bottos/core/contract/msgpack"
 	"github.com/bottos-project/bottos/service/common/bean"
+	"github.com/bottos-project/bottos/service/common/data"
 )
 
 func TestRegitser(t *testing.T) {
@@ -18,17 +19,17 @@ func TestRegitser(t *testing.T) {
 
 func TestSignature(t *testing.T){
 	dids := bean.Did{
-		"test",
-		"test",
+		"did:bot:045a44ce5c3a657f173fca88b80a2cec",
+		``,
 	}
-	t.Log(dids)
+
 	param,_ := pack.Marshal(dids)
 	t.Log(hex.EncodeToString(param))
-	data := &sign.BasicTransaction{
+	data := &push_sign.TransactionSign{
 		Version: 1,
-		CursorNum: 5134,
-		CursorLabel: 1754826169,
-		Lifetime: 1526281264,
+		CursorNum: 17,
+		CursorLabel: 1798372187,
+		Lifetime: 1524802582,
 		Sender: "bottos",
 		Contract: "usermng",
 		Method: "reguser",
@@ -37,6 +38,9 @@ func TestSignature(t *testing.T){
 	}
 	msg, _ := proto.Marshal(data)
 	seckey,_ := hex.DecodeString("e4877f7665e3c22d4e5acb1a24a2fc3554ceaa575e2a3a9e794a98d9c4c3940f")
+
+
+
 	t.Log(msg)
 	t.Log(seckey)
 	sign, _ := crypto.Sign(util.Sha256(msg), seckey)
@@ -70,4 +74,11 @@ func TestGenKey(t *testing.T) {
 
 	t.Log(hex.EncodeToString(pubkey))
 	t.Log(hex.EncodeToString(seckey))
+}
+
+func TestGoType(t *testing.T)  {
+
+	ret, err := data.PushTransaction(nil)
+	t.Log(err)
+	t.Log(ret)
 }

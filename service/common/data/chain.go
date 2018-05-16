@@ -30,13 +30,14 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if (resp.StatusCode != 200) {
+		log.Error(resp.Status)
 		return nil, errors.New(string(body))
 	}
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreCommonReturn{}
+	var common_ret = &bean.CoreBaseReturn{}
 	err = json.Unmarshal(body, common_ret)
 	if err != nil {
 		log.Error(err)
@@ -62,7 +63,7 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	return block_header, nil
 }
 
-func PushTransaction (i interface{}) (interface{}, error) {
+func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 	var params = ""
 	switch i.(type) {
 		case string:
@@ -75,7 +76,7 @@ func PushTransaction (i interface{}) (interface{}, error) {
 			}
 			params = fmt.Sprintf(TX_PARAMS, string(r))
 	}
-
+	log.Info(params)
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(params))
 	if err != nil {
@@ -126,7 +127,7 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreCommonReturn{}
+	var common_ret = &bean.CoreBaseReturn{}
 	err = json.Unmarshal(body, common_ret)
 	if err != nil {
 		log.Error(err)

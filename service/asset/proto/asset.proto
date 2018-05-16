@@ -11,7 +11,7 @@ service Asset {
     };
     rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
     };
-    rpc Register (RegisterRequest) returns (RegisterResponse) {
+    rpc RegisterAsset (RegisterRequest) returns (RegisterResponse) {
     };
     rpc Query (QueryRequest) returns (QueryResponse) {
     };

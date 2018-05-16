@@ -176,6 +176,8 @@ function unpackpackages() {
 
     source ~/.profile
 }
+=======
+>>>>>>> 0347ff98b8d08846c48ad3f828210d0230f89145
 
 function miniocheck(){
     if [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
@@ -329,7 +331,6 @@ function startcore()
 	if [ "$CHK_CORE" -lt 1 ];
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
-        	echo "nohup ${CORE_PROC_FILE_DIR}/core 2>&1 &"
 		sudo nohup ${CORE_PROC_FILE_DIR}/core 2>&1 & 
         	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
         	sleep 3
@@ -413,9 +414,7 @@ function prepcheck()
 
 function startcontract()
 {
-	#echo "sudo ${CORE_PROC_FILE_DIR}/./cmd newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &"
 	sudo ${CORE_PROC_FILE_DIR}/./cmd newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
-	#echo "sudo ${CORE_PROC_FILE_DIR}/./cmd deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &"
 	sudo ${CORE_PROC_FILE_DIR}/./cmd deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	echo "===CONTRACT DONE==="
 }
