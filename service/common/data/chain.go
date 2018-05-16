@@ -127,7 +127,7 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreCommonReturn{}
+	var common_ret = &bean.CoreBaseReturn{}
 	err = json.Unmarshal(body, common_ret)
 	if err != nil {
 		log.Error(err)
