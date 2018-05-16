@@ -1,9 +1,6 @@
 syntax = "proto3";
 
-package transaction;
-//option go_package = "github.com/bottos-project/core/api";
-
-message Transaction {
+message TransactionSign {
     uint32 version = 1;
     uint32 cursor_num = 2;
     uint32 cursor_label = 3;
@@ -11,7 +8,6 @@ message Transaction {
     string sender = 5;
     string contract = 6;
     string method = 7;
-    string param = 8;
+    bytes param = 8;
     uint32 sig_alg = 9;
-    string signature = 10;
 }
