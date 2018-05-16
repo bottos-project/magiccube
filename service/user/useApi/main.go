@@ -103,7 +103,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is_true, err := sign.PushVerifySign(registerRequest.Account.Pubkey, string(user_json_buf))
+	is_true, err := sign.PushVerifySign(string(user_json_buf), registerRequest.Account.Pubkey)
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
