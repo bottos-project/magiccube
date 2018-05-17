@@ -102,7 +102,7 @@ func ReturnError(code int64, e ...error) string {
 	d := GetAllErrorInfos()
 	for _, v := range d {
 		if code == v.Code {
-			if len(e) > 0 {
+			if len(e)>0 && e[0]!=nil{
 				v.Details = e[0].Error()
 			}
 			json, err := json.Marshal(v)
