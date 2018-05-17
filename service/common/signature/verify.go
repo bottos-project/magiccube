@@ -14,7 +14,8 @@ import (
 	"github.com/bottos-project/bottos/service/common/data"
 )
 
-func PushVerifySign(pubkeyStr string, jsonstr string) (bool, error) {
+func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
+
 	var tx bean.TxBean
 	err:=json.Unmarshal([]byte(jsonstr), &tx)
 	if err != nil {
@@ -53,7 +54,19 @@ func PushVerifySign(pubkeyStr string, jsonstr string) (bool, error) {
 		return false, err
 	}
 
-	pub_key, err := hex.DecodeString(pubkeyStr)
+	var p_key = ""
+	if len(pubkey) < 1 {
+		accountInfo, err := data.AccountInfo(tx.Sender)
+		if err != nil {
+			log.Error(err)
+			return false, err
+		}
+		p_key = accountInfo.Pubkey
+	} else {
+		p_key = pubkey[0]
+	}
+
+	pub_key, err := hex.DecodeString(p_key)
 	if err != nil {
 		log.Error(err)
 		return false, err

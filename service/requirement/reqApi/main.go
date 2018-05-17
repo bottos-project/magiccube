@@ -8,6 +8,8 @@ import (
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"github.com/bottos-project/bottos/config"
+	errcode "github.com/bottos-project/bottos/error"
+	sign "github.com/bottos-project/bottos/service/common/signature"
 )
 
 type Requirement struct {
@@ -15,20 +17,28 @@ type Requirement struct {
 }
 
 func (s *Requirement) Publish(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	response, err := s.Client.Publish(ctx, &requirement.PublishRequest{
-		Body: req.Body,
-	})
+	rsp.StatusCode = 200
+
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var publishRequest requirement.PublishRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.Publish(ctx, &publishRequest)
 	if err != nil {
 		return err
 	}
 
-	ret, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":  response.Msg,
-	})
-	rsp.StatusCode = 200
-	rsp.Body = string(ret)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -37,11 +47,10 @@ func (s *Requirement) Query(ctx context.Context, req *api.Request, rsp *api.Resp
 	log.Info(body)
 	var requirementQuery requirement.QueryRequest
 	err := json.Unmarshal([]byte(body), &requirementQuery)
-
-	log.Info(requirementQuery)
 	if err != nil {
 		log.Error(err)
 	}
+
 	response, err := s.Client.Query(ctx, &requirementQuery)
 	if err != nil {
 		log.Error(err)

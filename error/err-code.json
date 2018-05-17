@@ -54,5 +54,12 @@
     "cn": "获取账号信息失败"
   },
   "details": ""
+},{
+  "code": 3000,
+  "msg": {
+    "en": "Release requirements failure",
+    "cn": "发布需求失败"
+  },
+  "details": ""
 }
 ]

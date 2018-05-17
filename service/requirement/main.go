@@ -1,36 +1,28 @@
 ﻿package main
 
 import (
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	requirement_proto "github.com/bottos-project/bottos/service/requirement/proto"
 	"golang.org/x/net/context"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"io/ioutil"
-	"net/http"
-	"bytes"
 	"github.com/bottos-project/bottos/service/bean"
 	"github.com/bottos-project/bottos/config"
+	"os"
+	"github.com/bottos-project/bottos/service/common/data"
 )
 
-const (
-	BASE_URL              	= config.BASE_CHAIN_URL
-	PUSH_TRANSACTION_URL 	= BASE_URL + "v1/chain/push_transaction"
-)
 
 type Requirement struct {}
 
 func (u *Requirement) Publish(ctx context.Context, req *requirement_proto.PublishRequest, rsp *requirement_proto.PublishResponse) error {
-	log.Info(req.Body)
-	is_true := requirementPublish(req.Body)
-	if is_true {
-		rsp.Code = 0
-		rsp.Msg = "Publish success"
-	}else{
-		rsp.Code = 3001
-		rsp.Msg = "Publish failure"
+	i, err := data.PushTransaction(req)
+	if err != nil {
+		rsp.Code = 3000
+		rsp.Msg = err.Error()
 	}
+	log.Info(i)
 	return nil
 }
 
@@ -105,29 +97,17 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	return nil
 }
 
-func requirementPublish(info string) bool {
-	req, err := http.NewRequest("POST", PUSH_TRANSACTION_URL, bytes.NewBuffer([]byte(info)))
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
+	if err != nil{
 		log.Error(err)
+		panic(err)
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode/100 == 2 {
-		body, _ := ioutil.ReadAll(resp.Body)
-		log.Info("---Body---", string(body))
-		return true
-	}
-	return false
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
 }
 
 func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("requirement.srv")
-
 	service := micro.NewService(
 		micro.Name("go.micro.srv.requirement"),
 		micro.Version("2.0.0"),
@@ -138,6 +118,6 @@ func main() {
 	requirement_proto.RegisterRequirementHandler(service.Server(), new(Requirement))
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		os.Exit(1)
 	}
 }

@@ -6,6 +6,18 @@ service Requirement {
 }
 
 message PublishRequest {
+    uint32 version = 1;
+    uint32 cursor_num = 2;
+    uint32 cursor_label = 3;
+    uint64 lifetime = 4;
+    string sender = 5;
+    string contract = 6;
+    string method = 7;
+    string param = 8;
+    uint32 sig_alg = 9;
+    string signature =10;
+}
+
 //    string username = 1;
 //    string requirement_name = 2;
 //    string feature_tag = 3;
@@ -16,8 +28,6 @@ message PublishRequest {
 //    string description = 8;
 //    string publish_date = 9;
 //    string signature = 10;
-    string body = 1;
-}
 
 message PublishResponse {
     int32 code = 1;
