@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
 #GO_PATH=`echo $GOPATH |cut -d'=' -f2`
-GO_PATH=
+SYS_GOPATH=/mnt
+SYS_GOROOT=/usr/lib/go
+
+GO_PATH=/opt/go
 CONSUL_PATH=$GO_PATH/bin/linux_386/
 SERVER_PATH=$GO_PATH/bin/
+GZ_PACKAGE_DIR=/mnt
 
 MINIO_SITE=https://dl.minio.io/server/minio/release/linux-amd64/minio
 MINIO_SERV_SITE=https://raw.githubusercontent.com/minio/minio-service/master/linux-systemd/minio.service
@@ -13,9 +17,9 @@ MINIO_GRP=minio-user
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
-SERVER_IPADR=
+SERVER_IPADR=10.0.0.4
 SERVER_PORT=9000
-WALLET_SERV=
+WALLET_SERV=10.0.0.4
 CHAIN_PORT=8888
 EXTERNAL_IPADR=
 
@@ -25,6 +29,153 @@ MINIO_OPTS_ENV="MINIO_OPTS=\"-C "$MINIO_COF" --address "$SERVER_IPADR":"$SERVER_
 MINIO_VOLUMES="/usr/local/share/minio"
 MINIO_OPTS="-C /etc/minio --address "$SERVER_IPADR":"$SERVER_PORT
 CORE_PROC_FILE_DIR=${GO_PATH}/bin/core
+
+OPT_GO_BIN_GZ_PACK=opt-go-bin.tar.gz
+GOPATH_DIR_PACK=GOPATH-DIR.tar.gz
+GOLANG_PACK=go1.10.1.linux-amd64.tar.gz
+
+#DO NOT FILL THESE IN SCRIPT
+PACKAGE_SVR=""
+PACKAGE_SVR_USRNAME=""
+PACKAGE_SVR_PWD=""
+PACKAGE_SVR_PACKAGE_DIR=""
+
+function check_gzpackages() {
+    sudo apt-get install -y tcl tk expect   
+    counts=0
+    while ( [ -z "$PACKAGE_SVR" ] || [ -z "$PACKAGE_SVR_USRNAME" ] || [ -z "$PACKAGE_SVR_PWD" ] || [ -z "$PACKAGE_SVR_PACKAGE_DIR" ]); do
+        if [ $counts -gt 0 ]; then
+            echo -e "\033[31m Input wrong. Please input again.\033[0m"
+        fi
+        read -p "Please input source package server ip:" PACKAGE_SVR
+        read -p "Please input source package server packages directory:" PACKAGE_SVR_PACKAGE_DIR
+        read -p "Please input source package server user name:" PACKAGE_SVR_USRNAME
+        read -p "Please input source package server password:" PACKAGE_SVR_PWD
+        counts=1
+    done
+    
+    if [ ! -d /opt/go/bin/core ]; then
+
+/usr/bin/expect <<-EOF
+
+spawn scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
+set timeout 600
+
+expect {
+"*yes/no" { send "yes\r"; exp_continue }
+"*password:" { send "$PACKAGE_SVR_PWD\r" }
+}
+
+expect eof
+
+EOF
+
+    fi
+
+    if [ ! -f $GZ_PACKAGE_DIR/$GOLANG_PACK ]; then
+
+/usr/bin/expect <<-EOF
+
+spawn scp $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/$GOLANG_PACK $GZ_PACKAGE_DIR
+set timeout 600
+
+expect {
+"*yes/no" { send "yes\r"; exp_continue }
+"*password:" { send "$PACKAGE_SVR_PWD\r" }
+}
+
+expect eof
+
+EOF
+
+    fi
+
+
+    if [ ! -f $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK ]; then
+
+/usr/bin/expect <<-EOF
+
+spawn scp $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK $GZ_PACKAGE_DIR
+set timeout 600
+
+expect {
+"*yes/no" { send "yes\r"; exp_continue }
+"*password:" { send "$PACKAGE_SVR_PWD\r" }
+}
+
+expect eof
+
+EOF
+
+    fi
+
+
+    if [ ! -f $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK ]; then
+
+/usr/bin/expect <<-EOF
+
+spawn scp $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/$GOPATH_DIR_PACK $GZ_PACKAGE_DIR
+set timeout 600
+
+expect {
+"*yes/no" { send "yes\r"; exp_continue }
+"*password:" { send "$PACKAGE_SVR_PWD\r" }
+}
+
+expect eof
+
+EOF
+
+    fi
+
+    if [ ! -f $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK ] ; then
+        echo -e "\033[31m *ERROR* Please get your missing gz packages [ $OPT_GO_BIN_GZ_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
+        exit 1
+    fi
+    
+    if [ ! -f $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK ]; then
+        echo -e "\033[31m *ERROR* Please get your missing gz packages [ $GOPATH_DIR_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
+        exit 1
+    fi
+   
+    if [ ! -f $GZ_PACKAGE_DIR/$GOLANG_PACK ]; then
+        echo -e "\033[31m *ERROR* Please get your missing gz packages [ $GOLANG_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
+        exit 1
+    fi
+    
+    echo "!!All files done."    
+}
+
+function unpackpackages() {
+	echo "start unpack $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK:"
+	mkdir -p /opt/go/bin
+	tar zxvf $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK -C /opt/go
+	
+	echo "start unpack $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK:"
+	tar zxvf $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK -C $SYS_GOPATH
+	
+    echo "start unpack $GZ_PACKAGE_DIR/$GOLANG_PACK:"
+	tar -C /usr/lib -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
+	
+    cmd=$(sed  -n "/GOPATH/p" ~/.profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+        sed -i '$a\export GOPATH="/usr/lib/go"' ~/.profile
+    fi
+
+	cmd=$(sed  -n "/GOROOT/p" ~/.profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+        #cmd=\'+ '$a\export GOROOT='+$SYS_GOROOT+\'
+        echo "LYP--->\$a\export GOROOT=$SYS_GOROOT"
+        sed -i "\$a\export GOROOT=\"$SYS_GOROOT\"" ~/.profile
+    fi
+
+    cmd=$(sed -n "/export PATH/p" ~/.profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+        sed -i '$a\export PATH=$PATH:/usr/local/go/bin' ~/.profile
+    fi
+
+    source ~/.profile
+}
 
 function miniocheck(){
     if [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
@@ -143,9 +294,9 @@ function sslcheck()
 
 function varcheck()
 {
-	if [ -z "$GO_PATH" ] || [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
+	if [ -z "$GO_PATH" ] || [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ] || [ -z "$GZ_PACKAGE_DIR" ] || [ -z "$SYS_GOPATH" ] || [ -z "$SYS_GOROOT" ];
 	then
-		echo -e "\033[31m *ERROR* You have to specify the variable GO_PATH/SERVER_IPADR/SERVER_PORT in the script!!! \033[0m"
+		echo -e "\033[31m *ERROR* You have to specify the variable SYS_GOPATH/SYS_GOROOT/GO_PATH/SERVER_IPADR/SERVER_PORT/GZ_PACKAGE_DIR in the script!!! \033[0m"
 		exit 1
 	fi
 }
@@ -362,9 +513,11 @@ case $1 in
         ;;
     "deploy")
         usercheck
-        varcheck
+        varcheck   
+	    check_gzpackages
         prepcheck
         sslcheck
+	    unpackpackages
         ;;
     "startcore")
         startcore
