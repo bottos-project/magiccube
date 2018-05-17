@@ -47,7 +47,7 @@ func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Respons
 	b, _ := json.Marshal(map[string]interface{}{
 		"code": 1,
 		"data": map[string]interface{}{
-			"verify_key": idKeyD,
+			"verify_id": idKeyD,
 			"verify_data": base64stringD,
 		},
 		"msg": "OK",
@@ -87,7 +87,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		}
 	}
 
-	match,err :=regexp.MatchString("^[1-5a-z.]{3,13}$",registerRequest.Account.Name)
+	match,err :=regexp.MatchString("^[a-km-z][a-km-z]{2,15}$",registerRequest.Account.Name)
 	if err != nil {
 		log.Error(err)
 		return err
