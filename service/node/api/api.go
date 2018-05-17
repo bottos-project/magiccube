@@ -505,7 +505,7 @@ func (r *MongoRepository) CallInsertPointxy(ip string, pointx string, pointy str
     
     } else {    
         selector := bson.M{"ip": ip}
-        data := bson.M{"$set": bson.M{"pointx": "pointx", "pointy": "pointy"}}
+        data := bson.M{"$set": bson.M{"pointx": pointx, "pointy": pointy}}
     
         changeInfo, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
         if err != nil {
