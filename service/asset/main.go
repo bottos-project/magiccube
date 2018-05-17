@@ -9,7 +9,6 @@ import (
 	"time"
 	storage "github.com/bottos-project/bottos/service/storage/proto"
 	"github.com/micro/go-micro/client"
-	"bytes"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -43,24 +42,16 @@ func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadUR
 	log.Info("Start Get File URL!")
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
-	//dataBody, signValue, userName := "fd","","13"
-	dataBody, signValue, userName := GetSignAndData(req.PostBody)
 	//log.Info(userName)
 	//get Public Key
-	pubKey := GetPublicKey("userName")
-	//Verify Sign Local
-	ok, _ := VerifySign(dataBody, signValue, pubKey)
 
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
-		return nil
-	}
+
+
 	//log.Info(ok)
 	//get strore Address
 	js, _ := simplejson.NewJson([]byte(req.PostBody))
 	log.Info("js", js)
+	userName:=""
 
 	userName = js.Get("userName").MustString()
 	fileName := js.Get("fileName").MustString()
@@ -187,142 +178,50 @@ func (u *Asset) RegisterFile(ctx context.Context, req *proto.RegisterFileRequest
 	rsp.Code = 0
 	end_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("Time:", end_time-start_time)
-	return nil
 
-	//Write to BlockChain
-	/*flag, result := cbb.WriteToBlockChain(req.PostBody, PUSH_TRANSACTION_URL)
-	log.Info("OK1:", result)
+		return nil
+}
 
+func (u *Asset) RegisterAsset(ctx context.Context, req *proto.RegisterRequest, rsp *proto.RegisterResponse) error {
+	start_time := time.Now().UnixNano() / int64(time.Millisecond)
+	log.Info("reqBody:" + req.PostBody)
+
+	rsp.Code = 1005
+	//var requestStruct sign_proto.Transaction
+	//json.Unmarshal([]byte(req.PostBody), &requestStruct)
+
+	ret, err := data.PushTransaction(req.PostBody)
+		if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+}
+	log.Info("ret-file:", ret)
+	log.Info(ret.Result.TrxHash)
+
+	//Check the chain for packaging results.
+	params := `service=core&method=CoreApi.QueryObject&request={
+	"contract":"%s",
+	"object":"%s",
+	"key":"%s"
+	}`
+	s := fmt.Sprintf(params, "assetmng", "assetreg", ret.Result.TrxHash)
+	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
+		strings.NewReader(s))
+
+	log.Info("resp:", resp)
+	log.Info("err", err)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	log.Info(body)
+	//test
+	rsp.Code = 0
 	end_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("Time:", end_time-start_time)
-	//ok1 = true
-	if flag == false {
-		rsp.Code = 2001
-		rsp.Msg = "Register File Failed."
-		rsp.Data = result
-		return nil
-	} else {
-		rsp.Code = 1
-		rsp.Msg = "Register File Successful!"
-		rsp.Data = string(result)
-		return nil
-		}*/
 
-}
-
-func GetPublicKey(post string) string {
-	req, err := http.NewRequest("POST", PUSH_TRANSACTION_URL, bytes.NewBuffer([]byte(post)))
-	// req.Header.Set("X-Custom-Header", "myvalue")
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.Status == "200 OK" {
-		body, _ := ioutil.ReadAll(resp.Body)
-		js, _ := simplejson.NewJson([]byte(body))
-		result := js.Get("result").MustString()
-		return result
-	} else {
-		return ""
-	}
-}
-func GetSignAndDataCom(postBody string) (signData string, account string, sign string, data string) {
-	js, _ := simplejson.NewJson([]byte(postBody))
-	//get signed data
-	//TODO
-
-	messages := js.Get("messages").GetIndex(0)
-	authorization := messages.Get("authorization").GetIndex(0)
-	log.Info("----------", authorization.Get("account").MustString())
-
-	postData := map[string]interface{}{
-		"ref_block_num":    js.Get("ref_block_num").MustInt(),
-		"ref_block_prefix": js.Get("ref_block_prefix").MustInt(),
-		"expiration":       js.Get("expiration").MustString(),
-		"scope":            []string{js.Get("scope").MustString()},
-		"read_scope":       []string{},
-		"messages": []interface{}{
-			map[string]interface{}{
-				"code": messages.Get("code").MustString(),
-				"type": messages.Get("type").MustString(),
-				"authorization": []interface{}{
-					map[string]interface{}{
-						"account":    authorization.Get("account").MustString(),
-						"permission": authorization.Get("permission").MustString(),
-					},
-				},
-				"data": messages.Get("data").MustString(),
-			},
-		},
-		"signatures": []string{js.Get("signatures").MustString()},
-	}
-	log.Info(postData)
-	//getSignValue
-	signValue := js.Get("signatures").MustString()
-	log.Info(signValue)
-	//get Account
-	account = authorization.Get("account").MustString()
-	log.Info(account)
-	//get sign Data
-	delete(postData, "signatures")
-	signData = ""
-	//signData = string(json.Marshal(postData))
-	log.Info(signData)
-	//get sign Data
-	data = messages.Get("data").MustString()
-	log.Info("----------", data)
-
-	/*	req := curl.NewRequest()
-		resp, err := req.SetUrl(PUSH_TRANSACTION_URL).SetPostData(postData).Post()
-		if err != nil {
-			return
-		}*/
-	//return resp.Body, account
-	return signData, account, signValue, data
-}
-
-func VerifySignOnBlockChain(post string, url string) bool {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(post)))
-	// req.Header.Set("X-Custom-Header", "myvalue")
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.Status == "200 OK" {
-		body, _ := ioutil.ReadAll(resp.Body)
-		js, _ := simplejson.NewJson([]byte(body))
-		js.Get("result").MustString()
-		//return js.Get("result").MustString()
-		return true
-	} else {
-		return false
-	}
-}
-
-func VerifySign(data string, sign string, pubKey string) (bool, string) {
-	//if sign == "" {
-	//	//从data中取sign TODO
-	//}
-	//flag := false
-	//ToDO
-	//var err string
-	if data == sign {
-		//flag = true
-		return true, "Successful!"
-	} else {
-		return false, "Failed!"
-	}
-
+	return nil
 }
 
 func (u *Asset) GetFileUploadStat(ctx context.Context, req *proto.GetFileUploadStatRequest, rsp *proto.GetFileUploadStatResponse) error {
@@ -537,20 +436,10 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryUploadedD
 
 func (u *Asset) GetDownLoadURL(ctx context.Context, req *proto.GetDownLoadURLRequest, rsp *proto.GetDownLoadURLResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
-	dataBody, signValue, account, data := "", "", "", ""
-	//dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
-	log.Info(account, data)
-	//get Public Key
-	pubKey := GetPublicKey("account")
-	//Verify Sign Local
-	ok, _ := VerifySign(dataBody, signValue, pubKey)
-	log.Info(ok)
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
-		return nil
-	}
+
+
+
+
 	//Test
 	params := `service=storage&method=Storage.GetDownLoadURL&request={
 	"username":"%s",
@@ -595,7 +484,7 @@ func (u *Asset) GetDownLoadURL(ctx context.Context, req *proto.GetDownLoadURLReq
 	return nil
 }
 
-func (u *Asset) Register(ctx context.Context, req *proto.RegisterRequest, rsp *proto.RegisterResponse) error {
+/*func (u *Asset) Register(ctx context.Context, req *proto.RegisterRequest, rsp *proto.RegisterResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
 	dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
@@ -632,7 +521,7 @@ func (u *Asset) Register(ctx context.Context, req *proto.RegisterRequest, rsp *p
 		return nil
 	}
 
-	/*	获取data JSON格式数据
+	*//*	获取data JSON格式数据
 	postData1 := map[string]interface{}{
 			"code":    "bto",
 			"action":  "newaccount",
@@ -643,8 +532,8 @@ func (u *Asset) Register(ctx context.Context, req *proto.RegisterRequest, rsp *p
 
 		if err != nil {
 			return nil
+		}*//*
 		}*/
-}
 
 func (u *Asset) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.QueryResponse) error {
 
@@ -744,20 +633,10 @@ func (u *Asset) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 
 func (u *Asset) QueryAllAsset(ctx context.Context, req *proto.QueryAllAssetRequest, rsp *proto.QueryAllAssetResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
-	dataBody, signValue, account, data := "", "", "", ""
-	//dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
-	log.Info(account, data)
-	//get Public Key
-	pubKey := GetPublicKey("account")
-	//Verify Sign Local
-	ok, _ := VerifySign(dataBody, signValue, pubKey)
-	log.Info(ok)
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
-		return nil
-	}
+
+
+
+
 	//Test
 	params := `service=storage&method=Storage.GetAllAssetList&request={
 	"username":"%s"
@@ -800,22 +679,11 @@ func (u *Asset) QueryAllAsset(ctx context.Context, req *proto.QueryAllAssetReque
 	return nil
 }
 
+
 func (u *Asset) Modify(ctx context.Context, req *proto.ModifyRequest, rsp *proto.ModifyResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
-	dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
-	log.Info(account, data)
-	//get Public Key
-	pubKey := GetPublicKey("account")
-	//Verify Sign Local
-	ok, _ := VerifySign(dataBody, signValue, pubKey)
-	log.Info(ok)
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
-		return nil
-	}
+
 
 	//Write to BlockChain
 	flag, result := cbb.WriteToBlockChain(req.PostBody, PUSH_TRANSACTION_URL)
