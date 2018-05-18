@@ -1,16 +1,18 @@
 ﻿package main
 
 import (
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	dashboard_proto "github.com/bottos-project/bottos/service/dashboard/proto"
 	"golang.org/x/net/context"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/bottos/service/bean"
+	com_bean "github.com/bottos-project/bottos/service/common/bean"
 	"time"
 	"github.com/bottos-project/bottos/config"
 	"github.com/bottos-project/bottos/service/query"
+	"os"
 )
 
 type Dashboard struct {}
@@ -98,15 +100,15 @@ func (u *Dashboard) GetBlockList(ctx context.Context, req *dashboard_proto.GetBl
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 && req.PageSize <= 50 {
+	if req.PageSize > 0 && req.PageSize <= 20 {
 		pageSize = int(req.PageSize)
 	}
 
 	skip = (pageNum - 1) *  pageSize
 
-	var sort string= "-block_num"
+	var sort string= "-block_number"
 	if req.Sort == "asc" {
-		sort = "block_num"
+		sort = "block_number"
 	}
 
 	var mgo = mgo.Session()
@@ -116,7 +118,7 @@ func (u *Dashboard) GetBlockList(ctx context.Context, req *dashboard_proto.GetBl
 	if err != nil {
 		log.Error(err)
 	}
-	var ret []bean.BlockBean
+	var ret []com_bean.Block
 
 	mgo.DB(config.DB_NAME).C("Blocks").Find(nil).Sort(sort).Skip(skip).Limit(pageSize).All(&ret)
 
@@ -124,12 +126,13 @@ func (u *Dashboard) GetBlockList(ctx context.Context, req *dashboard_proto.GetBl
 
 	for _, v := range ret {
 		rows = append(rows, &dashboard_proto.BlockRow{
-			BlockNum: v.BlockNum,
-			BlockId: v.BlockID,
-			PrevBlockId:v.PrevBlockID,
-			TransactionMerkleRoot:v.TransactionMerkleRoot,
-			Producer:v.ProducerAccountID,
-			Timestamp:v.Timestamp.String(),
+			BlockNumber: v.BlockNumber,
+			BlockHash: v.BlockHash,
+			PrevBlockHash:v.PrevBlockHash,
+			MerkleRoot:v.MerkleRoot,
+			Delegate:v.Delegate,
+			Timestamp:v.Timestamp,
+			TxNum:uint32(len(v.Transactions)),
 		})
 	}
 	var data = &dashboard_proto.BlockData{
@@ -390,14 +393,21 @@ func getRecent7DayTimeSlice() []int {
 	return timeSlice
 }
 
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/dash-log.xml")
+	if err != nil{
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
+}
+
 func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("dashboard.srv")
 
 	service := micro.NewService(
-		micro.Name("go.micro.srv.dashboard"),
-		micro.Version("2.0.0"),
+		micro.Name("bottos.srv.dashboard"),
+		micro.Version("3.0.0"),
 	)
 
 	service.Init()
@@ -405,6 +415,6 @@ func main() {
 	dashboard_proto.RegisterDashboardHandler(service.Server(), new(Dashboard))
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		os.Exit(1)
 	}
 }
