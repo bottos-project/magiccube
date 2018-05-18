@@ -68,5 +68,5 @@ type Block struct {
 	Timestamp             uint64     	    `bson:"timestamp"`
 	MerkleRoot 			  string        	`bson:"merkle_root"`
 	Transactions          []bson.ObjectId   `bson:"transactions"`
-	createdTime           time.Time     	`bson:"created_time"`
+	createTime           time.Time     		`bson:"create_time"`
 }
