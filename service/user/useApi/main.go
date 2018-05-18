@@ -215,6 +215,54 @@ func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Respo
 	return nil
 }
 
+
+
+func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var pushTxRequest user.PushTxRequest
+	err := json.Unmarshal([]byte(req.Body), &pushTxRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//is, err:=sign.PushVerifySign(req.Body)
+	//TODO
+	is:=true
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.Transfer(ctx, &pushTxRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	var getAccountInfoRequest user.GetBalanceRequest
+	err := json.Unmarshal([]byte(req.Body), &getAccountInfoRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	response, err := u.Client.GetBalance(ctx, &getAccountInfoRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{

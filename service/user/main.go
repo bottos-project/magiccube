@@ -147,6 +147,30 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	return nil
 }
 
+
+func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp *user_proto.PushTxResponse) error {
+
+	i, err := data.PushTransaction(req)
+
+	if i != nil {
+		rsp.Code = 1008
+		rsp.Msg = err.Error()
+	}
+	return nil
+}
+
+func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
+	account_info, err:= data.AccountInfo(req.Username)
+	if account_info != nil {
+		rsp.Data = ""
+		//rsp.Data = account_info
+	} else {
+		rsp.Code = 1006
+		rsp.Msg = err.Error()
+	}
+	return nil
+}
+
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{
