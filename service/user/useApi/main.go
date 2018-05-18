@@ -163,6 +163,58 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 	return nil
 }
 
+func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var favoriteRequest user.FavoriteRequest
+	err := json.Unmarshal([]byte(req.Body), &favoriteRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	is, err:=sign.QueryVerifySign(req.Body)
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.Favorite(ctx, &favoriteRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var getFavoriteRequest user.GetFavoriteRequest
+	err := json.Unmarshal([]byte(req.Body), &getFavoriteRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	is, err:=sign.QueryVerifySign(req.Body)
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.GetFavorite(ctx, &getFavoriteRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{
