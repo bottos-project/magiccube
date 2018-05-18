@@ -20,6 +20,12 @@ It has these top-level messages:
 	GetAccountInfoRequest
 	GetAccountInfoResponse
 	AccountInfoData
+	FavoriteRequest
+	FavoriteResponse
+	GetFavoriteRequest
+	GetFavoriteResponse
+	FavoriteArr
+	FavoriteData
 */
 package user
 
@@ -56,6 +62,8 @@ type UserClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 	GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, opts ...client.CallOption) (*GetBlockHeaderResponse, error)
 	GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, opts ...client.CallOption) (*GetAccountInfoResponse, error)
+	Favorite(ctx context.Context, in *FavoriteRequest, opts ...client.CallOption) (*FavoriteResponse, error)
+	GetFavorite(ctx context.Context, in *GetFavoriteRequest, opts ...client.CallOption) (*GetFavoriteResponse, error)
 }
 
 type userClient struct {
@@ -116,6 +124,26 @@ func (c *userClient) GetAccountInfo(ctx context.Context, in *GetAccountInfoReque
 	return out, nil
 }
 
+func (c *userClient) Favorite(ctx context.Context, in *FavoriteRequest, opts ...client.CallOption) (*FavoriteResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.Favorite", in)
+	out := new(FavoriteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetFavorite(ctx context.Context, in *GetFavoriteRequest, opts ...client.CallOption) (*GetFavoriteResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.GetFavorite", in)
+	out := new(GetFavoriteResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -123,6 +151,8 @@ type UserHandler interface {
 	Login(context.Context, *LoginRequest, *LoginResponse) error
 	GetBlockHeader(context.Context, *GetBlockHeaderRequest, *GetBlockHeaderResponse) error
 	GetAccountInfo(context.Context, *GetAccountInfoRequest, *GetAccountInfoResponse) error
+	Favorite(context.Context, *FavoriteRequest, *FavoriteResponse) error
+	GetFavorite(context.Context, *GetFavoriteRequest, *GetFavoriteResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -147,4 +177,12 @@ func (h *User) GetBlockHeader(ctx context.Context, in *GetBlockHeaderRequest, ou
 
 func (h *User) GetAccountInfo(ctx context.Context, in *GetAccountInfoRequest, out *GetAccountInfoResponse) error {
 	return h.UserHandler.GetAccountInfo(ctx, in, out)
+}
+
+func (h *User) Favorite(ctx context.Context, in *FavoriteRequest, out *FavoriteResponse) error {
+	return h.UserHandler.Favorite(ctx, in, out)
+}
+
+func (h *User) GetFavorite(ctx context.Context, in *GetFavoriteRequest, out *GetFavoriteResponse) error {
+	return h.UserHandler.GetFavorite(ctx, in, out)
 }

@@ -71,7 +71,7 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
-
+	log.Info(req.Body)
 	var registerRequest user.RegisterRequest
 	err := json.Unmarshal([]byte(req.Body), &registerRequest)
 	if err != nil {
@@ -87,7 +87,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		}
 	}
 
-	match,err :=regexp.MatchString("^[a-km-z][a-km-z]{2,15}$",registerRequest.Account.Name)
+	match,err :=regexp.MatchString("^[a-km-z][a-km-z1-9]{2,15}$",registerRequest.Account.Name)
 	if err != nil {
 		log.Error(err)
 		return err
