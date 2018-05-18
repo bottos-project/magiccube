@@ -4,7 +4,7 @@ import (
 	"testing"
 	"encoding/hex"
 	query_sign "github.com/bottos-project/bottos/service/common/signature/query"
-	"github.com/bottos-project/bottos/crypto"
+	"github.com/bottos-project/crypto-go/crypto"
 	"github.com/bottos-project/bottos/service/common/util"
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/bottos/service/common/data"
@@ -14,7 +14,7 @@ import (
 
 func TestLoginSignature(t *testing.T){
 	data := &query_sign.QuerySign{
-		Username:"tssd11",
+		Username:"tssd1111",
 		Random:"11111111",
 	}
 

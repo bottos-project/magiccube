@@ -4,9 +4,9 @@ import (
 	"testing"
 	"encoding/hex"
 	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
-	"github.com/bottos-project/bottos/crypto"
 	"github.com/bottos-project/bottos/service/common/util"
 	"github.com/protobuf/proto"
+	"github.com/bottos-project/crypto-go/crypto"
 	pack "github.com/bottos-project/bottos/core/contract/msgpack"
 )
 
@@ -18,28 +18,30 @@ type Requirement struct {
 type RequirementData struct {
 	Username        string `protobuf:"bytes,1,opt,name=username" json:"username"`
 	RequirementName string `protobuf:"bytes,3,opt,name=requirement_name,json=requirementName" json:"requirement_name"`
+	RequirementType uint64
 	FeatureTag      uint64 `protobuf:"varint,4,opt,name=feature_tag,json=featureTag" json:"feature_tag"`
-	SamplePath      string `protobuf:"bytes,5,opt,name=sample_path,json=samplePath" json:"sample_path"`
 	SampleHash      string `protobuf:"bytes,6,opt,name=sample_hash,json=sampleHash" json:"sample_hash"`
-	ExpireTime      uint32 `protobuf:"varint,7,opt,name=expire_time,json=expireTime" json:"expire_time"`
+	ExpireTime      uint64 `protobuf:"varint,7,opt,name=expire_time,json=expireTime" json:"expire_time"`
+	OpType 			uint32
 	Price           uint64 `protobuf:"varint,8,opt,name=price" json:"price"`
+	FavoriFlag      uint32
 	Description     string `protobuf:"bytes,9,opt,name=description" json:"description"`
-	PublishDate     uint32 `protobuf:"varint,10,opt,name=publish_date,json=publishDate" json:"publish_date"`
 }
 
 func TestReqSignature(t *testing.T){
 	data := Requirement{
 		RequirementId:"1",
 		RequirementData: RequirementData{
-			Username:"tttt",
+			Username:"ttsss1s1s",
 			RequirementName: "1111",
+			RequirementType: 1,
 			FeatureTag:1,
-			SamplePath: "./s/asd/sd.png",
 			SampleHash:"asdasdsdagkfdjg3",
 			ExpireTime:1455379533,
 			Price:1000,
 			Description:"test",
-			PublishDate:1455379533,
+			FavoriFlag:1,
+			OpType:1,
 		},
 	}
 
@@ -50,7 +52,7 @@ func TestReqSignature(t *testing.T){
 		CursorNum: 17,
 		CursorLabel: 1798372187,
 		Lifetime: 1524802582,
-		Sender: "tttt",
+		Sender: "ttsss1s1s",
 		Contract: "datareqmng",
 		Method: "datareqreg",
 		Param: param,
