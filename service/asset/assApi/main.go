@@ -388,6 +388,33 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 	return nil
 }
 
+func (u *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var preSaleRequest asset.PushTxRequest
+	err := json.Unmarshal([]byte(req.Body), &preSaleRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//is, err:=sign.PushVerifySign(req.Body)
+	is:=true
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.PreSaleNotice(ctx, &preSaleRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 func init() {
 	defer log.Flush()
 	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
