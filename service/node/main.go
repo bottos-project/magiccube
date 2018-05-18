@@ -299,7 +299,7 @@ func main() {
     var err error
 
     inputReader = bufio.NewReader(os.Stdin)
-    fmt.Println("Please your password: ")
+    fmt.Println("Please input your password: ")
     input1, err = inputReader.ReadString('\n')
     
     fmt.Println("Please input your password again: ")
