@@ -133,12 +133,13 @@ func (u *User) Login(ctx context.Context, req *user_proto.LoginRequest, rsp *use
 }
 
 func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rsp *user_proto.FavoriteResponse) error {
+
 	i, err := data.PushTransaction(req)
-	if err != nil {
+
+	if i != nil {
 		rsp.Code = 1008
 		rsp.Msg = err.Error()
 	}
-	log.Info(i)
 	return nil
 }
 

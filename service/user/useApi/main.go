@@ -173,7 +173,7 @@ func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is, err:=sign.QueryVerifySign(req.Body)
+	is, err:=sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
