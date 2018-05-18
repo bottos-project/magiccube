@@ -42,15 +42,8 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	var where interface{}
 	where = &bson.M{"type": "datareqreg"}
 	log.Info(req.Username)
-	if req.Username != "" && req.FeatureTag > 0 {
-		where = &bson.M{"type": "datareqreg","data.basic_info.user_name": req.Username,"data.basic_info.feature_tag": req.FeatureTag}
-	}else{
-		if req.Username != "" {
-			where = &bson.M{"type": "datareqreg","data.basic_info.user_name": req.Username}
-		}
-		if req.FeatureTag > 0 {
-			where = &bson.M{"type": "datareqreg","data.basic_info.feature_tag": req.FeatureTag}
-		}
+	if req.Username != ""{
+		where = &bson.M{"type": "datareqreg","data.basic_info.user_name": req.Username}
 	}
 
 	log.Info(where)
@@ -66,10 +59,10 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	}
 	mgo.DB(config.DB_NAME).C("Messages").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
 
-	var rows = []*requirement_proto.QueryRow{}
+	var rows = []*requirement_proto.RequirementData{}
 	for _, v := range ret {
 
-		rows = append(rows, &requirement_proto.QueryRow{
+		rows = append(rows, &requirement_proto.RequirementData{
 			RequirementId : v.Data.DataReqID,
 			Username : v.Data.BasicInfo.UserName,
 			RequirementName : v.Data.BasicInfo.RequirementName,
@@ -85,8 +78,8 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	}
 
 	var data = &requirement_proto.QueryData{
-		RowCount: uint64(count),
-		PageNum: uint64(pageNum),
+		RowCount: uint32(count),
+		PageNum: uint32(pageNum),
 		Row:rows,
 	}
 	log.Info(data)
@@ -98,7 +91,7 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 }
 
 func init() {
-	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/req-log.xml")
 	if err != nil{
 		log.Error(err)
 		panic(err)
@@ -109,8 +102,8 @@ func init() {
 
 func main() {
 	service := micro.NewService(
-		micro.Name("go.micro.srv.requirement"),
-		micro.Version("2.0.0"),
+		micro.Name("bottos.srv.requirement"),
+		micro.Version("3.0.0"),
 	)
 
 	service.Init()

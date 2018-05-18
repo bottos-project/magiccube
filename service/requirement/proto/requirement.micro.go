@@ -13,7 +13,7 @@ It has these top-level messages:
 	QueryRequest
 	QueryResponse
 	QueryData
-	QueryRow
+	RequirementData
 */
 package requirement
 

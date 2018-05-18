@@ -30,16 +30,15 @@ message PublishRequest {
 //    string signature = 10;
 
 message PublishResponse {
-    int32 code = 1;
+    uint32 code = 1;
     string data = 2;
     string msg = 3;
 }
 
 message QueryRequest {
-    int32 pageSize = 1;
-    int32 pageNum = 2;
+    uint32 page_size = 1;
+    uint32 page_num = 2;
     string username = 3;
-    uint64 feature_tag =4;
 }
 
 message QueryResponse {
@@ -49,14 +48,14 @@ message QueryResponse {
 }
 
 message QueryData {
-    uint64 pageNum = 1;
-    uint64 rowCount = 2;
-    repeated QueryRow row = 3;
+    uint32 page_num = 1;
+    uint32 row_count = 2;
+    repeated RequirementData row = 3;
 }
 
-message QueryRow {
-    string requirement_id = 1;
-    string username = 2;
+message RequirementData {
+    string username = 1;
+    string requirement_id = 2;
     string requirement_name = 3;
     uint64 feature_tag = 4;
     string sample_path = 5;

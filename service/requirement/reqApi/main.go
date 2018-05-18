@@ -1,15 +1,15 @@
 ﻿package main
 
 import (
+	log "github.com/cihub/seelog"
 	"encoding/json"
-	log "github.com/jeanphorn/log4go"
 	"github.com/bottos-project/bottos/service/requirement/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"github.com/bottos-project/bottos/config"
 	errcode "github.com/bottos-project/bottos/error"
 	sign "github.com/bottos-project/bottos/service/common/signature"
+	"os"
 )
 
 type Requirement struct {
@@ -66,13 +66,19 @@ func (s *Requirement) Query(ctx context.Context, req *api.Request, rsp *api.Resp
 	return nil
 }
 
-func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("requirement.api")
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/req-log.xml")
+	if err != nil{
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
+}
 
+func main() {
 	service := micro.NewService(
-		micro.Name("go.micro.api.v2.requirement"),
+		micro.Name("bottos.api.v3.requirement"),
 	)
 
 	// parse command line flags
@@ -80,10 +86,10 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&Requirement{Client: requirement.NewRequirementClient("go.micro.srv.requirement", service.Client())},
+			&Requirement{Client: requirement.NewRequirementClient("bottos.srv.requirement", service.Client())},
 		),
 	)
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		os.Exit(1)
 	}
 }
