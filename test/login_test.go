@@ -20,8 +20,10 @@ func TestLoginSignature(t *testing.T){
 
 
 	msg, _ := proto.Marshal(data)
+	t.Log(hex.EncodeToString(msg))
 	seckey,_ := hex.DecodeString("e4877f7665e3c22d4e5acb1a24a2fc3554ceaa575e2a3a9e794a98d9c4c3940f")
 
+	t.Log(hex.EncodeToString(util.Sha256(msg)))
 	sign, _ := crypto.Sign(util.Sha256(msg), seckey)
 
 	t.Log(hex.EncodeToString(sign))

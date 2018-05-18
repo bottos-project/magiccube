@@ -71,7 +71,7 @@ func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
 		log.Error(err)
 		return false, err
 	}
-	return crypto.VerifySign(pub_key, util.Sha256(seri_data), sign), errors.New("")
+	return crypto.VerifySign(pub_key, util.Sha256(seri_data), sign), nil
 }
 
 type CommonQuery struct{
@@ -130,6 +130,6 @@ func QueryVerifySign(b string) (bool, error) {
 		log.Error(err)
 		return false, err
 	}
-	return crypto.VerifySign(pub_key, util.Sha256(seri_data), sign), errors.New("")
+	return crypto.VerifySign(pub_key, util.Sha256(seri_data), sign), nil
 }
 

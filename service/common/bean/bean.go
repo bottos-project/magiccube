@@ -50,16 +50,6 @@ type Did struct {
 	Didinfo string
 }
 
-type File struct {
-	user_name string
-	file_size uint64
-	file_name string
-	file_policy string
-	auth_path string
-	file_number uint64
-}
-
 type TxPublic struct {
 	Sender string `json:"sender"`
 }
-
