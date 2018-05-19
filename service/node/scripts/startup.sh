@@ -482,6 +482,10 @@ function stopserv()
 	ps -ef | grep ${SERVER_PATH}"core" | grep -v grep | cut -c 9-15 | xargs kill -s 9
     miniopid=$(pidof minio)
     kill -9 $miniopid 2>/dev/null
+    datapid=$(pidof data)
+    kill -9 $datapid 2>/dev/null
+    datApipid=$(pidof datApi)
+    kill -9 $datApipid 2>/dev/null
 
 	sleep 1
 
