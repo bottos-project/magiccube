@@ -429,7 +429,7 @@ func main() {
 	log.Info("Asset API Service Start")
 
 	service := micro.NewService(
-		micro.Name("go.micro.api.v2.asset"),
+		micro.Name("go.micro.api.v3.asset"),
 	)
 
 	// parse command line flags
@@ -437,7 +437,7 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&Asset{Client: asset.NewAssetClient("go.micro.srv.v2.asset", service.Client())},
+			&Asset{Client: asset.NewAssetClient("go.micro.srv.v3.asset", service.Client())},
 		),
 	)
 

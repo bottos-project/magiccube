@@ -1,4 +1,4 @@
-[{
+﻿[{
   "code": 1,
   "msg": {
     "en": "ok",
@@ -62,10 +62,10 @@
   },
   "details": ""
 },{
-  "code": 2007,
+  "code": 2001,
   "msg": {
-    "en": "Add / cancel the collection failure",
-    "cn": "添加/取消收藏失败"
+    "en": "Register Asset failure",
+    "cn": "注册资产失败"
   },
   "details": ""
 },{

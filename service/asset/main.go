@@ -184,7 +184,7 @@ func (u *Asset) RegisterAsset(ctx context.Context, req *proto.RegisterRequest, r
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
 
-	rsp.Code = 1005
+	rsp.Code = 2001
 	//var requestStruct sign_proto.Transaction
 	//json.Unmarshal([]byte(req.PostBody), &requestStruct)
 
@@ -1182,7 +1182,7 @@ func main() {
 	log.Info("Asset Service Start")
 
 	service := micro.NewService(
-		micro.Name("go.micro.srv.v2.asset"),
+		micro.Name("go.micro.srv.v3.asset"),
 		micro.Version("3.0.0"),
 	)
 
