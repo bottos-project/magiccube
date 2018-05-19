@@ -480,6 +480,9 @@ function stopserv()
 	ps -ef | grep -w ${SERVER_PATH}"ideApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"storage" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"core" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+    miniopid=$(pidof minio)
+    kill -9 $miniopid 2>/dev/null
+
 	sleep 1
 
 	ps -ef | grep -w ${SERVER_PATH}"./node" | grep -v grep | cut -c 9-15 | xargs kill -s 9
@@ -499,8 +502,52 @@ function stopserv()
 	return
 }
 
+function download_git_newcode()
+{
+    echo "WARNING: THIS STEP WILL OVERWRITE YOUR CODES UNDER GOPATH. ARE YOU SURE? $1? (Y/N) (default: N) __"
+    read dorm
+    dorm=${dorm:=N}
+    if [ $dorm = N ]; then
+        echo "OK. BYE"
+        exit 1
+    fi
+
+    if [ ! -z $GOPATH ]; then
+        sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
+        sudo rm -rf $GOPATH/src/github.com/bottos-project/core   2>&1>/dev/null
+        sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore/crypto-go 2>&1>/dev/null
+        sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project
+        sudo git clone https://github.com/bottos-project/crypto-go.git $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore
+        sudo git clone https://github.com/bottos-project/core.git $GOPATH/src/github.com/bottos-project/core
+        
+        echo "\n Cloning all is done. Please do following operations:"
+        echo "\n 1. modify module node's config/config.go and config/config.json for IP and user password."
+        echo "\n 2. modify /etc/mongodb.conf's bind ip to your external ip address."
+        echo "\n 3. When 1,2 are done, please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
+    fi
+}
+
 #main
 case $1 in
+    "update")
+        download_git_newcode        
+        ;;
+    "buildstart")
+        cd $GOPATH/src/github.com/bottos-project/core
+        go build github.com/bottos-project/core
+        sudo cp $GOPATH/src/github.com/bottos-project/core/core /opt/go/bin/core
+        
+        cd $GOPATH/src/github.com/bottos-project/bottos/service/node
+        go build github.com/bottos-project/bottos/service/node
+        
+        sudo cp $GOPATH/src/github.com/bottos-project/bottos/service/node/node /opt/go/bin/
+        cd /opt/go/bin
+
+        usercheck
+        varcheck
+        service mongodb start
+        startserv
+        ;;
 	"start")
         usercheck
         varcheck
