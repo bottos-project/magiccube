@@ -531,22 +531,41 @@ function download_git_newcode()
     fi
 }
 
+function build_all_modules()
+{
+    mkdir -p $GOPATH/src/github.com/bottos-project/buildfiles
+    cd $GOPATH/src/github.com/bottos-project/buildfiles
+
+    go build github.com/bottos-project/core
+    go build github.com/bottos-project/bottos/service/node
+    go build github.com/bottos-project/bottos/service/asset
+    go build github.com/bottos-project/bottos/service/storage
+    go build github.com/bottos-project/bottos/service/requirement
+    go build github.com/bottos-project/bottos/service/exchange
+    go build github.com/bottos-project/bottos/service/dashboard/dasApi
+    go build github.com/bottos-project/bottos/service/dashboard   
+        
+    cp -f core        /opt/go/bin/core
+    cp -f node        /opt/go/bin
+    cp -f asset       /opt/go/bin
+    cp -f storage     /opt/go/bin
+    cp -f requirement /opt/go/bin
+    cp -f exchange    /opt/go/bin
+    cp -f dasApi      /opt/go/bin
+    cp -f dashboard   /opt/go/bin
+    cp -f /opt/go/bin/log.xml  /opt/go/bin/config
+    cp -f /opt/go/bin/log.xml  /opt/go/bin/config/log-req.xml
+    
+    cd /opt/go/bin
+}
+
 #main
 case $1 in
     "update")
         download_git_newcode        
         ;;
     "buildstart")
-        cd $GOPATH/src/github.com/bottos-project/core
-        go build github.com/bottos-project/core
-        sudo cp $GOPATH/src/github.com/bottos-project/core/core /opt/go/bin/core
-        
-        cd $GOPATH/src/github.com/bottos-project/bottos/service/node
-        go build github.com/bottos-project/bottos/service/node
-        
-        sudo cp $GOPATH/src/github.com/bottos-project/bottos/service/node/node /opt/go/bin/
-        cd /opt/go/bin
-
+        build_all_modules
         usercheck
         varcheck
         service mongodb start
