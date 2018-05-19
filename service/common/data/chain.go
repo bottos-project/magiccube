@@ -101,10 +101,10 @@ func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 		log.Error(err)
 		return nil, err
 	}
+
 	if common_ret.Errcode == 0 {
 		return common_ret, nil
 	}
-
 	return nil, errors.New(string(body))
 }
 

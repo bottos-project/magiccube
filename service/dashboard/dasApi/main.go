@@ -1,13 +1,13 @@
 ﻿package main
 
 import (
+	log "github.com/cihub/seelog"
 	"encoding/json"
 	"github.com/bottos-project/bottos/service/dashboard/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	log "github.com/jeanphorn/log4go"
-	"github.com/bottos-project/bottos/config"
+	"os"
 )
 
 type Dashboard struct {
@@ -198,13 +198,19 @@ func (s *Dashboard) GetAllTypeTotal(ctx context.Context, req *api.Request, rsp *
 	return nil
 }
 
-func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("dashboard.api")
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/dash-log.xml")
+	if err != nil{
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
+}
 
+func main() {
 	service := micro.NewService(
-		micro.Name("go.micro.api.v2.dashboard"),
+		micro.Name("bottos.api.v3.dashboard"),
 	)
 
 	// parse command line flags
@@ -212,10 +218,10 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&Dashboard{Client: dashboard.NewDashboardClient("go.micro.srv.dashboard", service.Client())},
+			&Dashboard{Client: dashboard.NewDashboardClient("bottos.srv.dashboard", service.Client())},
 		),
 	)
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		os.Exit(1)
 	}
 }

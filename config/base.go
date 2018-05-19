@@ -8,7 +8,7 @@ const (
 	//BASE_RPC        		= "http://127.0.0.1:8080/rpc"
 
 	BASE_MONGODB_PORT = "27017"
-	BASE_MONGODB_ADDR = BASE_CHAIN_IP + ":" + BASE_MONGODB_PORT
+	BASE_MONGODB_ADDR = "139.217.206.43" + ":" + BASE_MONGODB_PORT
 	DB_NAME           = "bottos"
 
 	BASE_MINIO_IP         = "xx"
@@ -23,6 +23,6 @@ const (
 	TOKEN_EXPIRE_TIME = 2 * 60 * 60
 
 	//Enable/Disable verification code
-	Enable_verification = true
+	Enable_verification = false
 
 )

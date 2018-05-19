@@ -45,8 +45,6 @@ func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadUR
 	//log.Info(userName)
 	//get Public Key
 
-
-
 	//log.Info(ok)
 	//get strore Address
 	js, _ := simplejson.NewJson([]byte(req.PostBody))
@@ -199,13 +197,19 @@ func (u *Asset) RegisterAsset(ctx context.Context, req *proto.RegisterRequest, r
 	log.Info(ret.Result.TrxHash)
 
 	//Check the chain for packaging results.
-	params := `service=core&method=CoreApi.QueryObject&request={
-	"contract":"%s",
-	"object":"%s",
-	"key":"%s"
+	//params := `service=core&method=CoreApi.QueryTrx&request={
+	//"contract":"%s",
+	//"object":"%s",
+	//"key":"%s"
+	//}`
+	txHash:="c76387dc13f54c1fb73ec3903a14ac4c006d5be23565fd660aaeb5df124cccce"
+
+	params := `service=core&method=CoreApi.QueryTrx&request={
+	"trx_hash":"%s"
 	}`
-	s := fmt.Sprintf(params, "assetmng", "assetreg", ret.Result.TrxHash)
-	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
+	s := fmt.Sprintf(params, txHash)
+	//s := fmt.Sprintf(params, ret.Result.TrxHash)
+	resp, err := http.Post(STORAGE_RPC_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(s))
 
 	log.Info("resp:", resp)
@@ -216,6 +220,15 @@ func (u *Asset) RegisterAsset(ctx context.Context, req *proto.RegisterRequest, r
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	log.Info(body)
+	if err != nil {
+		return err
+	} else {
+		jss, _ := simplejson.NewJson([]byte(body))
+		log.Info("jss", jss)
+		errcode := jss.Get("errcode").MustInt64()
+		log.Info(errcode)
+		if errcode == 0 {}
+	}
 	//test
 	rsp.Code = 0
 	end_time := time.Now().UnixNano() / int64(time.Millisecond)
@@ -437,9 +450,6 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryUploadedD
 func (u *Asset) GetDownLoadURL(ctx context.Context, req *proto.GetDownLoadURLRequest, rsp *proto.GetDownLoadURLResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 
-
-
-
 	//Test
 	params := `service=storage&method=Storage.GetDownLoadURL&request={
 	"username":"%s",
@@ -634,9 +644,6 @@ func (u *Asset) Query(ctx context.Context, req *proto.QueryRequest, rsp *proto.Q
 func (u *Asset) QueryAllAsset(ctx context.Context, req *proto.QueryAllAssetRequest, rsp *proto.QueryAllAssetResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 
-
-
-
 	//Test
 	params := `service=storage&method=Storage.GetAllAssetList&request={
 	"username":"%s"
@@ -679,11 +686,9 @@ func (u *Asset) QueryAllAsset(ctx context.Context, req *proto.QueryAllAssetReque
 	return nil
 }
 
-
 func (u *Asset) Modify(ctx context.Context, req *proto.ModifyRequest, rsp *proto.ModifyResponse) error {
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 	log.Info("reqBody:" + req.PostBody)
-
 
 	//Write to BlockChain
 	flag, result := cbb.WriteToBlockChain(req.PostBody, PUSH_TRANSACTION_URL)
@@ -1129,120 +1134,38 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *proto.GetUser
 	log.Info("Time:", end_time-start_time)
 	return nil
 }*/
-func GetBolckNum() (int, int, error) {
-	req := curl.NewRequest()
-	resp, err := req.SetUrl(GET_INFO_URL).Get()
-	if err != nil {
-		return 0, resp.Raw.StatusCode, err
-	}
 
-	if resp.IsOk() {
-		js, _ := simplejson.NewJson([]byte(resp.Body))
-		block_num := js.Get("head_block_num").MustInt()
-		return block_num, resp.Raw.StatusCode, err
-	} else {
-		return 0, resp.Raw.StatusCode, err
+func (u *Asset) PreSaleNotice(ctx context.Context, req *proto.PushTxRequest, rsp *proto.PreSaleNoticeResponse) error {
+
+	i, err := data.PushTransaction(req)
+
+	if i != nil {
+		rsp.Code = 1008
+		rsp.Msg = err.Error()
 	}
+	return nil
 }
 
-func GetBlockPrefix(block_num int) (int, string, int, error) {
-	postData := map[string]interface{}{
-		"block_num_or_id": block_num,
+func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeRequest, rsp *proto.QueryMyNoticeResponse) error {
+
+	i, err := data.PushTransaction(req)
+
+	if i != nil {
+		rsp.Code = 1008
+		rsp.Msg = err.Error()
 	}
-	req := curl.NewRequest()
-	resp, err := req.SetUrl(GET_BLOCK_URL).SetPostData(postData).Post()
-	if err != nil {
-		return 0, "", resp.Raw.StatusCode, err
+	return nil
 	}
 
-	if resp.IsOk() {
-		js, _ := simplejson.NewJson([]byte(resp.Body))
-		block_prefix := js.Get("ref_block_prefix").MustInt()
-		timestamp := js.Get("timestamp").MustString()
-		return block_prefix, timestamp, resp.Raw.StatusCode, err
-	} else {
-		return 0, "", resp.Raw.StatusCode, err
-	}
-}
+func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequest, rsp *proto.QueryMyNoticeResponse) error {
 
-func AccountGetBin(name string, owner_key string, active_key string) (string, int, error) {
-	postData := map[string]interface{}{
-		"code":   "bto",
-		"action": "newaccount",
-		"args": map[string]interface{}{
-			"creator": "testa",
-			"name":    name,
-			"owner": map[string]interface{}{
-				"threshold": 1,
-				"keys": []interface{}{
-					map[string]interface{}{
-						"key":    owner_key,
-						"weight": 1,
-					},
-				},
-				"accounts": []string{},
-			},
-			"active": map[string]interface{}{
-				"threshold": 1,
-				"keys": []interface{}{
-					map[string]interface{}{
-						"key":    active_key,
-						"weight": 1,
-					},
-				},
-				"accounts": []string{},
-			},
-			"recovery": map[string]interface{}{
-				"threshold": 1,
-				"keys":      []string{},
-				"accounts": []interface{}{map[string]interface{}{
-					"permission": map[string]interface{}{
-						"account":    "testa",
-						"permission": "active",
-					},
-					"weight": 1,
-				},
-				},
-			},
-			"deposit": "0.00000001",
-		},
-	}
-	req := curl.NewRequest()
-	resp, err := req.SetUrl(ABI_JSON_TO_BIN_URL).SetPostData(postData).Post()
-	if err != nil {
-		return "", resp.Raw.StatusCode, err
-	}
+	i, err := data.PushTransaction(req)
 
-	js, _ := simplejson.NewJson([]byte(resp.Body))
-	binargs := js.Get("binargs").MustString()
-	return binargs, resp.Raw.StatusCode, err
-
-}
-
-func UserGetBin(username string, info string) (string, int, error) {
-	postData := map[string]interface{}{
-		"code":   "usermng",
-		"action": "reguser",
-		"args": map[string]interface{}{
-			"user_name": username,
-			"basic_info": map[string]interface{}{
-				"info": info,
-			},
-		},
+	if i != nil {
+		rsp.Code = 1008
+		rsp.Msg = err.Error()
 	}
-	req := curl.NewRequest()
-	resp, err := req.SetUrl(ABI_JSON_TO_BIN_URL).SetPostData(postData).Post()
-	if err != nil {
-		return "", resp.Raw.StatusCode, err
-	}
-
-	if resp.Raw.StatusCode/100 == 2 {
-		js, _ := simplejson.NewJson([]byte(resp.Body))
-		binargs := js.Get("binargs").MustString()
-		return binargs, resp.Raw.StatusCode, err
-	} else {
-		return "", resp.Raw.StatusCode, err
-	}
+	return nil
 }
 
 func init() {

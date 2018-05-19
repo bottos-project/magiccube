@@ -4,7 +4,7 @@ import (
 	"testing"
 	"encoding/hex"
 	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
-	"github.com/bottos-project/bottos/crypto"
+	"github.com/bottos-project/crypto-go/crypto"
 	"github.com/bottos-project/bottos/service/common/util"
 	"github.com/protobuf/proto"
 	pack "github.com/bottos-project/bottos/core/contract/msgpack"
@@ -19,8 +19,8 @@ func TestRegitser(t *testing.T) {
 
 func TestSignature(t *testing.T){
 	dids := bean.Did{
-		"did:bot:045a44ce5c3a657f173fca88b80a2cec",
-		``,
+		"asdsada11",
+		`sadsasadasd1a`,
 	}
 
 	param,_ := pack.Marshal(dids)

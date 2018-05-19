@@ -1,9 +1,9 @@
 syntax = "proto3";
 
 service Dashboard {
+	rpc GetBlockList(GetBlockListRequest) returns(GetBlockListResponse) {};
 	rpc GetNodeInfos(GetNodeInfosRequest) returns(GetNodeInfosResponse) {};
 	rpc GetRecentTxList(GetRecentTxListRequest) returns(GetRecentTxListResponse) {};
-	rpc GetBlockList(GetBlockListRequest) returns(GetBlockListResponse) {};
 	rpc GetRequirementNumByDay(GetRequirementNumByDayRequest) returns(GetRequirementNumByDayResponse) {};
 	rpc GetAllTxNum(GetAllTxNumRequest) returns(GetAllTxNumResponse) {};
 	rpc GetAssetNumByDay(GetAssetNumByDayRequest) returns(GetAssetNumByDayResponse) {};
@@ -64,8 +64,8 @@ message TxListRow {
 }
 
 message GetBlockListRequest {
-	uint64 pageNum = 1;
-	uint64 pageSize = 2;
+	uint32 page_size = 1;
+	uint32 page_num = 2;
 	string sort = 3;
 }
 
@@ -76,18 +76,19 @@ message GetBlockListResponse {
 }
 
 message BlockData {
-	uint64 pageNum = 1;
-	uint64 rowCount = 2;
+	uint64 page_num = 1;
+	uint64 row_count = 2;
 	repeated BlockRow row = 3;
 }
 
 message BlockRow {
-	uint64 block_num = 1;
-	string block_id = 2;
-	string prev_block_id = 3;
-	string transaction_merkle_root = 4;
-	string producer = 5;
-	string timestamp = 6;
+	uint64 block_number = 1;
+	string block_hash = 2;
+	string prev_block_hash = 3;
+	string merkle_root = 4;
+	uint32 tx_num = 5;
+	string delegate = 6;
+	uint64 timestamp = 7;
 }
 
 message GetRequirementNumByDayRequest {}

@@ -55,6 +55,13 @@
   },
   "details": ""
 },{
+  "code": 1007,
+  "msg": {
+    "en": "Add / cancel the collection failure",
+    "cn": "添加/取消收藏失败"
+  },
+  "details": ""
+},{
   "code": 3000,
   "msg": {
     "en": "Release requirements failure",

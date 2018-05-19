@@ -74,9 +74,9 @@ var _ server.Option
 // Client API for Dashboard service
 
 type DashboardClient interface {
+	GetBlockList(ctx context.Context, in *GetBlockListRequest, opts ...client.CallOption) (*GetBlockListResponse, error)
 	GetNodeInfos(ctx context.Context, in *GetNodeInfosRequest, opts ...client.CallOption) (*GetNodeInfosResponse, error)
 	GetRecentTxList(ctx context.Context, in *GetRecentTxListRequest, opts ...client.CallOption) (*GetRecentTxListResponse, error)
-	GetBlockList(ctx context.Context, in *GetBlockListRequest, opts ...client.CallOption) (*GetBlockListResponse, error)
 	GetRequirementNumByDay(ctx context.Context, in *GetRequirementNumByDayRequest, opts ...client.CallOption) (*GetRequirementNumByDayResponse, error)
 	GetAllTxNum(ctx context.Context, in *GetAllTxNumRequest, opts ...client.CallOption) (*GetAllTxNumResponse, error)
 	GetAssetNumByDay(ctx context.Context, in *GetAssetNumByDayRequest, opts ...client.CallOption) (*GetAssetNumByDayResponse, error)
@@ -105,6 +105,16 @@ func NewDashboardClient(serviceName string, c client.Client) DashboardClient {
 	}
 }
 
+func (c *dashboardClient) GetBlockList(ctx context.Context, in *GetBlockListRequest, opts ...client.CallOption) (*GetBlockListResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Dashboard.GetBlockList", in)
+	out := new(GetBlockListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *dashboardClient) GetNodeInfos(ctx context.Context, in *GetNodeInfosRequest, opts ...client.CallOption) (*GetNodeInfosResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Dashboard.GetNodeInfos", in)
 	out := new(GetNodeInfosResponse)
@@ -118,16 +128,6 @@ func (c *dashboardClient) GetNodeInfos(ctx context.Context, in *GetNodeInfosRequ
 func (c *dashboardClient) GetRecentTxList(ctx context.Context, in *GetRecentTxListRequest, opts ...client.CallOption) (*GetRecentTxListResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Dashboard.GetRecentTxList", in)
 	out := new(GetRecentTxListResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dashboardClient) GetBlockList(ctx context.Context, in *GetBlockListRequest, opts ...client.CallOption) (*GetBlockListResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Dashboard.GetBlockList", in)
-	out := new(GetBlockListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -218,9 +218,9 @@ func (c *dashboardClient) GetAllTypeTotal(ctx context.Context, in *GetAllTypeTot
 // Server API for Dashboard service
 
 type DashboardHandler interface {
+	GetBlockList(context.Context, *GetBlockListRequest, *GetBlockListResponse) error
 	GetNodeInfos(context.Context, *GetNodeInfosRequest, *GetNodeInfosResponse) error
 	GetRecentTxList(context.Context, *GetRecentTxListRequest, *GetRecentTxListResponse) error
-	GetBlockList(context.Context, *GetBlockListRequest, *GetBlockListResponse) error
 	GetRequirementNumByDay(context.Context, *GetRequirementNumByDayRequest, *GetRequirementNumByDayResponse) error
 	GetAllTxNum(context.Context, *GetAllTxNumRequest, *GetAllTxNumResponse) error
 	GetAssetNumByDay(context.Context, *GetAssetNumByDayRequest, *GetAssetNumByDayResponse) error
@@ -239,16 +239,16 @@ type Dashboard struct {
 	DashboardHandler
 }
 
+func (h *Dashboard) GetBlockList(ctx context.Context, in *GetBlockListRequest, out *GetBlockListResponse) error {
+	return h.DashboardHandler.GetBlockList(ctx, in, out)
+}
+
 func (h *Dashboard) GetNodeInfos(ctx context.Context, in *GetNodeInfosRequest, out *GetNodeInfosResponse) error {
 	return h.DashboardHandler.GetNodeInfos(ctx, in, out)
 }
 
 func (h *Dashboard) GetRecentTxList(ctx context.Context, in *GetRecentTxListRequest, out *GetRecentTxListResponse) error {
 	return h.DashboardHandler.GetRecentTxList(ctx, in, out)
-}
-
-func (h *Dashboard) GetBlockList(ctx context.Context, in *GetBlockListRequest, out *GetBlockListResponse) error {
-	return h.DashboardHandler.GetBlockList(ctx, in, out)
 }
 
 func (h *Dashboard) GetRequirementNumByDay(ctx context.Context, in *GetRequirementNumByDayRequest, out *GetRequirementNumByDayResponse) error {

@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/context"
 	"github.com/bottos-project/bottos/service/common/data"
 	"encoding/hex"
-	"github.com/bottos-project/bottos/crypto"
+	"github.com/bottos-project/crypto-go/crypto"
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/bottos/service/common/util"
 	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
@@ -129,23 +129,45 @@ func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInf
 }
 
 func (u *User) Login(ctx context.Context, req *user_proto.LoginRequest, rsp *user_proto.LoginResponse) error {
-	//is_login, account := UserLogin(req.Body)
-	//log.Info(account)
-	//if is_login {
-	//	token := create_token()
-	//	is_save_token := save_token(account, token)
-	//	if is_save_token {
-	//		rsp.Code = 0
-	//		rsp.Msg = "OK"
-	//		rsp.Token = token
-	//	} else {
-	//		rsp.Code = 1002
-	//		rsp.Msg = "Write token failure"
-	//	}
-	//} else {
-	//	rsp.Code = 1001
-	//	rsp.Msg = "Access to account information failure"
-	//}
+	return nil
+}
+
+func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rsp *user_proto.FavoriteResponse) error {
+
+	i, err := data.PushTransaction(req)
+
+	if i != nil {
+		rsp.Code = 1008
+		rsp.Msg = err.Error()
+	}
+	return nil
+}
+
+func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
+	return nil
+}
+
+
+func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp *user_proto.PushTxResponse) error {
+
+	i, err := data.PushTransaction(req)
+
+	if i != nil {
+		rsp.Code = 1008
+		rsp.Msg = err.Error()
+	}
+	return nil
+}
+
+func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
+	account_info, err:= data.AccountInfo(req.Username)
+	if account_info != nil {
+		rsp.Data = ""
+		//rsp.Data = account_info
+	} else {
+		rsp.Code = 1006
+		rsp.Msg = err.Error()
+	}
 	return nil
 }
 

@@ -1,5 +1,10 @@
 ﻿package bean
 
+import (
+	"gopkg.in/mgo.v2/bson"
+	"time"
+)
+
 type CoreBaseReturn struct {
 	Errcode int64 		`json:"errcode"`
 	Msg     string  	`json:"msg"`
@@ -50,16 +55,18 @@ type Did struct {
 	Didinfo string
 }
 
-type File struct {
-	user_name string
-	file_size uint64
-	file_name string
-	file_policy string
-	auth_path string
-	file_number uint64
-}
-
 type TxPublic struct {
 	Sender string `json:"sender"`
 }
 
+type Block struct {
+	ID                    bson.ObjectId 	`bson:"_id,omitempty"`
+	BlockHash             string        	`bson:"block_hash"`
+	BlockNumber           uint64        	`bson:"block_number"`
+	PrevBlockHash         string        	`bson:"prev_block_hash"`
+	Delegate     		  string        	`bson:"delegate"`
+	Timestamp             uint64     	    `bson:"timestamp"`
+	MerkleRoot 			  string        	`bson:"merkle_root"`
+	Transactions          []bson.ObjectId   `bson:"transactions"`
+	createTime           time.Time     		`bson:"create_time"`
+}

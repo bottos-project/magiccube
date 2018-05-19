@@ -71,7 +71,7 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
-
+	log.Info(req.Body)
 	var registerRequest user.RegisterRequest
 	err := json.Unmarshal([]byte(req.Body), &registerRequest)
 	if err != nil {
@@ -87,7 +87,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		}
 	}
 
-	match,err :=regexp.MatchString("^[a-km-z][a-km-z]{2,15}$",registerRequest.Account.Name)
+	match,err :=regexp.MatchString("^[a-km-z][a-km-z1-9]{2,15}$",registerRequest.Account.Name)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -160,6 +160,106 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 	}
 
 	rsp.Body = errcode.ReturnError(1)
+	return nil
+}
+
+func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var favoriteRequest user.FavoriteRequest
+	err := json.Unmarshal([]byte(req.Body), &favoriteRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	is, err:=sign.PushVerifySign(req.Body)
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.Favorite(ctx, &favoriteRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var getFavoriteRequest user.GetFavoriteRequest
+	err := json.Unmarshal([]byte(req.Body), &getFavoriteRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	is, err:=sign.QueryVerifySign(req.Body)
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.GetFavorite(ctx, &getFavoriteRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+
+
+func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var pushTxRequest user.PushTxRequest
+	err := json.Unmarshal([]byte(req.Body), &pushTxRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//is, err:=sign.PushVerifySign(req.Body)
+	//TODO
+	is:=true
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.Transfer(ctx, &pushTxRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	var getAccountInfoRequest user.GetBalanceRequest
+	err := json.Unmarshal([]byte(req.Body), &getAccountInfoRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	response, err := u.Client.GetBalance(ctx, &getAccountInfoRequest)
+	if err != nil {
+
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
