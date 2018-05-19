@@ -1,0 +1,169 @@
+syntax = "proto3";
+package data;
+service Data {
+	rpc FileCheck (FileCheckRequest) returns (FileCheckResponse){
+	};
+	rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
+    };
+	rpc GetUploadProgress (GetUploadProgressRequest) returns (GetUploadProgressResponse) {
+    };
+	rpc GetFileStorageNode (GetFileStorageNodeRequest) returns (GetFileStorageNodeResponse) {
+    };
+	rpc PutFile(PutFileRequest) returns (PutFileResponse) {
+    };
+	rpc GetFileStorageURL (GetFileStorageURLRequest) returns (GetFileStorageURLResponse) {
+    };
+	rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse) {
+    };
+	rpc ComposeFile(ComposeFileRequest) returns(ComposeFileResponse) {
+    };
+	rpc GetStorageIP (GetStorageIPRequest) returns (GetStorageIPResponse) {
+    };
+	rpc GetFileDownloadURL (GetFileDownloadURLRequest) returns (GetFileDownloadURLResponse) {
+    };
+	
+
+    
+}
+message AllRequest{
+	
+}
+message Slice{
+	string sguid = 1;	
+}
+message Url{
+	string sguid =1;
+	string surl = 2;
+}
+
+message Node{
+	string nodeID = 1;
+	string nodeIP = 2;
+	string node_port = 3;
+	string node_address = 4;
+	string seedIP = 5;
+	string slaveIP = 6;		
+}
+
+message Ip{
+	string sguid =1;
+	string snode_ip = 2;
+}
+message Hash{
+	string hash =1;
+}
+message FileCheckRequest {
+	repeated Hash hash = 1;
+}
+
+message FileCheckResponse {
+	uint64 result = 1;
+    string message = 2;
+	string merkle_root_hash =3;
+	uint64 is_exist = 4;
+}
+
+message GetFileUploadURLRequest {
+	string username = 1;
+	repeated Slice slice = 2;
+
+}
+
+message GetFileUploadURLResponse {
+	uint64 result = 1;
+    string message = 2;
+	repeated Url url = 3;
+
+}
+
+message GetFileStorageNodeRequest {
+	string username = 1; 
+	repeated Slice slice = 2;
+}
+
+message GetFileStorageNodeResponse {
+	uint64 result = 1;
+    string message = 2;
+	repeated Ip ip = 3;
+}
+
+message PutFileRequest {
+	string username = 1;
+	string guid =2;
+	string url = 3;
+}
+message PutFileResponse {
+	uint64 result = 1;
+    string message = 2;
+}
+
+
+message GetUploadProgressRequest {
+	string username = 1;
+	repeated Slice slice = 2;
+}
+
+message GetUploadProgressResponse {
+    uint64 result = 1;
+    string message = 2;
+	uint64 progress_done = 3;
+	uint64 progressing = 4;
+	repeated Slice slice_progress_done = 5;
+	repeated Slice slice_progressing = 6;
+	
+}
+
+
+message DownloadFileRequest {
+	string username = 1;
+	string guid =2;
+	string url = 3;
+}
+message DownloadFileResponse {
+	uint64 result = 1;
+    string message = 2;
+}
+
+message ComposeFileRequest {
+	string username = 1;
+	string guid =2;
+	repeated Ip ip = 3;
+}
+message ComposeFileResponse {
+
+}
+message GetFileStorageURLRequest {
+	string username = 1;
+	string guid =2;
+}
+
+message GetFileStorageURLResponse {
+	uint64 result = 1;
+    string message = 2;
+	string  url = 3;
+}
+
+
+
+message GetStorageIPRequest {
+	string guid = 1;
+}
+message GetStorageIPResponse {
+	uint64 result = 1;
+    string message = 2;
+	repeated Ip ip = 3;
+}
+message GetFileDownloadURLRequest {
+	string username = 1;
+	string guid =2;
+	repeated Ip ip = 3;
+	
+}
+message GetFileDownloadURLResponse {
+	uint64 result = 1;
+    string message = 2;
+	string url = 3;
+}
+
+
+
