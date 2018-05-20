@@ -19,7 +19,7 @@ type Requirement struct {}
 func (u *Requirement) Publish(ctx context.Context, req *requirement_proto.PublishRequest, rsp *requirement_proto.PublishResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
-		rsp.Code = 3000
+		rsp.Code = 3001
 		rsp.Msg = err.Error()
 	}
 	log.Info(i)
