@@ -92,7 +92,7 @@ func main() {
 			bson.Unmarshal(data, &favoritepro)
 
 			if favoritepro.OpTyte == 2 || favoritepro.OpTyte == 3 {
-				where = bson.M{"param.id": favoritepro.GoodsId, "param.goodstype": favoritepro.GoodsTyte}
+				where = bson.M{"param.goodsid": favoritepro.GoodsId, "param.goodstype": favoritepro.GoodsTyte}
 				set := bson.M{"$set": bson.M{ "param.optype": 3}}
 				mgo.DB("bottos").C(v.Method).UpdateAll(where,set);
 			}
