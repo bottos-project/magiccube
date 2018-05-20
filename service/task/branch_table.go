@@ -138,7 +138,7 @@ func main() {
 			"message_id": part.ID.Hex(),
 		})
 	} else {
-		mgo.DB("zltest").C("rec_msgid").Insert(map[string]interface{}{
+		mgo.DB("bottos").C("rec_msgid").Insert(map[string]interface{}{
 			"message_id": part.ID.Hex(),
 		})
 	}
