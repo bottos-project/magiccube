@@ -70,3 +70,22 @@ type Block struct {
 	Transactions          []bson.ObjectId   `bson:"transactions"`
 	createTime           time.Time     		`bson:"create_time"`
 }
+
+type Favorite struct {
+	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	Contract    string  		`json:"contract"`
+	CursorLabel uint32 			`json:"cursor_label"`
+	CursorNum   uint32			`json:"cursor_num"`
+	Lifetime    uint64 			`json:"lifetime"`
+	Method      string  		`json:"method"`
+	Param       struct {
+		Goodsid   string  		`json:"goodsid"`
+		Goodstype string  		`json:"goodstype"`
+		Optype    float64 		`json:"optype"`
+		Username  string  		`json:"username"`
+	} 							`json:"param"`
+	Sender    string  			`json:"sender"`
+	SigAlg    uint32 			`json:"sig_alg"`
+	Signature string  			`json:"signature"`
+	Version   uint32 			`json:"version"`
+}
