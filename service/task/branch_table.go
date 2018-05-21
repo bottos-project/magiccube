@@ -1,6 +1,7 @@
 package main
 
 import(
+	"github.com/robfig/cron"
 	log "github.com/cihub/seelog"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
@@ -65,6 +66,14 @@ func init() {
 }
 
 func main() {
+	c := cron.New()
+	spec := "@every 3s"
+	c.AddFunc(spec, BranchTable)
+	c.Start()
+	select{} //阻塞主线程不退出
+}
+
+func BranchTable() {
 	var mgo = mgo.Session()
 	defer mgo.Close()
 
