@@ -18,8 +18,8 @@ type CoreCommonReturn struct {
 		Trx struct {
 			Version     uint32 `json:"version"`
 			CursorNum   uint32 `json:"cursor_num"`
-			CursorLabel int64  `json:"cursor_label"`
-			Lifetime    uint32 `json:"lifetime"`
+			CursorLabel uint32  `json:"cursor_label"`
+			Lifetime    uint64 `json:"lifetime"`
 			Sender      string `json:"sender"`
 			Contract    string `json:"contract"`
 			Method      string `json:"method"`
