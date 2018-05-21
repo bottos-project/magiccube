@@ -120,7 +120,7 @@ type Requirement struct {
 	CreateTime 	time.Time     	`bson:"create_time"`
 }
 
-type Asset struct {
+type AssetBean struct {
 	ID          bson.ObjectId   `bson:"_id,omitempty"`
 	Contract    string  		`bson:"contract"`
 	CursorLabel uint32 			`bson:"cursor_label"`
@@ -130,18 +130,40 @@ type Asset struct {
 	Param       struct {
 		AssetId string `bson:"assetid"`
 		Info    struct {
-			AssetName   string  `bson:"assetname"`
-			AssetType   string  `bson:"assettype"`
+			UserName    string `bson:"user_name"`
+			AssetName   string `bson:"asset_name"`
+			AssetType   string `bson:"asset_type"`
+			FeatureTag  string `bson:"feature_tag"`
+			SampleHash  string `bson:"sample_hash"`
+			StorageHash string `bson:"storage_hash"`
+			ExpireTime  uint32 `bson:"expire_time"`
+			OpType  uint32 `bson:"op_type"`
+			Price       uint64 `bson:"price"`
 			Description string  `bson:"description"`
-			Expiretime  uint64  `bson:"expiretime"`
-			Featuretag  string  `bson:"featuretag"`
-			Price       uint64  `bson:"price"`
-			Samplehash  string  `bson:"samplehash"`
-			Samplepath  string  `bson:"samplepath"`
+		} `bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
 			Signature   string  `bson:"signature"`
-			Storagehash string  `bson:"storagehash"`
-			Storagepath string  `bson:"storagepath"`
-			Uploaddate  uint64  `bson:"uploaddate"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+
+type PreSaleBean struct {
+	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		Datapresaleid string `bson:"datapresaleid"`
+		Info      struct {
+			Assetid   string  `bson:"assetid"`
+			Consumer  string  `bson:"consumer"`
+			Datareqid string  `bson:"datareqid"`
+			Optype    uint32 `bson:"optype"`
 			Username    string  `bson:"username"`
 		} `bson:"info"`
 	} 							`bson:"param"`
