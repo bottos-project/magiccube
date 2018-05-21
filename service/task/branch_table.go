@@ -7,7 +7,8 @@ import(
 	"time"
 )
 
-var branch_table = []string{"favoritepro", "datareqreg", "assetreg"}
+var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale"}
+var prefix = "pre_"
 
 type Favoritepro struct {
 	GoodsId string `bson:"goodsid"`
@@ -17,6 +18,11 @@ type Favoritepro struct {
 
 type Datareqreg struct {
 	DataReqId string `bson:"datareqid"`
+	Info `bson:"info"`
+}
+
+type Presale struct {
+	DataPresaleId string `bson:"datapresaleid"`
 	Info `bson:"info"`
 }
 
@@ -93,11 +99,11 @@ func main() {
 			}
 			bson.Unmarshal(data, &favoritepro)
 
-			if favoritepro.OpTyte == 2 || favoritepro.OpTyte == 3 {
+			//if favoritepro.OpTyte == 2 || favoritepro.OpTyte == 3 {
 				where = bson.M{"param.goodsid": favoritepro.GoodsId, "param.goodstype": favoritepro.GoodsTyte}
 				set := bson.M{"$set": bson.M{ "param.optype": 3}}
-				mgo.DB("bottos").C(v.Method).UpdateAll(where,set);
-			}
+				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
+			//}
 		case "datareqreg":
 			var datareqreg = &Datareqreg{}
 			data ,err := bson.Marshal(v.Param)
@@ -108,8 +114,8 @@ func main() {
 			bson.Unmarshal(data, &datareqreg)
 			if datareqreg.OpTyte == 2 || datareqreg.OpTyte == 3 {
 				where = bson.M{"param.datareqid": datareqreg.DataReqId, "param.info.optype": datareqreg.Info.OpTyte}
-				set := bson.M{"$set": bson.M{ "param.optype": 3}}
-				mgo.DB("bottos").C(v.Method).UpdateAll(where,set);
+				set := bson.M{"$set": bson.M{ "param.info.optype": 3}}
+				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
 			}
 		case "assetreg":
 			var assetreg = &Assetreg{}
@@ -121,11 +127,24 @@ func main() {
 			bson.Unmarshal(data, &assetreg)
 			if assetreg.OpTyte == 2 || assetreg.OpTyte == 3 {
 				where = bson.M{"param.assetid": assetreg.AssetId, "param.info.optype": assetreg.Info.OpTyte}
-				set := bson.M{"$set": bson.M{ "param.optype": 3}}
-				mgo.DB("bottos").C(v.Method).UpdateAll(where,set);
+				set := bson.M{"$set": bson.M{ "param.info.optype": 3}}
+				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
+			}
+		case "presale":
+			var presale = &Presale{}
+			data ,err := bson.Marshal(v.Param)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			bson.Unmarshal(data, &presale)
+			if presale.OpTyte == 2 || presale.OpTyte == 3 {
+				where = bson.M{"param.datapresaleid": presale.DataPresaleId, "param.info.optype": presale.Info.OpTyte}
+				set := bson.M{"$set": bson.M{ "param.info.optype": 3}}
+				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
 			}
 		}
-		mgo.DB("bottos").C(v.Method).Insert(v)
+		mgo.DB("bottos").C(prefix+v.Method).Insert(v)
 
 		//if common_data.Action == "edit" || common_data.Action == "del"{
 		//	where = bson.M{"data.id": common_data.Id}
