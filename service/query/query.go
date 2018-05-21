@@ -4,7 +4,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"time"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 	"github.com/bottos-project/bottos/service/bean"
 	"github.com/bottos-project/bottos/config"
 )
@@ -52,7 +52,7 @@ func RequirementNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	var count = 0;
-	count, err := mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "datareqreg", "createdAt": bson.M{"$gte": TimestampToUTC(min), "$lt": TimestampToUTC(max)}}).Count()
+	count, err := mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lt": TimestampToUTC(max)}}).Count()
 	if err!= nil {
 		log.Error(err)
 	}
@@ -63,7 +63,7 @@ func AssetNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	var count = 0;
-	count, err :=mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "assetreg", "createdAt": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
+	count, err :=mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
 	if err!= nil {
 		log.Error(err)
 	}
@@ -74,7 +74,7 @@ func AccountNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	var count = 0;
-	count, err :=mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "newaccount", "createdAt": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
+	count, err :=mgo.DB(config.DB_NAME).C("Accounts").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
 	if err!= nil {
 		log.Error(err)
 	}
