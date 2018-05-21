@@ -183,7 +183,7 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	if req.GoodsType == "asset" {
 		var ret2 bean.Asset
 		for _, v := range ret {
-			err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(&bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}},"param.assetid": v.Param.Goodsid}).One(&ret2)
+			err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(&bson.M{"param.assetid": v.Param.Goodsid}).Sort("-_id").Limit(1).One(&ret2)
 			if err != nil {
 				log.Error(err)
 			}
