@@ -145,7 +145,7 @@ message FavoriteArr {
 message FavoriteData {
     string username = 1;
     string goods_id = 2;
-    string name = 3;
+    string goods_name = 3;
     uint64 price = 4;
     uint64 time = 5;
 }

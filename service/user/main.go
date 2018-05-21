@@ -15,6 +15,7 @@ import (
 	"github.com/bottos-project/bottos/service/common/bean"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/bottos-project/bottos/config"
 )
 type User struct{}
 
@@ -138,7 +139,7 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 
 	i, err := data.PushTransaction(req)
 
-	if i != nil {
+	if i == nil {
 		rsp.Code = 1008
 		rsp.Msg = err.Error()
 	}
@@ -168,44 +169,44 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 		"param.optype": bson.M{"$in": []int32{1,2}},
 		"param.username": req.Username,
 		"param.goodstype":req.GoodsType}
-
-	count, err:=mgo.DB("bottos").C("favroitepro").Find(where).Count()
+	log.Info(where)
+	count, err:=mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
 	}
+	var ret []*bean.Favorite
+	mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Sort("-_id").Limit(pageSize).Skip(skip).All(&ret)
 
-	var ret []bean.Favorite
-	mgo.DB("bottos").C("favroitepro").Find(&bson.M{"type": "datapurchase"}).Sort("-_id").Limit(pageSize).Skip(skip).All(&ret)
-	log.Info(ret)
-	//var rows = []*dashboard_proto.TxListRow{}
-	//var ret2 = bean.AssetBean{}
-	//for _, v := range ret {
-	//	log.Info(v.Data.BasicInfo.AssetID)
-	//	err := mgo.DB(config.DB_NAME).C("Messages").Find(&bson.M{"type": "assetreg", "data.asset_id": v.Data.BasicInfo.AssetID}).One(&ret2)
-	//	if err != nil {
-	//		log.Error(err)
-	//	}
-	//
-	//	rows = append(rows, &dashboard_proto.TxListRow{
-	//		TransactionId: v.TransactionID,
-	//		From: ret2.Data.BasicInfo.UserName,
-	//		To: v.Data.BasicInfo.UserName,
-	//		Price: ret2.Data.BasicInfo.Price,
-	//		AssetType: ret2.Data.BasicInfo.AssetType,
-	//		Date: v.CreatedAt.String(),
-	//		BlockId: v.BlockNum,
-	//	})
-	//}
-	//
-	//var data = &dashboard_proto.RecentTxListData{
-	//	PageNum: uint64(pageNum),
-	//	RowCount: uint64(count),
-	//	Row:rows,
-	//}
-	//
-	//rsp.Code = 1
-	//rsp.Data = data
+	var rows []*user_proto.FavoriteData
+
+	if req.GoodsType == "asset" {
+		var ret2 bean.Asset
+		for _, v := range ret {
+			err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(&bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}},"param.assetid": v.Param.Goodsid}).One(&ret2)
+			if err != nil {
+				log.Error(err)
+			}
+
+			rows = append(rows, &user_proto.FavoriteData{
+				Username:ret2.Param.Info.Username,
+				GoodsId:v.Param.Goodsid,
+				GoodsName:ret2.Param.Info.AssetName,
+				Price:ret2.Param.Info.Price,
+				Time:uint64(v.CreateTime.Unix()),
+			})
+		}
+	}
+
+
+
+	var data = &user_proto.FavoriteArr{
+		PageNum: uint64(pageNum),
+		RowCount: uint64(count),
+		Row: rows,
+	}
+
+	rsp.Data = data
 	return nil
 }
 
