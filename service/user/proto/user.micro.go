@@ -28,6 +28,8 @@ It has these top-level messages:
 	GetFavoriteResponse
 	FavoriteArr
 	FavoriteData
+	GetBalanceRequest
+	GetBalanceResponse
 */
 package user
 
@@ -67,6 +69,7 @@ type UserClient interface {
 	Favorite(ctx context.Context, in *FavoriteRequest, opts ...client.CallOption) (*FavoriteResponse, error)
 	GetFavorite(ctx context.Context, in *GetFavoriteRequest, opts ...client.CallOption) (*GetFavoriteResponse, error)
 	Transfer(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PushTxResponse, error)
+	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error)
 }
 
 type userClient struct {
@@ -157,6 +160,16 @@ func (c *userClient) Transfer(ctx context.Context, in *PushTxRequest, opts ...cl
 	return out, nil
 }
 
+func (c *userClient) GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.GetBalance", in)
+	out := new(GetBalanceResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -167,6 +180,7 @@ type UserHandler interface {
 	Favorite(context.Context, *FavoriteRequest, *FavoriteResponse) error
 	GetFavorite(context.Context, *GetFavoriteRequest, *GetFavoriteResponse) error
 	Transfer(context.Context, *PushTxRequest, *PushTxResponse) error
+	GetBalance(context.Context, *GetBalanceRequest, *GetBalanceResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -203,4 +217,8 @@ func (h *User) GetFavorite(ctx context.Context, in *GetFavoriteRequest, out *Get
 
 func (h *User) Transfer(ctx context.Context, in *PushTxRequest, out *PushTxResponse) error {
 	return h.UserHandler.Transfer(ctx, in, out)
+}
+
+func (h *User) GetBalance(ctx context.Context, in *GetBalanceRequest, out *GetBalanceResponse) error {
+	return h.UserHandler.GetBalance(ctx, in, out)
 }

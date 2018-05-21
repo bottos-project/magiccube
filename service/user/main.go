@@ -221,17 +221,17 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	return nil
 }
 
-//func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
-//	account_info, err:= data.AccountInfo(req.Username)
-//	if account_info != nil {
-//		rsp.Data = ""
-//		//rsp.Data = account_info
-//	} else {
-//		rsp.Code = 1006
-//		rsp.Msg = err.Error()
-//	}
-//	return nil
-//}
+func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
+	account_info, err:= data.AccountInfo(req.Username)
+	if account_info != nil {
+		rsp.Data = ""
+		//rsp.Data = account_info
+	} else {
+		rsp.Code = 1006
+		rsp.Msg = err.Error()
+	}
+	return nil
+}
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")

@@ -275,7 +275,7 @@ func init() {
 
 func main() {
 	service := micro.NewService(
-		micro.Name("bottos.api.v3.user"),
+		micro.Name("go.micro.api.v3.user"),
 	)
 
 	// parse command line flags

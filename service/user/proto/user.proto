@@ -8,7 +8,7 @@ service User {
 	rpc Favorite(FavoriteRequest) returns(FavoriteResponse) {};
     rpc GetFavorite(GetFavoriteRequest) returns(GetFavoriteResponse) {};
 	rpc Transfer(PushTxRequest) returns(PushTxResponse) {};
-//	rpc GetBalance(GetBalanceRequest) returns(GetBalanceResponse) {};
+	rpc GetBalance(GetBalanceRequest) returns(GetBalanceResponse) {};
 }
 
 message PushTxRequest {
@@ -148,4 +148,14 @@ message FavoriteData {
     string name = 3;
     uint64 price = 4;
     uint64 time = 5;
+}
+
+message GetBalanceRequest {
+	string username = 1;
+	string random = 2;
+}
+message GetBalanceResponse {
+	uint32 code = 1;
+	string data = 2;
+	string msg = 3;
 }
