@@ -68,24 +68,86 @@ type Block struct {
 	Timestamp             uint64     	    `bson:"timestamp"`
 	MerkleRoot 			  string        	`bson:"merkle_root"`
 	Transactions          []bson.ObjectId   `bson:"transactions"`
-	createTime           time.Time     		`bson:"create_time"`
+	CreateTime           time.Time     		`bson:"create_time"`
 }
 
 type Favorite struct {
 	ID          bson.ObjectId   `bson:"_id,omitempty"`
-	Contract    string  		`json:"contract"`
-	CursorLabel uint32 			`json:"cursor_label"`
-	CursorNum   uint32			`json:"cursor_num"`
-	Lifetime    uint64 			`json:"lifetime"`
-	Method      string  		`json:"method"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
 	Param       struct {
-		Goodsid   string  		`json:"goodsid"`
-		Goodstype string  		`json:"goodstype"`
-		Optype    float64 		`json:"optype"`
-		Username  string  		`json:"username"`
-	} 							`json:"param"`
-	Sender    string  			`json:"sender"`
-	SigAlg    uint32 			`json:"sig_alg"`
-	Signature string  			`json:"signature"`
-	Version   uint32 			`json:"version"`
+		Goodsid   string  		`bson:"goodsid"`
+		Goodstype string  		`bson:"goodstype"`
+		Optype    float64 		`bson:"optype"`
+		Username  string  		`bson:"username"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+
+}
+
+type Requirement struct {
+	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		DataReqId string `bson:"datareqid"`
+		Info      struct {
+			Description string  `bson:"description"`
+			Expiretime  uint64  `bson:"expiretime"`
+			Featuretag  uint64  `bson:"featuretag"`
+			Optype      uint32  `bson:"optype"`
+			Price       uint64  `bson:"price"`
+			Reqname     string  `bson:"reqname"`
+			Reqtype     uint64  `bson:"reqtype"`
+			Samplehash  string  `bson:"samplehash"`
+			Username    string  `bson:"username"`
+		} `bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+type Asset struct {
+	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		AssetId string `bson:"assetid"`
+		Info    struct {
+			AssetName   string  `bson:"assetname"`
+			AssetType   string  `bson:"assettype"`
+			Description string  `bson:"description"`
+			Expiretime  uint64  `bson:"expiretime"`
+			Featuretag  string  `bson:"featuretag"`
+			Price       uint64  `bson:"price"`
+			Samplehash  string  `bson:"samplehash"`
+			Samplepath  string  `bson:"samplepath"`
+			Signature   string  `bson:"signature"`
+			Storagehash string  `bson:"storagehash"`
+			Storagepath string  `bson:"storagepath"`
+			Uploaddate  uint64  `bson:"uploaddate"`
+			Username    string  `bson:"username"`
+		} `bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
 }
