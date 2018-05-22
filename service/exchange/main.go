@@ -5,7 +5,7 @@ import (
 	"github.com/micro/go-micro"
 	proto "github.com/bottos-project/bottos/service/exchange/proto"
 	"golang.org/x/net/context"
-	"github.com/bitly/go-simplejson"
+	/*"github.com/bitly/go-simplejson"
 	"time"
 	"bytes"
 	"io/ioutil"
@@ -13,9 +13,9 @@ import (
 	cbb "github.com/bottos-project/bottos/service/asset/cbb"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/service/bean"*/
 	"github.com/bottos-project/bottos/config"
-	"strings"
+	"github.com/bottos-project/bottos/service/common/data"
 )
 
 const (
@@ -31,53 +31,18 @@ const (
 
 type Exchange struct{}
 
-func (u *Exchange) ConsumerBuy(ctx context.Context, req *proto.ConsumerBuyRequest, rsp *proto.ConsumerBuyResponse) error {
-	start_time := time.Now().UnixNano() / int64(time.Millisecond)
-	log.Info("reqBody:" + req.PostBody)
-	dataBody, signValue, account, data := cbb.GetSignAndDataCom(req.PostBody)
-	log.Info(account, data)
-	//get Public Key
-	pubKey := cbb.GetPublicKey("account")
-	//Verify Sign Local
-	ok, _ := cbb.VerifySign(dataBody, signValue, pubKey)
-	log.Info(ok)
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
-		return nil
+func (u *Exchange) BuyAsset(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
+	i, err := data.PushTransaction(req)
+	if err != nil {
+		rsp.Code = 3001
+		rsp.Msg = err.Error()
 	}
-
-	//Write to BlockChain
-	flag, result := cbb.WriteToBlockChain(req.PostBody, PUSH_TRANSACTION_URL)
-
-	end_time := time.Now().UnixNano() / int64(time.Millisecond)
-	log.Info("Time:", end_time-start_time)
-	//ok1 = true
-	if flag == false {
-		if strings.Contains(result, "underflow subtracting token balance") {
-			rsp.Code = 4001
-			rsp.Msg = "Consumer Buy Asset Failed, The balance is too low."
-			log.Debug("4001:", result)
-			//rsp.Data = result
-			return nil
-		} else {
-			rsp.Code = 4002
-			log.Debug("4002:", result)
-			rsp.Msg = "Consumer Buy Asset Failed, Unkown error."
-			rsp.Data = result
-			return nil
-		}
-	} else {
-		rsp.Code = 1
-		rsp.Msg = "ConsumerBuy Successful!"
-		rsp.Data = string(result)
-		return nil
-	}
-
+	log.Info(i)
+	return nil
 }
 
-func (u *Exchange) QueryTx(ctx context.Context, req *proto.QueryTxRequest, rsp *proto.QueryTxResponse) error {
+
+/*func (u *Exchange) QueryTx(ctx context.Context, req *proto.QueryTxRequest, rsp *proto.QueryTxResponse) error {
 
 	dataBody, signValue, account := "", "", ""
 	//dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
@@ -191,170 +156,9 @@ func (u *Exchange) QueryTx(ctx context.Context, req *proto.QueryTxRequest, rsp *
 	//end_time := time.Now().UnixNano() / int64(time.Millisecond)
 	//log.Info("Time:", end_time-start_time)
 	return nil
-}
-
-func GetSignAndData(postBody string) (string, string, string) {
-	js, _ := simplejson.NewJson([]byte(postBody))
-	//get signed data
-	//TODO
-	dataBody := js.Get("signatures").MustString()
-	log.Info("dataBody", dataBody)
-	//getSignValue
-	signValue := js.Get("signatures").MustString()
-	log.Info(signValue)
-	//get username
-	userName := js.Get("userName").MustString()
-
-	//messages := js.Get("messages").GetIndex(0)
-	//authorization := messages.Get("authorization").GetIndex(0)
-	//log.Info("----------", authorization.Get("account").MustString())
-
-	//postData := map[string]interface{}{
-	//	"ref_block_num": js.Get("ref_block_num").MustInt(),
-	//}
-	return dataBody, signValue, userName
-}
-
-/*func WriteToBlockChain(post string, url string) []byte {
-	log.Info(url, post)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(post)))
-	// req.Header.Set("X-Custom-Header", "myvalue")
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	log.Info(resp.Status)
-	if resp.StatusCode/100 == 2 {
-		body, _ := ioutil.ReadAll(resp.Body)
-		js, _ := simplejson.NewJson([]byte(body))
-		log.Info(atom.String(body))
-		log.Info(string(body))
-		log.Info(js)
-		js.Get("result").MustString()
-		return body
-	} else {
-		return nil
-	}
-}
-
-func GetPublicKey(post string) string {
-	req, err := http.NewRequest("POST", PUSH_TRANSACTION_URL, bytes.NewBuffer([]byte(post)))
-	// req.Header.Set("X-Custom-Header", "myvalue")
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.Status == "200 OK" {
-		body, _ := ioutil.ReadAll(resp.Body)
-		js, _ := simplejson.NewJson([]byte(body))
-		result := js.Get("result").MustString()
-		return result
-	} else {
-		return ""
-	}
-}
-func GetSignAndDataCom(postBody string) (signData string, account string, sign string, data string) {
-	js, _ := simplejson.NewJson([]byte(postBody))
-	//get signed data
-	//TODO
-
-	messages := js.Get("messages").GetIndex(0)
-	authorization := messages.Get("authorization").GetIndex(0)
-	log.Info("----------", authorization.Get("account").MustString())
-
-	postData := map[string]interface{}{
-		"ref_block_num":    js.Get("ref_block_num").MustInt(),
-		"ref_block_prefix": js.Get("ref_block_prefix").MustInt(),
-		"expiration":       js.Get("expiration").MustString(),
-		"scope":            []string{js.Get("scope").MustString()},
-		"read_scope":       []string{},
-		"messages": []interface{}{
-			map[string]interface{}{
-				"code": messages.Get("code").MustString(),
-				"type": messages.Get("type").MustString(),
-				"authorization": []interface{}{
-					map[string]interface{}{
-						"account":    authorization.Get("account").MustString(),
-						"permission": authorization.Get("permission").MustString(),
-					},
-				},
-				"data": messages.Get("data").MustString(),
-			},
-		},
-		"signatures": []string{js.Get("signatures").MustString()},
-	}
-	log.Info(postData)
-	//getSignValue
-	signValue := js.Get("signatures").MustString()
-	log.Info(signValue)
-	//get Account
-	account = authorization.Get("account").MustString()
-	log.Info(account)
-	//get sign Data
-	delete(postData, "signatures")
-	signData = ""
-	//signData = string(json.Marshal(postData))
-	log.Info(signData)
-	//get sign Data
-	data = messages.Get("data").MustString()
-	log.Info("----------", data)
-
-	*//*	req := curl.NewRequest()
-		resp, err := req.SetUrl(PUSH_TRANSACTION_URL).SetPostData(postData).Post()
-		if err != nil {
-			return
-		}*//*
-	//return resp.Body, account
-	return signData, account, signValue, data
 }*/
 
-func VerifySignOnBlockChain(post string, url string) bool {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(post)))
-	// req.Header.Set("X-Custom-Header", "myvalue")
-	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.Status == "200 OK" {
-		body, _ := ioutil.ReadAll(resp.Body)
-		js, _ := simplejson.NewJson([]byte(body))
-		js.Get("result").MustString()
-		//return js.Get("result").MustString()
-		return true
-	} else {
-		return false
-	}
-}
-
-/*func VerifySign(data string, sign string, pubKey string) (bool, string) {
-	//if sign == "" {
-	//	//从data中取sign TODO
-	//}
-	//flag := false
-	//ToDO
-	//var err string
-	if data == sign {
-		//flag = true
-		return true, "Successful!"
-	} else {
-		return false, "Failed!"
-	}
-
-}*/
 
 func main() {
 	log.LoadConfiguration(config.BASE_LOG_CONF)
@@ -362,8 +166,8 @@ func main() {
 	log.LOGGER("exchange.srv")
 
 	service := micro.NewService(
-		micro.Name("go.micro.srv.v2.exchange"),
-		micro.Version("2.0.0"),
+		micro.Name("go.micro.srv.v3.exchange"),
+		micro.Version("3.0.0"),
 	)
 
 	service.Init()

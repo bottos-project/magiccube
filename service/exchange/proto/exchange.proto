@@ -1,27 +1,41 @@
 syntax = "proto3";
 
 service Exchange {
-	rpc ConsumerBuy(ConsumerBuyRequest) returns(ConsumerBuyResponse) {};
-	rpc QueryTx(QueryTxRequest) returns(QueryTxResponse) {};
+	rpc BuyAsset(PushRequest) returns(BuyAssetResponse) {};
+//	rpc GetTxList(QueryRequest) returns(GetTxListResponse) {};
 
 
 }
 
-message ConsumerBuyRequest {
-	string postBody = 1;
+message PushRequest {
+	uint32 version = 1;
+	uint32 cursor_num = 2;
+	uint32 cursor_label = 3;
+	uint64 lifetime = 4;
+	string sender = 5;
+	string contract = 6;
+	string method = 7;
+	string param = 8;
+	uint32 sig_alg = 9;
+	string signature =10;
 }
-message ConsumerBuyResponse {
+message BuyAssetResponse {
 	uint32 code = 1;
 	string data = 2;
 	string msg = 3;
 }
 
-message QueryTxRequest {
-	uint64 pageSize = 1;
-	uint64 pageNum = 2;
+
+message QueryRequest {
+	uint32 page_size = 1;
+	uint32 page_num = 2;
 	string username = 3;
+	string random = 4;
+	string signature = 5;
 }
-message QueryTxResponse {
+
+
+message GetTxListResponse {
 	uint32 code = 1;
 	QueryTxData data = 2;
 	string msg = 3;
