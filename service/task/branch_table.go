@@ -8,7 +8,7 @@ import(
 	"time"
 )
 
-var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilemng"}
+var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
 var prefix = "pre_"
 
 type Favoritepro struct {
@@ -45,19 +45,23 @@ type RecMessageId struct {
 	MessageID  string `bson:"message_id"`
 }
 
-type Tx struct {
-	ID          bson.ObjectId 	`bson:"_id,omitempty"`
-	Version     uint32  		`bson:"version"`
-	CursorNum   uint32  		`bson:"cursor_num"`
-	CursorLabel uint32  		`bson:"cursor_label"`
-	Lifetime    uint64  		`bson:"lifetime"`
-	Sender      string  		`bson:"sender"`
-	Contract    string  		`bson:"contract"`
-	Method      string  		`bson:"method"`
-	Param       interface{}  	`bson:"param"`
-	SigAlg      uint32  		`bson:"sig_alg"`
-	Signature   string  		`bson:"signature"`
-	CreateTime  time.Time		`bson:"create_time"`
+type Transaction struct {
+	ID          	bson.ObjectId 	`bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	CursorNum   	uint32  		`bson:"cursor_num"`
+	CursorLabel 	uint32  		`bson:"cursor_label"`
+	Lifetime    	uint64  		`bson:"lifetime"`
+	Sender      	string  		`bson:"sender"`
+	Contract    	string  		`bson:"contract"`
+	Method      	string  		`bson:"method"`
+	Param       	interface{}  	`bson:"param"`
+	SigAlg      	uint32  		`bson:"sig_alg"`
+	Signature   	string  		`bson:"signature"`
+	CreateTime  	time.Time		`bson:"create_time"`
+	Version     	uint32  		`bson:"version"`
 }
 
 func init() {
@@ -85,7 +89,7 @@ func BranchTable() {
 	var rec_msg RecMessageId
 	mgo.DB("bottos").C("rec_msgid").Find(nil).One(&rec_msg)
 
-	var part Tx
+	var part Transaction
 	mgo.DB("bottos").C("Transactions").Find(nil).Sort("-_id").Limit(1).One(&part)
 	log.Info("part-last-id:", part.ID)
 
@@ -98,7 +102,7 @@ func BranchTable() {
 		where = bson.M{"_id": bson.M{"$gt": bson.ObjectIdHex(rec_msg.MessageID), "$lte": bson.ObjectIdHex(part.ID.Hex())}, "method": bson.M{"$in": branch_table}}
 	}
 
-	var ret []Tx
+	var ret []Transaction
 	mgo.DB("bottos").C("Transactions").Find(where).All(&ret)
 
 	log.Info(len(ret))
@@ -157,7 +161,7 @@ func BranchTable() {
 				set := bson.M{"$set": bson.M{ "param.info.optype": 3}}
 				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
 			}
-		case "datafilemng":
+		case "datafilereg":
 			var file = &File{}
 			data ,err := bson.Marshal(v.Param)
 			if err != nil {
