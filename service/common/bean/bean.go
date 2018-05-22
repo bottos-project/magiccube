@@ -232,3 +232,15 @@ type Tx struct {
 	Version   	uint32 				`bson:"version"`
 	CreateTime 	time.Time     		`bson:"create_time"`
 }
+
+type RecordNum struct {
+	ID                    	bson.ObjectId 	`bson:"_id,omitempty"`
+	TxNum              		int   			`bson:"tx_num"`
+	TxAmount 				uint64   		`bson:"tx_amount"`
+	RequirementNum			int   			`bson:"requirement_num"`
+	AssetNum				int   			`bson:"asset_num"`
+	AccountNum  			int   			`bson:"account_num"`
+	Date					string   		`bson:"date"`
+	Timestamp				int   			`bson:"timestamp"`
+	Create_time			  	time.Time		`bson:"create_time"`
+}
