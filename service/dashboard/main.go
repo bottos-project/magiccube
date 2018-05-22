@@ -442,7 +442,7 @@ func init() {
 func main() {
 
 	service := micro.NewService(
-		micro.Name("bottos.srv.dashboard"),
+		micro.Name("go.micro.srv.v3.dashboard"),
 		micro.Version("3.0.0"),
 	)
 

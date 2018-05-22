@@ -321,7 +321,7 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&User{Client: user.NewUserClient("bottos.srv.user", service.Client())},
+			&User{Client: user.NewUserClient("go.micro.srv.v3.user", service.Client())},
 		),
 	)
 
