@@ -674,7 +674,6 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 	}
 	mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
 
-
 	var rows = []*proto.AssetData{}
 	for _, v := range ret {
 		rows = append(rows, &proto.AssetData{
