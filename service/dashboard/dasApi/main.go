@@ -8,49 +8,40 @@ import (
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"os"
+	errcode "github.com/bottos-project/bottos/error"
 )
 
 type Dashboard struct {
 	Client dashboard.DashboardClient
 }
 
-func (s *Dashboard) GetAllTxNum(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	response, err := s.Client.GetAllTxNum(ctx, &dashboard.GetAllTxNumRequest{})
+func (s *Dashboard) GetTxNum(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	response, err := s.Client.GetTxNum(ctx, &dashboard.GetTxNumRequest{})
 	if err != nil {
 		return err
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
-func (s *Dashboard) GetRecentTxList(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (s *Dashboard) GetTxList(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
-	var dashboardRecentTxList dashboard.GetRecentTxListRequest
-	err := json.Unmarshal([]byte(body), &dashboardRecentTxList)
-	response, err := s.Client.GetRecentTxList(ctx, &dashboardRecentTxList)
+	var getTxList dashboard.GetTxListRequest
+	err := json.Unmarshal([]byte(body), &getTxList)
+	response, err := s.Client.GetTxList(ctx, &getTxList)
 	if err != nil {
 		log.Error(err)
 	}
 
-	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
 func (s *Dashboard) GetBlockList(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
 	body := req.Body
 	log.Info(body)
 	var blockListRequest dashboard.GetBlockListRequest
@@ -60,13 +51,22 @@ func (s *Dashboard) GetBlockList(ctx context.Context, req *api.Request, rsp *api
 		log.Error(err)
 	}
 
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (s *Dashboard) GetBlockInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	body := req.Body
+	log.Info(body)
+	var getBlockInfoRequest dashboard.GetBlockInfoRequest
+	err := json.Unmarshal([]byte(body), &getBlockInfoRequest)
+	response, err := s.Client.GetBlockInfo(ctx, &getBlockInfoRequest)
+	if err != nil {
+		log.Error(err)
+	}
+
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -77,12 +77,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -93,12 +88,7 @@ func (s *Dashboard) GetRequirementNumByDay(ctx context.Context, req *api.Request
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -109,12 +99,7 @@ func (s *Dashboard) GetAssetNumByDay(ctx context.Context, req *api.Request, rsp 
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -125,28 +110,18 @@ func (s *Dashboard) GetAccountNumByDay(ctx context.Context, req *api.Request, rs
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
-func (s *Dashboard) GetSumTxAmount(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	response, err := s.Client.GetSumTxAmount(ctx, &dashboard.GetSumTxAmountRequest{})
+func (s *Dashboard) GetTxAmount(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	response, err := s.Client.GetTxAmount(ctx, &dashboard.GetTxAmountRequest{})
 	if err != nil {
 		return err
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -157,12 +132,7 @@ func (s *Dashboard) GetTxNumByDay(ctx context.Context, req *api.Request, rsp *ap
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -173,12 +143,7 @@ func (s *Dashboard) GetTxAmountByDay(ctx context.Context, req *api.Request, rsp 
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -189,12 +154,7 @@ func (s *Dashboard) GetAllTypeTotal(ctx context.Context, req *api.Request, rsp *
 	}
 
 	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":"OK",
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -210,7 +170,7 @@ func init() {
 
 func main() {
 	service := micro.NewService(
-		micro.Name("bottos.api.v3.dashboard"),
+		micro.Name("go.micro.api.v3.dashboard"),
 	)
 
 	// parse command line flags

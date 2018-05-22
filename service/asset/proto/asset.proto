@@ -1,34 +1,36 @@
 ﻿syntax = "proto3";
 
 service Asset {
-    rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
-    };
-    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
-    };
+    //    rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
+    //    };
+    //    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
+    //    };
     rpc RegisterFile (RegisterFileRequest) returns (RegisterFileResponse) {
     };
-    rpc QueryUploadedData (QueryUploadedDataRequest) returns (QueryUploadedDataResponse) {
+    rpc QueryUploadedData (QueryRequest) returns (QueryUploadedDataResponse) {
     };
-    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
-    };
+    //    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
+    //    };
     rpc RegisterAsset (RegisterRequest) returns (RegisterResponse) {
     };
-    rpc Query (QueryRequest) returns (QueryResponse) {
+    rpc QueryAsset (QueryRequest) returns (QueryResponse) {
     };
-    rpc QueryAllAsset (QueryAllAssetRequest) returns (QueryAllAssetResponse) {
-    };
-    rpc Modify (ModifyRequest) returns (ModifyResponse) {
-    };
-
-    rpc QueryByID (QueryByIDRequest) returns (QueryResponse) {
-    };
-    rpc GetUserPurchaseAssetList (GetUserPurchaseAssetListRequest) returns (QueryResponse) {
-    };
+//    rpc QueryAllAsset (QueryRequest) returns (QueryResponse) {
+//    };
+    //    rpc Modify (ModifyRequest) returns (ModifyResponse) {
+    //    };
+    //
+    //    rpc QueryByID (QueryByIDRequest) returns (QueryResponse) {
+    //    };
+    //    rpc GetUserPurchaseAssetList (GetUserPurchaseAssetListRequest) returns (QueryResponse) {
+    //    };
 
     rpc PreSaleNotice (PushTxRequest) returns (PreSaleNoticeResponse) {
     };
-    rpc QueryMyNotice (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
-    rpc QueryMyPreSale (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
+    rpc QueryMyNotice (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {
+    };
+    rpc QueryMyPreSale (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {
+    };
 }
 
 message PushTxRequest {
@@ -41,7 +43,7 @@ message PushTxRequest {
     string method = 7;
     string param = 8;
     uint32 sig_alg = 9;
-    string signature =10;
+    string signature = 10;
 }
 
 
@@ -71,19 +73,15 @@ message RegisterFileResponse {
     string data = 3;
 }
 
-message QueryUploadedDataRequest {
-    int32 pageSize = 1;
-    int32 pageNum = 2;
-    string username = 3;
-}
+
 message QueryUploadedDataResponse {
     int32 code = 1;
     QueryUploadedData data = 2;
     string msg = 3;
 }
 message QueryUploadedData {
-    uint64 pageNum = 1;
-    uint64 rowCount = 2;
+    uint32 pageNum = 1;
+    uint32 rowCount = 2;
     repeated QueryUploadedRow row = 3;
 }
 message QueryUploadedRow {
@@ -93,8 +91,10 @@ message QueryUploadedRow {
     uint64 file_size = 4;
     string file_policy = 5;
     uint64 file_number = 6;
-    string auth_path = 7;
-    string create_time = 8;
+    uint32 sim_or_ass = 7;
+    uint32 op_type = 8;
+    string store_addr = 9;
+    uint64 create_time = 10;
 }
 
 
@@ -121,41 +121,6 @@ message RegisterResponse {
     string data = 3;
 }
 
-message QueryRequest {
-    int32 pageSize = 1;
-    int32 pageNum = 2;
-    string username = 3;
-    uint64 featureTag = 4;
-    //    uint64 featureType = 4;
-}
-message QueryResponse {
-    int32 code = 1;
-    QueryData data = 2;
-    string msg = 3;
-}
-message QueryData {
-    uint64 pageNum = 1;
-    uint64 rowCount = 2;
-    repeated QueryRow row = 3;
-}
-message QueryRow {
-    string asset_id = 1;
-    string username = 2;
-    string asset_name = 3;
-    string asset_type = 4;
-    string feature_tag1 = 5;
-    string feature_tag2 = 6;
-    string feature_tag3 = 7;
-    string sample_path = 8;
-    string sample_hash = 9;
-    string storage_path = 10;
-    string storage_hash = 11;
-    uint32 expire_time = 12;
-    uint64 price = 13;
-    string description = 14;
-    uint32 upload_date = 15;
-    string create_time = 16;
-}
 
 message QueryAllAssetRequest {
     string username = 1;
@@ -246,10 +211,48 @@ message PreSaleNoticeResponse {
     string data = 3;
 }
 
+
+message QueryRequest {
+    uint32 page_size = 1;
+    uint32 page_num = 2;
+    string username = 3;
+    string random = 4;
+    string signature = 5;
+}
+
+message QueryResponse {
+    int32 code = 1;
+    QueryData data = 2;
+    string msg = 3;
+}
+
+message QueryData {
+    uint32 page_num = 1;
+    uint32 row_count = 2;
+    repeated AssetData row = 3;
+}
+message AssetData {
+    string asset_id = 1;
+    string username = 2;
+    string asset_name = 3;
+    string asset_type = 4;
+    string feature_tag = 5;
+    string sample_hash = 6;
+    string storage_hash = 7;
+    uint32 expire_time = 8;
+    uint32 op_type = 9;
+    uint64 price = 10;
+    string description = 11;
+    uint64 create_time = 12;
+}
+
+
 message QueryMyNoticeRequest {
     int32 pageSize = 1;
     int32 pageNum = 2;
     string username = 3;
+    string random = 4;
+    string signature = 5;
 }
 message QueryMyNoticeResponse {
     int32 code = 1;
@@ -257,16 +260,18 @@ message QueryMyNoticeResponse {
     string msg = 3;
 }
 message QueryNoticeData {
-    uint64 pageNum = 1;
-    uint64 rowCount = 2;
+    uint32 pageNum = 1;
+    uint32 rowCount = 2;
     repeated QueryNoticeRow row = 3;
 }
 message QueryNoticeRow {
     string username = 1;
-    string asset_id = 2;
-    string asset_name = 3;
-    string data_req_id = 4;
-    string data_req_name = 5;
-    string consumer = 6;
-    string createTime = 7;
+    string notice_id = 2;
+    string asset_id = 3;
+    string asset_name = 4;
+    string data_req_id = 5;
+    string data_req_name = 6;
+    string consumer = 7;
+    string read_flag = 8;
+    uint64 time = 9;
 }

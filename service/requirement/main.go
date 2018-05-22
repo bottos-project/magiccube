@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/context"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/service/bean"
+	"github.com/bottos-project/bottos/service/common/bean"
 	"github.com/bottos-project/bottos/config"
 	"os"
 	"github.com/bottos-project/bottos/service/common/data"
@@ -19,7 +19,7 @@ type Requirement struct {}
 func (u *Requirement) Publish(ctx context.Context, req *requirement_proto.PublishRequest, rsp *requirement_proto.PublishResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
-		rsp.Code = 3000
+		rsp.Code = 3001
 		rsp.Msg = err.Error()
 	}
 	log.Info(i)
@@ -40,40 +40,37 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	skip = (pageNum - 1) *  pageSize
 
 	var where interface{}
-	where = &bson.M{"type": "datareqreg"}
-	log.Info(req.Username)
-	if req.Username != ""{
-		where = &bson.M{"type": "datareqreg","data.basic_info.user_name": req.Username}
-	}
+	where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
+	//if len(req.Username) > 0{
+	//	where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	//}
 
 	log.Info(where)
 
-	var ret []bean.RequirementBean
+	var ret []bean.Requirement
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err:= mgo.DB(config.DB_NAME).C("Messages").Find(where).Count()
+	count, err:= mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
 	}
-	mgo.DB(config.DB_NAME).C("Messages").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+	mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
 
 	var rows = []*requirement_proto.RequirementData{}
 	for _, v := range ret {
 
 		rows = append(rows, &requirement_proto.RequirementData{
-			RequirementId : v.Data.DataReqID,
-			Username : v.Data.BasicInfo.UserName,
-			RequirementName : v.Data.BasicInfo.RequirementName,
-			FeatureTag : v.Data.BasicInfo.FeatureTag,
-			SamplePath : v.Data.BasicInfo.SamplePath,
-			SampleHash : v.Data.BasicInfo.SampleHash,
-			ExpireTime : v.Data.BasicInfo.ExpireTime,
-			Price : v.Data.BasicInfo.Price,
-			Description : v.Data.BasicInfo.Description,
-			PublishDate : uint32(v.CreatedAt.Unix()),
-
+			RequirementId : v.Param.DataReqId,
+			Username : v.Param.Info.Username,
+			RequirementName : v.Param.Info.Reqname,
+			FeatureTag : v.Param.Info.Featuretag,
+			SampleHash : v.Param.Info.Samplehash,
+			ExpireTime : v.Param.Info.Expiretime,
+			Price : v.Param.Info.Price,
+			Description : v.Param.Info.Description,
+			PublishDate : uint64(v.CreateTime.Unix()),
 		})
 	}
 
@@ -83,10 +80,7 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 		Row:rows,
 	}
 	log.Info(data)
-	rsp.Code = 0
 	rsp.Data = data
-	rsp.Msg = "OK"
-
 	return nil
 }
 

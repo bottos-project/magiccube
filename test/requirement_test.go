@@ -30,18 +30,18 @@ type RequirementData struct {
 
 func TestReqSignature(t *testing.T){
 	data := Requirement{
-		RequirementId:"1",
+		RequirementId:"2",
 		RequirementData: RequirementData{
-			Username:"ttsss1s1s",
-			RequirementName: "1111",
+			Username:"test",
+			RequirementName: "1",
 			RequirementType: 1,
 			FeatureTag:1,
-			SampleHash:"asdasdsdagkfdjg3",
+			SampleHash:"1",
 			ExpireTime:1455379533,
 			Price:1000,
-			Description:"test",
+			Description:"1",
 			FavoriFlag:1,
-			OpType:1,
+			OpType:2,
 		},
 	}
 
@@ -52,7 +52,7 @@ func TestReqSignature(t *testing.T){
 		CursorNum: 17,
 		CursorLabel: 1798372187,
 		Lifetime: 1524802582,
-		Sender: "ttsss1s1s",
+		Sender: "test",
 		Contract: "datareqmng",
 		Method: "datareqreg",
 		Param: param,

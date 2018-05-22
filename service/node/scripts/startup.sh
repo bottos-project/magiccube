@@ -544,7 +544,9 @@ function build_all_modules()
     go build github.com/bottos-project/bottos/service/exchange
     go build github.com/bottos-project/bottos/service/dashboard/dasApi
     go build github.com/bottos-project/bottos/service/dashboard   
-        
+    go build github.com/bottos-project/bottos/service/data
+    go build github.com/bottos-project/bottos/service/data/datApi
+
     cp -f core        /opt/go/bin/core
     cp -f node        /opt/go/bin
     cp -f asset       /opt/go/bin
@@ -553,6 +555,8 @@ function build_all_modules()
     cp -f exchange    /opt/go/bin
     cp -f dasApi      /opt/go/bin
     cp -f dashboard   /opt/go/bin
+    cp -f data        /opt/go/bin
+    cp -f datApi      /opt/go/bin
     cp -f /opt/go/bin/log.xml  /opt/go/bin/config
     cp -f /opt/go/bin/log.xml  /opt/go/bin/config/log-req.xml
     

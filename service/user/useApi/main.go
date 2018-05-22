@@ -245,17 +245,55 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (u *User) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
-	var getAccountInfoRequest user.GetBalanceRequest
-	err := json.Unmarshal([]byte(req.Body), &getAccountInfoRequest)
+	body := req.Body
+	var queryMyNotice user.QueryMyNoticeRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	response, err := u.Client.GetBalance(ctx, &getAccountInfoRequest)
-	if err != nil {
 
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	//is_true=true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.QueryMyNotice(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice user.QueryMyNoticeRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	//is_true=true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.QueryMyPreSale(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
 		return err
 	}
 
@@ -275,7 +313,7 @@ func init() {
 
 func main() {
 	service := micro.NewService(
-		micro.Name("bottos.api.v3.user"),
+		micro.Name("go.micro.api.v3.user"),
 	)
 
 	// parse command line flags

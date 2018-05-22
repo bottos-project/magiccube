@@ -8,7 +8,8 @@ service User {
 	rpc Favorite(FavoriteRequest) returns(FavoriteResponse) {};
     rpc GetFavorite(GetFavoriteRequest) returns(GetFavoriteResponse) {};
 	rpc Transfer(PushTxRequest) returns(PushTxResponse) {};
-	rpc GetBalance(GetBalanceRequest) returns(GetBalanceResponse) {};
+	rpc QueryMyNotice (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
+	rpc QueryMyPreSale(QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
 }
 
 message PushTxRequest {
@@ -102,6 +103,8 @@ message GetAccountInfoResponse {
 message AccountInfoData {
 	string account_name = 1;
 	string pubkey = 2;
+	uint64 balance = 3;
+	uint64 staked_balance = 4;
 }
 
 message FavoriteRequest {
@@ -124,9 +127,10 @@ message FavoriteResponse {
 }
 
 message GetFavoriteRequest {
-    string goods_type = 1;
-    uint32 page_size = 2;
-    uint32 page_num = 3;
+	string username = 1;
+    string goods_type = 2;
+    uint32 page_size = 3;
+    uint32 page_num = 4;
 }
 
 message GetFavoriteResponse {
@@ -144,7 +148,46 @@ message FavoriteArr {
 message FavoriteData {
     string username = 1;
     string goods_id = 2;
-    string name = 3;
+    string goods_name = 3;
     uint64 price = 4;
     uint64 time = 5;
+}
+
+message GetBalanceRequest {
+	string username = 1;
+	string random = 2;
+}
+message GetBalanceResponse {
+	uint32 code = 1;
+	string data = 2;
+	string msg = 3;
+}
+
+message QueryMyNoticeRequest {
+	int32 pageSize = 1;
+	int32 pageNum = 2;
+	string username = 3;
+	string random = 4;
+	string signature = 5;
+}
+message QueryMyNoticeResponse {
+	int32 code = 1;
+	QueryNoticeData data = 2;
+	string msg = 3;
+}
+message QueryNoticeData {
+	uint32 pageNum = 1;
+	uint32 rowCount = 2;
+	repeated QueryNoticeRow row = 3;
+}
+message QueryNoticeRow {
+	string username = 1;
+	string notice_id = 2;
+	string asset_id = 3;
+	string asset_name = 4;
+	string data_req_id = 5;
+	string data_req_name = 6;
+	string consumer = 7;
+	string read_flag = 8;
+	uint64 time = 9;
 }

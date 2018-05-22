@@ -13,7 +13,11 @@ import (
 	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
 	pack "github.com/bottos-project/bottos/core/contract/msgpack"
 	"github.com/bottos-project/bottos/service/common/bean"
+	"github.com/bottos-project/bottos/tools/db/mongodb"
+	"gopkg.in/mgo.v2/bson"
+	"github.com/bottos-project/bottos/config"
 )
+
 type User struct{}
 
 func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
@@ -54,7 +58,6 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		Param: account_buf,
 		SigAlg: 1,
 	}
-
 
 	msg, err := proto.Marshal(tx_account_sign)
 	if err != nil {
@@ -106,7 +109,6 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	rsp.Code = 1005
 	ret_user, err := data.PushTransaction(&req.User)
 
-
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
@@ -115,7 +117,6 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	rsp.Code = 1
 	return nil
 }
-
 
 func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
 	account_info, err:= data.AccountInfo(req.AccountName)
@@ -136,7 +137,7 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 
 	i, err := data.PushTransaction(req)
 
-	if i != nil {
+	if i == nil {
 		rsp.Code = 1008
 		rsp.Msg = err.Error()
 	}
@@ -144,30 +145,188 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 }
 
 func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
+	var pageNum, pageSize, skip int= 1, 20, 0
+	if req.PageNum > 0 {
+		pageNum = int(req.PageNum)
+	}
+
+	if req.PageSize > 0 && req.PageSize <= 50{
+		pageSize = int(req.PageSize)
+	}
+
+	if len(req.GoodsType) < 1{
+		req.GoodsType = "asset"
+	}
+
+	skip = (pageNum - 1) *  pageSize
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	var where = bson.M{
+		"param.optype": bson.M{"$in": []int32{1,2}},
+		"param.username": req.Username,
+		"param.goodstype":req.GoodsType}
+	log.Info(where)
+	count, err:=mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	var ret []*bean.Favorite
+	mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Sort("-_id").Limit(pageSize).Skip(skip).All(&ret)
+
+	var rows []*user_proto.FavoriteData
+
+	if req.GoodsType == "asset" {
+		var ret2 bean.AssetBean
+		for _, v := range ret {
+			err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(&bson.M{"param.assetid": v.Param.Goodsid}).Sort("-_id").Limit(1).One(&ret2)
+			if err != nil {
+				log.Error(err)
+			}
+
+			rows = append(rows, &user_proto.FavoriteData{
+				Username:ret2.Param.Info.UserName,
+				GoodsId:v.Param.Goodsid,
+				GoodsName:ret2.Param.Info.AssetName,
+				Price:ret2.Param.Info.Price,
+				Time:uint64(v.CreateTime.Unix()),
+			})
+		}
+	}
+
+
+
+	var data = &user_proto.FavoriteArr{
+		PageNum: uint64(pageNum),
+		RowCount: uint64(count),
+		Row: rows,
+	}
+
+	rsp.Data = data
 	return nil
 }
-
 
 func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp *user_proto.PushTxResponse) error {
 
 	i, err := data.PushTransaction(req)
 
-	if i != nil {
+	if i == nil {
 		rsp.Code = 1008
 		rsp.Msg = err.Error()
 	}
 	return nil
 }
 
-func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
-	account_info, err:= data.AccountInfo(req.Username)
-	if account_info != nil {
-		rsp.Data = ""
-		//rsp.Data = account_info
-	} else {
-		rsp.Code = 1006
-		rsp.Msg = err.Error()
+func (u *User) QueryMyNotice(ctx context.Context, req *user_proto.QueryMyNoticeRequest, rsp *user_proto.QueryMyNoticeResponse) error {
+
+	var pageNum, pageSize, skip int= 1, 20, 0
+	if req.PageNum > 0 {
+		pageNum = int(req.PageNum)
 	}
+
+	if req.PageSize > 0 {
+		pageSize = int(req.PageSize)
+	}
+
+	skip = (pageNum - 1) *  pageSize
+
+	var where interface{}
+	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
+	if len(req.Username) > 0{
+		where = &bson.M{ "param.info.consumer": req.Username}
+	}
+
+	log.Info(where)
+
+	var ret []bean.PreSaleBean
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err:= mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+
+	var rows = []*user_proto.QueryNoticeRow{}
+	for _, v := range ret {
+
+		rows = append(rows, &user_proto.QueryNoticeRow{
+			NoticeId : v.Param.Datapresaleid,
+			Username : v.Param.Info.Username,
+			AssetId : v.Param.Info.Assetid,
+			//AssetName : v.Param.Info.ass,
+			DataReqId : v.Param.Info.Datareqid,
+			Consumer : v.Param.Info.Consumer,
+			Time : uint64(v.CreateTime.Unix()),
+		})
+	}
+
+	var data = &user_proto.QueryNoticeData{
+		RowCount: uint32(count),
+		PageNum: uint32(pageNum),
+		Row:rows,
+	}
+	log.Info(data)
+	rsp.Data = data
+	return nil
+}
+
+func (u *User) QueryMyPreSale(ctx context.Context, req *user_proto.QueryMyNoticeRequest, rsp *user_proto.QueryMyNoticeResponse) error {
+
+	var pageNum, pageSize, skip int= 1, 20, 0
+	if req.PageNum > 0 {
+		pageNum = int(req.PageNum)
+	}
+
+	if req.PageSize > 0 {
+		pageSize = int(req.PageSize)
+	}
+
+	skip = (pageNum - 1) *  pageSize
+
+	var where interface{}
+	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
+	if len(req.Username) > 0{
+		where = &bson.M{ "param.info.username": req.Username}
+	}
+
+	log.Info(where)
+
+	var ret []bean.PreSaleBean
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err:= mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+
+	var rows = []*user_proto.QueryNoticeRow{}
+	for _, v := range ret {
+
+		rows = append(rows, &user_proto.QueryNoticeRow{
+			NoticeId : v.Param.Datapresaleid,
+			Username : v.Param.Info.Username,
+			AssetId : v.Param.Info.Assetid,
+			//AssetName : v.Param.Info.ass,
+			DataReqId : v.Param.Info.Datareqid,
+			Consumer : v.Param.Info.Consumer,
+			Time : uint64(v.CreateTime.Unix()),
+		})
+	}
+
+	var data = &user_proto.QueryNoticeData{
+		RowCount: uint32(count),
+		PageNum: uint32(pageNum),
+		Row:rows,
+	}
+	log.Info(data)
+	rsp.Data = data
 	return nil
 }
 
@@ -197,5 +356,3 @@ func main() {
 	}
 
 }
-
-

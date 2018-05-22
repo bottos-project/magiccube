@@ -1,4 +1,4 @@
-﻿[{
+[{
   "code": 1,
   "msg": {
     "en": "ok",
@@ -62,6 +62,13 @@
   },
   "details": ""
 },{
+  "code": 1010,
+  "msg": {
+    "en": "The username can not be empty",
+    "cn": "用户名不能为空"
+  },
+  "details": ""
+},{
   "code": 2001,
   "msg": {
     "en": "Register Asset failure",
@@ -69,9 +76,9 @@
   },
   "details": ""
 },{
-  "code": 3000,
+  "code": 3001,
   "msg": {
-    "en": "Release requirements failure",
+    "en": "Release Requirements failure",
     "cn": "发布需求失败"
   },
   "details": ""
