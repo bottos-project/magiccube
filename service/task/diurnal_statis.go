@@ -43,7 +43,7 @@ func DiurnalStatis() {
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	err := mgo.DB(config.DB_NAME).C("record_num_log").Insert(d)
+	err := mgo.DB(config.DB_NAME).C("rec_num").Insert(d)
 	if err != nil {
 		log.Error(err.Error())
 	}

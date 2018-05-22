@@ -5,7 +5,7 @@ import(
 	log "github.com/cihub/seelog"
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"time"
+	"github.com/bottos-project/bottos/service/common/bean"
 )
 
 var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
@@ -45,25 +45,6 @@ type RecMessageId struct {
 	MessageID  string `bson:"message_id"`
 }
 
-type Transaction struct {
-	ID          	bson.ObjectId 	`bson:"_id,omitempty"`
-	BlockNumber 	uint32  		`bson:"block_number"`
-	TransactionId 	string  		`bson:"transaction_id"`
-	SequenceNum   	uint32  		`bson:"sequence_num"`
-	BlockHash 		string  		`bson:"block_hash"`
-	CursorNum   	uint32  		`bson:"cursor_num"`
-	CursorLabel 	uint32  		`bson:"cursor_label"`
-	Lifetime    	uint64  		`bson:"lifetime"`
-	Sender      	string  		`bson:"sender"`
-	Contract    	string  		`bson:"contract"`
-	Method      	string  		`bson:"method"`
-	Param       	interface{}  	`bson:"param"`
-	SigAlg      	uint32  		`bson:"sig_alg"`
-	Signature   	string  		`bson:"signature"`
-	CreateTime  	time.Time		`bson:"create_time"`
-	Version     	uint32  		`bson:"version"`
-}
-
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/task-log.xml")
 	if err != nil{
@@ -83,13 +64,14 @@ func main() {
 }
 
 func BranchTable() {
+	log.Info("Execution of tasks!!!")
 	var mgo = mgo.Session()
 	defer mgo.Close()
 
 	var rec_msg RecMessageId
-	mgo.DB("bottos").C("rec_msgid").Find(nil).One(&rec_msg)
+	mgo.DB("bottos").C("rec_id").Find(nil).One(&rec_msg)
 
-	var part Transaction
+	var part bean.Transaction
 	mgo.DB("bottos").C("Transactions").Find(nil).Sort("-_id").Limit(1).One(&part)
 	log.Info("part-last-id:", part.ID)
 
@@ -102,7 +84,7 @@ func BranchTable() {
 		where = bson.M{"_id": bson.M{"$gt": bson.ObjectIdHex(rec_msg.MessageID), "$lte": bson.ObjectIdHex(part.ID.Hex())}, "method": bson.M{"$in": branch_table}}
 	}
 
-	var ret []Transaction
+	var ret []bean.Transaction
 	mgo.DB("bottos").C("Transactions").Find(where).All(&ret)
 
 	log.Info(len(ret))
@@ -186,11 +168,11 @@ func BranchTable() {
 	}
 
 	if rec_msg.MessageID != "" {
-		mgo.DB("bottos").C("rec_msgid").Update(nil, map[string]interface{}{
+		mgo.DB("bottos").C("rec_id").Update(nil, map[string]interface{}{
 			"message_id": part.ID.Hex(),
 		})
 	} else {
-		mgo.DB("bottos").C("rec_msgid").Insert(map[string]interface{}{
+		mgo.DB("bottos").C("rec_id").Insert(map[string]interface{}{
 			"message_id": part.ID.Hex(),
 		})
 	}
