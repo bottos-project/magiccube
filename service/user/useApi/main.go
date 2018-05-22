@@ -263,6 +263,62 @@ func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Respon
 	return nil
 }
 
+func (u *User) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice user.QueryMyNoticeRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	//is_true=true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.QueryMyNotice(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *User) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice user.QueryMyNoticeRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	//is_true=true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.QueryMyPreSale(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{
