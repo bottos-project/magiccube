@@ -8,7 +8,6 @@ service User {
 	rpc Favorite(FavoriteRequest) returns(FavoriteResponse) {};
     rpc GetFavorite(GetFavoriteRequest) returns(GetFavoriteResponse) {};
 	rpc Transfer(PushTxRequest) returns(PushTxResponse) {};
-	rpc GetBalance(GetBalanceRequest) returns(GetBalanceResponse) {};
 	rpc QueryMyNotice (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
 	rpc QueryMyPreSale(QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
 }

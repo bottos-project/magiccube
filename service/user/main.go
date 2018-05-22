@@ -178,7 +178,7 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	var rows []*user_proto.FavoriteData
 
 	if req.GoodsType == "asset" {
-		var ret2 bean.Asset
+		var ret2 bean.AssetBean
 		for _, v := range ret {
 			err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(&bson.M{"param.assetid": v.Param.Goodsid}).Sort("-_id").Limit(1).One(&ret2)
 			if err != nil {
@@ -186,7 +186,7 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 			}
 
 			rows = append(rows, &user_proto.FavoriteData{
-				Username:ret2.Param.Info.Username,
+				Username:ret2.Param.Info.UserName,
 				GoodsId:v.Param.Goodsid,
 				GoodsName:ret2.Param.Info.AssetName,
 				Price:ret2.Param.Info.Price,
@@ -213,18 +213,6 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 
 	if i == nil {
 		rsp.Code = 1008
-		rsp.Msg = err.Error()
-	}
-	return nil
-}
-
-func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
-	account_info, err := data.AccountInfo(req.Username)
-	if account_info != nil {
-		rsp.Data = ""
-		//rsp.Data = account_info
-	} else {
-		rsp.Code = 1006
 		rsp.Msg = err.Error()
 	}
 	return nil

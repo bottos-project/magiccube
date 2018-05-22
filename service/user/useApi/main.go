@@ -245,24 +245,6 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	rsp.StatusCode = 200
-	var getAccountInfoRequest user.GetBalanceRequest
-	err := json.Unmarshal([]byte(req.Body), &getAccountInfoRequest)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-	response, err := u.Client.GetBalance(ctx, &getAccountInfoRequest)
-	if err != nil {
-
-		return err
-	}
-
-	rsp.Body = errcode.Return(response)
-	return nil
-}
-
 func (u *User) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body

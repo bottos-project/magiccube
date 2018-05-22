@@ -73,7 +73,6 @@ type UserClient interface {
 	Favorite(ctx context.Context, in *FavoriteRequest, opts ...client.CallOption) (*FavoriteResponse, error)
 	GetFavorite(ctx context.Context, in *GetFavoriteRequest, opts ...client.CallOption) (*GetFavoriteResponse, error)
 	Transfer(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PushTxResponse, error)
-	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error)
 	QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
 	QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
 }
@@ -166,16 +165,6 @@ func (c *userClient) Transfer(ctx context.Context, in *PushTxRequest, opts ...cl
 	return out, nil
 }
 
-func (c *userClient) GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "User.GetBalance", in)
-	out := new(GetBalanceResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userClient) QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "User.QueryMyNotice", in)
 	out := new(QueryMyNoticeResponse)
@@ -206,7 +195,6 @@ type UserHandler interface {
 	Favorite(context.Context, *FavoriteRequest, *FavoriteResponse) error
 	GetFavorite(context.Context, *GetFavoriteRequest, *GetFavoriteResponse) error
 	Transfer(context.Context, *PushTxRequest, *PushTxResponse) error
-	GetBalance(context.Context, *GetBalanceRequest, *GetBalanceResponse) error
 	QueryMyNotice(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
 	QueryMyPreSale(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
 }
@@ -245,10 +233,6 @@ func (h *User) GetFavorite(ctx context.Context, in *GetFavoriteRequest, out *Get
 
 func (h *User) Transfer(ctx context.Context, in *PushTxRequest, out *PushTxResponse) error {
 	return h.UserHandler.Transfer(ctx, in, out)
-}
-
-func (h *User) GetBalance(ctx context.Context, in *GetBalanceRequest, out *GetBalanceResponse) error {
-	return h.UserHandler.GetBalance(ctx, in, out)
 }
 
 func (h *User) QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, out *QueryMyNoticeResponse) error {
