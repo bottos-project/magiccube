@@ -134,14 +134,14 @@ type AssetBean struct {
 	TransactionId 	string  		`bson:"transaction_id"`
 	SequenceNum   	uint32  		`bson:"sequence_num"`
 	BlockHash 		string  		`bson:"block_hash"`
-	Contract    string  		`bson:"contract"`
-	CursorLabel uint32 			`bson:"cursor_label"`
-	CursorNum   uint32			`bson:"cursor_num"`
-	Lifetime    uint64 			`bson:"lifetime"`
-	Method      string  		`bson:"method"`
-	Param       struct {
-		AssetId string 			`bson:"assetid"`
-		Info    struct {
+	Contract    	string  		`bson:"contract"`
+	CursorLabel 	uint32 			`bson:"cursor_label"`
+	CursorNum   	uint32			`bson:"cursor_num"`
+	Lifetime    	uint64 			`bson:"lifetime"`
+	Method      	string  		`bson:"method"`
+	Param       	struct {
+		AssetId 	string 			`bson:"assetid"`
+		Info    	struct {
 			UserName    string 	`bson:"user_name"`
 			AssetName   string 	`bson:"asset_name"`
 			AssetType   string 	`bson:"asset_type"`
@@ -149,14 +149,14 @@ type AssetBean struct {
 			SampleHash  string 	`bson:"sample_hash"`
 			StorageHash string 	`bson:"storage_hash"`
 			ExpireTime  uint32 	`bson:"expire_time"`
-			OpType  uint32 		`bson:"op_type"`
+			OpType  	uint32 	`bson:"op_type"`
 			Price       uint64 	`bson:"price"`
 			Description string  `bson:"description"`
 		} 						`bson:"info"`
 	} 							`bson:"param"`
 	Sender    	string  		`bson:"sender"`
 	SigAlg    	uint32 			`bson:"sig_alg"`
-			Signature   string  `bson:"signature"`
+	Signature   string  		`bson:"signature"`
 	Version   	uint32 			`bson:"version"`
 	CreateTime 	time.Time     	`bson:"create_time"`
 }
