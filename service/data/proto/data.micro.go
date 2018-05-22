@@ -42,8 +42,8 @@ import fmt "fmt"
 import math "math"
 
 import (
-	client "github.com/micro/go-micro/client"
-	server "github.com/micro/go-micro/server"
+	client "github.com/bottos-project/go-micro/client"
+	server "github.com/bottos-project/go-micro/server"
 	context "context"
 )
 

@@ -16,7 +16,7 @@ import (
 	//	storage "github.com/bottos-project/bottos/service/storage/proto"
 	"errors"
 	//log "github.com/jeanphorn/log4go"
-	"github.com/micro/go-micro"
+	"github.com/bottos-project/go-micro"
 	"golang.org/x/net/context"
 	"io/ioutil"
 	"math/rand"
@@ -93,6 +93,8 @@ func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest
 	fmt.Println("root")
 	fmt.Println(root)
 	isSlicefileExist, err := d.mgoRepo.CallIsDataExists(root)
+	fmt.Println("isSlicefileExist")
+	fmt.Println(isSlicefileExist)
 	if err != nil {
 		rsp.Result = 404
 		rsp.Message = "file check failed"
