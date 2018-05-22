@@ -1244,13 +1244,18 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeReque
 
 	var rows = []*proto.QueryNoticeRow{}
 	for _, v := range ret {
+		var ret2 bean.AssetBean
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
+		var ret3 bean.Requirement
+		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
 
 		rows = append(rows, &proto.QueryNoticeRow{
 			NoticeId : v.Param.Datapresaleid,
 			Username : v.Param.Info.Username,
 			AssetId : v.Param.Info.Assetid,
-			//AssetName : v.Param.Info.ass,
+			AssetName : ret2.Param.Info.AssetName,
 			DataReqId : v.Param.Info.Datareqid,
+			DataReqName : ret3.Param.Info.Reqname,
 			Consumer : v.Param.Info.Consumer,
 			Time : uint64(v.CreateTime.Unix()),
 		})
@@ -1302,12 +1307,16 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 	for _, v := range ret {
 		var ret2 bean.AssetBean
 		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
+		var ret3 bean.Requirement
+		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
+
 		rows = append(rows, &proto.QueryNoticeRow{
 			NoticeId : v.Param.Datapresaleid,
 			Username : v.Param.Info.Username,
 			AssetId : v.Param.Info.Assetid,
 			AssetName : ret2.Param.Info.AssetName,
 			DataReqId : v.Param.Info.Datareqid,
+			DataReqName : ret3.Param.Info.Reqname,
 			Consumer : v.Param.Info.Consumer,
 			Time : uint64(v.CreateTime.Unix()),
 		})
@@ -1325,7 +1334,7 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 
 func init() {
 	defer log.Flush()
-	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/ass-log.xml")
 	if err != nil {
 		log.Critical("err parsing config log file", err)
 		os.Exit(1)

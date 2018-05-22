@@ -411,7 +411,7 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.R
 
 func init() {
 	defer log.Flush()
-	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/ass-log.xml")
 	if err != nil {
 		log.Critical("err parsing config log file", err)
 		os.Exit(1)
