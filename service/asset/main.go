@@ -651,7 +651,7 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 {
+	if req.PageSize > 0 && req.PageSize < 20{
 		pageSize = int(req.PageSize)
 	}
 
@@ -659,11 +659,9 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 
 	var where interface{}
 	where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}}
-	//if len(req.Username) > 0{
-	//	where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
-	//}
-
-	log.Info(where)
+	if len(req.Username) > 0{
+		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	}
 
 	var ret []bean.AssetBean
 
@@ -675,6 +673,7 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 		log.Error(err)
 	}
 	mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+
 
 	var rows = []*proto.AssetData{}
 	for _, v := range ret {
@@ -1275,7 +1274,7 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 {
+	if req.PageSize > 0 && req.PageSize < 20{
 		pageSize = int(req.PageSize)
 	}
 
@@ -1302,12 +1301,13 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 
 	var rows = []*proto.QueryNoticeRow{}
 	for _, v := range ret {
-
+		var ret2 bean.AssetBean
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
 		rows = append(rows, &proto.QueryNoticeRow{
 			NoticeId : v.Param.Datapresaleid,
 			Username : v.Param.Info.Username,
 			AssetId : v.Param.Info.Assetid,
-			//AssetName : v.Param.Info.ass,
+			AssetName : ret2.Param.Info.AssetName,
 			DataReqId : v.Param.Info.Datareqid,
 			Consumer : v.Param.Info.Consumer,
 			Time : uint64(v.CreateTime.Unix()),
