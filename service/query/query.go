@@ -33,8 +33,6 @@ func TxAmount(min int64, max int64) uint64 {
 	var mgo = mgo.Session()
 	defer mgo.Close()
 
-	log.Info(TimestampToUTC(min))
-
 	err :=mgo.DB(config.DB_NAME).C("Transactions").Find(bson.M{"method": "buydata", "create_time": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).All(&ret)
 	if err!= nil {
 		log.Error(err)
