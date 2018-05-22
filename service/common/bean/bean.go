@@ -31,6 +31,25 @@ type CoreCommonReturn struct {
 	} `json:"result"`
 }
 
+type Transaction struct {
+	ID          	bson.ObjectId 	`bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	CursorNum   	uint32  		`bson:"cursor_num"`
+	CursorLabel 	uint32  		`bson:"cursor_label"`
+	Lifetime    	uint64  		`bson:"lifetime"`
+	Sender      	string  		`bson:"sender"`
+	Contract    	string  		`bson:"contract"`
+	Method      	string  		`bson:"method"`
+	Param       	interface{}  	`bson:"param"`
+	SigAlg      	uint32  		`bson:"sig_alg"`
+	Signature   	string  		`bson:"signature"`
+	CreateTime  	time.Time		`bson:"create_time"`
+	Version     	uint32  		`bson:"version"`
+}
+
 type TxBean struct {
 	Version     uint32  `protobuf:"varint,1,opt,name=version" json:"version"`
 	CursorNum   uint32  `protobuf:"varint,2,opt,name=cursor_num,json=cursorNum" json:"cursor_num"`
