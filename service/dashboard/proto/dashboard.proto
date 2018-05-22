@@ -2,13 +2,14 @@ syntax = "proto3";
 
 service Dashboard {
 	rpc GetBlockList(GetBlockListRequest) returns(GetBlockListResponse) {};
+	rpc GetBlockInfo(GetBlockInfoRequest) returns(GetBlockInfoResponse) {};
 	rpc GetNodeInfos(GetNodeInfosRequest) returns(GetNodeInfosResponse) {};
-	rpc GetRecentTxList(GetRecentTxListRequest) returns(GetRecentTxListResponse) {};
+	rpc GetTxList(GetTxListRequest) returns(GetTxListResponse) {};
+	rpc GetTxNum(GetTxNumRequest) returns(GetTxNumResponse) {};
 	rpc GetRequirementNumByDay(GetRequirementNumByDayRequest) returns(GetRequirementNumByDayResponse) {};
-	rpc GetAllTxNum(GetAllTxNumRequest) returns(GetAllTxNumResponse) {};
 	rpc GetAssetNumByDay(GetAssetNumByDayRequest) returns(GetAssetNumByDayResponse) {};
 	rpc GetAccountNumByDay(GetAccountNumByDayRequest) returns(GetAccountNumByDayResponse) {};
-	rpc GetSumTxAmount(GetSumTxAmountRequest) returns(GetSumTxAmountResponse) {};
+	rpc GetTxAmount(GetTxAmountRequest) returns(GetTxAmountResponse) {};
 	rpc GetTxNumByDay(GetTxNumByDayRequest) returns(GetTxNumByDayResponse) {};
 	rpc GetTxAmountByDay(GetTxAmountByDayRequest) returns(GetTxAmountByDayResponse);
 	rpc GetAllTypeTotal(GetAllTypeTotalRequest) returns(GetAllTypeTotalResponse);
@@ -34,33 +35,33 @@ message NodeInfoData {
 //	string lat = 3;
 //}
 
-message GetRecentTxListRequest {
-	uint64 pageNum = 1;
-	uint64 pageSize = 2;
+message GetTxListRequest {
+	uint64 page_num = 1;
+	uint64 page_size = 2;
 	string sort = 3;
 	string username = 4;
 }
 
-message GetRecentTxListResponse {
+message GetTxListResponse {
 	int32 code = 1;
-	RecentTxListData data = 2;
+	TxListData data = 2;
 	string msg =3;
 }
 
-message RecentTxListData{
-	uint64 pageNum = 1;
-	uint64 rowCount = 2;
-	repeated TxListRow row = 3;
+message TxListData{
+	uint32 page_num = 1;
+	uint32 row_count = 2;
+	repeated Tx row = 3;
 }
 
-message TxListRow {
+message Tx {
 	string transaction_id = 1;
 	string from = 2;
 	string to = 3;
 	uint64 price = 4;
 	string asset_type = 5;
 	string date = 6;
-	uint64 block_id = 7;
+	uint32 block_number = 7;
 }
 
 message GetBlockListRequest {
@@ -78,17 +79,47 @@ message GetBlockListResponse {
 message BlockData {
 	uint64 page_num = 1;
 	uint64 row_count = 2;
-	repeated BlockRow row = 3;
+	repeated Block row = 3;
 }
 
-message BlockRow {
+message Block {
 	uint64 block_number = 1;
 	string block_hash = 2;
 	string prev_block_hash = 3;
 	string merkle_root = 4;
 	uint32 tx_num = 5;
 	string delegate = 6;
-	uint64 timestamp = 7;
+	string delegate_sign = 7;
+	uint64 timestamp = 8;
+}
+
+message GetBlockInfoRequest {
+	uint64 block_number = 1;
+}
+
+message GetBlockInfoResponse {
+	int32 code = 1;
+	BlockInfoData data = 2;
+}
+
+message BlockInfoData {
+	Block block = 1;
+	repeated TxList tx_list = 2;
+}
+
+message TxList {
+	string transaction_id = 1;
+	uint32 sequence_num = 2;
+	uint32 cursor_num = 3;
+	uint32 cursor_label = 4;
+	uint64 lifetime = 5;
+	string sender = 6;
+	string contract = 7;
+	string method = 8;
+	string param = 9;
+	uint32 sig_alg = 10;
+	string signature = 11;
+	uint64 create_time = 12;
 }
 
 message GetRequirementNumByDayRequest {}
@@ -103,9 +134,9 @@ message RequirementNumByDayData {
 	int64 count = 2;
 }
 
-message GetAllTxNumRequest {}
+message GetTxNumRequest {}
 
-message GetAllTxNumResponse {
+message GetTxNumResponse {
 	int32 code = 1;
 	Num data = 2;
 }
@@ -134,9 +165,9 @@ message AccountNumByDayData{
 	int64 count = 2;
 }
 
-message GetSumTxAmountRequest {}
+message GetTxAmountRequest {}
 
-message GetSumTxAmountResponse {
+message GetTxAmountResponse {
 	int32 code = 1;
 	Num data = 2;
 }

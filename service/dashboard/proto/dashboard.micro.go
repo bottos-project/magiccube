@@ -11,27 +11,31 @@ It has these top-level messages:
 	GetNodeInfosRequest
 	GetNodeInfosResponse
 	NodeInfoData
-	GetRecentTxListRequest
-	GetRecentTxListResponse
-	RecentTxListData
-	TxListRow
+	GetTxListRequest
+	GetTxListResponse
+	TxListData
+	Tx
 	GetBlockListRequest
 	GetBlockListResponse
 	BlockData
-	BlockRow
+	Block
+	GetBlockInfoRequest
+	GetBlockInfoResponse
+	BlockInfoData
+	TxList
 	GetRequirementNumByDayRequest
 	GetRequirementNumByDayResponse
 	RequirementNumByDayData
-	GetAllTxNumRequest
-	GetAllTxNumResponse
+	GetTxNumRequest
+	GetTxNumResponse
 	GetAssetNumByDayRequest
 	GetAssetNumByDayResponse
 	AssetNumByDayData
 	GetAccountNumByDayRequest
 	GetAccountNumByDayResponse
 	AccountNumByDayData
-	GetSumTxAmountRequest
-	GetSumTxAmountResponse
+	GetTxAmountRequest
+	GetTxAmountResponse
 	GetTxNumByDayRequest
 	GetTxNumByDayResponse
 	TxNumByDayData
@@ -75,13 +79,14 @@ var _ server.Option
 
 type DashboardClient interface {
 	GetBlockList(ctx context.Context, in *GetBlockListRequest, opts ...client.CallOption) (*GetBlockListResponse, error)
+	GetBlockInfo(ctx context.Context, in *GetBlockInfoRequest, opts ...client.CallOption) (*GetBlockInfoResponse, error)
 	GetNodeInfos(ctx context.Context, in *GetNodeInfosRequest, opts ...client.CallOption) (*GetNodeInfosResponse, error)
-	GetRecentTxList(ctx context.Context, in *GetRecentTxListRequest, opts ...client.CallOption) (*GetRecentTxListResponse, error)
+	GetTxList(ctx context.Context, in *GetTxListRequest, opts ...client.CallOption) (*GetTxListResponse, error)
+	GetTxNum(ctx context.Context, in *GetTxNumRequest, opts ...client.CallOption) (*GetTxNumResponse, error)
 	GetRequirementNumByDay(ctx context.Context, in *GetRequirementNumByDayRequest, opts ...client.CallOption) (*GetRequirementNumByDayResponse, error)
-	GetAllTxNum(ctx context.Context, in *GetAllTxNumRequest, opts ...client.CallOption) (*GetAllTxNumResponse, error)
 	GetAssetNumByDay(ctx context.Context, in *GetAssetNumByDayRequest, opts ...client.CallOption) (*GetAssetNumByDayResponse, error)
 	GetAccountNumByDay(ctx context.Context, in *GetAccountNumByDayRequest, opts ...client.CallOption) (*GetAccountNumByDayResponse, error)
-	GetSumTxAmount(ctx context.Context, in *GetSumTxAmountRequest, opts ...client.CallOption) (*GetSumTxAmountResponse, error)
+	GetTxAmount(ctx context.Context, in *GetTxAmountRequest, opts ...client.CallOption) (*GetTxAmountResponse, error)
 	GetTxNumByDay(ctx context.Context, in *GetTxNumByDayRequest, opts ...client.CallOption) (*GetTxNumByDayResponse, error)
 	GetTxAmountByDay(ctx context.Context, in *GetTxAmountByDayRequest, opts ...client.CallOption) (*GetTxAmountByDayResponse, error)
 	GetAllTypeTotal(ctx context.Context, in *GetAllTypeTotalRequest, opts ...client.CallOption) (*GetAllTypeTotalResponse, error)
@@ -115,6 +120,16 @@ func (c *dashboardClient) GetBlockList(ctx context.Context, in *GetBlockListRequ
 	return out, nil
 }
 
+func (c *dashboardClient) GetBlockInfo(ctx context.Context, in *GetBlockInfoRequest, opts ...client.CallOption) (*GetBlockInfoResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Dashboard.GetBlockInfo", in)
+	out := new(GetBlockInfoResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *dashboardClient) GetNodeInfos(ctx context.Context, in *GetNodeInfosRequest, opts ...client.CallOption) (*GetNodeInfosResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Dashboard.GetNodeInfos", in)
 	out := new(GetNodeInfosResponse)
@@ -125,9 +140,19 @@ func (c *dashboardClient) GetNodeInfos(ctx context.Context, in *GetNodeInfosRequ
 	return out, nil
 }
 
-func (c *dashboardClient) GetRecentTxList(ctx context.Context, in *GetRecentTxListRequest, opts ...client.CallOption) (*GetRecentTxListResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Dashboard.GetRecentTxList", in)
-	out := new(GetRecentTxListResponse)
+func (c *dashboardClient) GetTxList(ctx context.Context, in *GetTxListRequest, opts ...client.CallOption) (*GetTxListResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Dashboard.GetTxList", in)
+	out := new(GetTxListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardClient) GetTxNum(ctx context.Context, in *GetTxNumRequest, opts ...client.CallOption) (*GetTxNumResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Dashboard.GetTxNum", in)
+	out := new(GetTxNumResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -138,16 +163,6 @@ func (c *dashboardClient) GetRecentTxList(ctx context.Context, in *GetRecentTxLi
 func (c *dashboardClient) GetRequirementNumByDay(ctx context.Context, in *GetRequirementNumByDayRequest, opts ...client.CallOption) (*GetRequirementNumByDayResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Dashboard.GetRequirementNumByDay", in)
 	out := new(GetRequirementNumByDayResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dashboardClient) GetAllTxNum(ctx context.Context, in *GetAllTxNumRequest, opts ...client.CallOption) (*GetAllTxNumResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Dashboard.GetAllTxNum", in)
-	out := new(GetAllTxNumResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -175,9 +190,9 @@ func (c *dashboardClient) GetAccountNumByDay(ctx context.Context, in *GetAccount
 	return out, nil
 }
 
-func (c *dashboardClient) GetSumTxAmount(ctx context.Context, in *GetSumTxAmountRequest, opts ...client.CallOption) (*GetSumTxAmountResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Dashboard.GetSumTxAmount", in)
-	out := new(GetSumTxAmountResponse)
+func (c *dashboardClient) GetTxAmount(ctx context.Context, in *GetTxAmountRequest, opts ...client.CallOption) (*GetTxAmountResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Dashboard.GetTxAmount", in)
+	out := new(GetTxAmountResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -219,13 +234,14 @@ func (c *dashboardClient) GetAllTypeTotal(ctx context.Context, in *GetAllTypeTot
 
 type DashboardHandler interface {
 	GetBlockList(context.Context, *GetBlockListRequest, *GetBlockListResponse) error
+	GetBlockInfo(context.Context, *GetBlockInfoRequest, *GetBlockInfoResponse) error
 	GetNodeInfos(context.Context, *GetNodeInfosRequest, *GetNodeInfosResponse) error
-	GetRecentTxList(context.Context, *GetRecentTxListRequest, *GetRecentTxListResponse) error
+	GetTxList(context.Context, *GetTxListRequest, *GetTxListResponse) error
+	GetTxNum(context.Context, *GetTxNumRequest, *GetTxNumResponse) error
 	GetRequirementNumByDay(context.Context, *GetRequirementNumByDayRequest, *GetRequirementNumByDayResponse) error
-	GetAllTxNum(context.Context, *GetAllTxNumRequest, *GetAllTxNumResponse) error
 	GetAssetNumByDay(context.Context, *GetAssetNumByDayRequest, *GetAssetNumByDayResponse) error
 	GetAccountNumByDay(context.Context, *GetAccountNumByDayRequest, *GetAccountNumByDayResponse) error
-	GetSumTxAmount(context.Context, *GetSumTxAmountRequest, *GetSumTxAmountResponse) error
+	GetTxAmount(context.Context, *GetTxAmountRequest, *GetTxAmountResponse) error
 	GetTxNumByDay(context.Context, *GetTxNumByDayRequest, *GetTxNumByDayResponse) error
 	GetTxAmountByDay(context.Context, *GetTxAmountByDayRequest, *GetTxAmountByDayResponse) error
 	GetAllTypeTotal(context.Context, *GetAllTypeTotalRequest, *GetAllTypeTotalResponse) error
@@ -243,20 +259,24 @@ func (h *Dashboard) GetBlockList(ctx context.Context, in *GetBlockListRequest, o
 	return h.DashboardHandler.GetBlockList(ctx, in, out)
 }
 
+func (h *Dashboard) GetBlockInfo(ctx context.Context, in *GetBlockInfoRequest, out *GetBlockInfoResponse) error {
+	return h.DashboardHandler.GetBlockInfo(ctx, in, out)
+}
+
 func (h *Dashboard) GetNodeInfos(ctx context.Context, in *GetNodeInfosRequest, out *GetNodeInfosResponse) error {
 	return h.DashboardHandler.GetNodeInfos(ctx, in, out)
 }
 
-func (h *Dashboard) GetRecentTxList(ctx context.Context, in *GetRecentTxListRequest, out *GetRecentTxListResponse) error {
-	return h.DashboardHandler.GetRecentTxList(ctx, in, out)
+func (h *Dashboard) GetTxList(ctx context.Context, in *GetTxListRequest, out *GetTxListResponse) error {
+	return h.DashboardHandler.GetTxList(ctx, in, out)
+}
+
+func (h *Dashboard) GetTxNum(ctx context.Context, in *GetTxNumRequest, out *GetTxNumResponse) error {
+	return h.DashboardHandler.GetTxNum(ctx, in, out)
 }
 
 func (h *Dashboard) GetRequirementNumByDay(ctx context.Context, in *GetRequirementNumByDayRequest, out *GetRequirementNumByDayResponse) error {
 	return h.DashboardHandler.GetRequirementNumByDay(ctx, in, out)
-}
-
-func (h *Dashboard) GetAllTxNum(ctx context.Context, in *GetAllTxNumRequest, out *GetAllTxNumResponse) error {
-	return h.DashboardHandler.GetAllTxNum(ctx, in, out)
 }
 
 func (h *Dashboard) GetAssetNumByDay(ctx context.Context, in *GetAssetNumByDayRequest, out *GetAssetNumByDayResponse) error {
@@ -267,8 +287,8 @@ func (h *Dashboard) GetAccountNumByDay(ctx context.Context, in *GetAccountNumByD
 	return h.DashboardHandler.GetAccountNumByDay(ctx, in, out)
 }
 
-func (h *Dashboard) GetSumTxAmount(ctx context.Context, in *GetSumTxAmountRequest, out *GetSumTxAmountResponse) error {
-	return h.DashboardHandler.GetSumTxAmount(ctx, in, out)
+func (h *Dashboard) GetTxAmount(ctx context.Context, in *GetTxAmountRequest, out *GetTxAmountResponse) error {
+	return h.DashboardHandler.GetTxAmount(ctx, in, out)
 }
 
 func (h *Dashboard) GetTxNumByDay(ctx context.Context, in *GetTxNumByDayRequest, out *GetTxNumByDayResponse) error {
