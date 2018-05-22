@@ -7,7 +7,6 @@ import (
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"github.com/bottos-project/bottos/config"
 	sign "github.com/bottos-project/bottos/service/common/signature"
 	errcode "github.com/bottos-project/bottos/error"
 	"os"
