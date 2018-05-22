@@ -104,6 +104,8 @@ message GetAccountInfoResponse {
 message AccountInfoData {
 	string account_name = 1;
 	string pubkey = 2;
+	uint64 balance = 3;
+	uint64 staked_balance = 4;
 }
 
 message FavoriteRequest {
