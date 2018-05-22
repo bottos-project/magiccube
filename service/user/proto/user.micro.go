@@ -30,6 +30,10 @@ It has these top-level messages:
 	FavoriteData
 	GetBalanceRequest
 	GetBalanceResponse
+	QueryMyNoticeRequest
+	QueryMyNoticeResponse
+	QueryNoticeData
+	QueryNoticeRow
 */
 package user
 
@@ -70,6 +74,8 @@ type UserClient interface {
 	GetFavorite(ctx context.Context, in *GetFavoriteRequest, opts ...client.CallOption) (*GetFavoriteResponse, error)
 	Transfer(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PushTxResponse, error)
 	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error)
+	QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
+	QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
 }
 
 type userClient struct {
@@ -170,6 +176,26 @@ func (c *userClient) GetBalance(ctx context.Context, in *GetBalanceRequest, opts
 	return out, nil
 }
 
+func (c *userClient) QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.QueryMyNotice", in)
+	out := new(QueryMyNoticeResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.QueryMyPreSale", in)
+	out := new(QueryMyNoticeResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -181,6 +207,8 @@ type UserHandler interface {
 	GetFavorite(context.Context, *GetFavoriteRequest, *GetFavoriteResponse) error
 	Transfer(context.Context, *PushTxRequest, *PushTxResponse) error
 	GetBalance(context.Context, *GetBalanceRequest, *GetBalanceResponse) error
+	QueryMyNotice(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
+	QueryMyPreSale(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -221,4 +249,12 @@ func (h *User) Transfer(ctx context.Context, in *PushTxRequest, out *PushTxRespo
 
 func (h *User) GetBalance(ctx context.Context, in *GetBalanceRequest, out *GetBalanceResponse) error {
 	return h.UserHandler.GetBalance(ctx, in, out)
+}
+
+func (h *User) QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, out *QueryMyNoticeResponse) error {
+	return h.UserHandler.QueryMyNotice(ctx, in, out)
+}
+
+func (h *User) QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, out *QueryMyNoticeResponse) error {
+	return h.UserHandler.QueryMyPreSale(ctx, in, out)
 }
