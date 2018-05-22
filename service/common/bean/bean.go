@@ -72,7 +72,11 @@ type Block struct {
 }
 
 type Favorite struct {
-	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
 	Contract    string  		`bson:"contract"`
 	CursorLabel uint32 			`bson:"cursor_label"`
 	CursorNum   uint32			`bson:"cursor_num"`
@@ -93,7 +97,11 @@ type Favorite struct {
 }
 
 type Requirement struct {
-	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
 	Contract    string  		`bson:"contract"`
 	CursorLabel uint32 			`bson:"cursor_label"`
 	CursorNum   uint32			`bson:"cursor_num"`
@@ -121,7 +129,11 @@ type Requirement struct {
 }
 
 type AssetBean struct {
-	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
 	Contract    string  		`bson:"contract"`
 	CursorLabel uint32 			`bson:"cursor_label"`
 	CursorNum   uint32			`bson:"cursor_num"`
@@ -150,7 +162,11 @@ type AssetBean struct {
 }
 
 type PreSaleBean struct {
-	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
 	Contract    string  		`bson:"contract"`
 	CursorLabel uint32 			`bson:"cursor_label"`
 	CursorNum   uint32			`bson:"cursor_num"`
@@ -174,22 +190,26 @@ type PreSaleBean struct {
 }
 
 type Tx struct {
-	ID          bson.ObjectId   `bson:"_id,omitempty"`
-	Contract    string  		`bson:"contract"`
-	CursorLabel uint32 			`bson:"cursor_label"`
-	CursorNum   uint32			`bson:"cursor_num"`
-	Lifetime    uint64 			`bson:"lifetime"`
-	Method      string  		`bson:"method"`
-	Param       struct {
-		DataExchangeId string 	`bson:"dataexchangeid"`
-		Info           struct {
-			AssetId  string 	`bson:"assetid"`
-			Username string 	`bson:"username"`
-		} 						`bson:"info"`
-	} 							`bson:"param"`
-	Sender    	string  		`bson:"sender"`
-	SigAlg    	uint32 			`bson:"sig_alg"`
-	Signature 	string  		`bson:"signature"`
-	Version   	uint32 			`bson:"version"`
-	CreateTime 	time.Time     	`bson:"create_time"`
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    	string  		`bson:"contract"`
+	CursorLabel	 	uint32 			`bson:"cursor_label"`
+	CursorNum   	uint32			`bson:"cursor_num"`
+	Lifetime    	uint64 			`bson:"lifetime"`
+	Method      	string  		`bson:"method"`
+	Param       	struct {
+		DataExchangeId 	string 		`bson:"dataexchangeid"`
+		Info           	struct {
+			AssetId  	string 		`bson:"assetid"`
+			Username 	string 		`bson:"username"`
+		} 							`bson:"info"`
+	} 								`bson:"param"`
+	Sender    	string  			`bson:"sender"`
+	SigAlg    	uint32 				`bson:"sig_alg"`
+	Signature 	string  			`bson:"signature"`
+	Version   	uint32 				`bson:"version"`
+	CreateTime 	time.Time     		`bson:"create_time"`
 }
