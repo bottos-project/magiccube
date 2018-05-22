@@ -10,6 +10,7 @@ import (
 	"github.com/bottos-project/bottos/config"
 	sign "github.com/bottos-project/bottos/service/common/signature"
 	errcode "github.com/bottos-project/bottos/error"
+	"os"
 )
 
 
@@ -109,10 +110,6 @@ func init() {
 }
 
 func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("exchange.api")
-
 	service := micro.NewService(
 		micro.Name("go.micro.api.v3.exchange"),
 	)
@@ -127,7 +124,7 @@ func main() {
 	)
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		os.Exit(1)
 	}
 
 }

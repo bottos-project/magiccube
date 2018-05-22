@@ -16,6 +16,7 @@ import (
 	"github.com/bottos-project/bottos/service/bean"*/
 	"github.com/bottos-project/bottos/config"
 	"github.com/bottos-project/bottos/service/common/data"
+	"os"
 )
 
 const (
@@ -181,6 +182,6 @@ func main() {
 	proto.RegisterExchangeHandler(service.Server(), new(Exchange))
 
 	if err := service.Run(); err != nil {
-		log.Exit(err)
+		os.Exit(1)
 	}
 }
