@@ -2,7 +2,7 @@
 
 import (
 	"encoding/json"
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 	"github.com/bottos-project/bottos/service/exchange/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
@@ -97,6 +97,16 @@ func (s *Exchange) BuyAsset(ctx context.Context, req *api.Request, rsp *api.Resp
 //	rsp.Body = string(b)
 //	return nil
 //}
+
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/exc-log.xml")
+	if err != nil{
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
+}
 
 func main() {
 	log.LoadConfiguration(config.BASE_LOG_CONF)

@@ -1,7 +1,7 @@
 ﻿package main
 
 import (
-	log "github.com/jeanphorn/log4go"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	proto "github.com/bottos-project/bottos/service/exchange/proto"
 	"golang.org/x/net/context"
@@ -158,13 +158,17 @@ func (u *Exchange) BuyAsset(ctx context.Context, req *proto.PushRequest, rsp *pr
 	return nil
 }*/
 
-
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/exc-log.xml")
+	if err != nil{
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
+}
 
 func main() {
-	log.LoadConfiguration(config.BASE_LOG_CONF)
-	defer log.Close()
-	log.LOGGER("exchange.srv")
-
 	service := micro.NewService(
 		micro.Name("go.micro.srv.v3.exchange"),
 		micro.Version("3.0.0"),
