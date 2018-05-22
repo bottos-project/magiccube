@@ -147,13 +147,13 @@ func (u *Dashboard) GetBlockList(ctx context.Context, req *dashboard_proto.GetBl
 }
 
 func (u *Dashboard) GetRequirementNumByDay(ctx context.Context, req *dashboard_proto.GetRequirementNumByDayRequest, rsp *dashboard_proto.GetRequirementNumByDayResponse) error {
-	timeSlice :=getRecent7DayTimeSlice()
+	timeSlice := getRecent7DayTimeSlice()
 	log.Info(timeSlice)
 	var data []*dashboard_proto.RequirementNumByDayData
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	for i:=0; i<len(timeSlice)-1; i++ {
-		count, err := mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "datareqreg", "createdAt": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).Count()
+		count, err := mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}},"create_time": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).Count()
 		if err!= nil {
 			log.Error(err)
 		}
@@ -191,7 +191,7 @@ func (u *Dashboard) GetAssetNumByDay(ctx context.Context, req *dashboard_proto.G
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	for i:=0; i<len(timeSlice)-1; i++ {
-		count, err :=mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "assetreg", "createdAt": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).Count()
+		count, err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}},"create_time": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).Count()
 		if err!= nil {
 			log.Error(err)
 		}
@@ -202,7 +202,6 @@ func (u *Dashboard) GetAssetNumByDay(ctx context.Context, req *dashboard_proto.G
 		})
 	}
 
-	rsp.Code = 1
 	rsp.Data = data
 	return nil
 }
@@ -214,7 +213,7 @@ func (u *Dashboard) GetAccountNumByDay(ctx context.Context, req *dashboard_proto
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	for i:=0; i<len(timeSlice)-1; i++ {
-		count, err :=mgo.DB(config.DB_NAME).C("Messages").Find(bson.M{"type": "newaccount", "createdAt": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).Count()
+		count, err :=mgo.DB(config.DB_NAME).C("Accounts").Find(bson.M{"create_time": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).Count()
 		if err!= nil {
 			log.Error(err)
 		}
