@@ -8,7 +8,7 @@ import(
 	"time"
 )
 
-var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale"}
+var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilemng"}
 var prefix = "pre_"
 
 type Favoritepro struct {
