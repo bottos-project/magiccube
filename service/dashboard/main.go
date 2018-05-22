@@ -346,71 +346,71 @@ func (u *Dashboard) GetTxAmount(ctx context.Context, req *dashboard_proto.GetTxA
 }
 
 func (u *Dashboard) GetAllTypeTotal(ctx context.Context, req *dashboard_proto.GetAllTypeTotalRequest, rsp *dashboard_proto.GetAllTypeTotalResponse) error {
-	//var accountNum, assetNum, requirementNum, txNum int= 0, 0, 0, 0
-	//var txAmount uint64 = 0
-	//min, max := query.TodayTimeSolt()
-	//accountNum = accountNum + query.AccountNum(min, max)
-	//assetNum = assetNum + query.AssetNum(min, max)
-	//requirementNum = requirementNum + query.RequirementNum(min, max)
-	//txAmount = txAmount + query.TxAmount(min, max)
-	//txNum = txNum + query.TxNum(min, max)
-	//log.Info(accountNum, assetNum, requirementNum, txAmount, txNum)
-	//var mgo = mgo.Session()
-	//defer mgo.Close()
-	//
-	//var ret []bean.RecordNumLog
-	//err := mgo.DB(config.DB_NAME).C("record_num_log").Find(nil).All(&ret);
+	var accountNum, assetNum, requirementNum, txNum int= 0, 0, 0, 0
+	var txAmount uint64 = 0
+	min, max := query.TodayTimeSolt()
+	accountNum = accountNum + query.AccountNum(min, max)
+	assetNum = assetNum + query.AssetNum(min, max)
+	requirementNum = requirementNum + query.RequirementNum(min, max)
+	txAmount = txAmount + query.TxAmount(min, max)
+	txNum = txNum + query.TxNum(min, max)
+	log.Info(accountNum, assetNum, requirementNum, txAmount, txNum)
+	var mgo = mgo.Session()
+	defer mgo.Close()
+
+	var ret []bean.RecordNum
+	err := mgo.DB(config.DB_NAME).C("record_num").Find(nil).All(&ret);
+	if err != nil {
+		log.Error(err.Error())
+	}
+
+	//job := &mgo2.MapReduce{
+	//	Map:    "function() { emit(this.id_, this.asset_num) }",
+	//	Reduce: "function(key, values) { return Array.sum(values) }",
+	//}
+	//var result []struct {
+	//	Id    int "_id"
+	//	Value int
+	//}
+	//_, err = mgo.DB(config.DB_NAME).C("record_num_log").Find(nil).MapReduce(job, &result)
 	//if err != nil {
-	//	log.Error(err.Error())
+	//	panic(err)
 	//}
-	//
-	////job := &mgo2.MapReduce{
-	////	Map:    "function() { emit(this.id_, this.asset_num) }",
-	////	Reduce: "function(key, values) { return Array.sum(values) }",
-	////}
-	////var result []struct {
-	////	Id    int "_id"
-	////	Value int
-	////}
-	////_, err = mgo.DB(config.DB_NAME).C("record_num_log").Find(nil).MapReduce(job, &result)
-	////if err != nil {
-	////	panic(err)
-	////}
-	////log.Info(result)
-	//
-	//for _, v := range ret {
-	//	accountNum = accountNum + v.AccountNum
-	//	assetNum = assetNum + v.AssetNum
-	//	requirementNum = requirementNum + v.RequirementNum
-	//	txAmount = txAmount + v.TxAmount
-	//	txNum = txNum + v.TxNum
-	//}
-	//
-	//var data []*dashboard_proto.AllTypeData
-	//
-	//data = append(data,&dashboard_proto.AllTypeData{
-	//	Type:"AccountNum",
-	//	Total:int64(accountNum),
-	//})
-	//data = append(data,&dashboard_proto.AllTypeData{
-	//	Type:"AssetNum",
-	//	Total:int64(assetNum),
-	//})
-	//data = append(data,&dashboard_proto.AllTypeData{
-	//	Type:"RequirementNum",
-	//	Total:int64(requirementNum),
-	//})
-	//data = append(data,&dashboard_proto.AllTypeData{
-	//	Type:"TxAmount",
-	//	Total:int64(txAmount),
-	//})
-	//data = append(data,&dashboard_proto.AllTypeData{
-	//	Type:"TxNum",
-	//	Total:int64(txNum),
-	//})
-	//
-	//rsp.Code = 0
-	//rsp.Data = data
+	//log.Info(result)
+
+	for _, v := range ret {
+		accountNum = accountNum + v.AccountNum
+		assetNum = assetNum + v.AssetNum
+		requirementNum = requirementNum + v.RequirementNum
+		txAmount = txAmount + v.TxAmount
+		txNum = txNum + v.TxNum
+	}
+
+	var data []*dashboard_proto.AllTypeData
+
+	data = append(data,&dashboard_proto.AllTypeData{
+		Type:"AccountNum",
+		Total:int64(accountNum),
+	})
+	data = append(data,&dashboard_proto.AllTypeData{
+		Type:"AssetNum",
+		Total:int64(assetNum),
+	})
+	data = append(data,&dashboard_proto.AllTypeData{
+		Type:"RequirementNum",
+		Total:int64(requirementNum),
+	})
+	data = append(data,&dashboard_proto.AllTypeData{
+		Type:"TxAmount",
+		Total:int64(txAmount),
+	})
+	data = append(data,&dashboard_proto.AllTypeData{
+		Type:"TxNum",
+		Total:int64(txNum),
+	})
+
+	rsp.Code = 0
+	rsp.Data = data
 	return nil
 }
 
