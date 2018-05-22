@@ -32,6 +32,11 @@ type Assetreg struct {
 	Info `bson:"info"`
 }
 
+type File struct {
+	FileHash string `bson:"filehash"`
+	Info `bson:"info"`
+}
+
 type Info struct{
 	OpTyte  uint32 `bson:"optype"`
 }
@@ -149,6 +154,19 @@ func BranchTable() {
 			bson.Unmarshal(data, &presale)
 			if presale.OpTyte == 2 || presale.OpTyte == 3 {
 				where = bson.M{"param.datapresaleid": presale.DataPresaleId, "param.info.optype": presale.Info.OpTyte}
+				set := bson.M{"$set": bson.M{ "param.info.optype": 3}}
+				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
+			}
+		case "datafilemng":
+			var file = &File{}
+			data ,err := bson.Marshal(v.Param)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			bson.Unmarshal(data, &file)
+			if file.OpTyte == 2 || file.OpTyte == 3 {
+				where = bson.M{"param.filehash": file.FileHash, "param.info.optype": file.Info.OpTyte}
 				set := bson.M{"$set": bson.M{ "param.info.optype": 3}}
 				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where,set);
 			}
