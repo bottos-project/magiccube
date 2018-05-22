@@ -13,16 +13,11 @@ It has these top-level messages:
 	GetFileUploadURLResponse
 	RegisterFileRequest
 	RegisterFileResponse
-	QueryUploadedDataRequest
 	QueryUploadedDataResponse
 	QueryUploadedData
 	QueryUploadedRow
 	RegisterRequest
 	RegisterResponse
-	QueryRequest
-	QueryResponse
-	QueryData
-	QueryRow
 	QueryAllAssetRequest
 	QueryPara
 	QueryAllAssetResponse
@@ -39,6 +34,10 @@ It has these top-level messages:
 	QueryPurchaseRow
 	PreSaleNoticeRequest
 	PreSaleNoticeResponse
+	QueryRequest
+	QueryResponse
+	QueryData
+	AssetData
 	QueryMyNoticeRequest
 	QueryMyNoticeResponse
 	QueryNoticeData
@@ -75,17 +74,16 @@ var _ server.Option
 // Client API for Asset service
 
 type AssetClient interface {
-	GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, opts ...client.CallOption) (*GetFileUploadURLResponse, error)
-	GetFileUploadStat(ctx context.Context, in *GetFileUploadStatRequest, opts ...client.CallOption) (*GetFileUploadStatResponse, error)
+	//    rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
+	//    };
+	//    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
+	//    };
 	RegisterFile(ctx context.Context, in *RegisterFileRequest, opts ...client.CallOption) (*RegisterFileResponse, error)
-	QueryUploadedData(ctx context.Context, in *QueryUploadedDataRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error)
-	GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error)
+	QueryUploadedData(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error)
+	//    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
+	//    };
 	RegisterAsset(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
-	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error)
-	QueryAllAsset(ctx context.Context, in *QueryAllAssetRequest, opts ...client.CallOption) (*QueryAllAssetResponse, error)
-	Modify(ctx context.Context, in *ModifyRequest, opts ...client.CallOption) (*ModifyResponse, error)
-	QueryByID(ctx context.Context, in *QueryByIDRequest, opts ...client.CallOption) (*QueryResponse, error)
-	GetUserPurchaseAssetList(ctx context.Context, in *GetUserPurchaseAssetListRequest, opts ...client.CallOption) (*QueryResponse, error)
+	QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error)
 	PreSaleNotice(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PreSaleNoticeResponse, error)
 	QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
 	QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
@@ -109,26 +107,6 @@ func NewAssetClient(serviceName string, c client.Client) AssetClient {
 	}
 }
 
-func (c *assetClient) GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, opts ...client.CallOption) (*GetFileUploadURLResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetFileUploadURL", in)
-	out := new(GetFileUploadURLResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) GetFileUploadStat(ctx context.Context, in *GetFileUploadStatRequest, opts ...client.CallOption) (*GetFileUploadStatResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetFileUploadStat", in)
-	out := new(GetFileUploadStatResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *assetClient) RegisterFile(ctx context.Context, in *RegisterFileRequest, opts ...client.CallOption) (*RegisterFileResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Asset.RegisterFile", in)
 	out := new(RegisterFileResponse)
@@ -139,19 +117,9 @@ func (c *assetClient) RegisterFile(ctx context.Context, in *RegisterFileRequest,
 	return out, nil
 }
 
-func (c *assetClient) QueryUploadedData(ctx context.Context, in *QueryUploadedDataRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error) {
+func (c *assetClient) QueryUploadedData(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Asset.QueryUploadedData", in)
 	out := new(QueryUploadedDataResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetDownLoadURL", in)
-	out := new(GetDownLoadURLResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -169,48 +137,8 @@ func (c *assetClient) RegisterAsset(ctx context.Context, in *RegisterRequest, op
 	return out, nil
 }
 
-func (c *assetClient) Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.Query", in)
-	out := new(QueryResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) QueryAllAsset(ctx context.Context, in *QueryAllAssetRequest, opts ...client.CallOption) (*QueryAllAssetResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.QueryAllAsset", in)
-	out := new(QueryAllAssetResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) Modify(ctx context.Context, in *ModifyRequest, opts ...client.CallOption) (*ModifyResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.Modify", in)
-	out := new(ModifyResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) QueryByID(ctx context.Context, in *QueryByIDRequest, opts ...client.CallOption) (*QueryResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.QueryByID", in)
-	out := new(QueryResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *assetClient) GetUserPurchaseAssetList(ctx context.Context, in *GetUserPurchaseAssetListRequest, opts ...client.CallOption) (*QueryResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Asset.GetUserPurchaseAssetList", in)
+func (c *assetClient) QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Asset.QueryAsset", in)
 	out := new(QueryResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -252,17 +180,16 @@ func (c *assetClient) QueryMyPreSale(ctx context.Context, in *QueryMyNoticeReque
 // Server API for Asset service
 
 type AssetHandler interface {
-	GetFileUploadURL(context.Context, *GetFileUploadURLRequest, *GetFileUploadURLResponse) error
-	GetFileUploadStat(context.Context, *GetFileUploadStatRequest, *GetFileUploadStatResponse) error
+	//    rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
+	//    };
+	//    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
+	//    };
 	RegisterFile(context.Context, *RegisterFileRequest, *RegisterFileResponse) error
-	QueryUploadedData(context.Context, *QueryUploadedDataRequest, *QueryUploadedDataResponse) error
-	GetDownLoadURL(context.Context, *GetDownLoadURLRequest, *GetDownLoadURLResponse) error
+	QueryUploadedData(context.Context, *QueryRequest, *QueryUploadedDataResponse) error
+	//    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
+	//    };
 	RegisterAsset(context.Context, *RegisterRequest, *RegisterResponse) error
-	Query(context.Context, *QueryRequest, *QueryResponse) error
-	QueryAllAsset(context.Context, *QueryAllAssetRequest, *QueryAllAssetResponse) error
-	Modify(context.Context, *ModifyRequest, *ModifyResponse) error
-	QueryByID(context.Context, *QueryByIDRequest, *QueryResponse) error
-	GetUserPurchaseAssetList(context.Context, *GetUserPurchaseAssetListRequest, *QueryResponse) error
+	QueryAsset(context.Context, *QueryRequest, *QueryResponse) error
 	PreSaleNotice(context.Context, *PushTxRequest, *PreSaleNoticeResponse) error
 	QueryMyNotice(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
 	QueryMyPreSale(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
@@ -276,48 +203,20 @@ type Asset struct {
 	AssetHandler
 }
 
-func (h *Asset) GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, out *GetFileUploadURLResponse) error {
-	return h.AssetHandler.GetFileUploadURL(ctx, in, out)
-}
-
-func (h *Asset) GetFileUploadStat(ctx context.Context, in *GetFileUploadStatRequest, out *GetFileUploadStatResponse) error {
-	return h.AssetHandler.GetFileUploadStat(ctx, in, out)
-}
-
 func (h *Asset) RegisterFile(ctx context.Context, in *RegisterFileRequest, out *RegisterFileResponse) error {
 	return h.AssetHandler.RegisterFile(ctx, in, out)
 }
 
-func (h *Asset) QueryUploadedData(ctx context.Context, in *QueryUploadedDataRequest, out *QueryUploadedDataResponse) error {
+func (h *Asset) QueryUploadedData(ctx context.Context, in *QueryRequest, out *QueryUploadedDataResponse) error {
 	return h.AssetHandler.QueryUploadedData(ctx, in, out)
-}
-
-func (h *Asset) GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, out *GetDownLoadURLResponse) error {
-	return h.AssetHandler.GetDownLoadURL(ctx, in, out)
 }
 
 func (h *Asset) RegisterAsset(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error {
 	return h.AssetHandler.RegisterAsset(ctx, in, out)
 }
 
-func (h *Asset) Query(ctx context.Context, in *QueryRequest, out *QueryResponse) error {
-	return h.AssetHandler.Query(ctx, in, out)
-}
-
-func (h *Asset) QueryAllAsset(ctx context.Context, in *QueryAllAssetRequest, out *QueryAllAssetResponse) error {
-	return h.AssetHandler.QueryAllAsset(ctx, in, out)
-}
-
-func (h *Asset) Modify(ctx context.Context, in *ModifyRequest, out *ModifyResponse) error {
-	return h.AssetHandler.Modify(ctx, in, out)
-}
-
-func (h *Asset) QueryByID(ctx context.Context, in *QueryByIDRequest, out *QueryResponse) error {
-	return h.AssetHandler.QueryByID(ctx, in, out)
-}
-
-func (h *Asset) GetUserPurchaseAssetList(ctx context.Context, in *GetUserPurchaseAssetListRequest, out *QueryResponse) error {
-	return h.AssetHandler.GetUserPurchaseAssetList(ctx, in, out)
+func (h *Asset) QueryAsset(ctx context.Context, in *QueryRequest, out *QueryResponse) error {
+	return h.AssetHandler.QueryAsset(ctx, in, out)
 }
 
 func (h *Asset) PreSaleNotice(ctx context.Context, in *PushTxRequest, out *PreSaleNoticeResponse) error {
