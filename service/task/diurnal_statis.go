@@ -21,7 +21,7 @@ func init() {
 }
 
 func main() {
-	DiurnalStatis()
+	//DiurnalStatis()
 	c := cron.New()
 	spec := "0, 5, 0, *, *, *" //每天凌晨0:05执行一次
 	c.AddFunc(spec, DiurnalStatis)
