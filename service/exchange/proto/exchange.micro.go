@@ -8,10 +8,10 @@ It is generated from these files:
 	exchange.proto
 
 It has these top-level messages:
-	ConsumerBuyRequest
-	ConsumerBuyResponse
-	QueryTxRequest
-	QueryTxResponse
+	PushRequest
+	BuyAssetResponse
+	QueryRequest
+	GetTxListResponse
 	QueryTxData
 	TxRow
 	TransferRequest
@@ -50,8 +50,7 @@ var _ server.Option
 // Client API for Exchange service
 
 type ExchangeClient interface {
-	ConsumerBuy(ctx context.Context, in *ConsumerBuyRequest, opts ...client.CallOption) (*ConsumerBuyResponse, error)
-	QueryTx(ctx context.Context, in *QueryTxRequest, opts ...client.CallOption) (*QueryTxResponse, error)
+	BuyAsset(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
 }
 
 type exchangeClient struct {
@@ -72,19 +71,9 @@ func NewExchangeClient(serviceName string, c client.Client) ExchangeClient {
 	}
 }
 
-func (c *exchangeClient) ConsumerBuy(ctx context.Context, in *ConsumerBuyRequest, opts ...client.CallOption) (*ConsumerBuyResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Exchange.ConsumerBuy", in)
-	out := new(ConsumerBuyResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *exchangeClient) QueryTx(ctx context.Context, in *QueryTxRequest, opts ...client.CallOption) (*QueryTxResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Exchange.QueryTx", in)
-	out := new(QueryTxResponse)
+func (c *exchangeClient) BuyAsset(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Exchange.BuyAsset", in)
+	out := new(BuyAssetResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -95,8 +84,7 @@ func (c *exchangeClient) QueryTx(ctx context.Context, in *QueryTxRequest, opts .
 // Server API for Exchange service
 
 type ExchangeHandler interface {
-	ConsumerBuy(context.Context, *ConsumerBuyRequest, *ConsumerBuyResponse) error
-	QueryTx(context.Context, *QueryTxRequest, *QueryTxResponse) error
+	BuyAsset(context.Context, *PushRequest, *BuyAssetResponse) error
 }
 
 func RegisterExchangeHandler(s server.Server, hdlr ExchangeHandler, opts ...server.HandlerOption) {
@@ -107,10 +95,6 @@ type Exchange struct {
 	ExchangeHandler
 }
 
-func (h *Exchange) ConsumerBuy(ctx context.Context, in *ConsumerBuyRequest, out *ConsumerBuyResponse) error {
-	return h.ExchangeHandler.ConsumerBuy(ctx, in, out)
-}
-
-func (h *Exchange) QueryTx(ctx context.Context, in *QueryTxRequest, out *QueryTxResponse) error {
-	return h.ExchangeHandler.QueryTx(ctx, in, out)
+func (h *Exchange) BuyAsset(ctx context.Context, in *PushRequest, out *BuyAssetResponse) error {
+	return h.ExchangeHandler.BuyAsset(ctx, in, out)
 }

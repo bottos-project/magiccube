@@ -111,7 +111,7 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&Requirement{Client: requirement.NewRequirementClient("bottos.srv.requirement", service.Client())},
+			&Requirement{Client: requirement.NewRequirementClient("go.micro.srv.v3.requirement", service.Client())},
 		),
 	)
 	if err := service.Run(); err != nil {

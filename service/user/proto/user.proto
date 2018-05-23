@@ -8,8 +8,7 @@ service User {
 	rpc Favorite(FavoriteRequest) returns(FavoriteResponse) {};
     rpc GetFavorite(GetFavoriteRequest) returns(GetFavoriteResponse) {};
 	rpc Transfer(PushTxRequest) returns(PushTxResponse) {};
-	rpc QueryMyNotice (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
-	rpc QueryMyPreSale(QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {};
+	rpc QueryMyBuy (QueryMyBuyRequest) returns (QueryMyBuyResponse) {};
 }
 
 message PushTxRequest {
@@ -163,31 +162,35 @@ message GetBalanceResponse {
 	string msg = 3;
 }
 
-message QueryMyNoticeRequest {
-	int32 pageSize = 1;
-	int32 pageNum = 2;
+message QueryMyBuyRequest {
+	int32 page_size = 1;
+	int32 page_num = 2;
 	string username = 3;
 	string random = 4;
 	string signature = 5;
 }
-message QueryMyNoticeResponse {
-	int32 code = 1;
-	QueryNoticeData data = 2;
+
+message QueryMyBuyResponse {
+	uint32 code = 1;
+	BuyData data = 2;
 	string msg = 3;
 }
-message QueryNoticeData {
-	uint32 pageNum = 1;
-	uint32 rowCount = 2;
-	repeated QueryNoticeRow row = 3;
+
+message BuyData {
+	int32 page_num = 2;
+	int32 row_count = 1;
+	repeated Buy row = 3;
 }
-message QueryNoticeRow {
-	string username = 1;
-	string notice_id = 2;
+
+message Buy {
+	string exchange_id = 1;
+	string username = 2;
 	string asset_id = 3;
 	string asset_name = 4;
-	string data_req_id = 5;
-	string data_req_name = 6;
-	string consumer = 7;
-	string read_flag = 8;
-	uint64 time = 9;
+	string asset_type = 5;
+	string feature_tag = 6;
+	uint64 price = 7;
+	string sample_hash = 8;
+	string storage_hash = 9;
+	uint64 expiretime = 10;
 }

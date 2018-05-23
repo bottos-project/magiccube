@@ -1,0 +1,9 @@
+<seelog type="sync">
+    <outputs formatid="log">
+        <console />
+        <rollingfile type="size" filename="./log/exc.log" maxsize="20971520" maxrolls="3" />
+    </outputs>
+    <formats>
+        <format id="log" format="%Date %Time [%LEV] %RelFile:%Line %FuncShort(): %Msg%n"/>
+    </formats>
+</seelog>

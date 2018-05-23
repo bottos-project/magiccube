@@ -218,115 +218,54 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	return nil
 }
 
-func (u *User) QueryMyNotice(ctx context.Context, req *user_proto.QueryMyNoticeRequest, rsp *user_proto.QueryMyNoticeResponse) error {
-
+func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest, rsp *user_proto.QueryMyBuyResponse) error {
 	var pageNum, pageSize, skip int= 1, 20, 0
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 {
+	if req.PageSize > 0 && req.PageSize < 20{
 		pageSize = int(req.PageSize)
 	}
 
 	skip = (pageNum - 1) *  pageSize
 
-	var where interface{}
-	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
-	if len(req.Username) > 0{
-		where = &bson.M{ "param.info.consumer": req.Username}
-	}
+	var where = &bson.M{"method":"buydata", "param.info.username": req.Username}
 
-	log.Info(where)
-
-	var ret []bean.PreSaleBean
+	var ret []bean.Buy
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err:= mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	count, err:= mgo.DB(config.DB_NAME).C("Transactions").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
 	}
-	mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+	mgo.DB(config.DB_NAME).C("Transactions").Find(where).Sort("-create_time").Skip(skip).Limit(pageSize).All(&ret)
 
-	var rows = []*user_proto.QueryNoticeRow{}
+	var rows = []*user_proto.Buy{}
 	for _, v := range ret {
-
-		rows = append(rows, &user_proto.QueryNoticeRow{
-			NoticeId : v.Param.Datapresaleid,
-			Username : v.Param.Info.Username,
-			AssetId : v.Param.Info.Assetid,
-			//AssetName : v.Param.Info.ass,
-			DataReqId : v.Param.Info.Datareqid,
-			Consumer : v.Param.Info.Consumer,
-			Time : uint64(v.CreateTime.Unix()),
+		var ret2 bean.AssetBean
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"data.asset_id":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		rows = append(rows, &user_proto.Buy{
+			ExchangeId : v.Param.DataExchangeId,
+			Username : ret2.Param.Info.UserName,
+			AssetId : v.Param.Info.AssetId,
+			AssetName : ret2.Param.Info.AssetName,
+			AssetType : ret2.Param.Info.AssetType,
+			FeatureTag : ret2.Param.Info.FeatureTag,
+			Price : ret2.Param.Info.Price,
+			SampleHash : ret2.Param.Info.SampleHash,
+			StorageHash : ret2.Param.Info.StorageHash,
+			Expiretime : uint64(ret2.Param.Info.ExpireTime),
 		})
 	}
 
-	var data = &user_proto.QueryNoticeData{
-		RowCount: uint32(count),
-		PageNum: uint32(pageNum),
+	rsp.Data = &user_proto.BuyData{
+		RowCount: int32(count),
+		PageNum: int32(pageNum),
 		Row:rows,
 	}
-	log.Info(data)
-	rsp.Data = data
-	return nil
-}
-
-func (u *User) QueryMyPreSale(ctx context.Context, req *user_proto.QueryMyNoticeRequest, rsp *user_proto.QueryMyNoticeResponse) error {
-
-	var pageNum, pageSize, skip int= 1, 20, 0
-	if req.PageNum > 0 {
-		pageNum = int(req.PageNum)
-	}
-
-	if req.PageSize > 0 {
-		pageSize = int(req.PageSize)
-	}
-
-	skip = (pageNum - 1) *  pageSize
-
-	var where interface{}
-	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
-	if len(req.Username) > 0{
-		where = &bson.M{ "param.info.username": req.Username}
-	}
-
-	log.Info(where)
-
-	var ret []bean.PreSaleBean
-
-	var mgo = mgo.Session()
-	defer mgo.Close()
-	count, err:= mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
-	log.Info(count)
-	if err != nil {
-		log.Error(err)
-	}
-	mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
-
-	var rows = []*user_proto.QueryNoticeRow{}
-	for _, v := range ret {
-
-		rows = append(rows, &user_proto.QueryNoticeRow{
-			NoticeId : v.Param.Datapresaleid,
-			Username : v.Param.Info.Username,
-			AssetId : v.Param.Info.Assetid,
-			//AssetName : v.Param.Info.ass,
-			DataReqId : v.Param.Info.Datareqid,
-			Consumer : v.Param.Info.Consumer,
-			Time : uint64(v.CreateTime.Unix()),
-		})
-	}
-
-	var data = &user_proto.QueryNoticeData{
-		RowCount: uint32(count),
-		PageNum: uint32(pageNum),
-		Row:rows,
-	}
-	log.Info(data)
-	rsp.Data = data
 	return nil
 }
 
@@ -343,7 +282,8 @@ func init() {
 func main() {
 
 	service := micro.NewService(
-		micro.Name("bottos.srv.user"),
+		micro.Name("go.micro.srv.v3.user"),
+
 		micro.Version("3.0.0"),
 	)
 

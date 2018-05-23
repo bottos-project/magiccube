@@ -351,6 +351,32 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 	return nil
 }*/
 
+func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var publishRequest asset.PushTxRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.PreSaleNotice(ctx, &publishRequest)
+	if err != nil {
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -411,7 +437,7 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.R
 
 func init() {
 	defer log.Flush()
-	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/ass-log.xml")
 	if err != nil {
 		log.Critical("err parsing config log file", err)
 		os.Exit(1)

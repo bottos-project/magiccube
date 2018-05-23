@@ -178,7 +178,7 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&Dashboard{Client: dashboard.NewDashboardClient("bottos.srv.dashboard", service.Client())},
+			&Dashboard{Client: dashboard.NewDashboardClient("go.micro.srv.v3.dashboard", service.Client())},
 		),
 	)
 	if err := service.Run(); err != nil {

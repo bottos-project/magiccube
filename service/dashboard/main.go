@@ -359,7 +359,7 @@ func (u *Dashboard) GetAllTypeTotal(ctx context.Context, req *dashboard_proto.Ge
 	defer mgo.Close()
 
 	var ret []bean.RecordNum
-	err := mgo.DB(config.DB_NAME).C("record_num").Find(nil).All(&ret);
+	err := mgo.DB(config.DB_NAME).C("rec_num").Find(nil).All(&ret);
 	if err != nil {
 		log.Error(err.Error())
 	}
@@ -442,7 +442,7 @@ func init() {
 func main() {
 
 	service := micro.NewService(
-		micro.Name("bottos.srv.dashboard"),
+		micro.Name("go.micro.srv.v3.dashboard"),
 		micro.Version("3.0.0"),
 	)
 
