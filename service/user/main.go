@@ -246,7 +246,8 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 	var rows = []*user_proto.Buy{}
 	for _, v := range ret {
 		var ret2 bean.AssetBean
-		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"data.asset_id":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		//mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.asset_id":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.assetid": v.Param.Info.AssetId}).One(&ret2)
 		rows = append(rows, &user_proto.Buy{
 			ExchangeId : v.Param.DataExchangeId,
 			Username : ret2.Param.Info.UserName,
