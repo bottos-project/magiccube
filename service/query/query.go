@@ -28,7 +28,7 @@ func TxNum(min int64, max int64) int {
 func TxAmount(min int64, max int64) uint64 {
 	var amount uint64 = 0
 	var ret []bean.Tx
-	var ret2 bean.AssetBean
+
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -37,9 +37,13 @@ func TxAmount(min int64, max int64) uint64 {
 	if err!= nil {
 		log.Error(err)
 	}
+	log.Info(ret)
 
 	for _, v := range ret {
-		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"data.asset_id":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		var ret2 bean.AssetBean
+		log.Info(v.Param.Info.AssetId)
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.assetid":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		log.Info(ret2)
 		amount +=  ret2.Param.Info.Price
 	}
 
