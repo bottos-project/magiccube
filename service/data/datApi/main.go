@@ -8,7 +8,7 @@ import (
 	"github.com/micro/go-micro"
 	//"github.com/micro/go-micro/client"
 	//"github.com/micro/go-micro/client"
-	api "github.com/bottos-project/micro/api/proto"
+	api "github.com/micro/micro/api/proto"
 
 	"fmt"
 	"github.com/bitly/go-simplejson"
