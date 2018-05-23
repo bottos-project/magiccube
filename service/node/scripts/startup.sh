@@ -159,7 +159,7 @@ function unpackpackages() {
 	
     cmd=$(sed  -n "/GOPATH/p" ~/.profile |wc -l)
     if [ $cmd -lt 1 ]; then
-        sed -i '$a\export GOPATH="/usr/lib/go"' ~/.profile
+        sed -i '$a\export GOPATH="/mnt/bottos"' ~/.profile
     fi
 
 	cmd=$(sed  -n "/GOROOT/p" ~/.profile |wc -l)
@@ -173,6 +173,8 @@ function unpackpackages() {
     if [ $cmd -lt 1 ]; then
         sed -i '$a\export PATH=$PATH:/usr/local/go/bin' ~/.profile
     fi
+    
+    sudo cp -rf /usr/bin/go /usr/lib
 
     source ~/.profile
 }
@@ -379,7 +381,7 @@ function prepcheck()
 	then
 	    echo -e "\033[33m *WRAN* golang hadn't been installed , install it currently ... \033[0m"
 		apt-get update
-        apt-get install golang-go -y
+        #apt-get install golang-go -y
 	fi
 
 	#check if git had been installed , if not , install it
@@ -516,11 +518,12 @@ function download_git_newcode()
         exit 1
     fi
 
+    GOPATH=/mnt/bottos
     if [ ! -z $GOPATH ]; then
         sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
         sudo rm -rf $GOPATH/src/github.com/bottos-project/core   2>&1>/dev/null
         sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore/crypto-go 2>&1>/dev/null
-        sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project
+        sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project/bottos
         sudo git clone https://github.com/bottos-project/crypto-go.git $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore
         sudo git clone https://github.com/bottos-project/core.git $GOPATH/src/github.com/bottos-project/core
         

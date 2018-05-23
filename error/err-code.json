@@ -69,10 +69,24 @@
   },
   "details": ""
 },{
-  "code": 2001,
+    "code": 2011,
+    "msg": {
+      "en": "Register File failure",
+      "cn": "注册文件失败"
+    },
+    "details": ""
+  },{
+  "code": 2021,
   "msg": {
     "en": "Register Asset failure",
     "cn": "注册资产失败"
+  },
+  "details": ""
+},{
+  "code": 2031,
+  "msg": {
+    "en": "PreSale Notice failure",
+    "cn": "推销资产失败"
   },
   "details": ""
 },{

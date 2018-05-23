@@ -8,7 +8,7 @@ import (
 	"github.com/micro/go-micro"
 	//"github.com/micro/go-micro/client"
 	//"github.com/micro/go-micro/client"
-	api "github.com/micro/micro/api/proto"
+	api "github.com/bottos-project/micro/api/proto"
 
 	"fmt"
 	"github.com/bitly/go-simplejson"
@@ -28,6 +28,7 @@ type Data struct {
 
 //global map
 var mslice = make(map[string]int)
+var msliceip = make(map[string]string)
 
 func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
@@ -49,7 +50,7 @@ func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Respons
 		"result":           rep.Result,
 		"message":          rep.Message,
 		"merkle_root_hash": rep.MerkleRootHash,
-		//"is_exist":         rep.IsExist,
+		"is_exist":         rep.IsExist,
 	})
 	rsp.Body = string(b)
 	fmt.Println("rsp.Body")
@@ -91,12 +92,17 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 
 	userName := req1.Username
 	fileSlice := req1.Slice
-
+    fmt.Println("userName !")
+	fmt.Println(userName)
+	fmt.Println("fileSlice !")
+	fmt.Println(fileSlice)
 	//1 check cache upload status
 	uploadCacheResult, err := d.Client.GetUploadProgress(ctx, &data.GetUploadProgressRequest{
 		Username: userName,
 		Slice:    fileSlice,
 	})
+	fmt.Println("uploadCacheResult !")
+	fmt.Println(uploadCacheResult)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -115,13 +121,15 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 	fmt.Println(nodes)
 	//2.2 storage
 	storageOK := 0
+	sliceIp := []*data.Ip{}
+	sliceIp = nil
 	for i := 0; i < m; i++ {
 		sguid := fileSlice[i].Sguid
 		if mslice[sguid] == 0 {
 			//2.2.1 get slice ip
 			Sip := nodes.Ip[i].SnodeIp
 			fmt.Println("Sip")
-			fmt.Println("Sip")
+			fmt.Println(Sip)
 			//Sip := "127.0.0.1"
 			addr := "http://" + Sip + ":8080/rpc"
 			//2.2.2 get slice storage url
@@ -161,6 +169,14 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			fmt.Println("putResult")
 			fmt.Println(putResult)
 			mslice[sguid] = 1
+			msliceip[sguid] = Sip
+			nodeTag := &data.Ip{sguid,
+			Sip}
+			sliceIp = append(sliceIp, nodeTag)
+		}else{
+			nodeTag := &data.Ip{sguid,
+			msliceip[sguid]}
+			sliceIp = append(sliceIp, nodeTag)
 		}
 		storageOK++
 	}
@@ -172,7 +188,8 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 		"message":             uploadCacheResult.Message,
 		"slice_progress_done": uploadCacheResult.SliceProgressDone,
 		"slice_progressing":   uploadCacheResult.SliceProgressing,
-		"storageDone":         storageOK,
+		"storage_done":         storageOK,
+		"storage_ip": 		   sliceIp,
 	})
 	rsp.Body = string(b)
 	return nil
@@ -198,7 +215,7 @@ func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Resp
 	b, _ := json.Marshal(map[string]interface{}{
 		"reslut":  rep.Result,
 		"message": rep.Message,
-		"ip":      rep.Ip,
+		"storage_addr":      rep.StorageAddr,
 	})
 	rsp.Body = string(b)
 
