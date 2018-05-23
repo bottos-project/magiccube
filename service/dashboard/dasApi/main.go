@@ -27,6 +27,7 @@ func (s *Dashboard) GetTxNum(ctx context.Context, req *api.Request, rsp *api.Res
 }
 
 func (s *Dashboard) GetTxList(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
 	body := req.Body
 	log.Info(body)
 	var getTxList dashboard.GetTxListRequest
