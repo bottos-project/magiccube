@@ -30,10 +30,10 @@ It has these top-level messages:
 	FavoriteData
 	GetBalanceRequest
 	GetBalanceResponse
-	QueryMyNoticeRequest
-	QueryMyNoticeResponse
-	QueryNoticeData
-	QueryNoticeRow
+	QueryMyBuyRequest
+	QueryMyBuyResponse
+	BuyData
+	Buy
 */
 package user
 
@@ -73,8 +73,7 @@ type UserClient interface {
 	Favorite(ctx context.Context, in *FavoriteRequest, opts ...client.CallOption) (*FavoriteResponse, error)
 	GetFavorite(ctx context.Context, in *GetFavoriteRequest, opts ...client.CallOption) (*GetFavoriteResponse, error)
 	Transfer(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PushTxResponse, error)
-	QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
-	QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
+	QueryMyBuy(ctx context.Context, in *QueryMyBuyRequest, opts ...client.CallOption) (*QueryMyBuyResponse, error)
 }
 
 type userClient struct {
@@ -165,19 +164,9 @@ func (c *userClient) Transfer(ctx context.Context, in *PushTxRequest, opts ...cl
 	return out, nil
 }
 
-func (c *userClient) QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "User.QueryMyNotice", in)
-	out := new(QueryMyNoticeResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "User.QueryMyPreSale", in)
-	out := new(QueryMyNoticeResponse)
+func (c *userClient) QueryMyBuy(ctx context.Context, in *QueryMyBuyRequest, opts ...client.CallOption) (*QueryMyBuyResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.QueryMyBuy", in)
+	out := new(QueryMyBuyResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -195,8 +184,7 @@ type UserHandler interface {
 	Favorite(context.Context, *FavoriteRequest, *FavoriteResponse) error
 	GetFavorite(context.Context, *GetFavoriteRequest, *GetFavoriteResponse) error
 	Transfer(context.Context, *PushTxRequest, *PushTxResponse) error
-	QueryMyNotice(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
-	QueryMyPreSale(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
+	QueryMyBuy(context.Context, *QueryMyBuyRequest, *QueryMyBuyResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -235,10 +223,6 @@ func (h *User) Transfer(ctx context.Context, in *PushTxRequest, out *PushTxRespo
 	return h.UserHandler.Transfer(ctx, in, out)
 }
 
-func (h *User) QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, out *QueryMyNoticeResponse) error {
-	return h.UserHandler.QueryMyNotice(ctx, in, out)
-}
-
-func (h *User) QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, out *QueryMyNoticeResponse) error {
-	return h.UserHandler.QueryMyPreSale(ctx, in, out)
+func (h *User) QueryMyBuy(ctx context.Context, in *QueryMyBuyRequest, out *QueryMyBuyResponse) error {
+	return h.UserHandler.QueryMyBuy(ctx, in, out)
 }

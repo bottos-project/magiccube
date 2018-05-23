@@ -227,9 +227,7 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	//is, err:=sign.PushVerifySign(req.Body)
-	//TODO
-	is:=true
+	is, err:=sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -245,11 +243,12 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-func (u *User) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+
+func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
-	var queryMyNotice user.QueryMyNoticeRequest
-	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	var queryMyBuyRequest user.QueryMyBuyRequest
+	err := json.Unmarshal([]byte(body), &queryMyBuyRequest)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -257,41 +256,12 @@ func (u *User) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Res
 
 	//验签
 	is_true, err := sign.QueryVerifySign(req.Body)
-	//is_true=true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := u.Client.QueryMyNotice(ctx, &queryMyNotice)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	rsp.Body = errcode.Return(response)
-	return nil
-}
-
-func (u *User) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	rsp.StatusCode = 200
-	body := req.Body
-	var queryMyNotice user.QueryMyNoticeRequest
-	err := json.Unmarshal([]byte(body), &queryMyNotice)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	//is_true=true
-	if !is_true {
-		rsp.Body = errcode.ReturnError(1000, err)
-		return nil
-	}
-
-	response, err := u.Client.QueryMyPreSale(ctx, &queryMyNotice)
+	response, err := u.Client.QueryMyBuy(ctx, &queryMyBuyRequest)
 	if err != nil {
 		log.Error(err)
 		return err
