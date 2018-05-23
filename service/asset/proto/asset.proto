@@ -5,25 +5,17 @@ service Asset {
     //    };
     //    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
     //    };
-    rpc RegisterFile (RegisterFileRequest) returns (RegisterFileResponse) {
+    rpc RegisterFile (PushTxRequest) returns (RegisterFileResponse) {
     };
     rpc QueryUploadedData (QueryRequest) returns (QueryUploadedDataResponse) {
     };
-    //    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
-    //    };
-    rpc RegisterAsset (RegisterRequest) returns (RegisterResponse) {
+    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
     };
-    rpc QueryAsset (QueryRequest) returns (QueryResponse) {
+    rpc RegisterAsset (PushTxRequest) returns (RegisterResponse) {
     };
-//    rpc QueryAllAsset (QueryRequest) returns (QueryResponse) {
-//    };
-    //    rpc Modify (ModifyRequest) returns (ModifyResponse) {
-    //    };
-    //
-    //    rpc QueryByID (QueryByIDRequest) returns (QueryResponse) {
-    //    };
-    //    rpc GetUserPurchaseAssetList (GetUserPurchaseAssetListRequest) returns (QueryResponse) {
-    //    };
+    rpc QueryAsset (QueryRequest) returns (QueryAssetResponse) {
+    };
+
 
     rpc PreSaleNotice (PushTxRequest) returns (PreSaleNoticeResponse) {
     };
@@ -63,9 +55,6 @@ message GetFileUploadURLResponse {
     string data = 3;
 }
 
-message RegisterFileRequest {
-    string postBody = 1;
-}
 
 message RegisterFileResponse {
     uint32 code = 1;
@@ -97,58 +86,13 @@ message QueryUploadedRow {
     uint64 create_time = 10;
 }
 
-
-message RegisterRequest {
-    /*string username = 1;
-    string asset_id = 2;
-    string session_id = 3;
-    string asset_name = 4;
-    int32 feature_tag = 5;
-    string asset_sample_path = 6;
-    string asset_sample_hash = 7;
-    string asset_storage_path = 8;
-    string asset_storage_hash = 9;
-    string expire_time = 10;
-    int64 price = 11;
-    string description = 12;
-    string upload_date = 13;
-    string signature = 14;*/
-    string postBody = 1;
-}
 message RegisterResponse {
     uint32 code = 1;
     string msg = 2;
     string data = 3;
 }
 
-
-message QueryAllAssetRequest {
-    string username = 1;
-    string session_id = 2;
-    QueryPara query_para = 3;
-}
-message QueryPara {
-    string username = 1;
-    string session_id = 2;
-}
-message QueryAllAssetResponse {
-    uint32 code = 1;
-    string msg = 2;
-    string data = 3;
-}
-
-message ModifyRequest {
-    //    string username = 1;
-    //    string signature = 2;
-    string postBody = 1;
-}
-message ModifyResponse {
-    uint32 code = 1;
-    string msg = 2;
-    string data = 3;
-}
-
-message GetFileUploadStatRequest {
+/*message GetFileUploadStatRequest {
     string username = 1;
     string fileName = 2;
 }
@@ -156,11 +100,14 @@ message GetFileUploadStatResponse {
     uint32 code = 1;
     string msg = 2;
     string data = 3;
-}
-
+}*/
 message GetDownLoadURLRequest {
-    string username = 1;
-    string fileName = 2;
+    uint32 page_size = 1;
+    uint32 page_num = 2;
+    string username = 3;
+    string random = 4;
+    string file_id = 5;
+    string signature = 6;
 }
 message GetDownLoadURLResponse {
     uint32 code = 1;
@@ -169,48 +116,11 @@ message GetDownLoadURLResponse {
 }
 
 
-message QueryByIDRequest {
-    int32 pageSize = 1;
-    int32 pageNum = 2;
-    string assetID = 3;
-}
-
-
-message GetUserPurchaseAssetListRequest {
-    int32 pageSize = 1;
-    int32 pageNum = 2;
-    string username = 3;
-    string asset_id = 4;
-}
-message GetUserPurchaseAssetListResponse {
-    int32 code = 1;
-    QueryPurchaseData data = 2;
-    string msg = 3;
-}
-message QueryPurchaseData {
-    uint64 pageNum = 1;
-    uint64 rowCount = 2;
-    repeated QueryPurchaseRow row = 3;
-}
-message QueryPurchaseRow {
-    string username = 1;
-    string session_id = 2;
-    string asset_id = 3;
-    string data_req_id = 4;
-    string consumer = 5;
-    //    string asset_name = 6;
-}
-
-
-message PreSaleNoticeRequest {
-    string postBody = 1;
-}
 message PreSaleNoticeResponse {
     uint32 code = 1;
     string msg = 2;
     string data = 3;
 }
-
 
 message QueryRequest {
     uint32 page_size = 1;
@@ -220,13 +130,13 @@ message QueryRequest {
     string signature = 5;
 }
 
-message QueryResponse {
+message QueryAssetResponse {
     int32 code = 1;
-    QueryData data = 2;
+    QueryAssetData data = 2;
     string msg = 3;
 }
 
-message QueryData {
+message QueryAssetData {
     uint32 page_num = 1;
     uint32 row_count = 2;
     repeated AssetData row = 3;
@@ -248,8 +158,8 @@ message AssetData {
 
 
 message QueryMyNoticeRequest {
-    int32 pageSize = 1;
-    int32 pageNum = 2;
+    uint32 page_size = 1;
+    uint32 page_num = 2;
     string username = 3;
     string random = 4;
     string signature = 5;

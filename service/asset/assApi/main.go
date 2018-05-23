@@ -10,8 +10,6 @@ import (
 	"golang.org/x/net/context"
 	"os"
 	sign "github.com/bottos-project/bottos/service/common/signature"
-	chain "github.com/bottos-project/bottos/service/common/data"
-	"github.com/bottos-project/bottos/service/common/bean"
 	errcode "github.com/bottos-project/bottos/error"
 )
 
@@ -76,33 +74,24 @@ func (u *Asset) GetFileUploadStat(ctx context.Context, req *api.Request, rsp *ap
 }*/
 
 func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	//header, _ := json.Marshal(req.Header)
+	rsp.StatusCode = 200
 
-	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var queryRequest bean.TxPublic
-	json.Unmarshal([]byte(body), &queryRequest)
-
-	log.Info(queryRequest.Sender)
-	//check signature
-	accountInfo, err := chain.AccountInfo(queryRequest.Sender)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	is_true, err := sign.PushVerifySign(accountInfo.Pubkey, req.Body)
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
 	is_true=true
-	log.Info(is_true,err)
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := s.Client.RegisterFile(ctx, &asset.RegisterFileRequest{
-		PostBody: req.Body,
-	})
+	var publishRequest asset.PushTxRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.RegisterFile(ctx, &publishRequest)
 	if err != nil {
 		return err
 	}
@@ -125,7 +114,7 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *ap
 
 	//验签
 	is_true, err := sign.QueryVerifySign(req.Body)
-	is_true=true
+	is_true = true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -178,32 +167,24 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *ap
 //}
 
 func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
 
-	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var queryRequest bean.TxPublic
-	json.Unmarshal([]byte(body), &queryRequest)
-
-	log.Info(queryRequest.Sender)
-	//check signature
-	accountInfo, err := chain.AccountInfo(queryRequest.Sender)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	is_true, err := sign.PushVerifySign(accountInfo.Pubkey, req.Body)
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
 	is_true=true
-	log.Info(is_true,err)
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := s.Client.RegisterAsset(ctx, &asset.RegisterRequest{
-		PostBody: req.Body,
-	})
+	var publishRequest asset.PushTxRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.RegisterAsset(ctx, &publishRequest)
 	if err != nil {
 		return err
 	}
@@ -211,8 +192,6 @@ func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	rsp.Body = errcode.Return(response)
 	return nil
 }
-
-
 func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -225,7 +204,7 @@ func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Res
 
 	//验签
 	is_true, err := sign.QueryVerifySign(req.Body)
-	is_true=true
+	is_true = true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -350,12 +329,12 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 	rsp.Body = string(b)
 	return nil
 }*/
-
 func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
 	//验签
 	is_true, err := sign.PushVerifySign(req.Body)
+	is_true=true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -369,6 +348,7 @@ func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Re
 	}
 
 	response, err := s.Client.PreSaleNotice(ctx, &publishRequest)
+	log.Error(response)
 	if err != nil {
 		return err
 	}
@@ -389,7 +369,7 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Re
 
 	//验签
 	is_true, err := sign.QueryVerifySign(req.Body)
-	//is_true=true
+	is_true=true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -417,7 +397,7 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.R
 
 	//验签
 	is_true, err := sign.QueryVerifySign(req.Body)
-	//is_true=true
+	is_true = true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -432,8 +412,6 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.R
 	rsp.Body = errcode.Return(response)
 	return nil
 }
-
-
 
 func init() {
 	defer log.Flush()
@@ -462,6 +440,6 @@ func main() {
 	)
 
 	if err := service.Run(); err != nil {
-		log.Critical("Asset API Service Run Failed",err)
+		log.Critical("Asset API Service Run Failed", err)
 	}
 }

@@ -11,32 +11,17 @@ It has these top-level messages:
 	PushTxRequest
 	GetFileUploadURLRequest
 	GetFileUploadURLResponse
-	RegisterFileRequest
 	RegisterFileResponse
 	QueryUploadedDataResponse
 	QueryUploadedData
 	QueryUploadedRow
-	RegisterRequest
 	RegisterResponse
-	QueryAllAssetRequest
-	QueryPara
-	QueryAllAssetResponse
-	ModifyRequest
-	ModifyResponse
-	GetFileUploadStatRequest
-	GetFileUploadStatResponse
 	GetDownLoadURLRequest
 	GetDownLoadURLResponse
-	QueryByIDRequest
-	GetUserPurchaseAssetListRequest
-	GetUserPurchaseAssetListResponse
-	QueryPurchaseData
-	QueryPurchaseRow
-	PreSaleNoticeRequest
 	PreSaleNoticeResponse
 	QueryRequest
-	QueryResponse
-	QueryData
+	QueryAssetResponse
+	QueryAssetData
 	AssetData
 	QueryMyNoticeRequest
 	QueryMyNoticeResponse
@@ -78,12 +63,11 @@ type AssetClient interface {
 	//    };
 	//    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
 	//    };
-	RegisterFile(ctx context.Context, in *RegisterFileRequest, opts ...client.CallOption) (*RegisterFileResponse, error)
+	RegisterFile(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*RegisterFileResponse, error)
 	QueryUploadedData(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryUploadedDataResponse, error)
-	//    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
-	//    };
-	RegisterAsset(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
-	QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error)
+	GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error)
+	RegisterAsset(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*RegisterResponse, error)
+	QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryAssetResponse, error)
 	PreSaleNotice(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PreSaleNoticeResponse, error)
 	QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
 	QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
@@ -107,7 +91,7 @@ func NewAssetClient(serviceName string, c client.Client) AssetClient {
 	}
 }
 
-func (c *assetClient) RegisterFile(ctx context.Context, in *RegisterFileRequest, opts ...client.CallOption) (*RegisterFileResponse, error) {
+func (c *assetClient) RegisterFile(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*RegisterFileResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Asset.RegisterFile", in)
 	out := new(RegisterFileResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -127,7 +111,17 @@ func (c *assetClient) QueryUploadedData(ctx context.Context, in *QueryRequest, o
 	return out, nil
 }
 
-func (c *assetClient) RegisterAsset(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error) {
+func (c *assetClient) GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Asset.GetDownLoadURL", in)
+	out := new(GetDownLoadURLResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assetClient) RegisterAsset(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*RegisterResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Asset.RegisterAsset", in)
 	out := new(RegisterResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -137,9 +131,9 @@ func (c *assetClient) RegisterAsset(ctx context.Context, in *RegisterRequest, op
 	return out, nil
 }
 
-func (c *assetClient) QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error) {
+func (c *assetClient) QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryAssetResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Asset.QueryAsset", in)
-	out := new(QueryResponse)
+	out := new(QueryAssetResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -184,12 +178,11 @@ type AssetHandler interface {
 	//    };
 	//    rpc GetFileUploadStat (GetFileUploadStatRequest) returns (GetFileUploadStatResponse) {
 	//    };
-	RegisterFile(context.Context, *RegisterFileRequest, *RegisterFileResponse) error
+	RegisterFile(context.Context, *PushTxRequest, *RegisterFileResponse) error
 	QueryUploadedData(context.Context, *QueryRequest, *QueryUploadedDataResponse) error
-	//    rpc GetDownLoadURL (GetDownLoadURLRequest) returns (GetDownLoadURLResponse) {
-	//    };
-	RegisterAsset(context.Context, *RegisterRequest, *RegisterResponse) error
-	QueryAsset(context.Context, *QueryRequest, *QueryResponse) error
+	GetDownLoadURL(context.Context, *GetDownLoadURLRequest, *GetDownLoadURLResponse) error
+	RegisterAsset(context.Context, *PushTxRequest, *RegisterResponse) error
+	QueryAsset(context.Context, *QueryRequest, *QueryAssetResponse) error
 	PreSaleNotice(context.Context, *PushTxRequest, *PreSaleNoticeResponse) error
 	QueryMyNotice(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
 	QueryMyPreSale(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
@@ -203,7 +196,7 @@ type Asset struct {
 	AssetHandler
 }
 
-func (h *Asset) RegisterFile(ctx context.Context, in *RegisterFileRequest, out *RegisterFileResponse) error {
+func (h *Asset) RegisterFile(ctx context.Context, in *PushTxRequest, out *RegisterFileResponse) error {
 	return h.AssetHandler.RegisterFile(ctx, in, out)
 }
 
@@ -211,11 +204,15 @@ func (h *Asset) QueryUploadedData(ctx context.Context, in *QueryRequest, out *Qu
 	return h.AssetHandler.QueryUploadedData(ctx, in, out)
 }
 
-func (h *Asset) RegisterAsset(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error {
+func (h *Asset) GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, out *GetDownLoadURLResponse) error {
+	return h.AssetHandler.GetDownLoadURL(ctx, in, out)
+}
+
+func (h *Asset) RegisterAsset(ctx context.Context, in *PushTxRequest, out *RegisterResponse) error {
 	return h.AssetHandler.RegisterAsset(ctx, in, out)
 }
 
-func (h *Asset) QueryAsset(ctx context.Context, in *QueryRequest, out *QueryResponse) error {
+func (h *Asset) QueryAsset(ctx context.Context, in *QueryRequest, out *QueryAssetResponse) error {
 	return h.AssetHandler.QueryAsset(ctx, in, out)
 }
 
