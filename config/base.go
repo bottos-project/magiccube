@@ -23,6 +23,6 @@ const (
 	TOKEN_EXPIRE_TIME = 2 * 60 * 60
 
 	//Enable/Disable verification code
-	Enable_verification = false
+	Enable_verification = true
 
 )
