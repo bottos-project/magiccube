@@ -379,7 +379,7 @@ function prepcheck()
 	then
 	    echo -e "\033[33m *WRAN* golang hadn't been installed , install it currently ... \033[0m"
 		apt-get update
-        apt-get install golang-go -y
+        #apt-get install golang-go -y
 	fi
 
 	#check if git had been installed , if not , install it
