@@ -1,19 +1,18 @@
 package main
 
 import (
+	log "github.com/cihub/seelog"
 	"encoding/json"
-
 	"github.com/bottos-project/bottos/service/data/proto"
-
 	"github.com/micro/go-micro"
 	//"github.com/micro/go-micro/client"
 	//"github.com/micro/go-micro/client"
 	api "github.com/micro/micro/api/proto"
 
-	"fmt"
 	"github.com/bitly/go-simplejson"
 	"golang.org/x/net/context"
 	"io/ioutil"
+	"fmt"
 	//"os"
 
 	//log "github.com/cihub/seelog"
@@ -32,7 +31,7 @@ var msliceip = make(map[string]string)
 
 func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	fmt.Println("Start File Check !")
+	log.Info("Start File Check !")
 	var req1 data.FileCheckRequest
 	json.Unmarshal([]byte(body), &req1)
 
@@ -42,9 +41,9 @@ func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Respons
 		Hash: sliceHash,
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
-	fmt.Println(rep)
+	log.Info(rep)
 	rsp.StatusCode = 200
 	b, _ := json.Marshal(map[string]interface{}{
 		"result":           rep.Result,
@@ -53,13 +52,13 @@ func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Respons
 		"is_exist":         rep.IsExist,
 	})
 	rsp.Body = string(b)
-	fmt.Println("rsp.Body")
-	fmt.Println(rsp.Body)
+	log.Info("rsp.Body")
+	log.Info(rsp.Body)
 	return nil
 }
 func (d *Data) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	fmt.Println("Start Get File URL!")
+	log.Info("Start Get File URL!")
 	var req1 data.GetFileUploadURLRequest
 	json.Unmarshal([]byte(body), &req1)
 
@@ -86,25 +85,25 @@ func (d *Data) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.
 }
 func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	fmt.Println("Start Get Upload Progress !")
+	log.Info("Start Get Upload Progress !")
 	var req1 data.GetUploadProgressRequest
 	json.Unmarshal([]byte(body), &req1)
 
 	userName := req1.Username
 	fileSlice := req1.Slice
-    fmt.Println("userName !")
-	fmt.Println(userName)
-	fmt.Println("fileSlice !")
-	fmt.Println(fileSlice)
+	log.Info("userName !")
+	log.Info(userName)
+	log.Info("fileSlice !")
+	log.Info(fileSlice)
 	//1 check cache upload status
 	uploadCacheResult, err := d.Client.GetUploadProgress(ctx, &data.GetUploadProgressRequest{
 		Username: userName,
 		Slice:    fileSlice,
 	})
-	fmt.Println("uploadCacheResult !")
-	fmt.Println(uploadCacheResult)
+	log.Info("uploadCacheResult !")
+	log.Info(uploadCacheResult)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
 	m := int(uploadCacheResult.ProgressDone)
 
@@ -114,11 +113,11 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 		Slice:    fileSlice,
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return err
 	}
-	fmt.Println("nodes")
-	fmt.Println(nodes)
+	log.Info("nodes")
+	log.Info(nodes)
 	//2.2 storage
 	storageOK := 0
 	sliceIp := []*data.Ip{}
@@ -128,8 +127,8 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 		if mslice[sguid] == 0 {
 			//2.2.1 get slice ip
 			Sip := nodes.Ip[i].SnodeIp
-			fmt.Println("Sip")
-			fmt.Println(Sip)
+			log.Info("Sip")
+			log.Info(Sip)
 			//Sip := "127.0.0.1"
 			addr := "http://" + Sip + ":8080/rpc"
 			//2.2.2 get slice storage url
@@ -140,22 +139,22 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			s := fmt.Sprintf(params, userName, sguid)
 			resp_body, err := http.Post(addr, "application/x-www-form-urlencoded",
 				strings.NewReader(s))
-			fmt.Println("Get Data from remote rpc err:")
+			log.Info("Get Data from remote rpc err:")
 			if err != nil {
-				fmt.Println(err)
+				log.Info(err)
 			}
 			defer resp_body.Body.Close()
 			body, err := ioutil.ReadAll(resp_body.Body)
 			var url string
 			if err != nil {
-				fmt.Println(err)
+				log.Info(err)
 			} else {
 				jss, _ := simplejson.NewJson([]byte(body))
 				url = jss.Get("url").MustString()
 
 			}
-			fmt.Println("url")
-			fmt.Println(url)
+			log.Info("url")
+			log.Info(url)
 			//2.2.3 storage slice file
 			putResult, err := d.Client.PutFile(ctx, &data.PutFileRequest{
 				Username: userName,
@@ -163,11 +162,11 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 				Url:      url,
 			})
 			if err != nil {
-				fmt.Println(err)
+				log.Info(err)
 				return err
 			}
-			fmt.Println("putResult")
-			fmt.Println(putResult)
+			log.Info("putResult")
+			log.Info(putResult)
 			mslice[sguid] = 1
 			msliceip[sguid] = Sip
 			nodeTag := &data.Ip{sguid,
@@ -198,7 +197,7 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 
 func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	fmt.Println("Start Get Storage IP !")
+	log.Info("Start Get Storage IP !")
 	var req1 data.GetStorageIPRequest
 	json.Unmarshal([]byte(body), &req1)
 
@@ -208,7 +207,7 @@ func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Resp
 		Guid: guid,
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
 
 	rsp.StatusCode = 200
@@ -223,7 +222,7 @@ func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Resp
 }
 func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	fmt.Println("Start Get File Download URL!")
+	log.Info("Start Get File Download URL!")
 	var req1 data.GetFileDownloadURLRequest
 
 	json.Unmarshal([]byte(body), &req1)
@@ -250,12 +249,9 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 		addr := "http://" + Sip + ":8080/rpc"
 		//1.2 get slice storage url
 		sguid := ip[i].Sguid
-		fmt.Println("sguid")
-		fmt.Println(sguid)
-		fmt.Println("Sip")
-		fmt.Println(Sip)
-		fmt.Println("username")
-		fmt.Println(userName)
+		log.Info("sguid:",sguid)
+		log.Info("Sip:",Sip)
+		log.Info("username:",userName)
 		params := `service=go.micro.srv.v2.data&method=Data.GetFileStorageURL&request={
 					"username":"%s",
 					"guid":"%s"}`
@@ -275,8 +271,7 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 			url = jss.Get("url").MustString()
 
 		}
-		fmt.Println("url")
-		fmt.Println(url)
+		log.Info("url:",url)
 		//1.3 storage slice file
 		downloadResult, err := d.Client.DownloadFile(ctx, &data.DownloadFileRequest{
 			Username: userName,
@@ -284,16 +279,14 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 			Url:      url,
 		})
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 			return err
 		}
-		fmt.Println("downloadResult")
-		fmt.Println(downloadResult)
+		log.Info("downloadResult:",downloadResult)
 		downloadOK++
 
 	}
-	fmt.Println("ip")
-	fmt.Println(ip)
+	log.Info("ip:",ip)
 	//2.composeFile
 	d.Client.ComposeFile(ctx, &data.ComposeFileRequest{
 		Username: userName,
@@ -307,7 +300,7 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 		Guid:     guid,
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
 
 	rsp.StatusCode = 200
@@ -319,6 +312,16 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 	rsp.Body = string(b)
 
 	return nil
+}
+
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/data-log.xml")
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
 }
 
 func main() {
@@ -339,6 +342,7 @@ func main() {
 	)
 
 	if err := service.Run(); err != nil {
-		fmt.Println(err)
+		log.Critical(err)
 	}
+
 }

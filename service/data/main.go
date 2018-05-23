@@ -1,8 +1,8 @@
 package main
 
 import (
+	log "github.com/cihub/seelog"
 	"bytes"
-	"fmt"
 	//"github.com/bitly/go-simplejson"
 	baseConfig "github.com/bottos-project/bottos/config"
 	"github.com/bottos-project/bottos/service/data/internal/platform/config"
@@ -66,17 +66,17 @@ func NewDataService(minioRepo minioRepository, mgodb mgoRepository) proto.DataHa
 
 func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest, rsp *proto.FileCheckResponse) error {
 
-	fmt.Println("Start Check File!")
+	log.Info("Start Check File!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing data request")
 	}
-	fmt.Println("Check File")
+	log.Info("Check File")
 
 	sliceHash := req.Hash
-	fmt.Println("req.Hash")
-	fmt.Println(req.Hash)
+	log.Info("req.Hash")
+	log.Info(req.Hash)
 	var hs []hash.Hash
 	for _, filehash := range sliceHash {
 		sfilehash := filehash.Hash
@@ -84,21 +84,21 @@ func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest
 		shash := hash.HexToHash(sfilehash)
 		hs = append(hs, shash)
 	}
-	fmt.Println("hs")
-	fmt.Println(hs)
+	log.Info("hs")
+	log.Info(hs)
 	MerkleRootHash := hash.ComputeMerkleRootHash(hs)
 	root := MerkleRootHash.ToHexString()
-	fmt.Println("root")
-	fmt.Println(root)
-	fmt.Println("root")
-	fmt.Println(root)
+	log.Info("root")
+	log.Info(root)
+	log.Info("root")
+	log.Info(root)
 	isSlicefileExist, err := d.mgoRepo.CallIsDataExists(root)
-	fmt.Println("isSlicefileExist")
-	fmt.Println(isSlicefileExist)
+	log.Info("isSlicefileExist")
+	log.Info(isSlicefileExist)
 	if err != nil {
 		rsp.Result = 404
 		rsp.Message = "file check failed"
-		fmt.Println(err)
+		log.Info(err)
 		return errors.New("Failed check file")
 	}
 	rsp.Result = 200
@@ -110,7 +110,7 @@ func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest
 
 func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadURLRequest, rsp *proto.GetFileUploadURLResponse) error {
 
-	fmt.Println("Start Get File URL!")
+	log.Info("Start Get File URL!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
@@ -120,18 +120,18 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 	userName := req.Username
 	fileSlice := req.Slice
 	rsp.Url = []*proto.Url{}
-	fmt.Println("get FileUploadURL")
+	log.Info("get FileUploadURL")
 
 	for _, slice := range fileSlice {
-		fmt.Println("userName")
-		fmt.Println(userName)
-		fmt.Println("slice.Sguid")
-		fmt.Println(slice.Sguid)
+		log.Info("userName")
+		log.Info(userName)
+		log.Info("slice.Sguid")
+		log.Info(slice.Sguid)
 		cacheUrl, err := d.minioRepo.GetCacheURL(userName, slice.Sguid)
 		if err != nil {
 			rsp.Result = 404
 			rsp.Message = "get url failed"
-			fmt.Println(err)
+			log.Info(err)
 			return errors.New("Failed get put url")
 		}
 
@@ -146,13 +146,13 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 }
 func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFileDownloadURLRequest, rsp *proto.GetFileDownloadURLResponse) error {
 
-	fmt.Println("Start Get File URL!")
+	log.Info("Start Get File URL!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-	fmt.Println("get FileDownloadURL")
+	log.Info("get FileDownloadURL")
 
 	userName := req.Username
 	guid := req.Guid
@@ -161,7 +161,7 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 	if err != nil {
 		rsp.Result = 404
 		rsp.Message = "get url failed"
-		fmt.Println(err)
+		log.Info(err)
 		return errors.New("Failed get download url")
 	}
 
@@ -172,7 +172,7 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 }
 
 func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploadProgressRequest, rsp *proto.GetUploadProgressResponse) error {
-	fmt.Println("Start Get Upload Progress!")
+	log.Info("Start Get Upload Progress!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
@@ -189,8 +189,8 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 	var j int = 0
 	for _, slice := range fileSlice {
 		result, err := d.minioRepo.GetPutState(userName, slice.Sguid)
-		fmt.Println("result")
-		fmt.Println(result)
+		log.Info("result")
+		log.Info(result)
 		if err != nil {
 			j++
 			slice1Tag := slice
@@ -204,7 +204,7 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 
 	}
 
-	fmt.Println("success")
+	log.Info("success")
 
 	rsp.Result = 200
 	rsp.Message = "OK"
@@ -216,13 +216,13 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 
 func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFileStorageNodeRequest, rsp *proto.GetFileStorageNodeResponse) error {
 
-	fmt.Println("Start Get File Storage Node!")
+	log.Info("Start Get File Storage Node!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing storage node request")
 	}
-	fmt.Println("get FileStorageNode")
+	log.Info("get FileStorageNode")
 
 	fileSlice := req.Slice
 	rsp.Ip = []*proto.Ip{}
@@ -231,7 +231,7 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 	if err != nil {
 		rsp.Result = 404
 		rsp.Message = "get node failed"
-		fmt.Println(err)
+		log.Info(err)
 		return errors.New("Failed get put node")
 	}
 
@@ -253,13 +253,13 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 
 func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileStorageURLRequest, rsp *proto.GetFileStorageURLResponse) error {
 
-	fmt.Println("Start Get File Storage URL!")
+	log.Info("Start Get File Storage URL!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-	fmt.Println("get FileStorageURL")
+	log.Info("get FileStorageURL")
 
 	userName := req.Username
 	guid := req.Guid
@@ -268,7 +268,7 @@ func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileS
 	if err != nil {
 		rsp.Result = 404
 		rsp.Message = "get url failed"
-		fmt.Println(err)
+		log.Info(err)
 		return errors.New("Failed get put url")
 	}
 
@@ -280,13 +280,13 @@ func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileS
 }
 func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rsp *proto.PutFileResponse) error {
 
-	fmt.Println("Start Put file!")
+	log.Info("Start Put file!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-	fmt.Println("put file")
+	log.Info("put file")
 
 	url := req.Url
 	userName := req.Username
@@ -298,7 +298,7 @@ func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rs
 	//get cache file
 	file, err := d.minioRepo.GetCacheFile(userName, guid)
 	if err != nil {
-		fmt.Println("error read file")
+		log.Info("error read file")
 		return nil
 	}
 	//iocopy
@@ -321,20 +321,20 @@ func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rs
 	if err != nil {
 		return nil
 	}
-	fmt.Println("resp_body")
-	fmt.Println(resp_body)
+	log.Info("resp_body")
+	log.Info(resp_body)
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
 }
 func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileRequest, rsp *proto.DownloadFileResponse) error {
-	fmt.Println("Start download file!")
+	log.Info("Start download file!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-	fmt.Println("download file")
+	log.Info("download file")
 
 	url := req.Url
 	userName := req.Username
@@ -350,11 +350,11 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 
 	resp_http, err := client.Do(req_body)
 	defer resp_http.Body.Close()
-	fmt.Println("download success")
+	log.Info("download success")
 	//**start
 	body_http, err := ioutil.ReadAll(resp_http.Body)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 	}
 	file1 := bytes.NewReader(body_http)
 	fileSize := int64(len(body_http))
@@ -363,45 +363,45 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 	/////getfile
 	/*
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 		}
-		fmt.Println("resp_http")
-		fmt.Println(resp_http)
+		log.Info("resp_http")
+		log.Info(resp_http)
 		file, err := os.Create(guid)
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 		}
-		fmt.Println("file")
-		fmt.Println(file)
+		log.Info("file")
+		log.Info(file)
 		defer file.Close()
 
 		_, err = io.Copy(file, resp_http.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 		}
-		fmt.Println("download success")
+		log.Info("download success")
 		////getfile
 		////putfile
 
 		file1, err := os.Open(guid)
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 		}
 		defer file1.Close()
 
 		fileStat, err := file1.Stat()
 		if err != nil {
-			fmt.Println(err)
+			log.Info(err)
 		}*/
 	////putfile
-	fmt.Println("start upload")
+	log.Info("start upload")
 	n, err := d.minioRepo.PutFile(userName, guid, file1, fileSize)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		//return err
 	}
-	fmt.Println("Successfully uploaded bytes: ", n)
-	fmt.Println("upload success")
+	log.Info("Successfully uploaded bytes: ", n)
+	log.Info("upload success")
 
 	rsp.Result = 200
 	rsp.Message = "OK"
@@ -409,12 +409,12 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 }
 func (d *DataService) ComposeFile(ctx context.Context, req *proto.ComposeFileRequest, rsp *proto.ComposeFileResponse) error {
 
-	fmt.Println("Start compose file!")
+	log.Info("Start compose file!")
 	if req == nil {
-		fmt.Println("Missing file request")
+		log.Info("Missing file request")
 
 	}
-	fmt.Println("compose file")
+	log.Info("compose file")
 
 	userName := req.Username
 	guid := req.Guid
@@ -437,25 +437,25 @@ func (d *DataService) ComposeFile(ctx context.Context, req *proto.ComposeFileReq
 	//sseDst := encrypt.DefaultPBKDF([]byte("new-password"), []byte("new-salt"))
 	dst, err := basicMinio.NewDestinationInfo(userName, guid, nil, nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 	}
 
 	err = d.minioRepo.ComposeFile(dst, srcs)
-	fmt.Println(err)
-	fmt.Println("Composed object successfully.")
+	log.Info(err)
+	log.Info("Composed object successfully.")
 	return nil
 
 }
 
 func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPRequest, rsp *proto.GetStorageIPResponse) error {
 
-	fmt.Println("Start Get Storage IP!")
+	log.Info("Start Get Storage IP!")
 	if req == nil {
 		rsp.Result = 404
 		rsp.Message = "para error"
 		return errors.New("Missing storage node request")
 	}
-	fmt.Println("get StorageIP")
+	log.Info("get StorageIP")
 
 	guid := req.Guid
 	
@@ -463,13 +463,23 @@ func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPR
 	DataInfo, err := d.mgoRepo.CallDataSliceIPRequest(guid)
 	
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 	}
 
 	rsp.StorageAddr = DataInfo.Storeaddr
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
+}
+
+func init() {
+	logger, err := log.LoggerFromConfigAsFile("./config/data-log.xml")
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+	defer logger.Flush()
+	log.ReplaceLogger(logger)
 }
 
 func main() {
