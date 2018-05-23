@@ -60,7 +60,7 @@ message Tx {
 	string to = 3;
 	uint64 price = 4;
 	string asset_type = 5;
-	uint64 date = 6;
+	uint64 timestamp = 6;
 	uint32 block_number = 7;
 }
 
