@@ -35,7 +35,6 @@ func (s *Dashboard) GetTxList(ctx context.Context, req *api.Request, rsp *api.Re
 	if err != nil {
 		log.Error(err)
 	}
-
 	rsp.Body = errcode.Return(response)
 	return nil
 }
