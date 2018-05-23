@@ -1,4 +1,4 @@
-[{
+﻿[{
   "code": 1,
   "msg": {
     "en": "ok",
@@ -94,6 +94,13 @@
   "msg": {
     "en": "Release Requirements failure",
     "cn": "发布需求失败"
+  },
+  "details": ""
+},{
+  "code": 4001,
+  "msg": {
+    "en": "Buy Asset failure",
+    "cn": "购买资产失败"
   },
   "details": ""
 }
