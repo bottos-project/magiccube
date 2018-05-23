@@ -6,8 +6,8 @@ import (
 	"github.com/bottos-project/bottos/service/data/proto"
 
 	"github.com/micro/go-micro"
-	//"github.com/bottos-project/go-micro/client"
-	//"github.com/bottos-project/go-micro/client"
+	//"github.com/micro/go-micro/client"
+	//"github.com/micro/go-micro/client"
 	api "github.com/bottos-project/micro/api/proto"
 
 	"fmt"
@@ -129,7 +129,7 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			//2.2.1 get slice ip
 			Sip := nodes.Ip[i].SnodeIp
 			fmt.Println("Sip")
-			fmt.Println("Sip")
+			fmt.Println(Sip)
 			//Sip := "127.0.0.1"
 			addr := "http://" + Sip + ":8080/rpc"
 			//2.2.2 get slice storage url
@@ -215,7 +215,7 @@ func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Resp
 	b, _ := json.Marshal(map[string]interface{}{
 		"reslut":  rep.Result,
 		"message": rep.Message,
-		"ip":      rep.Ip,
+		"storage_addr":      rep.StorageAddr,
 	})
 	rsp.Body = string(b)
 

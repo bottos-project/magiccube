@@ -42,7 +42,7 @@ func (r *MongoRepository) CallNodeRequest(seedip string) (*util.NodeDBInfo, erro
 		return c.Find(bson.M{"type": "nodeinforeg", "node.basic_info.seed_ip": seedip}).One(&mesgs)
 	}
 
-	session.SetCollection("bottos", query)
+	session.SetCollection("pre_node", query)
 	fmt.Println("mesgs")
 	fmt.Println(mesgs)
 	reqs := &util.NodeDBInfo{
