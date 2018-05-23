@@ -11,34 +11,18 @@ It has these top-level messages:
 	PushTxRequest
 	GetFileUploadURLRequest
 	GetFileUploadURLResponse
-	RegisterFileRequest
 	RegisterFileResponse
-	QueryUploadedDataRequest
 	QueryUploadedDataResponse
 	QueryUploadedData
 	QueryUploadedRow
-	RegisterRequest
 	RegisterResponse
-	QueryRequest
-	QueryResponse
-	QueryData
-	QueryRow
-	QueryAllAssetRequest
-	QueryPara
-	QueryAllAssetResponse
-	ModifyRequest
-	ModifyResponse
-	GetFileUploadStatRequest
-	GetFileUploadStatResponse
 	GetDownLoadURLRequest
 	GetDownLoadURLResponse
-	QueryByIDRequest
-	GetUserPurchaseAssetListRequest
-	GetUserPurchaseAssetListResponse
-	QueryPurchaseData
-	QueryPurchaseRow
-	PreSaleNoticeRequest
 	PreSaleNoticeResponse
+	QueryRequest
+	QueryAssetResponse
+	QueryAssetData
+	AssetData
 	QueryMyNoticeRequest
 	QueryMyNoticeResponse
 	QueryNoticeData
@@ -204,22 +188,6 @@ func (m *GetFileUploadURLResponse) GetData() string {
 	return ""
 }
 
-type RegisterFileRequest struct {
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
-}
-
-func (m *RegisterFileRequest) Reset()                    { *m = RegisterFileRequest{} }
-func (m *RegisterFileRequest) String() string            { return proto.CompactTextString(m) }
-func (*RegisterFileRequest) ProtoMessage()               {}
-func (*RegisterFileRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
-
-func (m *RegisterFileRequest) GetPostBody() string {
-	if m != nil {
-		return m.PostBody
-	}
-	return ""
-}
-
 type RegisterFileResponse struct {
 	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
 	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
@@ -229,7 +197,7 @@ type RegisterFileResponse struct {
 func (m *RegisterFileResponse) Reset()                    { *m = RegisterFileResponse{} }
 func (m *RegisterFileResponse) String() string            { return proto.CompactTextString(m) }
 func (*RegisterFileResponse) ProtoMessage()               {}
-func (*RegisterFileResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (*RegisterFileResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 func (m *RegisterFileResponse) GetCode() uint32 {
 	if m != nil {
@@ -252,38 +220,6 @@ func (m *RegisterFileResponse) GetData() string {
 	return ""
 }
 
-type QueryUploadedDataRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
-	Username string `protobuf:"bytes,3,opt,name=username" json:"username"`
-}
-
-func (m *QueryUploadedDataRequest) Reset()                    { *m = QueryUploadedDataRequest{} }
-func (m *QueryUploadedDataRequest) String() string            { return proto.CompactTextString(m) }
-func (*QueryUploadedDataRequest) ProtoMessage()               {}
-func (*QueryUploadedDataRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
-
-func (m *QueryUploadedDataRequest) GetPageSize() int32 {
-	if m != nil {
-		return m.PageSize
-	}
-	return 0
-}
-
-func (m *QueryUploadedDataRequest) GetPageNum() int32 {
-	if m != nil {
-		return m.PageNum
-	}
-	return 0
-}
-
-func (m *QueryUploadedDataRequest) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
 type QueryUploadedDataResponse struct {
 	Code int32              `protobuf:"varint,1,opt,name=code" json:"code"`
 	Data *QueryUploadedData `protobuf:"bytes,2,opt,name=data" json:"data"`
@@ -293,7 +229,7 @@ type QueryUploadedDataResponse struct {
 func (m *QueryUploadedDataResponse) Reset()                    { *m = QueryUploadedDataResponse{} }
 func (m *QueryUploadedDataResponse) String() string            { return proto.CompactTextString(m) }
 func (*QueryUploadedDataResponse) ProtoMessage()               {}
-func (*QueryUploadedDataResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
+func (*QueryUploadedDataResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func (m *QueryUploadedDataResponse) GetCode() int32 {
 	if m != nil {
@@ -317,24 +253,24 @@ func (m *QueryUploadedDataResponse) GetMsg() string {
 }
 
 type QueryUploadedData struct {
-	PageNum  uint64              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
-	RowCount uint64              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
+	PageNum  uint32              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
+	RowCount uint32              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
 	Row      []*QueryUploadedRow `protobuf:"bytes,3,rep,name=row" json:"row"`
 }
 
 func (m *QueryUploadedData) Reset()                    { *m = QueryUploadedData{} }
 func (m *QueryUploadedData) String() string            { return proto.CompactTextString(m) }
 func (*QueryUploadedData) ProtoMessage()               {}
-func (*QueryUploadedData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
+func (*QueryUploadedData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
 
-func (m *QueryUploadedData) GetPageNum() uint64 {
+func (m *QueryUploadedData) GetPageNum() uint32 {
 	if m != nil {
 		return m.PageNum
 	}
 	return 0
 }
 
-func (m *QueryUploadedData) GetRowCount() uint64 {
+func (m *QueryUploadedData) GetRowCount() uint32 {
 	if m != nil {
 		return m.RowCount
 	}
@@ -355,14 +291,16 @@ type QueryUploadedRow struct {
 	FileSize   uint64 `protobuf:"varint,4,opt,name=file_size,json=fileSize" json:"file_size"`
 	FilePolicy string `protobuf:"bytes,5,opt,name=file_policy,json=filePolicy" json:"file_policy"`
 	FileNumber uint64 `protobuf:"varint,6,opt,name=file_number,json=fileNumber" json:"file_number"`
-	AuthPath   string `protobuf:"bytes,7,opt,name=auth_path,json=authPath" json:"auth_path"`
-	CreateTime string `protobuf:"bytes,8,opt,name=create_time,json=createTime" json:"create_time"`
+	SimOrAss   uint32 `protobuf:"varint,7,opt,name=sim_or_ass,json=simOrAss" json:"sim_or_ass"`
+	OpType     uint32 `protobuf:"varint,8,opt,name=op_type,json=opType" json:"op_type"`
+	StoreAddr  string `protobuf:"bytes,9,opt,name=store_addr,json=storeAddr" json:"store_addr"`
+	CreateTime uint64 `protobuf:"varint,10,opt,name=create_time,json=createTime" json:"create_time"`
 }
 
 func (m *QueryUploadedRow) Reset()                    { *m = QueryUploadedRow{} }
 func (m *QueryUploadedRow) String() string            { return proto.CompactTextString(m) }
 func (*QueryUploadedRow) ProtoMessage()               {}
-func (*QueryUploadedRow) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
+func (*QueryUploadedRow) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
 
 func (m *QueryUploadedRow) GetUsername() string {
 	if m != nil {
@@ -406,48 +344,32 @@ func (m *QueryUploadedRow) GetFileNumber() uint64 {
 	return 0
 }
 
-func (m *QueryUploadedRow) GetAuthPath() string {
+func (m *QueryUploadedRow) GetSimOrAss() uint32 {
 	if m != nil {
-		return m.AuthPath
+		return m.SimOrAss
+	}
+	return 0
+}
+
+func (m *QueryUploadedRow) GetOpType() uint32 {
+	if m != nil {
+		return m.OpType
+	}
+	return 0
+}
+
+func (m *QueryUploadedRow) GetStoreAddr() string {
+	if m != nil {
+		return m.StoreAddr
 	}
 	return ""
 }
 
-func (m *QueryUploadedRow) GetCreateTime() string {
+func (m *QueryUploadedRow) GetCreateTime() uint64 {
 	if m != nil {
 		return m.CreateTime
 	}
-	return ""
-}
-
-type RegisterRequest struct {
-	// string username = 1;
-	// string asset_id = 2;
-	// string session_id = 3;
-	// string asset_name = 4;
-	// int32 feature_tag = 5;
-	// string asset_sample_path = 6;
-	// string asset_sample_hash = 7;
-	// string asset_storage_path = 8;
-	// string asset_storage_hash = 9;
-	// string expire_time = 10;
-	// int64 price = 11;
-	// string description = 12;
-	// string upload_date = 13;
-	// string signature = 14;
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
-}
-
-func (m *RegisterRequest) Reset()                    { *m = RegisterRequest{} }
-func (m *RegisterRequest) String() string            { return proto.CompactTextString(m) }
-func (*RegisterRequest) ProtoMessage()               {}
-func (*RegisterRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
-
-func (m *RegisterRequest) GetPostBody() string {
-	if m != nil {
-		return m.PostBody
-	}
-	return ""
+	return 0
 }
 
 type RegisterResponse struct {
@@ -459,7 +381,7 @@ type RegisterResponse struct {
 func (m *RegisterResponse) Reset()                    { *m = RegisterResponse{} }
 func (m *RegisterResponse) String() string            { return proto.CompactTextString(m) }
 func (*RegisterResponse) ProtoMessage()               {}
-func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
+func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
 func (m *RegisterResponse) GetCode() uint32 {
 	if m != nil {
@@ -482,449 +404,42 @@ func (m *RegisterResponse) GetData() string {
 	return ""
 }
 
-type QueryRequest struct {
-	PageSize   int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
-	PageNum    int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
-	Username   string `protobuf:"bytes,3,opt,name=username" json:"username"`
-	FeatureTag uint64 `protobuf:"varint,4,opt,name=featureTag" json:"featureTag"`
+// message GetFileUploadStatRequest {
+// string username = 1;
+// string fileName = 2;
+// }
+// message GetFileUploadStatResponse {
+// uint32 code = 1;
+// string msg = 2;
+// string data = 3;
+// }
+type GetDownLoadURLRequest struct {
+	PageSize  uint32 `protobuf:"varint,1,opt,name=page_size,json=pageSize" json:"page_size"`
+	PageNum   uint32 `protobuf:"varint,2,opt,name=page_num,json=pageNum" json:"page_num"`
+	Username  string `protobuf:"bytes,3,opt,name=username" json:"username"`
+	Random    string `protobuf:"bytes,4,opt,name=random" json:"random"`
+	FileId    string `protobuf:"bytes,5,opt,name=file_id,json=fileId" json:"file_id"`
+	Signature string `protobuf:"bytes,6,opt,name=signature" json:"signature"`
 }
 
-func (m *QueryRequest) Reset()                    { *m = QueryRequest{} }
-func (m *QueryRequest) String() string            { return proto.CompactTextString(m) }
-func (*QueryRequest) ProtoMessage()               {}
-func (*QueryRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
+func (m *GetDownLoadURLRequest) Reset()                    { *m = GetDownLoadURLRequest{} }
+func (m *GetDownLoadURLRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetDownLoadURLRequest) ProtoMessage()               {}
+func (*GetDownLoadURLRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{8} }
 
-func (m *QueryRequest) GetPageSize() int32 {
+func (m *GetDownLoadURLRequest) GetPageSize() uint32 {
 	if m != nil {
 		return m.PageSize
 	}
 	return 0
 }
 
-func (m *QueryRequest) GetPageNum() int32 {
+func (m *GetDownLoadURLRequest) GetPageNum() uint32 {
 	if m != nil {
 		return m.PageNum
 	}
 	return 0
 }
-
-func (m *QueryRequest) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *QueryRequest) GetFeatureTag() uint64 {
-	if m != nil {
-		return m.FeatureTag
-	}
-	return 0
-}
-
-type QueryResponse struct {
-	Code int32      `protobuf:"varint,1,opt,name=code" json:"code"`
-	Data *QueryData `protobuf:"bytes,2,opt,name=data" json:"data"`
-	Msg  string     `protobuf:"bytes,3,opt,name=msg" json:"msg"`
-}
-
-func (m *QueryResponse) Reset()                    { *m = QueryResponse{} }
-func (m *QueryResponse) String() string            { return proto.CompactTextString(m) }
-func (*QueryResponse) ProtoMessage()               {}
-func (*QueryResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
-
-func (m *QueryResponse) GetCode() int32 {
-	if m != nil {
-		return m.Code
-	}
-	return 0
-}
-
-func (m *QueryResponse) GetData() *QueryData {
-	if m != nil {
-		return m.Data
-	}
-	return nil
-}
-
-func (m *QueryResponse) GetMsg() string {
-	if m != nil {
-		return m.Msg
-	}
-	return ""
-}
-
-type QueryData struct {
-	PageNum  uint64      `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
-	RowCount uint64      `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
-	Row      []*QueryRow `protobuf:"bytes,3,rep,name=row" json:"row"`
-}
-
-func (m *QueryData) Reset()                    { *m = QueryData{} }
-func (m *QueryData) String() string            { return proto.CompactTextString(m) }
-func (*QueryData) ProtoMessage()               {}
-func (*QueryData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{13} }
-
-func (m *QueryData) GetPageNum() uint64 {
-	if m != nil {
-		return m.PageNum
-	}
-	return 0
-}
-
-func (m *QueryData) GetRowCount() uint64 {
-	if m != nil {
-		return m.RowCount
-	}
-	return 0
-}
-
-func (m *QueryData) GetRow() []*QueryRow {
-	if m != nil {
-		return m.Row
-	}
-	return nil
-}
-
-type QueryRow struct {
-	AssetId     string `protobuf:"bytes,1,opt,name=asset_id,json=assetId" json:"asset_id"`
-	Username    string `protobuf:"bytes,2,opt,name=username" json:"username"`
-	AssetName   string `protobuf:"bytes,3,opt,name=asset_name,json=assetName" json:"asset_name"`
-	AssetType   string `protobuf:"bytes,4,opt,name=asset_type,json=assetType" json:"asset_type"`
-	FeatureTag1 string `protobuf:"bytes,5,opt,name=feature_tag1,json=featureTag1" json:"feature_tag1"`
-	FeatureTag2 string `protobuf:"bytes,6,opt,name=feature_tag2,json=featureTag2" json:"feature_tag2"`
-	FeatureTag3 string `protobuf:"bytes,7,opt,name=feature_tag3,json=featureTag3" json:"feature_tag3"`
-	SamplePath  string `protobuf:"bytes,8,opt,name=sample_path,json=samplePath" json:"sample_path"`
-	SampleHash  string `protobuf:"bytes,9,opt,name=sample_hash,json=sampleHash" json:"sample_hash"`
-	StoragePath string `protobuf:"bytes,10,opt,name=storage_path,json=storagePath" json:"storage_path"`
-	StorageHash string `protobuf:"bytes,11,opt,name=storage_hash,json=storageHash" json:"storage_hash"`
-	ExpireTime  uint32 `protobuf:"varint,12,opt,name=expire_time,json=expireTime" json:"expire_time"`
-	Price       uint64 `protobuf:"varint,13,opt,name=price" json:"price"`
-	Description string `protobuf:"bytes,14,opt,name=description" json:"description"`
-	UploadDate  uint32 `protobuf:"varint,15,opt,name=upload_date,json=uploadDate" json:"upload_date"`
-	CreateTime  string `protobuf:"bytes,16,opt,name=create_time,json=createTime" json:"create_time"`
-}
-
-func (m *QueryRow) Reset()                    { *m = QueryRow{} }
-func (m *QueryRow) String() string            { return proto.CompactTextString(m) }
-func (*QueryRow) ProtoMessage()               {}
-func (*QueryRow) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{14} }
-
-func (m *QueryRow) GetAssetId() string {
-	if m != nil {
-		return m.AssetId
-	}
-	return ""
-}
-
-func (m *QueryRow) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *QueryRow) GetAssetName() string {
-	if m != nil {
-		return m.AssetName
-	}
-	return ""
-}
-
-func (m *QueryRow) GetAssetType() string {
-	if m != nil {
-		return m.AssetType
-	}
-	return ""
-}
-
-func (m *QueryRow) GetFeatureTag1() string {
-	if m != nil {
-		return m.FeatureTag1
-	}
-	return ""
-}
-
-func (m *QueryRow) GetFeatureTag2() string {
-	if m != nil {
-		return m.FeatureTag2
-	}
-	return ""
-}
-
-func (m *QueryRow) GetFeatureTag3() string {
-	if m != nil {
-		return m.FeatureTag3
-	}
-	return ""
-}
-
-func (m *QueryRow) GetSamplePath() string {
-	if m != nil {
-		return m.SamplePath
-	}
-	return ""
-}
-
-func (m *QueryRow) GetSampleHash() string {
-	if m != nil {
-		return m.SampleHash
-	}
-	return ""
-}
-
-func (m *QueryRow) GetStoragePath() string {
-	if m != nil {
-		return m.StoragePath
-	}
-	return ""
-}
-
-func (m *QueryRow) GetStorageHash() string {
-	if m != nil {
-		return m.StorageHash
-	}
-	return ""
-}
-
-func (m *QueryRow) GetExpireTime() uint32 {
-	if m != nil {
-		return m.ExpireTime
-	}
-	return 0
-}
-
-func (m *QueryRow) GetPrice() uint64 {
-	if m != nil {
-		return m.Price
-	}
-	return 0
-}
-
-func (m *QueryRow) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
-func (m *QueryRow) GetUploadDate() uint32 {
-	if m != nil {
-		return m.UploadDate
-	}
-	return 0
-}
-
-func (m *QueryRow) GetCreateTime() string {
-	if m != nil {
-		return m.CreateTime
-	}
-	return ""
-}
-
-type QueryAllAssetRequest struct {
-	Username  string     `protobuf:"bytes,1,opt,name=username" json:"username"`
-	SessionId string     `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id"`
-	QueryPara *QueryPara `protobuf:"bytes,3,opt,name=query_para,json=queryPara" json:"query_para"`
-}
-
-func (m *QueryAllAssetRequest) Reset()                    { *m = QueryAllAssetRequest{} }
-func (m *QueryAllAssetRequest) String() string            { return proto.CompactTextString(m) }
-func (*QueryAllAssetRequest) ProtoMessage()               {}
-func (*QueryAllAssetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{15} }
-
-func (m *QueryAllAssetRequest) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *QueryAllAssetRequest) GetSessionId() string {
-	if m != nil {
-		return m.SessionId
-	}
-	return ""
-}
-
-func (m *QueryAllAssetRequest) GetQueryPara() *QueryPara {
-	if m != nil {
-		return m.QueryPara
-	}
-	return nil
-}
-
-type QueryPara struct {
-	Username  string `protobuf:"bytes,1,opt,name=username" json:"username"`
-	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id"`
-}
-
-func (m *QueryPara) Reset()                    { *m = QueryPara{} }
-func (m *QueryPara) String() string            { return proto.CompactTextString(m) }
-func (*QueryPara) ProtoMessage()               {}
-func (*QueryPara) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{16} }
-
-func (m *QueryPara) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *QueryPara) GetSessionId() string {
-	if m != nil {
-		return m.SessionId
-	}
-	return ""
-}
-
-type QueryAllAssetResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
-}
-
-func (m *QueryAllAssetResponse) Reset()                    { *m = QueryAllAssetResponse{} }
-func (m *QueryAllAssetResponse) String() string            { return proto.CompactTextString(m) }
-func (*QueryAllAssetResponse) ProtoMessage()               {}
-func (*QueryAllAssetResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{17} }
-
-func (m *QueryAllAssetResponse) GetCode() uint32 {
-	if m != nil {
-		return m.Code
-	}
-	return 0
-}
-
-func (m *QueryAllAssetResponse) GetMsg() string {
-	if m != nil {
-		return m.Msg
-	}
-	return ""
-}
-
-func (m *QueryAllAssetResponse) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type ModifyRequest struct {
-	//    string username = 1;
-	//    string signature = 2;
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
-}
-
-func (m *ModifyRequest) Reset()                    { *m = ModifyRequest{} }
-func (m *ModifyRequest) String() string            { return proto.CompactTextString(m) }
-func (*ModifyRequest) ProtoMessage()               {}
-func (*ModifyRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{18} }
-
-func (m *ModifyRequest) GetPostBody() string {
-	if m != nil {
-		return m.PostBody
-	}
-	return ""
-}
-
-type ModifyResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
-}
-
-func (m *ModifyResponse) Reset()                    { *m = ModifyResponse{} }
-func (m *ModifyResponse) String() string            { return proto.CompactTextString(m) }
-func (*ModifyResponse) ProtoMessage()               {}
-func (*ModifyResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{19} }
-
-func (m *ModifyResponse) GetCode() uint32 {
-	if m != nil {
-		return m.Code
-	}
-	return 0
-}
-
-func (m *ModifyResponse) GetMsg() string {
-	if m != nil {
-		return m.Msg
-	}
-	return ""
-}
-
-func (m *ModifyResponse) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type GetFileUploadStatRequest struct {
-	Username string `protobuf:"bytes,1,opt,name=username" json:"username"`
-	FileName string `protobuf:"bytes,2,opt,name=fileName" json:"fileName"`
-}
-
-func (m *GetFileUploadStatRequest) Reset()                    { *m = GetFileUploadStatRequest{} }
-func (m *GetFileUploadStatRequest) String() string            { return proto.CompactTextString(m) }
-func (*GetFileUploadStatRequest) ProtoMessage()               {}
-func (*GetFileUploadStatRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{20} }
-
-func (m *GetFileUploadStatRequest) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *GetFileUploadStatRequest) GetFileName() string {
-	if m != nil {
-		return m.FileName
-	}
-	return ""
-}
-
-type GetFileUploadStatResponse struct {
-	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
-	Data string `protobuf:"bytes,3,opt,name=data" json:"data"`
-}
-
-func (m *GetFileUploadStatResponse) Reset()                    { *m = GetFileUploadStatResponse{} }
-func (m *GetFileUploadStatResponse) String() string            { return proto.CompactTextString(m) }
-func (*GetFileUploadStatResponse) ProtoMessage()               {}
-func (*GetFileUploadStatResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{21} }
-
-func (m *GetFileUploadStatResponse) GetCode() uint32 {
-	if m != nil {
-		return m.Code
-	}
-	return 0
-}
-
-func (m *GetFileUploadStatResponse) GetMsg() string {
-	if m != nil {
-		return m.Msg
-	}
-	return ""
-}
-
-func (m *GetFileUploadStatResponse) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type GetDownLoadURLRequest struct {
-	Username string `protobuf:"bytes,1,opt,name=username" json:"username"`
-	FileName string `protobuf:"bytes,2,opt,name=fileName" json:"fileName"`
-}
-
-func (m *GetDownLoadURLRequest) Reset()                    { *m = GetDownLoadURLRequest{} }
-func (m *GetDownLoadURLRequest) String() string            { return proto.CompactTextString(m) }
-func (*GetDownLoadURLRequest) ProtoMessage()               {}
-func (*GetDownLoadURLRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{22} }
 
 func (m *GetDownLoadURLRequest) GetUsername() string {
 	if m != nil {
@@ -933,9 +448,23 @@ func (m *GetDownLoadURLRequest) GetUsername() string {
 	return ""
 }
 
-func (m *GetDownLoadURLRequest) GetFileName() string {
+func (m *GetDownLoadURLRequest) GetRandom() string {
 	if m != nil {
-		return m.FileName
+		return m.Random
+	}
+	return ""
+}
+
+func (m *GetDownLoadURLRequest) GetFileId() string {
+	if m != nil {
+		return m.FileId
+	}
+	return ""
+}
+
+func (m *GetDownLoadURLRequest) GetSignature() string {
+	if m != nil {
+		return m.Signature
 	}
 	return ""
 }
@@ -949,7 +478,7 @@ type GetDownLoadURLResponse struct {
 func (m *GetDownLoadURLResponse) Reset()                    { *m = GetDownLoadURLResponse{} }
 func (m *GetDownLoadURLResponse) String() string            { return proto.CompactTextString(m) }
 func (*GetDownLoadURLResponse) ProtoMessage()               {}
-func (*GetDownLoadURLResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{23} }
+func (*GetDownLoadURLResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{9} }
 
 func (m *GetDownLoadURLResponse) GetCode() uint32 {
 	if m != nil {
@@ -972,210 +501,6 @@ func (m *GetDownLoadURLResponse) GetData() string {
 	return ""
 }
 
-type QueryByIDRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
-	AssetID  string `protobuf:"bytes,3,opt,name=assetID" json:"assetID"`
-}
-
-func (m *QueryByIDRequest) Reset()                    { *m = QueryByIDRequest{} }
-func (m *QueryByIDRequest) String() string            { return proto.CompactTextString(m) }
-func (*QueryByIDRequest) ProtoMessage()               {}
-func (*QueryByIDRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{24} }
-
-func (m *QueryByIDRequest) GetPageSize() int32 {
-	if m != nil {
-		return m.PageSize
-	}
-	return 0
-}
-
-func (m *QueryByIDRequest) GetPageNum() int32 {
-	if m != nil {
-		return m.PageNum
-	}
-	return 0
-}
-
-func (m *QueryByIDRequest) GetAssetID() string {
-	if m != nil {
-		return m.AssetID
-	}
-	return ""
-}
-
-type GetUserPurchaseAssetListRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
-	Username string `protobuf:"bytes,3,opt,name=username" json:"username"`
-	AssetId  string `protobuf:"bytes,4,opt,name=asset_id,json=assetId" json:"asset_id"`
-}
-
-func (m *GetUserPurchaseAssetListRequest) Reset()         { *m = GetUserPurchaseAssetListRequest{} }
-func (m *GetUserPurchaseAssetListRequest) String() string { return proto.CompactTextString(m) }
-func (*GetUserPurchaseAssetListRequest) ProtoMessage()    {}
-func (*GetUserPurchaseAssetListRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor0, []int{25}
-}
-
-func (m *GetUserPurchaseAssetListRequest) GetPageSize() int32 {
-	if m != nil {
-		return m.PageSize
-	}
-	return 0
-}
-
-func (m *GetUserPurchaseAssetListRequest) GetPageNum() int32 {
-	if m != nil {
-		return m.PageNum
-	}
-	return 0
-}
-
-func (m *GetUserPurchaseAssetListRequest) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *GetUserPurchaseAssetListRequest) GetAssetId() string {
-	if m != nil {
-		return m.AssetId
-	}
-	return ""
-}
-
-type GetUserPurchaseAssetListResponse struct {
-	Code int32              `protobuf:"varint,1,opt,name=code" json:"code"`
-	Data *QueryPurchaseData `protobuf:"bytes,2,opt,name=data" json:"data"`
-	Msg  string             `protobuf:"bytes,3,opt,name=msg" json:"msg"`
-}
-
-func (m *GetUserPurchaseAssetListResponse) Reset()         { *m = GetUserPurchaseAssetListResponse{} }
-func (m *GetUserPurchaseAssetListResponse) String() string { return proto.CompactTextString(m) }
-func (*GetUserPurchaseAssetListResponse) ProtoMessage()    {}
-func (*GetUserPurchaseAssetListResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor0, []int{26}
-}
-
-func (m *GetUserPurchaseAssetListResponse) GetCode() int32 {
-	if m != nil {
-		return m.Code
-	}
-	return 0
-}
-
-func (m *GetUserPurchaseAssetListResponse) GetData() *QueryPurchaseData {
-	if m != nil {
-		return m.Data
-	}
-	return nil
-}
-
-func (m *GetUserPurchaseAssetListResponse) GetMsg() string {
-	if m != nil {
-		return m.Msg
-	}
-	return ""
-}
-
-type QueryPurchaseData struct {
-	PageNum  uint64              `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
-	RowCount uint64              `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
-	Row      []*QueryPurchaseRow `protobuf:"bytes,3,rep,name=row" json:"row"`
-}
-
-func (m *QueryPurchaseData) Reset()                    { *m = QueryPurchaseData{} }
-func (m *QueryPurchaseData) String() string            { return proto.CompactTextString(m) }
-func (*QueryPurchaseData) ProtoMessage()               {}
-func (*QueryPurchaseData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{27} }
-
-func (m *QueryPurchaseData) GetPageNum() uint64 {
-	if m != nil {
-		return m.PageNum
-	}
-	return 0
-}
-
-func (m *QueryPurchaseData) GetRowCount() uint64 {
-	if m != nil {
-		return m.RowCount
-	}
-	return 0
-}
-
-func (m *QueryPurchaseData) GetRow() []*QueryPurchaseRow {
-	if m != nil {
-		return m.Row
-	}
-	return nil
-}
-
-type QueryPurchaseRow struct {
-	Username  string `protobuf:"bytes,1,opt,name=username" json:"username"`
-	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId" json:"session_id"`
-	AssetId   string `protobuf:"bytes,3,opt,name=asset_id,json=assetId" json:"asset_id"`
-	DataReqId string `protobuf:"bytes,4,opt,name=data_req_id,json=dataReqId" json:"data_req_id"`
-	Consumer  string `protobuf:"bytes,5,opt,name=consumer" json:"consumer"`
-}
-
-func (m *QueryPurchaseRow) Reset()                    { *m = QueryPurchaseRow{} }
-func (m *QueryPurchaseRow) String() string            { return proto.CompactTextString(m) }
-func (*QueryPurchaseRow) ProtoMessage()               {}
-func (*QueryPurchaseRow) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{28} }
-
-func (m *QueryPurchaseRow) GetUsername() string {
-	if m != nil {
-		return m.Username
-	}
-	return ""
-}
-
-func (m *QueryPurchaseRow) GetSessionId() string {
-	if m != nil {
-		return m.SessionId
-	}
-	return ""
-}
-
-func (m *QueryPurchaseRow) GetAssetId() string {
-	if m != nil {
-		return m.AssetId
-	}
-	return ""
-}
-
-func (m *QueryPurchaseRow) GetDataReqId() string {
-	if m != nil {
-		return m.DataReqId
-	}
-	return ""
-}
-
-func (m *QueryPurchaseRow) GetConsumer() string {
-	if m != nil {
-		return m.Consumer
-	}
-	return ""
-}
-
-type PreSaleNoticeRequest struct {
-	PostBody string `protobuf:"bytes,1,opt,name=postBody" json:"postBody"`
-}
-
-func (m *PreSaleNoticeRequest) Reset()                    { *m = PreSaleNoticeRequest{} }
-func (m *PreSaleNoticeRequest) String() string            { return proto.CompactTextString(m) }
-func (*PreSaleNoticeRequest) ProtoMessage()               {}
-func (*PreSaleNoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{29} }
-
-func (m *PreSaleNoticeRequest) GetPostBody() string {
-	if m != nil {
-		return m.PostBody
-	}
-	return ""
-}
-
 type PreSaleNoticeResponse struct {
 	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code"`
 	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg"`
@@ -1185,7 +510,7 @@ type PreSaleNoticeResponse struct {
 func (m *PreSaleNoticeResponse) Reset()                    { *m = PreSaleNoticeResponse{} }
 func (m *PreSaleNoticeResponse) String() string            { return proto.CompactTextString(m) }
 func (*PreSaleNoticeResponse) ProtoMessage()               {}
-func (*PreSaleNoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{30} }
+func (*PreSaleNoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{10} }
 
 func (m *PreSaleNoticeResponse) GetCode() uint32 {
 	if m != nil {
@@ -1208,25 +533,243 @@ func (m *PreSaleNoticeResponse) GetData() string {
 	return ""
 }
 
-type QueryMyNoticeRequest struct {
-	PageSize int32  `protobuf:"varint,1,opt,name=pageSize" json:"pageSize"`
-	PageNum  int32  `protobuf:"varint,2,opt,name=pageNum" json:"pageNum"`
-	Username string `protobuf:"bytes,3,opt,name=username" json:"username"`
+type QueryRequest struct {
+	PageSize  uint32 `protobuf:"varint,1,opt,name=page_size,json=pageSize" json:"page_size"`
+	PageNum   uint32 `protobuf:"varint,2,opt,name=page_num,json=pageNum" json:"page_num"`
+	Username  string `protobuf:"bytes,3,opt,name=username" json:"username"`
+	Random    string `protobuf:"bytes,4,opt,name=random" json:"random"`
+	Signature string `protobuf:"bytes,5,opt,name=signature" json:"signature"`
 }
 
-func (m *QueryMyNoticeRequest) Reset()                    { *m = QueryMyNoticeRequest{} }
-func (m *QueryMyNoticeRequest) String() string            { return proto.CompactTextString(m) }
-func (*QueryMyNoticeRequest) ProtoMessage()               {}
-func (*QueryMyNoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{31} }
+func (m *QueryRequest) Reset()                    { *m = QueryRequest{} }
+func (m *QueryRequest) String() string            { return proto.CompactTextString(m) }
+func (*QueryRequest) ProtoMessage()               {}
+func (*QueryRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{11} }
 
-func (m *QueryMyNoticeRequest) GetPageSize() int32 {
+func (m *QueryRequest) GetPageSize() uint32 {
 	if m != nil {
 		return m.PageSize
 	}
 	return 0
 }
 
-func (m *QueryMyNoticeRequest) GetPageNum() int32 {
+func (m *QueryRequest) GetPageNum() uint32 {
+	if m != nil {
+		return m.PageNum
+	}
+	return 0
+}
+
+func (m *QueryRequest) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+func (m *QueryRequest) GetRandom() string {
+	if m != nil {
+		return m.Random
+	}
+	return ""
+}
+
+func (m *QueryRequest) GetSignature() string {
+	if m != nil {
+		return m.Signature
+	}
+	return ""
+}
+
+type QueryAssetResponse struct {
+	Code int32           `protobuf:"varint,1,opt,name=code" json:"code"`
+	Data *QueryAssetData `protobuf:"bytes,2,opt,name=data" json:"data"`
+	Msg  string          `protobuf:"bytes,3,opt,name=msg" json:"msg"`
+}
+
+func (m *QueryAssetResponse) Reset()                    { *m = QueryAssetResponse{} }
+func (m *QueryAssetResponse) String() string            { return proto.CompactTextString(m) }
+func (*QueryAssetResponse) ProtoMessage()               {}
+func (*QueryAssetResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{12} }
+
+func (m *QueryAssetResponse) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *QueryAssetResponse) GetData() *QueryAssetData {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
+func (m *QueryAssetResponse) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+type QueryAssetData struct {
+	PageNum  uint32       `protobuf:"varint,1,opt,name=page_num,json=pageNum" json:"page_num"`
+	RowCount uint32       `protobuf:"varint,2,opt,name=row_count,json=rowCount" json:"row_count"`
+	Row      []*AssetData `protobuf:"bytes,3,rep,name=row" json:"row"`
+}
+
+func (m *QueryAssetData) Reset()                    { *m = QueryAssetData{} }
+func (m *QueryAssetData) String() string            { return proto.CompactTextString(m) }
+func (*QueryAssetData) ProtoMessage()               {}
+func (*QueryAssetData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{13} }
+
+func (m *QueryAssetData) GetPageNum() uint32 {
+	if m != nil {
+		return m.PageNum
+	}
+	return 0
+}
+
+func (m *QueryAssetData) GetRowCount() uint32 {
+	if m != nil {
+		return m.RowCount
+	}
+	return 0
+}
+
+func (m *QueryAssetData) GetRow() []*AssetData {
+	if m != nil {
+		return m.Row
+	}
+	return nil
+}
+
+type AssetData struct {
+	AssetId     string `protobuf:"bytes,1,opt,name=asset_id,json=assetId" json:"asset_id"`
+	Username    string `protobuf:"bytes,2,opt,name=username" json:"username"`
+	AssetName   string `protobuf:"bytes,3,opt,name=asset_name,json=assetName" json:"asset_name"`
+	AssetType   string `protobuf:"bytes,4,opt,name=asset_type,json=assetType" json:"asset_type"`
+	FeatureTag  string `protobuf:"bytes,5,opt,name=feature_tag,json=featureTag" json:"feature_tag"`
+	SampleHash  string `protobuf:"bytes,6,opt,name=sample_hash,json=sampleHash" json:"sample_hash"`
+	StorageHash string `protobuf:"bytes,7,opt,name=storage_hash,json=storageHash" json:"storage_hash"`
+	ExpireTime  uint32 `protobuf:"varint,8,opt,name=expire_time,json=expireTime" json:"expire_time"`
+	OpType      uint32 `protobuf:"varint,9,opt,name=op_type,json=opType" json:"op_type"`
+	Price       uint64 `protobuf:"varint,10,opt,name=price" json:"price"`
+	Description string `protobuf:"bytes,11,opt,name=description" json:"description"`
+	CreateTime  uint64 `protobuf:"varint,12,opt,name=create_time,json=createTime" json:"create_time"`
+}
+
+func (m *AssetData) Reset()                    { *m = AssetData{} }
+func (m *AssetData) String() string            { return proto.CompactTextString(m) }
+func (*AssetData) ProtoMessage()               {}
+func (*AssetData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{14} }
+
+func (m *AssetData) GetAssetId() string {
+	if m != nil {
+		return m.AssetId
+	}
+	return ""
+}
+
+func (m *AssetData) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+func (m *AssetData) GetAssetName() string {
+	if m != nil {
+		return m.AssetName
+	}
+	return ""
+}
+
+func (m *AssetData) GetAssetType() string {
+	if m != nil {
+		return m.AssetType
+	}
+	return ""
+}
+
+func (m *AssetData) GetFeatureTag() string {
+	if m != nil {
+		return m.FeatureTag
+	}
+	return ""
+}
+
+func (m *AssetData) GetSampleHash() string {
+	if m != nil {
+		return m.SampleHash
+	}
+	return ""
+}
+
+func (m *AssetData) GetStorageHash() string {
+	if m != nil {
+		return m.StorageHash
+	}
+	return ""
+}
+
+func (m *AssetData) GetExpireTime() uint32 {
+	if m != nil {
+		return m.ExpireTime
+	}
+	return 0
+}
+
+func (m *AssetData) GetOpType() uint32 {
+	if m != nil {
+		return m.OpType
+	}
+	return 0
+}
+
+func (m *AssetData) GetPrice() uint64 {
+	if m != nil {
+		return m.Price
+	}
+	return 0
+}
+
+func (m *AssetData) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *AssetData) GetCreateTime() uint64 {
+	if m != nil {
+		return m.CreateTime
+	}
+	return 0
+}
+
+type QueryMyNoticeRequest struct {
+	PageSize  uint32 `protobuf:"varint,1,opt,name=page_size,json=pageSize" json:"page_size"`
+	PageNum   uint32 `protobuf:"varint,2,opt,name=page_num,json=pageNum" json:"page_num"`
+	Username  string `protobuf:"bytes,3,opt,name=username" json:"username"`
+	Random    string `protobuf:"bytes,4,opt,name=random" json:"random"`
+	Signature string `protobuf:"bytes,5,opt,name=signature" json:"signature"`
+}
+
+func (m *QueryMyNoticeRequest) Reset()                    { *m = QueryMyNoticeRequest{} }
+func (m *QueryMyNoticeRequest) String() string            { return proto.CompactTextString(m) }
+func (*QueryMyNoticeRequest) ProtoMessage()               {}
+func (*QueryMyNoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{15} }
+
+func (m *QueryMyNoticeRequest) GetPageSize() uint32 {
+	if m != nil {
+		return m.PageSize
+	}
+	return 0
+}
+
+func (m *QueryMyNoticeRequest) GetPageNum() uint32 {
 	if m != nil {
 		return m.PageNum
 	}
@@ -1240,6 +783,20 @@ func (m *QueryMyNoticeRequest) GetUsername() string {
 	return ""
 }
 
+func (m *QueryMyNoticeRequest) GetRandom() string {
+	if m != nil {
+		return m.Random
+	}
+	return ""
+}
+
+func (m *QueryMyNoticeRequest) GetSignature() string {
+	if m != nil {
+		return m.Signature
+	}
+	return ""
+}
+
 type QueryMyNoticeResponse struct {
 	Code int32            `protobuf:"varint,1,opt,name=code" json:"code"`
 	Data *QueryNoticeData `protobuf:"bytes,2,opt,name=data" json:"data"`
@@ -1249,7 +806,7 @@ type QueryMyNoticeResponse struct {
 func (m *QueryMyNoticeResponse) Reset()                    { *m = QueryMyNoticeResponse{} }
 func (m *QueryMyNoticeResponse) String() string            { return proto.CompactTextString(m) }
 func (*QueryMyNoticeResponse) ProtoMessage()               {}
-func (*QueryMyNoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{32} }
+func (*QueryMyNoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{16} }
 
 func (m *QueryMyNoticeResponse) GetCode() int32 {
 	if m != nil {
@@ -1273,24 +830,24 @@ func (m *QueryMyNoticeResponse) GetMsg() string {
 }
 
 type QueryNoticeData struct {
-	PageNum  uint64            `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
-	RowCount uint64            `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
+	PageNum  uint32            `protobuf:"varint,1,opt,name=pageNum" json:"pageNum"`
+	RowCount uint32            `protobuf:"varint,2,opt,name=rowCount" json:"rowCount"`
 	Row      []*QueryNoticeRow `protobuf:"bytes,3,rep,name=row" json:"row"`
 }
 
 func (m *QueryNoticeData) Reset()                    { *m = QueryNoticeData{} }
 func (m *QueryNoticeData) String() string            { return proto.CompactTextString(m) }
 func (*QueryNoticeData) ProtoMessage()               {}
-func (*QueryNoticeData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{33} }
+func (*QueryNoticeData) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{17} }
 
-func (m *QueryNoticeData) GetPageNum() uint64 {
+func (m *QueryNoticeData) GetPageNum() uint32 {
 	if m != nil {
 		return m.PageNum
 	}
 	return 0
 }
 
-func (m *QueryNoticeData) GetRowCount() uint64 {
+func (m *QueryNoticeData) GetRowCount() uint32 {
 	if m != nil {
 		return m.RowCount
 	}
@@ -1306,22 +863,31 @@ func (m *QueryNoticeData) GetRow() []*QueryNoticeRow {
 
 type QueryNoticeRow struct {
 	Username    string `protobuf:"bytes,1,opt,name=username" json:"username"`
-	AssetId     string `protobuf:"bytes,2,opt,name=asset_id,json=assetId" json:"asset_id"`
-	AssetName   string `protobuf:"bytes,3,opt,name=asset_name,json=assetName" json:"asset_name"`
-	DataReqId   string `protobuf:"bytes,4,opt,name=data_req_id,json=dataReqId" json:"data_req_id"`
-	DataReqName string `protobuf:"bytes,5,opt,name=data_req_name,json=dataReqName" json:"data_req_name"`
-	Consumer    string `protobuf:"bytes,6,opt,name=consumer" json:"consumer"`
-	CreateTime  string `protobuf:"bytes,7,opt,name=createTime" json:"createTime"`
+	NoticeId    string `protobuf:"bytes,2,opt,name=notice_id,json=noticeId" json:"notice_id"`
+	AssetId     string `protobuf:"bytes,3,opt,name=asset_id,json=assetId" json:"asset_id"`
+	AssetName   string `protobuf:"bytes,4,opt,name=asset_name,json=assetName" json:"asset_name"`
+	DataReqId   string `protobuf:"bytes,5,opt,name=data_req_id,json=dataReqId" json:"data_req_id"`
+	DataReqName string `protobuf:"bytes,6,opt,name=data_req_name,json=dataReqName" json:"data_req_name"`
+	Consumer    string `protobuf:"bytes,7,opt,name=consumer" json:"consumer"`
+	ReadFlag    string `protobuf:"bytes,8,opt,name=read_flag,json=readFlag" json:"read_flag"`
+	Time        uint64 `protobuf:"varint,9,opt,name=time" json:"time"`
 }
 
 func (m *QueryNoticeRow) Reset()                    { *m = QueryNoticeRow{} }
 func (m *QueryNoticeRow) String() string            { return proto.CompactTextString(m) }
 func (*QueryNoticeRow) ProtoMessage()               {}
-func (*QueryNoticeRow) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{34} }
+func (*QueryNoticeRow) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{18} }
 
 func (m *QueryNoticeRow) GetUsername() string {
 	if m != nil {
 		return m.Username
+	}
+	return ""
+}
+
+func (m *QueryNoticeRow) GetNoticeId() string {
+	if m != nil {
+		return m.NoticeId
 	}
 	return ""
 }
@@ -1361,45 +927,36 @@ func (m *QueryNoticeRow) GetConsumer() string {
 	return ""
 }
 
-func (m *QueryNoticeRow) GetCreateTime() string {
+func (m *QueryNoticeRow) GetReadFlag() string {
 	if m != nil {
-		return m.CreateTime
+		return m.ReadFlag
 	}
 	return ""
+}
+
+func (m *QueryNoticeRow) GetTime() uint64 {
+	if m != nil {
+		return m.Time
+	}
+	return 0
 }
 
 func init() {
 	proto.RegisterType((*PushTxRequest)(nil), "PushTxRequest")
 	proto.RegisterType((*GetFileUploadURLRequest)(nil), "GetFileUploadURLRequest")
 	proto.RegisterType((*GetFileUploadURLResponse)(nil), "GetFileUploadURLResponse")
-	proto.RegisterType((*RegisterFileRequest)(nil), "RegisterFileRequest")
 	proto.RegisterType((*RegisterFileResponse)(nil), "RegisterFileResponse")
-	proto.RegisterType((*QueryUploadedDataRequest)(nil), "QueryUploadedDataRequest")
 	proto.RegisterType((*QueryUploadedDataResponse)(nil), "QueryUploadedDataResponse")
 	proto.RegisterType((*QueryUploadedData)(nil), "QueryUploadedData")
 	proto.RegisterType((*QueryUploadedRow)(nil), "QueryUploadedRow")
-	proto.RegisterType((*RegisterRequest)(nil), "RegisterRequest")
 	proto.RegisterType((*RegisterResponse)(nil), "RegisterResponse")
-	proto.RegisterType((*QueryRequest)(nil), "QueryRequest")
-	proto.RegisterType((*QueryResponse)(nil), "QueryResponse")
-	proto.RegisterType((*QueryData)(nil), "QueryData")
-	proto.RegisterType((*QueryRow)(nil), "QueryRow")
-	proto.RegisterType((*QueryAllAssetRequest)(nil), "QueryAllAssetRequest")
-	proto.RegisterType((*QueryPara)(nil), "QueryPara")
-	proto.RegisterType((*QueryAllAssetResponse)(nil), "QueryAllAssetResponse")
-	proto.RegisterType((*ModifyRequest)(nil), "ModifyRequest")
-	proto.RegisterType((*ModifyResponse)(nil), "ModifyResponse")
-	proto.RegisterType((*GetFileUploadStatRequest)(nil), "GetFileUploadStatRequest")
-	proto.RegisterType((*GetFileUploadStatResponse)(nil), "GetFileUploadStatResponse")
 	proto.RegisterType((*GetDownLoadURLRequest)(nil), "GetDownLoadURLRequest")
 	proto.RegisterType((*GetDownLoadURLResponse)(nil), "GetDownLoadURLResponse")
-	proto.RegisterType((*QueryByIDRequest)(nil), "QueryByIDRequest")
-	proto.RegisterType((*GetUserPurchaseAssetListRequest)(nil), "GetUserPurchaseAssetListRequest")
-	proto.RegisterType((*GetUserPurchaseAssetListResponse)(nil), "GetUserPurchaseAssetListResponse")
-	proto.RegisterType((*QueryPurchaseData)(nil), "QueryPurchaseData")
-	proto.RegisterType((*QueryPurchaseRow)(nil), "QueryPurchaseRow")
-	proto.RegisterType((*PreSaleNoticeRequest)(nil), "PreSaleNoticeRequest")
 	proto.RegisterType((*PreSaleNoticeResponse)(nil), "PreSaleNoticeResponse")
+	proto.RegisterType((*QueryRequest)(nil), "QueryRequest")
+	proto.RegisterType((*QueryAssetResponse)(nil), "QueryAssetResponse")
+	proto.RegisterType((*QueryAssetData)(nil), "QueryAssetData")
+	proto.RegisterType((*AssetData)(nil), "AssetData")
 	proto.RegisterType((*QueryMyNoticeRequest)(nil), "QueryMyNoticeRequest")
 	proto.RegisterType((*QueryMyNoticeResponse)(nil), "QueryMyNoticeResponse")
 	proto.RegisterType((*QueryNoticeData)(nil), "QueryNoticeData")
@@ -1409,95 +966,77 @@ func init() {
 func init() { proto.RegisterFile("asset.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 1439 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x58, 0xcd, 0x6e, 0xdb, 0x46,
-	0x10, 0x96, 0x2c, 0xc9, 0x16, 0x47, 0x96, 0x2c, 0x6f, 0x6d, 0x87, 0x66, 0x9a, 0x44, 0x61, 0x8b,
-	0xc2, 0x45, 0x50, 0xa2, 0x71, 0xd0, 0x02, 0x3d, 0x14, 0xa8, 0x13, 0x23, 0xa9, 0x0b, 0x47, 0x55,
-	0x18, 0xfb, 0x5a, 0x61, 0x2d, 0xae, 0x25, 0x16, 0x92, 0x48, 0x73, 0x97, 0x75, 0x54, 0xf4, 0xd0,
-	0x4b, 0x4e, 0x05, 0xfa, 0x0c, 0x3d, 0xf4, 0xd9, 0xfa, 0x1c, 0xc5, 0xfe, 0x90, 0x5e, 0x52, 0x94,
-	0xe3, 0x58, 0xc9, 0x4d, 0x33, 0x3b, 0x33, 0x3b, 0x9c, 0xfd, 0xe6, 0x4f, 0xd0, 0xc0, 0x94, 0x12,
-	0xe6, 0x84, 0x51, 0xc0, 0x02, 0xfb, 0x9f, 0x15, 0x68, 0xf6, 0x62, 0x3a, 0x3a, 0x79, 0xe3, 0x92,
-	0x8b, 0x98, 0x50, 0x86, 0x4c, 0x58, 0xfb, 0x8d, 0x44, 0xd4, 0x0f, 0xa6, 0x66, 0xb9, 0x53, 0xde,
-	0x6b, 0xba, 0x09, 0x89, 0xee, 0x01, 0x0c, 0xe2, 0x88, 0x06, 0x51, 0x7f, 0x1a, 0x4f, 0xcc, 0x15,
-	0x71, 0x68, 0x48, 0x4e, 0x37, 0x9e, 0xa0, 0x87, 0xb0, 0xae, 0x8e, 0xc7, 0xf8, 0x8c, 0x8c, 0xcd,
-	0x8a, 0x10, 0x68, 0x48, 0xde, 0x31, 0x67, 0x21, 0x0b, 0xea, 0x63, 0xff, 0x9c, 0x30, 0x7f, 0x42,
-	0xcc, 0x6a, 0xa7, 0xbc, 0x57, 0x75, 0x53, 0x1a, 0xed, 0xc0, 0x2a, 0x25, 0x53, 0x8f, 0x44, 0x66,
-	0xad, 0x53, 0xde, 0x33, 0x5c, 0x45, 0x71, 0x9d, 0x41, 0x30, 0x65, 0x11, 0x1e, 0x30, 0x73, 0x55,
-	0x9c, 0xa4, 0x34, 0xd7, 0x99, 0x10, 0x36, 0x0a, 0x3c, 0x73, 0x4d, 0xea, 0x48, 0x0a, 0x6d, 0x41,
-	0x2d, 0xc4, 0x11, 0x9e, 0x98, 0x75, 0xc1, 0x96, 0x04, 0xba, 0x03, 0x6b, 0xd4, 0x1f, 0xf6, 0xf1,
-	0x78, 0x68, 0x1a, 0xc2, 0xb7, 0x55, 0xea, 0x0f, 0x0f, 0xc6, 0x43, 0xf4, 0x29, 0x18, 0xd4, 0x1f,
-	0x4e, 0x31, 0x8b, 0x23, 0x62, 0x82, 0x50, 0xb9, 0x62, 0xd8, 0xdf, 0xc0, 0x9d, 0x17, 0x84, 0x3d,
-	0xf7, 0xc7, 0xe4, 0x34, 0x1c, 0x07, 0xd8, 0x3b, 0x75, 0x8f, 0x93, 0x58, 0x59, 0x50, 0x0f, 0x03,
-	0xca, 0x9e, 0x06, 0xde, 0x4c, 0x04, 0xcb, 0x70, 0x53, 0xda, 0x3e, 0x01, 0x73, 0x5e, 0x8d, 0x86,
-	0xc1, 0x94, 0x12, 0x84, 0xa0, 0x3a, 0x08, 0x3c, 0xa2, 0x02, 0x2c, 0x7e, 0xa3, 0x36, 0x54, 0x26,
-	0x74, 0x28, 0xc2, 0x6a, 0xb8, 0xfc, 0x27, 0x97, 0xf2, 0x30, 0xc3, 0x22, 0x90, 0x86, 0x2b, 0x7e,
-	0xdb, 0x8f, 0xe1, 0x13, 0x97, 0x0c, 0x7d, 0xca, 0x48, 0xc4, 0x4d, 0xdf, 0xc4, 0x91, 0x1e, 0x6c,
-	0x65, 0x55, 0x96, 0x76, 0x62, 0x0c, 0xe6, 0xab, 0x98, 0x44, 0x33, 0xf9, 0x61, 0xc4, 0x3b, 0xc4,
-	0x0c, 0xeb, 0x9e, 0xe0, 0x21, 0x79, 0xed, 0xff, 0x2e, 0x2d, 0xd7, 0xdc, 0x94, 0xe6, 0xd0, 0xe2,
-	0xbf, 0xbb, 0x0a, 0x3d, 0x35, 0x37, 0x21, 0xb9, 0x56, 0x4c, 0x49, 0x34, 0xc5, 0x13, 0xa2, 0x6e,
-	0x4a, 0x69, 0xdb, 0x87, 0xdd, 0x82, 0xdb, 0x0a, 0x3e, 0xa2, 0xa6, 0x3e, 0xe2, 0x0b, 0xe5, 0x32,
-	0xbf, 0xa3, 0xb1, 0x8f, 0x9c, 0x79, 0x6d, 0x71, 0x9e, 0x7c, 0x6c, 0x25, 0xfd, 0x58, 0x7b, 0x0a,
-	0x9b, 0x73, 0xc2, 0xba, 0xd7, 0x65, 0x81, 0x59, 0xdd, 0xeb, 0x28, 0xb8, 0x7c, 0x16, 0xc4, 0x53,
-	0x26, 0x2e, 0xab, 0xba, 0x29, 0x8d, 0x3e, 0x83, 0x4a, 0x14, 0x5c, 0x9a, 0x95, 0x4e, 0x65, 0xaf,
-	0xb1, 0xbf, 0x99, 0xf5, 0xc1, 0x0d, 0x2e, 0x5d, 0x7e, 0x6a, 0xbf, 0x5d, 0x81, 0x76, 0xfe, 0x24,
-	0x13, 0x8b, 0x72, 0x36, 0x16, 0xe8, 0x2e, 0x18, 0xe7, 0xfe, 0x98, 0xf4, 0x47, 0x98, 0x8e, 0xd4,
-	0x2b, 0xd5, 0x39, 0xe3, 0x47, 0x4c, 0x47, 0xe9, 0xa1, 0x1e, 0x45, 0xce, 0xe8, 0xea, 0x9a, 0x94,
-	0x3f, 0x8c, 0xca, 0x3d, 0xce, 0x10, 0x0f, 0xf3, 0x00, 0x1a, 0xe2, 0x30, 0x0c, 0xc6, 0xfe, 0x60,
-	0xa6, 0x12, 0x10, 0x38, 0xab, 0x27, 0x38, 0xa9, 0xc0, 0x34, 0x9e, 0x9c, 0x91, 0x48, 0xe4, 0x61,
-	0x55, 0x0a, 0x74, 0x05, 0x87, 0x9b, 0xc7, 0x31, 0x1b, 0xf5, 0x43, 0xcc, 0x46, 0x2a, 0x19, 0xeb,
-	0x9c, 0xd1, 0xc3, 0x6c, 0xc4, 0xb5, 0x07, 0x11, 0xc1, 0x8c, 0xf4, 0x45, 0xe6, 0xcb, 0xa4, 0x04,
-	0xc9, 0x3a, 0xf1, 0x27, 0xc4, 0xfe, 0x0a, 0x36, 0x12, 0x88, 0xde, 0x04, 0xd1, 0xc7, 0xd0, 0xbe,
-	0x12, 0x5f, 0x1a, 0xcd, 0x7f, 0x96, 0x61, 0x5d, 0x3c, 0xc2, 0x47, 0x83, 0x30, 0xba, 0x0f, 0x70,
-	0x4e, 0x44, 0x35, 0x39, 0xc1, 0x43, 0x15, 0x7d, 0x8d, 0x63, 0x9f, 0x42, 0x53, 0x79, 0x70, 0x0d,
-	0xac, 0xef, 0x67, 0x60, 0x0d, 0x12, 0x52, 0xd7, 0xc2, 0xf9, 0x17, 0x30, 0x52, 0xa1, 0x5b, 0xc2,
-	0xf8, 0xae, 0x0e, 0x63, 0x43, 0xde, 0x99, 0xc2, 0xf7, 0xaf, 0x2a, 0xd4, 0x13, 0x0e, 0xda, 0x85,
-	0xba, 0x68, 0x2c, 0x7d, 0xdf, 0x53, 0x0f, 0xb6, 0x26, 0xe8, 0x23, 0x2f, 0x13, 0x9a, 0x95, 0x5c,
-	0x68, 0xee, 0x01, 0x48, 0x35, 0x2d, 0x70, 0x86, 0xe0, 0x74, 0x33, 0xc7, 0x6c, 0x16, 0x4a, 0xdc,
-	0x26, 0xc7, 0x27, 0xb3, 0x90, 0xf0, 0x9e, 0xa3, 0xc2, 0xd8, 0x67, 0x78, 0xf8, 0x58, 0x21, 0xb7,
-	0x71, 0x15, 0xda, 0xc7, 0x39, 0x91, 0x7d, 0xd5, 0x43, 0x34, 0x91, 0xfd, 0x9c, 0xc8, 0x13, 0x85,
-	0x5f, 0x4d, 0xe4, 0x09, 0x87, 0x30, 0xc5, 0x93, 0x90, 0xe7, 0x08, 0x47, 0xb8, 0x82, 0xb0, 0x64,
-	0x25, 0x18, 0x57, 0x02, 0x22, 0x37, 0x0d, 0x5d, 0x40, 0x64, 0xe7, 0x43, 0x58, 0xa7, 0x2c, 0x88,
-	0xf0, 0x50, 0x99, 0x90, 0x7d, 0xa6, 0xa1, 0x78, 0xc2, 0x86, 0x26, 0x22, 0x8c, 0x34, 0x32, 0x22,
-	0xc2, 0xca, 0x03, 0x68, 0x90, 0x37, 0xa1, 0x1f, 0xa9, 0x54, 0x5a, 0x17, 0x68, 0x07, 0xc9, 0xe2,
-	0xa9, 0x24, 0x5a, 0x5f, 0xe4, 0x0f, 0x88, 0xd9, 0x14, 0x2f, 0x29, 0x09, 0xd4, 0x81, 0x86, 0x47,
-	0xe8, 0x20, 0xf2, 0x43, 0xc6, 0x1b, 0x7b, 0x4b, 0x1a, 0xd6, 0x58, 0xdc, 0x70, 0x2c, 0x8a, 0x50,
-	0xdf, 0xc3, 0x8c, 0x98, 0x1b, 0xd2, 0xb0, 0x64, 0x1d, 0x62, 0x46, 0xf2, 0x49, 0xdc, 0x9e, 0x4b,
-	0xe2, 0x3f, 0x60, 0x4b, 0x80, 0xe1, 0x60, 0x3c, 0x3e, 0xe0, 0x0f, 0xa4, 0xa5, 0xd3, 0xc2, 0x7a,
-	0x76, 0x0f, 0x80, 0x12, 0xca, 0xa7, 0x0b, 0x0e, 0x9b, 0x15, 0xd5, 0x7a, 0x25, 0xe7, 0xc8, 0x43,
-	0x5f, 0x02, 0x5c, 0x70, 0x93, 0x7d, 0xde, 0xc0, 0x05, 0x38, 0x52, 0xe0, 0xf7, 0x70, 0x84, 0x5d,
-	0xe3, 0x22, 0xf9, 0x69, 0x3f, 0x57, 0x58, 0xe7, 0xc4, 0x12, 0x57, 0xda, 0xaf, 0x60, 0x3b, 0xf7,
-	0x15, 0x4b, 0x17, 0x98, 0x47, 0xd0, 0x7c, 0x19, 0x78, 0xfe, 0xf9, 0xec, 0x26, 0xb5, 0xed, 0x27,
-	0x68, 0x25, 0xc2, 0x4b, 0x5f, 0xec, 0xe6, 0x46, 0x90, 0xd7, 0x0c, 0xdf, 0xe8, 0x55, 0x2c, 0x48,
-	0xfb, 0x86, 0xde, 0x64, 0x38, 0x6d, 0x9f, 0xc2, 0x6e, 0x81, 0xcd, 0xa5, 0x5d, 0xfd, 0x19, 0xb6,
-	0x5f, 0x10, 0x76, 0x18, 0x5c, 0x4e, 0x8f, 0xe7, 0x46, 0xac, 0x5b, 0xf9, 0xe9, 0xc2, 0x4e, 0xde,
-	0xe0, 0xd2, 0x4e, 0x9e, 0xa9, 0x6e, 0xfd, 0x74, 0x76, 0x74, 0xb8, 0x5c, 0xb3, 0x30, 0x41, 0x15,
-	0xc7, 0x43, 0x75, 0x41, 0x42, 0xda, 0x7f, 0x97, 0xe1, 0xc1, 0x0b, 0xc2, 0x4e, 0x29, 0x89, 0x7a,
-	0x71, 0x34, 0x18, 0x61, 0x4a, 0x04, 0x0e, 0x8f, 0x7d, 0xca, 0x3e, 0x5e, 0x83, 0xd2, 0x8b, 0x77,
-	0x35, 0x53, 0xbc, 0xed, 0x10, 0x3a, 0x8b, 0xfd, 0x79, 0xdf, 0x29, 0x2c, 0x31, 0x71, 0xa3, 0x29,
-	0x4c, 0x17, 0xfe, 0x80, 0x53, 0x58, 0x62, 0x36, 0x6d, 0x63, 0xff, 0x96, 0xd5, 0xbb, 0x6a, 0x27,
-	0xcb, 0x54, 0x2d, 0x3d, 0x98, 0x95, 0x6c, 0x27, 0xbc, 0x0f, 0x0d, 0xfe, 0xd1, 0xfd, 0x88, 0x5c,
-	0x5c, 0x85, 0xda, 0xf0, 0xe4, 0xfc, 0x2c, 0x3b, 0xe5, 0x20, 0x98, 0xd2, 0x78, 0x92, 0xae, 0x41,
-	0x29, 0x6d, 0xef, 0xc3, 0x56, 0x2f, 0x22, 0xaf, 0xf1, 0x98, 0x74, 0x03, 0xe6, 0x0f, 0x6e, 0x34,
-	0xfb, 0xbf, 0x82, 0xed, 0x9c, 0xce, 0xd2, 0x49, 0x30, 0x52, 0x65, 0xfe, 0xe5, 0x6c, 0xde, 0x8d,
-	0x0f, 0x3b, 0xf8, 0x0f, 0x54, 0x29, 0xbe, 0xba, 0xe9, 0x1a, 0xb8, 0x7d, 0x9e, 0x81, 0x5b, 0x5b,
-	0x3e, 0xb5, 0xd4, 0xbb, 0x16, 0x6c, 0xbf, 0xc2, 0x46, 0x4e, 0xf4, 0x96, 0x50, 0x7b, 0xa8, 0x43,
-	0x6d, 0x43, 0xbf, 0x3f, 0x05, 0xda, 0x7f, 0x65, 0x68, 0x65, 0xf9, 0xd7, 0xc2, 0x4c, 0xc7, 0xd1,
-	0x4a, 0x16, 0x47, 0xef, 0x98, 0x9a, 0xde, 0x05, 0x33, 0x1b, 0x9a, 0xe9, 0xb9, 0xb0, 0xa0, 0xe6,
-	0x26, 0x25, 0xd1, 0x55, 0xc5, 0x35, 0x85, 0xe2, 0x6a, 0x16, 0x8a, 0x7c, 0x9e, 0xbd, 0x6a, 0xfc,
-	0x6a, 0x5c, 0xd2, 0x38, 0xfb, 0x6f, 0xd7, 0xa0, 0x26, 0xaa, 0x04, 0x3a, 0x82, 0x76, 0x7e, 0x0b,
-	0x46, 0xa6, 0xb3, 0x60, 0x9f, 0xb6, 0x76, 0x9d, 0x45, 0x2b, 0xb3, 0x5d, 0x42, 0xc7, 0xb0, 0x39,
-	0xd7, 0x79, 0x50, 0x4e, 0x43, 0xeb, 0x70, 0x96, 0xe5, 0x2c, 0x6c, 0x54, 0x76, 0x09, 0x7d, 0x0f,
-	0xeb, 0xfa, 0x56, 0x8c, 0xb6, 0x9c, 0x82, 0xbd, 0xda, 0xda, 0x76, 0x8a, 0x56, 0x67, 0xe9, 0xcc,
-	0xfc, 0xa6, 0xb8, 0xeb, 0x2c, 0x5a, 0x8b, 0x2d, 0xcb, 0x59, 0xb8, 0xc3, 0xda, 0x25, 0xf4, 0x0c,
-	0x5a, 0xd9, 0x66, 0x85, 0x76, 0x9c, 0xc2, 0x76, 0x68, 0xdd, 0x71, 0x8a, 0xbb, 0x9a, 0x5d, 0x42,
-	0xdf, 0x42, 0x33, 0x71, 0x56, 0xc6, 0xbe, 0xed, 0xe4, 0x96, 0x2a, 0x6b, 0xd3, 0xc9, 0xef, 0x4d,
-	0x76, 0x09, 0xed, 0x41, 0x4d, 0xf8, 0x86, 0x9a, 0x8e, 0xbe, 0x06, 0x59, 0x2d, 0x27, 0xb3, 0x93,
-	0xd8, 0x25, 0xf4, 0x83, 0x5a, 0x53, 0x92, 0xd9, 0x08, 0x6d, 0x3b, 0x45, 0x13, 0x9f, 0xb5, 0xe3,
-	0x14, 0x8e, 0x50, 0x76, 0x09, 0x3d, 0x82, 0x55, 0x39, 0xdd, 0xa0, 0x96, 0x93, 0x99, 0x89, 0xac,
-	0x0d, 0x27, 0x3b, 0xf6, 0xd8, 0x25, 0xf4, 0xb5, 0x1a, 0xe9, 0x78, 0xbb, 0x45, 0xaa, 0x78, 0x6b,
-	0xad, 0xb7, 0xc0, 0xc1, 0xae, 0x18, 0x78, 0x0a, 0x7b, 0x15, 0xea, 0x38, 0xef, 0x68, 0xab, 0x05,
-	0xf6, 0xbe, 0x83, 0x66, 0xa6, 0x7c, 0xa2, 0x96, 0x93, 0xf9, 0xb3, 0xcc, 0xda, 0x71, 0x0a, 0xcb,
-	0xab, 0x16, 0xab, 0xa4, 0x78, 0x25, 0xb1, 0xca, 0x95, 0xcd, 0x24, 0x56, 0xf9, 0x1a, 0x67, 0x97,
-	0xd0, 0x81, 0x2a, 0x16, 0x2f, 0x67, 0xea, 0x8e, 0xf7, 0x36, 0x71, 0xb6, 0x2a, 0xfe, 0xe4, 0x7b,
-	0xf2, 0x7f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x73, 0x55, 0x37, 0x7d, 0xf3, 0x13, 0x00, 0x00,
+	// 1149 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x57, 0x4d, 0x73, 0xdb, 0x36,
+	0x13, 0xd6, 0x97, 0x65, 0x71, 0x65, 0xc5, 0x36, 0x5e, 0x5b, 0x66, 0x64, 0xe7, 0x8d, 0xcd, 0x74,
+	0x3a, 0x3e, 0xf1, 0xe0, 0xb6, 0xd3, 0xe9, 0xad, 0x6e, 0x32, 0x49, 0x3d, 0xe3, 0xa8, 0x0e, 0xe3,
+	0x9c, 0x39, 0xb0, 0x08, 0xd3, 0xec, 0x90, 0x04, 0x0d, 0x90, 0x75, 0x94, 0xdf, 0xd1, 0x43, 0x8f,
+	0xf9, 0x1d, 0x3d, 0xf4, 0x3f, 0xf5, 0xd6, 0x63, 0x07, 0x0b, 0x92, 0x22, 0x29, 0xd5, 0x9d, 0xb6,
+	0x9e, 0x69, 0x6f, 0xdc, 0x0f, 0x2c, 0xa0, 0x07, 0xcf, 0x3e, 0x0b, 0xc1, 0x90, 0x4a, 0xc9, 0x52,
+	0x3b, 0x11, 0x3c, 0xe5, 0xd6, 0xc7, 0x0e, 0x8c, 0x2e, 0x32, 0x79, 0x73, 0xf9, 0xde, 0x61, 0xb7,
+	0x19, 0x93, 0x29, 0x31, 0x61, 0xfd, 0x07, 0x26, 0x64, 0xc0, 0x63, 0xb3, 0x7d, 0xd8, 0x3e, 0x1e,
+	0x39, 0x85, 0x49, 0x9e, 0x00, 0xcc, 0x32, 0x21, 0xb9, 0x70, 0xe3, 0x2c, 0x32, 0x3b, 0x18, 0x34,
+	0xb4, 0x67, 0x9a, 0x45, 0xe4, 0x08, 0x36, 0xf2, 0x70, 0x48, 0xaf, 0x58, 0x68, 0x76, 0x31, 0x61,
+	0xa8, 0x7d, 0xe7, 0xca, 0x45, 0x26, 0x30, 0x08, 0x83, 0x6b, 0x96, 0x06, 0x11, 0x33, 0x7b, 0x87,
+	0xed, 0xe3, 0x9e, 0x53, 0xda, 0x64, 0x0c, 0x7d, 0xc9, 0x62, 0x8f, 0x09, 0x73, 0xed, 0xb0, 0x7d,
+	0x6c, 0x38, 0xb9, 0xa5, 0xd6, 0xcc, 0x78, 0x9c, 0x0a, 0x3a, 0x4b, 0xcd, 0x3e, 0x46, 0x4a, 0x5b,
+	0xad, 0x89, 0x58, 0x7a, 0xc3, 0x3d, 0x73, 0x5d, 0xaf, 0xd1, 0x16, 0xd9, 0x81, 0xb5, 0x84, 0x0a,
+	0x1a, 0x99, 0x03, 0x74, 0x6b, 0x83, 0xec, 0xc1, 0xba, 0x0c, 0x7c, 0x97, 0x86, 0xbe, 0x69, 0xe0,
+	0xd9, 0xfa, 0x32, 0xf0, 0x4f, 0x43, 0x9f, 0x1c, 0x80, 0x21, 0x03, 0x3f, 0xa6, 0x69, 0x26, 0x98,
+	0x09, 0xb8, 0x64, 0xe1, 0xb0, 0xbe, 0x80, 0xbd, 0x57, 0x2c, 0x7d, 0x19, 0x84, 0xec, 0x5d, 0x12,
+	0x72, 0xea, 0xbd, 0x73, 0xce, 0x0b, 0xac, 0x26, 0x30, 0x48, 0xb8, 0x4c, 0xbf, 0xe1, 0xde, 0x1c,
+	0xc1, 0x32, 0x9c, 0xd2, 0xb6, 0x2e, 0xc1, 0x5c, 0x5e, 0x26, 0x13, 0x1e, 0x4b, 0x46, 0x08, 0xf4,
+	0x66, 0xdc, 0x63, 0x39, 0xc0, 0xf8, 0x4d, 0xb6, 0xa0, 0x1b, 0x49, 0x1f, 0x61, 0x35, 0x1c, 0xf5,
+	0xa9, 0xb2, 0x3c, 0x9a, 0x52, 0x04, 0xd2, 0x70, 0xf0, 0xdb, 0xba, 0x80, 0x1d, 0x87, 0xf9, 0x81,
+	0x4c, 0x99, 0x50, 0xa5, 0x1f, 0xa0, 0x62, 0x00, 0x8f, 0xdf, 0x64, 0x4c, 0xcc, 0xf5, 0x29, 0x99,
+	0xf7, 0x82, 0xa6, 0x74, 0x65, 0xd9, 0xb5, 0xbc, 0xec, 0xa7, 0x79, 0x11, 0x55, 0x77, 0x78, 0x42,
+	0xec, 0xe5, 0xd5, 0x18, 0x2f, 0xb6, 0xef, 0x96, 0xdb, 0x5b, 0x31, 0x6c, 0x2f, 0x25, 0x2b, 0xbe,
+	0x25, 0xd4, 0x67, 0xd3, 0x2c, 0x2a, 0xf8, 0x96, 0x9b, 0x0a, 0x5d, 0xc1, 0xef, 0x9e, 0xf3, 0x2c,
+	0x4e, 0x73, 0xb6, 0x95, 0x36, 0x79, 0x06, 0x5d, 0xc1, 0xef, 0xcc, 0xee, 0x61, 0xf7, 0x78, 0x78,
+	0xb2, 0x5d, 0x3f, 0x83, 0xc3, 0xef, 0x1c, 0x15, 0xb5, 0x7e, 0xe9, 0xc0, 0x56, 0x33, 0xa2, 0xaa,
+	0x66, 0x92, 0x89, 0x98, 0x46, 0xac, 0xb8, 0xb3, 0xc2, 0x26, 0xfb, 0x60, 0x5c, 0x07, 0x21, 0x73,
+	0x6f, 0xa8, 0xbc, 0xc9, 0x71, 0x1b, 0x28, 0xc7, 0xb7, 0x54, 0xde, 0x94, 0x41, 0x5c, 0xd9, 0x5d,
+	0x04, 0xa7, 0xd5, 0x95, 0x32, 0xf8, 0x50, 0x52, 0x5b, 0x39, 0xde, 0x06, 0x1f, 0x18, 0x79, 0x0a,
+	0x43, 0x0c, 0x26, 0x3c, 0x0c, 0x66, 0xf3, 0x9c, 0xdf, 0xa0, 0x5c, 0x17, 0xe8, 0x29, 0x13, 0xe2,
+	0x2c, 0xba, 0x62, 0x02, 0x69, 0xde, 0xd3, 0x09, 0x53, 0xf4, 0x90, 0x03, 0x00, 0x19, 0x44, 0x2e,
+	0x17, 0x2e, 0x95, 0x12, 0xc9, 0x3e, 0x72, 0x06, 0x32, 0x88, 0xbe, 0x13, 0xa7, 0x52, 0x2a, 0x62,
+	0xf3, 0xc4, 0x4d, 0xe7, 0x09, 0x43, 0xc2, 0x8f, 0x9c, 0x3e, 0x4f, 0x2e, 0xe7, 0x09, 0x53, 0x1d,
+	0x2b, 0x53, 0x2e, 0x98, 0x4b, 0x3d, 0x4f, 0x20, 0xe9, 0x15, 0xb3, 0x95, 0xe7, 0xd4, 0xf3, 0x84,
+	0xda, 0x76, 0x26, 0x18, 0x4d, 0x99, 0x8b, 0x1d, 0x09, 0x7a, 0x5b, 0xed, 0xba, 0x0c, 0x22, 0x66,
+	0x9d, 0xc3, 0x56, 0xc1, 0xb6, 0x07, 0x60, 0xda, 0xcf, 0x6d, 0xd8, 0x7d, 0xc5, 0xd2, 0x17, 0xfc,
+	0x2e, 0x3e, 0xaf, 0xf7, 0xd1, 0x3e, 0x18, 0xea, 0xd2, 0x35, 0x7a, 0xba, 0xf0, 0x40, 0x39, 0x10,
+	0xbd, 0xc7, 0x80, 0xdf, 0x15, 0xd1, 0xa9, 0x32, 0xa4, 0xbc, 0xcb, 0x6e, 0xe3, 0x2e, 0xc7, 0xd0,
+	0x17, 0x34, 0xf6, 0x78, 0x84, 0xd7, 0x61, 0x38, 0xb9, 0xa5, 0xc0, 0x42, 0xac, 0x03, 0xaf, 0x10,
+	0x1a, 0x65, 0x9e, 0x79, 0x75, 0x15, 0xe8, 0x37, 0x55, 0xc0, 0x81, 0x71, 0xf3, 0xec, 0xff, 0x18,
+	0x90, 0x37, 0xb0, 0x7b, 0x21, 0xd8, 0x5b, 0x1a, 0xb2, 0x29, 0x4f, 0x83, 0xd9, 0x43, 0x74, 0xf3,
+	0x4f, 0x6d, 0xd8, 0x40, 0xca, 0xff, 0x1b, 0xd0, 0xd6, 0x10, 0x5c, 0x6b, 0x22, 0xe8, 0x02, 0xc1,
+	0x93, 0x9d, 0xaa, 0xf1, 0x73, 0xaf, 0xc2, 0x3c, 0xab, 0x29, 0xcc, 0xa6, 0xbd, 0x58, 0x76, 0xaf,
+	0xbc, 0x5c, 0xc3, 0xa3, 0x7a, 0x66, 0xed, 0xf7, 0x35, 0xc4, 0x65, 0x1f, 0x0c, 0xc1, 0xef, 0xdc,
+	0xd9, 0x4a, 0x75, 0x39, 0xa8, 0xaa, 0x0b, 0xd8, 0x8b, 0xad, 0x51, 0x56, 0x7e, 0xeb, 0x80, 0x51,
+	0xdb, 0x03, 0x07, 0xaa, 0x22, 0x94, 0xd6, 0x93, 0x75, 0xb4, 0xcf, 0xbc, 0x1a, 0x86, 0x9d, 0x06,
+	0x86, 0x4f, 0x00, 0xf4, 0xb2, 0x0a, 0xc2, 0x06, 0x7a, 0xa6, 0xb5, 0x30, 0x76, 0x75, 0xaf, 0x12,
+	0xc6, 0xc6, 0x56, 0x82, 0xc1, 0x10, 0x56, 0x37, 0xa5, 0x7e, 0xa9, 0x28, 0xda, 0x75, 0x49, 0x7d,
+	0x95, 0x20, 0x69, 0x94, 0x14, 0x5a, 0xa6, 0xe9, 0x0c, 0xda, 0x85, 0x6a, 0x76, 0x04, 0x1b, 0x4a,
+	0x08, 0x14, 0x3a, 0x98, 0xa1, 0x07, 0xe8, 0x30, 0xf7, 0x61, 0xca, 0x53, 0x18, 0xb2, 0xf7, 0x49,
+	0x20, 0x72, 0x79, 0xd0, 0xd2, 0x02, 0xda, 0xa5, 0xe4, 0xa1, 0xaa, 0x3b, 0x46, 0x4d, 0x77, 0xd4,
+	0xfc, 0x15, 0xc1, 0xac, 0x90, 0x14, 0x6d, 0x90, 0x43, 0x18, 0x7a, 0x4c, 0xce, 0x44, 0x90, 0xa4,
+	0xea, 0x75, 0x31, 0xd4, 0x3b, 0x56, 0x5c, 0x4d, 0x41, 0xda, 0x58, 0x12, 0xa4, 0x8f, 0x6d, 0xd8,
+	0xc1, 0x3b, 0x7e, 0x3d, 0x2f, 0x5a, 0xe6, 0xbf, 0x46, 0xf3, 0x19, 0xec, 0x36, 0x4e, 0x78, 0x0f,
+	0xd3, 0x3f, 0xa9, 0x31, 0x7d, 0x4b, 0x33, 0x5d, 0xaf, 0xbb, 0x97, 0xea, 0xdf, 0xc3, 0x66, 0x23,
+	0xf5, 0x6f, 0xce, 0xd1, 0xa3, 0x2a, 0xd3, 0x37, 0xab, 0xfb, 0x97, 0x53, 0xf4, 0xc7, 0x4e, 0xde,
+	0x57, 0xa5, 0xff, 0xcf, 0x66, 0x68, 0x8c, 0x89, 0xaa, 0x21, 0x72, 0xd6, 0x6b, 0xc7, 0x99, 0x57,
+	0x6b, 0x96, 0x6e, 0xbd, 0x59, 0xea, 0x0d, 0xd1, 0x6b, 0x36, 0xc4, 0xff, 0x61, 0xa8, 0xb0, 0x70,
+	0x05, 0xbb, 0x5d, 0x48, 0xb7, 0xe1, 0xe1, 0x63, 0xe5, 0xf6, 0xcc, 0x23, 0x16, 0x8c, 0xca, 0x38,
+	0x56, 0xe8, 0xe7, 0xf4, 0xd2, 0x19, 0x58, 0x43, 0x3f, 0x25, 0x65, 0x16, 0x31, 0x91, 0xf3, 0xbd,
+	0xb4, 0x51, 0x0f, 0x18, 0xf5, 0xdc, 0xeb, 0x90, 0xfa, 0xf9, 0xb3, 0x71, 0xa0, 0x1c, 0x2f, 0x43,
+	0x8a, 0x4a, 0x8b, 0x84, 0x34, 0x90, 0x90, 0xf8, 0x7d, 0xf2, 0x6b, 0x17, 0xd6, 0x50, 0x05, 0xc8,
+	0x97, 0xb0, 0x51, 0x7d, 0x93, 0x91, 0x47, 0x76, 0xed, 0x45, 0x3d, 0xd9, 0xb5, 0x57, 0x3d, 0xd9,
+	0xac, 0x16, 0xf9, 0x7a, 0xd5, 0x7b, 0x68, 0x64, 0x57, 0xf5, 0x7b, 0x32, 0xb1, 0xff, 0xf0, 0x75,
+	0x66, 0xb5, 0xc8, 0x73, 0x78, 0x54, 0x9f, 0x4a, 0x64, 0x6c, 0xaf, 0x1c, 0xb1, 0x93, 0x3d, 0x7b,
+	0xf5, 0xf8, 0xb2, 0x5a, 0xe4, 0x73, 0x18, 0x15, 0x07, 0xd4, 0x3f, 0xa8, 0xf9, 0x03, 0xb6, 0xed,
+	0xe6, 0x2b, 0xc0, 0x6a, 0x91, 0x13, 0x80, 0x85, 0xda, 0x36, 0x4f, 0xfd, 0x3f, 0x7b, 0x59, 0xea,
+	0xad, 0x16, 0xf9, 0x0a, 0x46, 0xb5, 0x81, 0xb7, 0xb4, 0xd3, 0xd8, 0x5e, 0x39, 0x10, 0x11, 0xab,
+	0x51, 0xad, 0xad, 0xc8, 0xae, 0xbd, 0x4a, 0x08, 0x26, 0x63, 0x7b, 0x65, 0xf7, 0x59, 0x2d, 0x72,
+	0x9a, 0xd3, 0xf8, 0xf5, 0x3c, 0xdf, 0xe3, 0x2f, 0x97, 0xb8, 0xea, 0xe3, 0x9f, 0xa6, 0xcf, 0x7e,
+	0x0f, 0x00, 0x00, 0xff, 0xff, 0xd5, 0x26, 0x3d, 0x17, 0x43, 0x0d, 0x00, 0x00,
 }

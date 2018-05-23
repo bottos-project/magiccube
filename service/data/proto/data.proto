@@ -151,7 +151,7 @@ message GetStorageIPRequest {
 message GetStorageIPResponse {
 	uint64 result = 1;
     string message = 2;
-	repeated Ip ip = 3;
+	string storage_addr = 3;
 }
 message GetFileDownloadURLRequest {
 	string username = 1;

@@ -43,28 +43,53 @@ func (s *Requirement) Publish(ctx context.Context, req *api.Request, rsp *api.Re
 }
 
 func (s *Requirement) Query(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
 	body := req.Body
 	log.Info(body)
 	var requirementQuery requirement.QueryRequest
 	err := json.Unmarshal([]byte(body), &requirementQuery)
 	if err != nil {
 		log.Error(err)
+		return err
+	}
+	requirementQuery.Username = ""
+	response, err := s.Client.Query(ctx, &requirementQuery)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (s *Requirement) QueryByUsername(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var requirementQuery requirement.QueryRequest
+	err := json.Unmarshal([]byte(body), &requirementQuery)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
 	}
 
 	response, err := s.Client.Query(ctx, &requirementQuery)
 	if err != nil {
 		log.Error(err)
+		return err
 	}
 
-	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"data": response.Data,
-		"msg":  response.Msg,
-	})
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
+
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/req-log.xml")
@@ -78,7 +103,7 @@ func init() {
 
 func main() {
 	service := micro.NewService(
-		micro.Name("bottos.api.v3.requirement"),
+		micro.Name("go.micro.api.v3.requirement"),
 	)
 
 	// parse command line flags
@@ -86,7 +111,7 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&Requirement{Client: requirement.NewRequirementClient("bottos.srv.requirement", service.Client())},
+			&Requirement{Client: requirement.NewRequirementClient("go.micro.srv.v3.requirement", service.Client())},
 		),
 	)
 	if err := service.Run(); err != nil {

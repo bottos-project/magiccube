@@ -11,29 +11,34 @@ import (
 
 type DataMessage struct {
 	ID                 string        `bson:"_id"`
-	MessageID          int           `bson:"message_id"`
+	BlockNumber          int           `bson:"block_number"`
 	TransactionID      string        `bson:"transaction_id"`
-	Authorization      []interface{} `bson:"authorization"`
-	HandlerAccountName string        `bson:"handler_account_name"`
-	Type               string        `bson:"type"`
-	Data               struct {
-		Guid      string `bson:"guid"`
-		BasicInfo struct {
-			MerkleRootHash string     `bson:"merkle_root_hash"`
-			FileHash       string     `bson:"file_hash"`
-			UserName       string     `bson:"user_name"`
-			SessionID      string     `bson:"session_id"`
-			FileSize       uint64     `bson:"file_size"`
-			FileName       string     `bson:"file_name"`
-			FilePolicy     string     `bson:"file_policy"`
-			FileNumber     uint64     `bson:"file_number"`
-			Signature      string     `bson:"signature"`
-			Fslice         [][]string `bson:"fslice"`
+	SequenceNum      int `bson:"sequence_num"`
+	BlockHash string        `bson:"block_hash"`
+	CursorNum                 int        `bson:"cursor_num"`
+	CursorLabel          int           `bson:"cursor_label"`
+	Lifetime      int        `bson:"lifetime"`
+	Sender      string `bson:"sender"`
+	Cntract string        `bson:"contract"`
+	Method      string        `bson:"method"`
+	Param               struct {
+		Filehash      string `bson:"filehash"`
+		Info struct {
+			Username string     `bson:"username"`
+			Filesize       string     `bson:"filesize"`
+			Filename       string     `bson:"filename"`
+			Filepolicy      string     `bson:"filepolicy"`
+			Filenumber       uint64     `bson:"filenumber"`
+			Simorass       string     `bson:"simorass"`
+			Optype     string     `bson:"optype"`
+			Storeaddr     string     `bson:"storeaddr"`
 
-			AuthPath string `bson:"auth_path"`
-		} `bson:"basic_info"`
-	} `bson:"data"`
-	CreatedAt string `bson:"createdAt"`
+		} `bson:"info"`
+	} `bson:"param"`
+	SigAlg int `bson:"sig_alg"`
+	Signature string `bson:"signature"`
+	CreatedTime string `bson:"created_time"`
+	Version int `bson:"version"`
 }
 
 func (r *MongoRepository) CallIsDataExists(merkleroothash string) (uint64, error) {
@@ -46,14 +51,15 @@ func (r *MongoRepository) CallIsDataExists(merkleroothash string) (uint64, error
 	fmt.Println(session)
 	var mesgs []DataMessage
 	query := func(c *mgo.Collection) error {
-		return c.Find(bson.M{"type": "datafilereg", "data.basic_info.merkle_root_hash": merkleroothash}).All(&mesgs)
+		return c.Find(bson.M{"method": "datafilereg", "param.filehash": merkleroothash}).All(&mesgs)
 	}
-	session.SetCollection("bottos", query)
+	session.SetCollection("pre_datafilereg", query)
 	fmt.Println(mesgs)
 	var reqs uint64 = 0
 	if mesgs != nil {
 		reqs = 1
 	}
+	fmt.Println(session)
 	return reqs, err
 }
 func (r *MongoRepository) CallDataSliceIPRequest(guid string) (*util.DataDBInfo, error) {
@@ -66,21 +72,22 @@ func (r *MongoRepository) CallDataSliceIPRequest(guid string) (*util.DataDBInfo,
 	fmt.Println(session)
 	var mesgs DataMessage
 	query := func(c *mgo.Collection) error {
-		return c.Find(bson.M{"type": "datafilereg", "data.guid": guid}).One(&mesgs)
+		return c.Find(bson.M{"method": "datafilereg", "param.filehash": guid}).One(&mesgs)
 	}
-
-	session.SetCollection("bottos", query)
+	session.SetCollection("pre_datafilereg", query)
 	fmt.Println("mesgs")
 	fmt.Println(mesgs)
 	reqs := &util.DataDBInfo{
-		mesgs.Data.Guid,
-		mesgs.Data.BasicInfo.MerkleRootHash,
-		mesgs.Data.BasicInfo.UserName,
-		mesgs.Data.BasicInfo.FileName,
-		mesgs.Data.BasicInfo.FileSize,
-		mesgs.Data.BasicInfo.FileNumber,
-		mesgs.Data.BasicInfo.FilePolicy,
-		mesgs.Data.BasicInfo.Fslice}
+		mesgs.Param.Filehash,
+		mesgs.Param.Info.Username,
+		mesgs.Param.Info.Filesize,
+		mesgs.Param.Info.Filename,
+		mesgs.Param.Info.Filepolicy,
+		mesgs.Param.Info.Filenumber,
+		mesgs.Param.Info.Simorass,
+		mesgs.Param.Info.Optype,
+		mesgs.Param.Info.Storeaddr,
+		}
 
 	return reqs, err
 }

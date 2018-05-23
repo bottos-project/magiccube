@@ -82,3 +82,7 @@ func TestGoType(t *testing.T)  {
 	t.Log(err)
 	t.Log(ret)
 }
+
+func TestGetAccountInfo(t *testing.T)  {
+	t.Log(data.AccountInfo("rrrr"))
+}

@@ -18,8 +18,8 @@ type CoreCommonReturn struct {
 		Trx struct {
 			Version     uint32 `json:"version"`
 			CursorNum   uint32 `json:"cursor_num"`
-			CursorLabel int64  `json:"cursor_label"`
-			Lifetime    uint32 `json:"lifetime"`
+			CursorLabel uint32  `json:"cursor_label"`
+			Lifetime    uint64 `json:"lifetime"`
 			Sender      string `json:"sender"`
 			Contract    string `json:"contract"`
 			Method      string `json:"method"`
@@ -29,6 +29,25 @@ type CoreCommonReturn struct {
 		} `json:"trx"`
 		TrxHash string `json:"trx_hash"`
 	} `json:"result"`
+}
+
+type Transaction struct {
+	ID          	bson.ObjectId 	`bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	CursorNum   	uint32  		`bson:"cursor_num"`
+	CursorLabel 	uint32  		`bson:"cursor_label"`
+	Lifetime    	uint64  		`bson:"lifetime"`
+	Sender      	string  		`bson:"sender"`
+	Contract    	string  		`bson:"contract"`
+	Method      	string  		`bson:"method"`
+	Param       	interface{}  	`bson:"param"`
+	SigAlg      	uint32  		`bson:"sig_alg"`
+	Signature   	string  		`bson:"signature"`
+	CreateTime  	time.Time		`bson:"create_time"`
+	Version     	uint32  		`bson:"version"`
 }
 
 type TxBean struct {
@@ -68,5 +87,212 @@ type Block struct {
 	Timestamp             uint64     	    `bson:"timestamp"`
 	MerkleRoot 			  string        	`bson:"merkle_root"`
 	Transactions          []bson.ObjectId   `bson:"transactions"`
-	createTime           time.Time     		`bson:"create_time"`
+	CreateTime           time.Time     		`bson:"create_time"`
+}
+
+type Favorite struct {
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		Goodsid   string  		`bson:"goodsid"`
+		Goodstype string  		`bson:"goodstype"`
+		Optype    float64 		`bson:"optype"`
+		Username  string  		`bson:"username"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+
+}
+
+type Requirement struct {
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		DataReqId string 		`bson:"datareqid"`
+		Info      struct {
+			Description string  `bson:"description"`
+			Expiretime  uint64  `bson:"expiretime"`
+			Featuretag  uint64  `bson:"featuretag"`
+			Optype      uint32  `bson:"optype"`
+			Price       uint64  `bson:"price"`
+			Reqname     string  `bson:"reqname"`
+			Reqtype     uint64  `bson:"reqtype"`
+			Samplehash  string  `bson:"samplehash"`
+			Username    string  `bson:"username"`
+		} 						`bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+type AssetBean struct {
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    	string  		`bson:"contract"`
+	CursorLabel 	uint32 			`bson:"cursor_label"`
+	CursorNum   	uint32			`bson:"cursor_num"`
+	Lifetime    	uint64 			`bson:"lifetime"`
+	Method      	string  		`bson:"method"`
+	Param       	struct {
+		AssetId 	string 			`bson:"assetid"`
+		Info    	struct {
+			UserName    string `bson:"username"`
+			AssetName   string `bson:"assetname"`
+			AssetType   string `bson:"assettype"`
+			FeatureTag  string `bson:"featuretag"`
+			SampleHash  string `bson:"samplehash"`
+			StorageHash string `bson:"storagehash"`
+			ExpireTime  uint32 `bson:"expiretime"`
+			OpType  uint32 `bson:"optype"`
+			Price       uint64 	`bson:"price"`
+			Description string  `bson:"description"`
+		} 						`bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature   string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+type FileBean struct {
+	ID          bson.ObjectId   `bson:"_id,omitempty"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		FileId string `bson:"filehash"`
+		Info    struct {
+			UserName    string `bson:"username"`
+			FileName   string `bson:"filename"`
+			FileSize   uint64 `bson:"filesize"`
+			FilePolicy  string `bson:"filepolicy"`
+			FileNumber  uint64 `bson:"filenumber"`
+			SimOrAss  uint32 `bson:"simoreass"`
+			OpType  uint32 `bson:"optype"`
+			StoreAddr string `bson:"storeaddr"`
+		} `bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+type PreSaleBean struct {
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		Datapresaleid string 	`bson:"datapresaleid"`
+		Info      struct {
+			Assetid   string  	`bson:"assetid"`
+			Consumer  string  	`bson:"consumer"`
+			Datareqid string  	`bson:"datareqid"`
+			Optype    uint32 	`bson:"optype"`
+			Username    string  `bson:"username"`
+		} 						`bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+type Buy struct {
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    string  		`bson:"contract"`
+	CursorLabel uint32 			`bson:"cursor_label"`
+	CursorNum   uint32			`bson:"cursor_num"`
+	Lifetime    uint64 			`bson:"lifetime"`
+	Method      string  		`bson:"method"`
+	Param       struct {
+		DataExchangeId string 	`bson:"dataexchangeid"`
+		Info      struct {
+			AssetId   string  	`bson:"assetid"`
+			Username    string  `bson:"username"`
+		} 						`bson:"info"`
+	} 							`bson:"param"`
+	Sender    	string  		`bson:"sender"`
+	SigAlg    	uint32 			`bson:"sig_alg"`
+	Signature 	string  		`bson:"signature"`
+	Version   	uint32 			`bson:"version"`
+	CreateTime 	time.Time     	`bson:"create_time"`
+}
+
+type Tx struct {
+	ID          	bson.ObjectId   `bson:"_id,omitempty"`
+	BlockNumber 	uint32  		`bson:"block_number"`
+	TransactionId 	string  		`bson:"transaction_id"`
+	SequenceNum   	uint32  		`bson:"sequence_num"`
+	BlockHash 		string  		`bson:"block_hash"`
+	Contract    	string  		`bson:"contract"`
+	CursorLabel	 	uint32 			`bson:"cursor_label"`
+	CursorNum   	uint32			`bson:"cursor_num"`
+	Lifetime    	uint64 			`bson:"lifetime"`
+	Method      	string  		`bson:"method"`
+	Param       	struct {
+		DataExchangeId 	string 		`bson:"dataexchangeid"`
+		Info           	struct {
+			AssetId  	string 		`bson:"assetid"`
+			Username 	string 		`bson:"username"`
+		} 							`bson:"info"`
+	} 								`bson:"param"`
+	Sender    	string  			`bson:"sender"`
+	SigAlg    	uint32 				`bson:"sig_alg"`
+	Signature 	string  			`bson:"signature"`
+	Version   	uint32 				`bson:"version"`
+	CreateTime 	time.Time     		`bson:"create_time"`
+}
+
+type RecordNum struct {
+	ID                    	bson.ObjectId 	`bson:"_id,omitempty"`
+	TxNum              		int   			`bson:"tx_num"`
+	TxAmount 				uint64   		`bson:"tx_amount"`
+	RequirementNum			int   			`bson:"requirement_num"`
+	AssetNum				int   			`bson:"asset_num"`
+	AccountNum  			int   			`bson:"account_num"`
+	Date					string   		`bson:"date"`
+	Timestamp				int   			`bson:"timestamp"`
+	Create_time			  	time.Time		`bson:"create_time"`
 }

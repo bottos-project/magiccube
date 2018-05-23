@@ -93,6 +93,8 @@ func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest
 	fmt.Println("root")
 	fmt.Println(root)
 	isSlicefileExist, err := d.mgoRepo.CallIsDataExists(root)
+	fmt.Println("isSlicefileExist")
+	fmt.Println(isSlicefileExist)
 	if err != nil {
 		rsp.Result = 404
 		rsp.Message = "file check failed"
@@ -456,28 +458,15 @@ func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPR
 	fmt.Println("get StorageIP")
 
 	guid := req.Guid
-	rsp.Ip = []*proto.Ip{}
+	
 
 	DataInfo, err := d.mgoRepo.CallDataSliceIPRequest(guid)
+	
 	if err != nil {
-		rsp.Result = 404
-		rsp.Message = "get node failed"
 		fmt.Println(err)
-		return errors.New("Failed get storage node")
-	}
-	for i := 0; i < len(DataInfo.Fslice); i++ {
-		fs := DataInfo.Fslice[i]
-		fmt.Println("fs")
-		fmt.Println(fs)
-		fmt.Println("fs[0]")
-		fmt.Println(fs[0])
-		fmt.Println("fs[1]")
-		fmt.Println(fs[1])
-		nodeTag := &proto.Ip{fs[0],
-			fs[1]}
-		rsp.Ip = append(rsp.Ip, nodeTag)
 	}
 
+	rsp.StorageAddr = DataInfo.Storeaddr
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil

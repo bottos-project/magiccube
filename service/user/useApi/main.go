@@ -227,9 +227,7 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	//is, err:=sign.PushVerifySign(req.Body)
-	//TODO
-	is:=true
+	is, err:=sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -245,17 +243,27 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Response) error {
+
+func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
-	var getAccountInfoRequest user.GetBalanceRequest
-	err := json.Unmarshal([]byte(req.Body), &getAccountInfoRequest)
+	body := req.Body
+	var queryMyBuyRequest user.QueryMyBuyRequest
+	err := json.Unmarshal([]byte(body), &queryMyBuyRequest)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	response, err := u.Client.GetBalance(ctx, &getAccountInfoRequest)
-	if err != nil {
 
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.QueryMyBuy(ctx, &queryMyBuyRequest)
+	if err != nil {
+		log.Error(err)
 		return err
 	}
 
@@ -275,7 +283,7 @@ func init() {
 
 func main() {
 	service := micro.NewService(
-		micro.Name("bottos.api.v3.user"),
+		micro.Name("go.micro.api.v3.user"),
 	)
 
 	// parse command line flags
@@ -283,7 +291,7 @@ func main() {
 
 	service.Server().Handle(
 		service.Server().NewHandler(
-			&User{Client: user.NewUserClient("bottos.srv.user", service.Client())},
+			&User{Client: user.NewUserClient("go.micro.srv.v3.user", service.Client())},
 		),
 	)
 

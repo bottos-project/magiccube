@@ -8,12 +8,8 @@ import (
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"strconv"
-	"github.com/asaskevich/govalidator"
 	"os"
 	sign "github.com/bottos-project/bottos/service/common/signature"
-	chain "github.com/bottos-project/bottos/service/common/data"
-	"github.com/bottos-project/bottos/service/common/bean"
 	errcode "github.com/bottos-project/bottos/error"
 )
 
@@ -21,7 +17,7 @@ type Asset struct {
 	Client asset.AssetClient
 }
 
-func (s *Asset) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
+/*func (s *Asset) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("Start Get File URL!")
 	//header, _ := json.Marshal(req.Header)
 	response, err := s.Client.GetFileUploadURL(ctx, &asset.GetFileUploadURLRequest{
@@ -75,36 +71,27 @@ func (u *Asset) GetFileUploadStat(ctx context.Context, req *api.Request, rsp *ap
 	rsp.StatusCode = 200
 	rsp.Body = string(b)
 	return nil
-}
+}*/
 
 func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	//header, _ := json.Marshal(req.Header)
+	rsp.StatusCode = 200
 
-	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var queryRequest bean.TxPublic
-	json.Unmarshal([]byte(body), &queryRequest)
-
-	log.Info(queryRequest.Sender)
-	//check signature
-	accountInfo, err := chain.AccountInfo(queryRequest.Sender)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
-
-	is_true, err := sign.PushVerifySign(accountInfo.Pubkey, req.Body)
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
 	is_true=true
-	log.Info(is_true,err)
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := s.Client.RegisterFile(ctx, &asset.RegisterFileRequest{
-		PostBody: req.Body,
-	})
+	var publishRequest asset.PushTxRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.RegisterFile(ctx, &publishRequest)
 	if err != nil {
 		return err
 	}
@@ -114,102 +101,90 @@ func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Res
 }
 
 func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var queryRequest asset.QueryUploadedDataRequest
-	json.Unmarshal([]byte(body), &queryRequest)
-	//Checkout data format
 
-	log.Info(queryRequest)
-	ok, err := govalidator.ValidateStruct(queryRequest);
-	if !ok {
-		b, _ := json.Marshal(map[string]string{
-			"code": "-7",
-			"msg":  err.Error(),
-		})
-		rsp.StatusCode = 200
-		rsp.Body = string(b)
-		return nil
-	}
-
-	response, err := u.Client.QueryUploadedData(ctx, &queryRequest)
-	if err != nil {
-		return err
-	}
-
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": strconv.Itoa(int(response.Code)),
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
 	rsp.StatusCode = 200
-	rsp.Body = string(b)
-	return nil
-}
-
-func (u *Asset) GetDownLoadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var downLoadRequest asset.GetDownLoadURLRequest
-	json.Unmarshal([]byte(body), &downLoadRequest)
-	//Checkout data format
-
-	log.Info(downLoadRequest)
-	ok, err := govalidator.ValidateStruct(downLoadRequest);
-	if !ok {
-		b, _ := json.Marshal(map[string]string{
-			"code": "-7",
-			"msg":  err.Error(),
-		})
-		rsp.StatusCode = 200
-		rsp.Body = string(b)
-		return nil
-	}
-
-	response, err := u.Client.GetDownLoadURL(ctx, &downLoadRequest)
-	if err != nil {
-		return err
-	}
-
-	b, _ := json.Marshal(map[string]string{
-		"code": strconv.Itoa(int(response.Code)),
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
-	rsp.StatusCode = 200
-	rsp.Body = string(b)
-	return nil
-}
-
-func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
-
-	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var queryRequest bean.TxPublic
-	json.Unmarshal([]byte(body), &queryRequest)
-
-	log.Info(queryRequest.Sender)
-	//check signature
-	accountInfo, err := chain.AccountInfo(queryRequest.Sender)
+	log.Debug(body)
+	var queryRequest asset.QueryRequest
+	err := json.Unmarshal([]byte(body), &queryRequest)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	is_true, err := sign.PushVerifySign(accountInfo.Pubkey, req.Body)
-	is_true=true
-	log.Info(is_true,err)
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	is_true = true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := s.Client.RegisterAsset(ctx, &asset.RegisterRequest{
-		PostBody: req.Body,
-	})
+	response, err := u.Client.QueryUploadedData(ctx, &queryRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+
+}
+
+//func (u *Asset) GetDownLoadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
+//	body := req.Body
+//	log.Info(body)
+//	//transfer to struct
+//	var downLoadRequest asset.GetDownLoadURLRequest
+//	json.Unmarshal([]byte(body), &downLoadRequest)
+//	//Checkout data format
+//
+//	log.Info(downLoadRequest)
+//	ok, err := govalidator.ValidateStruct(downLoadRequest);
+//	if !ok {
+//		b, _ := json.Marshal(map[string]string{
+//			"code": "-7",
+//			"msg":  err.Error(),
+//		})
+//		rsp.StatusCode = 200
+//		rsp.Body = string(b)
+//		return nil
+//	}
+//
+//	response, err := u.Client.GetDownLoadURL(ctx, &downLoadRequest)
+//	if err != nil {
+//		return err
+//	}
+//
+//	b, _ := json.Marshal(map[string]string{
+//		"code": strconv.Itoa(int(response.Code)),
+//		"msg":  response.Msg,
+//		"data": response.Data,
+//	})
+//	rsp.StatusCode = 200
+//	rsp.Body = string(b)
+//	return nil
+//}
+
+func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
+	is_true=true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var publishRequest asset.PushTxRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.RegisterAsset(ctx, &publishRequest)
 	if err != nil {
 		return err
 	}
@@ -217,89 +192,56 @@ func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	rsp.Body = errcode.Return(response)
 	return nil
 }
-
-func (u *Asset) Query(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
 	body := req.Body
-	log.Info(body)
-	//transfer to struct
-	var queryRequest asset.QueryRequest
-	json.Unmarshal([]byte(body), &queryRequest)
-	//Checkout data format
-	log.Info(queryRequest)
-	ok, err := govalidator.ValidateStruct(queryRequest);
-	if !ok {
-		b, _ := json.Marshal(map[string]string{
-			"code": "-7",
-			"msg":  err.Error(),
-		})
-		rsp.StatusCode = 200
-		rsp.Body = string(b)
-		return nil
-	}
-
-	//check signature
-	accountInfo, err := chain.AccountInfo(queryRequest.Username)
+	var assetQuery asset.QueryRequest
+	err := json.Unmarshal([]byte(body), &assetQuery)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	verify, _ := sign.PushVerifySign(accountInfo.Pubkey, req.Body)
-	if verify != true {
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	is_true = true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := s.Client.QueryAsset(ctx, &assetQuery)
+	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	response, err := u.Client.Query(ctx, &queryRequest)
-	if err != nil {
-		return err
-	}
-
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": strconv.Itoa(int(response.Code)),
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
-	rsp.StatusCode = 200
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
-func (u *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (s *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
 	body := req.Body
 	log.Info(body)
-	//transfer to struct
-	var queryRequest asset.QueryAllAssetRequest
-	json.Unmarshal([]byte(body), &queryRequest)
-	//Checkout data format
-
-	log.Info(queryRequest)
-	ok, err := govalidator.ValidateStruct(queryRequest)
-	if !ok {
-		b, _ := json.Marshal(map[string]string{
-			"code": "-7",
-			"msg":  err.Error(),
-		})
-		rsp.StatusCode = 200
-		rsp.Body = string(b)
-		return nil
-	}
-
-	response, err := u.Client.QueryAllAsset(ctx, &queryRequest)
+	var assetQuery asset.QueryRequest
+	err := json.Unmarshal([]byte(body), &assetQuery)
 	if err != nil {
+		log.Error(err)
+		return err
+	}
+	assetQuery.Username = ""
+	response, err := s.Client.QueryAsset(ctx, &assetQuery)
+	if err != nil {
+		log.Error(err)
 		return err
 	}
 
-	b, _ := json.Marshal(map[string]string{
-		"code": strconv.Itoa(int(response.Code)),
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
-	rsp.StatusCode = 200
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
-func (u *Asset) Modify(ctx context.Context, req *api.Request, rsp *api.Response) error {
+/*func (u *Asset) Modify(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//header, _ := json.Marshal(req.Header)
 	response, err := u.Client.Modify(ctx, &asset.ModifyRequest{
 		PostBody: req.Body,
@@ -317,9 +259,9 @@ func (u *Asset) Modify(ctx context.Context, req *api.Request, rsp *api.Response)
 	rsp.Body = string(b)
 
 	return nil
-}
+}*/
 
-func (u *Asset) QueryByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
+/*func (u *Asset) QueryByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
 	//transfer to struct
@@ -386,28 +328,84 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 	rsp.StatusCode = 200
 	rsp.Body = string(b)
 	return nil
-}
-
-func (u *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+}*/
+func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
-	var preSaleRequest asset.PushTxRequest
-	err := json.Unmarshal([]byte(req.Body), &preSaleRequest)
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
+	is_true=true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var publishRequest asset.PushTxRequest
+	err = json.Unmarshal([]byte(req.Body), &publishRequest)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	//is, err:=sign.PushVerifySign(req.Body)
-	is:=true
-	if !is {
+	response, err := s.Client.PreSaleNotice(ctx, &publishRequest)
+	log.Error(response)
+	if err != nil {
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice asset.QueryMyNoticeRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	is_true=true
+	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := u.Client.PreSaleNotice(ctx, &preSaleRequest)
+	response, err := u.Client.QueryMyNotice(ctx, &queryMyNotice)
 	if err != nil {
+		log.Error(err)
+		return err
+	}
 
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice asset.QueryMyNoticeRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//验签
+	is_true, err := sign.QueryVerifySign(req.Body)
+	is_true = true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.QueryMyPreSale(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
 		return err
 	}
 
@@ -417,7 +415,7 @@ func (u *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Re
 
 func init() {
 	defer log.Flush()
-	logger, err := log.LoggerFromConfigAsFile("./config/log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/ass-log.xml")
 	if err != nil {
 		log.Critical("err parsing config log file", err)
 		os.Exit(1)
@@ -442,6 +440,6 @@ func main() {
 	)
 
 	if err := service.Run(); err != nil {
-		log.Critical("Asset API Service Run Failed",err)
+		log.Critical("Asset API Service Run Failed", err)
 	}
 }
