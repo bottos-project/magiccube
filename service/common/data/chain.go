@@ -95,15 +95,15 @@ func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 		return nil, errors.New(string(body))
 	}
 	log.Info("body:", string(body))
-	var common_ret = &bean.CoreCommonReturn{}
-	err = json.Unmarshal(body, common_ret)
+	var common_ret bean.CoreCommonReturn
+	err = json.Unmarshal(body, &common_ret)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
 	if common_ret.Errcode == 0 {
-		return common_ret, nil
+		return &common_ret, nil
 	}
 	return nil, errors.New(string(body))
 }
@@ -119,7 +119,7 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-
+	log.Info(string(body))
 	if (resp.StatusCode != 200) {
 		return nil, errors.New(string(body))
 	}
