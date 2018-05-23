@@ -230,7 +230,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 
 	skip = (pageNum - 1) *  pageSize
 
-	var where = &bson.M{ "param.info.username": req.Username}
+	var where = &bson.M{"method":"buydata", "param.info.username": req.Username}
 
 	var ret []bean.Buy
 
