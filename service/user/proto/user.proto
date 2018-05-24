@@ -193,4 +193,5 @@ message Buy {
 	string sample_hash = 8;
 	string storage_hash = 9;
 	uint64 expiretime = 10;
+	uint64 timestamp = 11;
 }

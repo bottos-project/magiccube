@@ -113,7 +113,6 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	if err != nil {
 		return err
 	}
-
 	rsp.Body = errcode.Return(response)
 	return nil
 }
