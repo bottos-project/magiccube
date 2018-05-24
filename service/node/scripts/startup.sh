@@ -17,9 +17,9 @@ MINIO_GRP=minio-user
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
-SERVER_IPADR=10.0.0.4
+SERVER_IPADR=
 SERVER_PORT=9000
-WALLET_SERV=10.0.0.4
+WALLET_SERV=
 CHAIN_PORT=8888
 EXTERNAL_IPADR=
 
@@ -518,6 +518,9 @@ function download_git_newcode()
         exit 1
     fi
 
+    echo "Please input your eth0's IP address:"
+    read eth0_ip
+
     GOPATH=/mnt/bottos
     if [ ! -z $GOPATH ]; then
         sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
@@ -527,10 +530,16 @@ function download_git_newcode()
         sudo git clone https://github.com/bottos-project/crypto-go.git $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore
         sudo git clone https://github.com/bottos-project/core.git $GOPATH/src/github.com/bottos-project/core
         
-        echo "\n Cloning all is done. Please do following operations:"
-        echo "\n 1. modify module node's config/config.go and config/config.json for IP and user password."
-        echo "\n 2. modify /etc/mongodb.conf's bind ip to your external ip address."
-        echo "\n 3. When 1,2 are done, please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
+        sed -ir $cmd $GOPATH/src/github.com/bottos-project/bottos/service/node/config/config.go
+        cmd="/WALLET_IP/c\WALLET_IP=\"$eth0_ip\""
+        sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/bottos/service/node/config/config.go
+        cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip\""
+        sudo sed -ir $cmd /opt/go/bin/config.json
+        cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip\""
+        sudo sed -ir $cmd /opt/go/bin/config.json
+        cmd="/bind_ip/c\bind_ip=$eth0_ip"
+        sudo sed -ir $cmd /etc/mongodb.conf
+        echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
     fi
 }
 
@@ -606,7 +615,7 @@ case $1 in
         restartcore
         ;;
     "help"|*)
-        echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|start|stop|startcore|stopcore|restartcore !!! \033[0m"
+        echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
         ;;
 esac
 
