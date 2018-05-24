@@ -74,6 +74,7 @@ func (u *Asset) GetFileUploadStat(ctx context.Context, req *api.Request, rsp *ap
 }*/
 
 func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("RegisterFile Service Start")
 	rsp.StatusCode = 200
 
 	//验签
@@ -101,7 +102,7 @@ func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Res
 }
 
 func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *api.Response) error {
-
+	log.Info("QueryUploadedData Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
 	log.Debug(body)
@@ -193,6 +194,7 @@ func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("QueryMyAsset Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
 	var assetQuery asset.QueryRequest
@@ -221,6 +223,7 @@ func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Res
 }
 
 func (s *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("QueryAllAsset Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
 	log.Info(body)
@@ -330,6 +333,7 @@ func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, 
 	return nil
 }*/
 func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("PreSaleNotice Service Start")
 	rsp.StatusCode = 200
 
 	//验签
@@ -358,6 +362,7 @@ func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Re
 }
 
 func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("QueryMyNotice Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
 	var queryMyNotice asset.QueryMyNoticeRequest
@@ -386,6 +391,7 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Re
 }
 
 func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("QueryMyPreSale Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
 	var queryMyNotice asset.QueryMyNoticeRequest
