@@ -258,7 +258,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 			SampleHash : ret2.Param.Info.SampleHash,
 			StorageHash : ret2.Param.Info.StorageHash,
 			Expiretime : uint64(ret2.Param.Info.ExpireTime),
-			Timestamp:uint64(v.CreateTime.Unix()),
+			Timestamp: uint64(v.CreateTime.Unix()),
 		})
 	}
 
