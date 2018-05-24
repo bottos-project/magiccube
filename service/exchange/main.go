@@ -35,7 +35,7 @@ type Exchange struct{}
 func (u *Exchange) BuyAsset(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
-		rsp.Code = 3001
+		rsp.Code = 4001
 		rsp.Msg = err.Error()
 	}
 	log.Info(i)

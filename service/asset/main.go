@@ -890,7 +890,7 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeReque
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 {
+	if req.PageSize > 0 && req.PageSize < 20{
 		pageSize = int(req.PageSize)
 	}
 

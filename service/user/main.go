@@ -16,7 +16,6 @@ import (
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/bottos/config"
-	"time"
 )
 
 type User struct{}
@@ -286,7 +285,6 @@ func main() {
 		micro.Name("go.micro.srv.v3.user"),
 
 		micro.Version("3.0.0"),
-		micro.RegisterInterval(3*time.Second),
 	)
 
 	service.Init()
