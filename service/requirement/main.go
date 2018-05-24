@@ -41,14 +41,11 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 
 	var where interface{}
 	where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
-	//if len(req.Username) > 0{
-	//	where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
-	//}
-
-	log.Info(where)
+	if len(req.Username) > 0{
+		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	}
 
 	var ret []bean.Requirement
-
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	count, err:= mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(where).Count()
