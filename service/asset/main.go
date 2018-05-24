@@ -32,7 +32,6 @@ const (
 
 type Asset struct{}
 
-
 func (u *Asset) RegisterFile(ctx context.Context, req *proto.PushTxRequest, rsp *proto.RegisterFileResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
@@ -53,7 +52,6 @@ func (u *Asset) RegisterAsset(ctx context.Context, req *proto.PushTxRequest, rsp
 	log.Info(i)
 	return nil
 }
-
 
 func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *proto.QueryAssetResponse) error {
 
@@ -119,17 +117,17 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryRequest, 
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 {
+	if req.PageSize > 0 && req.PageSize < 20 {
 		pageSize = int(req.PageSize)
 	}
 
 	skip = (pageNum - 1) * pageSize
 
 	var where interface{}
-	where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}}
-	//if len(req.Username) > 0{
-	//	where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
-	//}
+	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}}
+	if len(req.Username) > 0{
+		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	}
 
 	log.Info(where)
 
@@ -235,8 +233,6 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryRequest, 
 	//
 	//return nil
 }
-
-
 
 /*
 func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadURLRequest, rsp *proto.GetFileUploadURLResponse) error {
@@ -454,8 +450,6 @@ func (u *Asset) GetDownLoadURL(ctx context.Context, req *proto.GetDownLoadURLReq
 	log.Info("Time:", end_time-start_time)
 	return nil
 }
-
-
 
 /*func (u *Asset) QueryByID(ctx context.Context, req *proto.QueryByIDRequest, rsp *proto.QueryResponse) error {
 
