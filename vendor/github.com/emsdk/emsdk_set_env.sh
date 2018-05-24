@@ -1,1 +1,1 @@
-export EMSDK="go/src/github.com/emsdk"
+export EMSDK="～/go/src/github.com/emsdk"
