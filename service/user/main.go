@@ -16,6 +16,7 @@ import (
 	"github.com/bottos-project/bottos/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/bottos/config"
+	"time"
 )
 
 type User struct{}
@@ -246,7 +247,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 	var rows = []*user_proto.Buy{}
 	for _, v := range ret {
 		var ret2 bean.AssetBean
-		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"data.asset_id":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.assetid":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
 		rows = append(rows, &user_proto.Buy{
 			ExchangeId : v.Param.DataExchangeId,
 			Username : ret2.Param.Info.UserName,
@@ -285,6 +286,7 @@ func main() {
 		micro.Name("go.micro.srv.v3.user"),
 
 		micro.Version("3.0.0"),
+		micro.RegisterInterval(3*time.Second),
 	)
 
 	service.Init()
