@@ -6,7 +6,7 @@ import (
 
 	"time"
 
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )

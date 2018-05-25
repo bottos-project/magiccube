@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bottos-project/bottos/service/storage/proto"
+	"github.com/bottos-project/magiccube/service/storage/proto"
 
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
 //func (c *StorageService) GetUserInfo(ctx context.Context, request *storage.UserInfoRequest, response *storage.UserInfoResponse) error {

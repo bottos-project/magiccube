@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bottos-project/bottos/service/storage/proto"
+	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
 func (c *StorageService) GetUserFileList(ctx context.Context, request *storage.UserFileListRequest, response *storage.UserFileListResponse) error {

@@ -3,15 +3,15 @@ package main
 import (
 	"os"
 	"time"
-	//	"github.com/bottos-project/bottos/service/storage/blockchain"
-	"github.com/bottos-project/bottos/service/storage/internal/platform/config"
-	"github.com/bottos-project/bottos/service/storage/internal/platform/minio"
-	"github.com/bottos-project/bottos/service/storage/internal/platform/mongodb"
-	"github.com/bottos-project/bottos/service/storage/internal/service"
-	"github.com/bottos-project/bottos/service/storage/proto"
+	//	"github.com/bottos-project/magiccube/service/storage/blockchain"
+	"github.com/bottos-project/magiccube/service/storage/internal/platform/config"
+	"github.com/bottos-project/magiccube/service/storage/internal/platform/minio"
+	"github.com/bottos-project/magiccube/service/storage/internal/platform/mongodb"
+	"github.com/bottos-project/magiccube/service/storage/internal/service"
+	"github.com/bottos-project/magiccube/service/storage/proto"
 	"github.com/micro/go-micro"
 	log "github.com/sirupsen/logrus"
-	baseConfig "github.com/bottos-project/bottos/config"
+	baseConfig "github.com/bottos-project/magiccube/config"
 )
 
 func main() {

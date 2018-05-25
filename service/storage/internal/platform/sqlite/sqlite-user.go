@@ -7,10 +7,10 @@ import (
 
 	"errors"
 
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 	_ "github.com/mattn/go-sqlite3"
 
-	//	"github.com/bottos-project/bottos/service/storage/proto"
+	//	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
 func (c *SqliteContext) createUser() {

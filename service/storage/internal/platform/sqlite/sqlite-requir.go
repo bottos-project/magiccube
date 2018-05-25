@@ -1,7 +1,7 @@
 package sqlite
 
 import (
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
 func (r *SqliteRepository) CallGetUserRequirementList(username string) ([]*util.RequirementDBInfo, error) {

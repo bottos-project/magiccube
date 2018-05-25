@@ -3,7 +3,7 @@ package controller
 import (
 	"testing"
 	"fmt"
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
 
