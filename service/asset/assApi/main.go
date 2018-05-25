@@ -264,41 +264,27 @@ func (s *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }*/
 
-/*func (u *Asset) QueryByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (u *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("QueryAllAsset Service Start")
+	rsp.StatusCode = 200
 	body := req.Body
 	log.Info(body)
-	//transfer to struct
-	var queryRequest asset.QueryByIDRequest
-	json.Unmarshal([]byte(body), &queryRequest)
-	//Checkout data format
-
-	log.Info(queryRequest)
-	ok, err := govalidator.ValidateStruct(queryRequest);
-	if !ok {
-		b, _ := json.Marshal(map[string]string{
-			"code": "-7",
-			"msg":  err.Error(),
-		})
-		rsp.StatusCode = 200
-		rsp.Body = string(b)
-		return nil
-	}
-
-	response, err := u.Client.QueryByID(ctx, &queryRequest)
+	var assetQuery asset.QueryAssetByIDRequest
+	err := json.Unmarshal([]byte(body), &assetQuery)
 	if err != nil {
+		log.Error(err)
+		return err
+	}
+	response, err := u.Client.QueryAssetByID(ctx, &assetQuery)
+	if err != nil {
+		log.Error(err)
 		return err
 	}
 
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": strconv.Itoa(int(response.Code)),
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
-	rsp.StatusCode = 200
-	rsp.Body = string(b)
+	rsp.Body = errcode.Return(response)
 	return nil
 }
-func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, rsp *api.Response) error {
+/*func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
 	//transfer to struct
