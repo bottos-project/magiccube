@@ -49,11 +49,11 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.datareqid": req.ReqId}
 	}
 
-	if len(req.ReqType) > 0 {
+	if req.ReqType > 0 {
 		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.reqtype": req.ReqType}
 	}
 
-	if len(req.Username) > 0 && len(req.ReqType) > 0 {
+	if len(req.Username) > 0 && req.ReqType > 0 {
 		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username, "param.info.reqtype": req.ReqType}
 	}
 
@@ -74,6 +74,7 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 			RequirementId : v.Param.DataReqId,
 			Username : v.Param.Info.Username,
 			RequirementName : v.Param.Info.Reqname,
+			ReqType:v.Param.Info.Reqtype,
 			FeatureTag : v.Param.Info.Featuretag,
 			SampleHash : v.Param.Info.Samplehash,
 			ExpireTime : v.Param.Info.Expiretime,
