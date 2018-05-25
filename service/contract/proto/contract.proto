@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+service Contract {
+	rpc Deploy(DeployRequest) returns(DeployResponse) {};
+    rpc Query(QueryRequest) returns(QueryResponse) {};
+}
+
+message DeployRequest {}
+
+message DeployResponse {}
+
+message QueryRequest {
+    string Contract = 1;
+}
+
+message QueryResponse {}
