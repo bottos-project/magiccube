@@ -72,6 +72,15 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
 	}
 
+	if req.AssetType > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.assettype": req.AssetType}
+	}
+
+	if len(req.Username) > 0 && req.AssetType > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username, "param.info.assettype": req.AssetType}
+	}
+	log.Info(where)
+
 	var ret []bean.AssetBean
 
 	var mgo = mgo.Session()
@@ -104,6 +113,50 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 	var data = &proto.QueryAssetData{
 		RowCount: uint32(count),
 		PageNum:  uint32(pageNum),
+		Row:      rows,
+	}
+	log.Info(data)
+	rsp.Data = data
+	return nil
+}
+
+func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDRequest, rsp *proto.QueryAssetResponse) error {
+
+	var where interface{}
+	where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.assetid": req.AssetId}
+
+	var ret []bean.AssetBean
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("-_id").All(&ret)
+
+	var rows = []*proto.AssetData{}
+	for _, v := range ret {
+		rows = append(rows, &proto.AssetData{
+			AssetId:     v.Param.AssetId,
+			Username:    v.Param.Info.UserName,
+			AssetName:   v.Param.Info.AssetName,
+			AssetType:   v.Param.Info.AssetType,
+			FeatureTag:  v.Param.Info.FeatureTag,
+			SampleHash:  v.Param.Info.SampleHash,
+			StorageHash: v.Param.Info.StorageHash,
+			ExpireTime:  v.Param.Info.ExpireTime,
+			Price:       v.Param.Info.Price,
+			OpType:      v.Param.Info.OpType,
+			Description: v.Param.Info.Description,
+			CreateTime:  uint64(v.CreateTime.Unix()),
+		})
+	}
+
+	var data = &proto.QueryAssetData{
+		RowCount: uint32(count),
+		PageNum:  uint32(1),
 		Row:      rows,
 	}
 	log.Info(data)
@@ -674,63 +727,6 @@ func GetAssetByIdNoStoPath(assertId string) ([]*proto.AssetData, error) {
 	return rows, nil
 }
 
-/*func (u *Asset) QueryByID(ctx context.Context, req *proto.QueryByIDRequest, rsp *proto.QueryByIDResponse) error {
-	start_time := time.Now().UnixNano() / int64(time.Millisecond)
-	dataBody, signValue, account, data := "", "", "", ""
-	//dataBody, signValue, account, data := GetSignAndDataCom(req.PostBody)
-	log.Info(account, data)
-	//get Public Key
-	pubKey := GetPublicKey("account")
-	//Verify Sign Local
-	ok, _ := VerifySign(dataBody, signValue, pubKey)
-	log.Info(ok)
-	ok = true
-	if !ok {
-		rsp.Code = 2000
-		rsp.Msg = "Verify Signature Failed."
-		return nil
-	}
-	//Test
-	params := `service=storage&method=Storage.GetAssetByAssetId&request={
-	"asset_id":"%s"
-	}`
-	assetID := req.AssetID
-	//random := req.Random
-
-	//signature := req.Signature
-
-	s := fmt.Sprintf(params, assetID)
-	log.Info("s:", s)
-	resp, err := http.Post(STORAGE_RPC_URL, "application/x-www-form-urlencoded",
-		strings.NewReader(s))
-
-	log.Info("resp:", resp)
-	//log.Info("err", err)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	} else {
-		js, _ := simplejson.NewJson([]byte(body))
-		log.Info("jss", js)
-		result, _ := json.Marshal(js.Get("asset_info"))
-		if js.Get("code").MustInt() == 1 {
-
-			rsp.Code = 1
-			rsp.Msg = "Get Asset by ID Successful!"
-			rsp.Data = string(result)
-			log.Info(result)
-			log.Info(string(result))
-		}
-		return nil
-	}
-	end_time := time.Now().UnixNano() / int64(time.Millisecond)
-	log.Info("Time:", end_time-start_time)
-	return nil
-}*/
 /*func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *proto.GetUserPurchaseAssetListRequest, rsp *proto.QueryResponse) error {
 
 	var pageNum, pageSize, skip int = 1, 20, 0

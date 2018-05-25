@@ -39,9 +39,10 @@ message QueryRequest {
     uint32 page_size = 1;
     uint32 page_num = 2;
     string req_id = 3;
-    string username = 4;
-    string random = 5;
-    string signature = 6;
+    uint64 req_type = 4;
+    string username = 5;
+    string random = 6;
+    string signature = 7;
 }
 
 message QueryResponse {
@@ -60,11 +61,11 @@ message RequirementData {
     string username = 1;
     string requirement_id = 2;
     string requirement_name = 3;
-    uint64 feature_tag = 4;
-    string sample_path = 5;
-    string sample_hash = 6;
-    uint64 expire_time = 7;
-    uint64 price = 8;
-    string description = 9;
-    uint64 publish_date = 10;
+    uint64 req_type = 4;
+    uint64 feature_tag = 5;
+    string sample_hash = 7;
+    uint64 expire_time = 8;
+    uint64 price = 9;
+    string description = 10;
+    uint64 publish_date = 11;
 }

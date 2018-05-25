@@ -3,16 +3,16 @@
 import (
 	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/bottos/service/user/proto"
+	"github.com/bottos-project/magiccube/service/user/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"github.com/mojocn/base64Captcha"
 	"os"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/config"
 	"regexp"
-	errcode "github.com/bottos-project/bottos/error"
-	sign "github.com/bottos-project/bottos/service/common/signature"
+	errcode "github.com/bottos-project/magiccube/error"
+	sign "github.com/bottos-project/magiccube/service/common/signature"
 )
 
 type User struct {

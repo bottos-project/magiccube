@@ -163,7 +163,7 @@ type AssetBean struct {
 		Info    	struct {
 			UserName    string `bson:"username"`
 			AssetName   string `bson:"assetname"`
-			AssetType   string `bson:"assettype"`
+			AssetType   uint64 `bson:"assettype"`
 			FeatureTag  string `bson:"featuretag"`
 			SampleHash  string `bson:"samplehash"`
 			StorageHash string `bson:"storagehash"`
@@ -294,5 +294,5 @@ type RecordNum struct {
 	AccountNum  			int   			`bson:"account_num"`
 	Date					string   		`bson:"date"`
 	Timestamp				int   			`bson:"timestamp"`
-	Create_time			  	time.Time		`bson:"create_time"`
+	CreateTime			  	time.Time		`bson:"create_time"`
 }

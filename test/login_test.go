@@ -3,11 +3,11 @@ package test
 import (
 	"testing"
 	"encoding/hex"
-	query_sign "github.com/bottos-project/bottos/service/common/signature/query"
+	query_sign "github.com/bottos-project/magiccube/service/common/signature/query"
 	"github.com/bottos-project/crypto-go/crypto"
-	"github.com/bottos-project/bottos/service/common/util"
+	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/protobuf/proto"
-	"github.com/bottos-project/bottos/service/common/data"
+	"github.com/bottos-project/magiccube/service/common/data"
 )
 
 

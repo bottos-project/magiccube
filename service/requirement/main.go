@@ -49,6 +49,14 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.datareqid": req.ReqId}
 	}
 
+	if req.ReqType > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.reqtype": req.ReqType}
+	}
+
+	if len(req.Username) > 0 && req.ReqType > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username, "param.info.reqtype": req.ReqType}
+	}
+
 	var ret []bean.Requirement
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -61,11 +69,11 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 
 	var rows = []*requirement_proto.RequirementData{}
 	for _, v := range ret {
-
 		rows = append(rows, &requirement_proto.RequirementData{
 			RequirementId : v.Param.DataReqId,
 			Username : v.Param.Info.Username,
 			RequirementName : v.Param.Info.Reqname,
+			ReqType:v.Param.Info.Reqtype,
 			FeatureTag : v.Param.Info.Featuretag,
 			SampleHash : v.Param.Info.Samplehash,
 			ExpireTime : v.Param.Info.Expiretime,

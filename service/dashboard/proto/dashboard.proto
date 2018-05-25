@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 service Dashboard {
 	rpc GetBlockList(GetBlockListRequest) returns(GetBlockListResponse) {};
@@ -59,9 +59,11 @@ message Tx {
 	string from = 2;
 	string to = 3;
 	uint64 price = 4;
-	string asset_type = 5;
-	uint64 timestamp = 6;
-	uint32 block_number = 7;
+	string asset_id = 5;
+	string asset_name = 6;
+	uint64 asset_type = 7;
+	uint64 timestamp = 8;
+	uint32 block_number = 9;
 }
 
 message GetBlockListRequest {

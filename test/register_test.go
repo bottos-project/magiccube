@@ -3,13 +3,13 @@ package test
 import (
 	"testing"
 	"encoding/hex"
-	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
 	"github.com/bottos-project/crypto-go/crypto"
-	"github.com/bottos-project/bottos/service/common/util"
+	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/protobuf/proto"
-	pack "github.com/bottos-project/bottos/core/contract/msgpack"
-	"github.com/bottos-project/bottos/service/common/bean"
-	"github.com/bottos-project/bottos/service/common/data"
+	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/data"
 )
 
 func TestRegitser(t *testing.T) {

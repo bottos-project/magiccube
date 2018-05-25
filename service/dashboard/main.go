@@ -76,6 +76,8 @@ func (u *Dashboard) GetTxList(ctx context.Context, req *dashboard_proto.GetTxLis
 			From: v.Param.Info.Username,
 			To: ret2.Param.Info.UserName,
 			Price: ret2.Param.Info.Price,
+			AssetId: ret2.Param.AssetId,
+			AssetName:ret2.Param.Info.AssetName,
 			AssetType: ret2.Param.Info.AssetType,
 			Timestamp: uint64(v.CreateTime.Unix()),
 			BlockNumber: v.BlockNumber,

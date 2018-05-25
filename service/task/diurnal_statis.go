@@ -6,7 +6,7 @@ import (
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	log "github.com/cihub/seelog"
 	"github.com/bottos-project/magiccube/service/query"
-	"github.com/bottos-project/magiccube/service/bean"
+	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/config"
 )
 
@@ -32,7 +32,7 @@ func main() {
 func DiurnalStatis() {
 	log.Info("Execution of tasks!!!")
 	min, max := query.YesterdayTimeSlot()
-	var d bean.RecordNumLog
+	var d bean.RecordNum
 	d.TxNum = query.TxNum(min, max)
 	d.TxAmount = query.TxAmount(min, max)
 	d.RequirementNum = query.RequirementNum(min, max)
@@ -40,7 +40,7 @@ func DiurnalStatis() {
 	d.AccountNum = query.AccountNum(min, max)
 	d.Date = time.Unix(min, 0).Format("2006-01-02")
 	d.Timestamp = int(min)
-	d.CreatedAt = time.Now()
+	d.CreateTime = time.Now()
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
