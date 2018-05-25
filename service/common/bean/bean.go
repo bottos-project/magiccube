@@ -294,5 +294,5 @@ type RecordNum struct {
 	AccountNum  			int   			`bson:"account_num"`
 	Date					string   		`bson:"date"`
 	Timestamp				int   			`bson:"timestamp"`
-	Create_time			  	time.Time		`bson:"create_time"`
+	CreateTime			  	time.Time		`bson:"create_time"`
 }
