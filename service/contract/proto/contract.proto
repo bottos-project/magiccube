@@ -10,7 +10,7 @@ message DeployRequest {}
 message DeployResponse {}
 
 message QueryRequest {
-    string Contract = 1;
+    string contract = 1;
 }
 
 message QueryResponse {}
