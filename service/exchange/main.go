@@ -3,19 +3,19 @@
 import (
 	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
-	proto "github.com/bottos-project/bottos/service/exchange/proto"
+	proto "github.com/bottos-project/magiccube/service/exchange/proto"
 	"golang.org/x/net/context"
 	/*"github.com/bitly/go-simplejson"
 	"time"
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	cbb "github.com/bottos-project/bottos/service/asset/cbb"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
+	cbb "github.com/bottos-project/magiccube/service/asset/cbb"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/service/bean"*/
-	"github.com/bottos-project/bottos/config"
-	"github.com/bottos-project/bottos/service/common/data"
+	"github.com/bottos-project/magiccube/service/bean"*/
+	"github.com/bottos-project/magiccube/config"
+	"github.com/bottos-project/magiccube/service/common/data"
 	"os"
 )
 
