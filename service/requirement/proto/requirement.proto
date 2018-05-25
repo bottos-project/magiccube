@@ -39,9 +39,10 @@ message QueryRequest {
     uint32 page_size = 1;
     uint32 page_num = 2;
     string req_id = 3;
-    string username = 4;
-    string random = 5;
-    string signature = 6;
+    string req_type = 4;
+    string username = 5;
+    string random = 6;
+    string signature = 7;
 }
 
 message QueryResponse {

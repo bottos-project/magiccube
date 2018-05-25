@@ -49,6 +49,14 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.datareqid": req.ReqId}
 	}
 
+	if len(req.ReqType) > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.reqtype": req.ReqType}
+	}
+
+	if len(req.Username) > 0 && len(req.ReqType) > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username, "param.info.reqtype": req.ReqType}
+	}
+
 	var ret []bean.Requirement
 	var mgo = mgo.Session()
 	defer mgo.Close()
