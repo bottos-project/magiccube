@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 #GO_PATH=`echo $GOPATH |cut -d'=' -f2`
+GOPATH=/mnt/bottos
 SYS_GOPATH=/mnt
 SYS_GOROOT=/usr/lib/go
 
@@ -28,7 +29,7 @@ MINIO_OPTS_ENV="MINIO_OPTS=\"-C "$MINIO_COF" --address "$SERVER_IPADR":"$SERVER_
 
 MINIO_VOLUMES="/usr/local/share/minio"
 MINIO_OPTS="-C /etc/minio --address "$SERVER_IPADR":"$SERVER_PORT
-CORE_PROC_FILE_DIR=${GO_PATH}/bin/core
+CORE_PROC_FILE_DIR=${GO_PATH}/bin/core/cmd_dir
 
 OPT_GO_BIN_GZ_PACK=opt-go-bin.tar.gz
 GOPATH_DIR_PACK=GOPATH-DIR.tar.gz
@@ -54,11 +55,11 @@ function check_gzpackages() {
         counts=1
     done
     
-    if [ ! -d /opt/go/bin/core ]; then
+    #if [ ! -d /opt/go/bin/core ]; then
 
 /usr/bin/expect <<-EOF
-
-spawn scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
+sudo rm -rf /opt/go/bin/core 2>/dev/null
+spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
 set timeout 600
 
 expect {
@@ -70,7 +71,7 @@ expect eof
 
 EOF
 
-    fi
+    #fi
 
     if [ ! -f $GZ_PACKAGE_DIR/$GOLANG_PACK ]; then
 
@@ -157,15 +158,31 @@ function unpackpackages() {
     echo "start unpack $GZ_PACKAGE_DIR/$GOLANG_PACK:"
 	tar -C /usr/lib -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
 	
-    cmd=$(sed  -n "/GOPATH/p" ~/.profile |wc -l)
+    cmd=$(sed  -n "/GOPATH/p" /etc/profile |wc -l)
     if [ $cmd -lt 1 ]; then
-        sed -i '$a\export GOPATH="/mnt/bottos"' ~/.profile
+       sed -i '$a\export GOPATH="/mnt/bottos"' /etc/profile
+    else 
+       cmd="/GOROOT/c\GOROOT=\"/usr/lib/go\""
+       sed -ir $cmd /etc/profile 
     fi
 
-	cmd=$(sed  -n "/GOROOT/p" ~/.profile |wc -l)
+    cmd=$(sed  -n "/GOROOT/p" /etc/profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+       sed -i "\$a\export GOROOT=\"$SYS_GOROOT\"" /etc/profile
+    else
+        cmd="/GOPATH/c\GOPATH=\"/mnt/bottos\""
+        sed -ir $cmd /etc/profile
+    fi
+    
+    cmd=$(sed  -n "/GOPATH/p" ~/.profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+       sed -i '$a\export GOPATH="/mnt/bottos"' ~/.profile
+    fi
+   
+    cmd=$(sed  -n "/GOROOT/p" ~/.profile |wc -l)
     if [ $cmd -lt 1 ]; then
         #cmd=\'+ '$a\export GOROOT='+$SYS_GOROOT+\'
-        echo "LYP--->\$a\export GOROOT=$SYS_GOROOT"
+        #echo "LYP--->\$a\export GOROOT=$SYS_GOROOT"
         sed -i "\$a\export GOROOT=\"$SYS_GOROOT\"" ~/.profile
     fi
 
@@ -176,6 +193,7 @@ function unpackpackages() {
     
     sudo cp -rf /usr/bin/go /usr/lib
 
+    source /etc/profile
     source ~/.profile
 }
 
@@ -305,18 +323,28 @@ function varcheck()
 
 function startcore()
 {
-    if [ ! -e ${CORE_PROC_FILE_DIR}/core ];
+    if [ ! -e /opt/go/bin/core/core ];
 	then
-		echo -e "\033[31m *ERROR* Fail to find core process under :"${CORE_PROC_FILE_DIR}" !!! \033[0m"
+		echo -e "\033[31m *ERROR* Fail to find core process under : /opt/go/bin/core !!! \033[0m"
 		exit 1
 	fi
 	
-	if  [ ! -d ${CORE_PROC_FILE_DIR} ] || [ ! -f ${CORE_PROC_FILE_DIR}/chainconfig.json ] || [ ! -f ${CORE_PROC_FILE_DIR}/genesis.json ];
+	if [ ! -f /opt/go/bin/core/chainconfig.json ] || [ ! -f /opt/go/bin/core/genesis.json ];
 	then
 		echo -e "\033[31m *ERROR* Fail to find core proess's configuration item : config.json or genesis.json under :"${CORE_PROC_FILE_DIR}" \033[0m"
 		exit 1
 	fi
+
+    cp -f /opt/go/bin/core/chainconfig.json /opt/go/bin
+	cp -f /opt/go/bin/core/genesis.json /opt/go/bin
+
+    if [ ! -d ${CORE_PROC_FILE_DIR} ];
+	then
+		echo -e "\033[31m *ERROR* Directory does not exist:"${CORE_PROC_FILE_DIR}" \033[0m"
+		exit 1
+	fi
 	
+    sudo rm -r /opt/go/bin/datadir 2>/dev/null
 	sudo rm -r ${CORE_PROC_FILE_DIR}/datadir 2>/dev/null
 	sudo rm -r $GO_PATH/bin/datadir 2>/dev/null
 
@@ -327,11 +355,11 @@ function startcore()
 	#	exit 1
 	#fi
 	
-	CHK_CORE=`ps -elf | grep "${CORE_PROC_FILE_DIR}/core" | grep -v grep | wc -l`
+	CHK_CORE=`ps -elf | grep "/opt/go/bin/core/core" | grep -v grep | wc -l`
 	if [ "$CHK_CORE" -lt 1 ];
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
-		sudo nohup ${CORE_PROC_FILE_DIR}/core 2>&1 & 
+		sudo nohup /opt/go/bin/core/core 2>&1 & 
         	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
         	sleep 3
 	fi
@@ -340,7 +368,7 @@ function startcore()
 
 function stopcore()
 {
-    RUNNING_CORE_PID=`ps -elf | grep ${CORE_PROC_FILE_DIR}/core | grep -v grep | awk '{print $4}'`
+    RUNNING_CORE_PID=`ps -elf | grep /opt/go/bin/core | grep -v grep | awk '{print $4}'`
     if [ -z "$RUNNING_CORE_PID" ];
     then
         echo -e "\033[33m *WRAN* core process hadn't been running ... \033[0m"
@@ -509,7 +537,7 @@ function stopserv()
 }
 
 function download_git_newcode()
-{
+{ 
     echo "WARNING: THIS STEP WILL OVERWRITE YOUR CODES UNDER GOPATH. ARE YOU SURE? $1? (Y/N) (default: N) __"
     read dorm
     dorm=${dorm:=N}
@@ -521,43 +549,46 @@ function download_git_newcode()
     echo "Please input your eth0's IP address:"
     read eth0_ip
 
-    GOPATH=/mnt/bottos
     if [ ! -z $GOPATH ]; then
         sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
         sudo rm -rf $GOPATH/src/github.com/bottos-project/core   2>&1>/dev/null
         sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore/crypto-go 2>&1>/dev/null
         sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project/bottos
-        sudo git clone https://github.com/bottos-project/crypto-go.git $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore
+        
+        path=`pwd`
+        cd $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore
+        sudo git clone https://github.com/bottos-project/crypto-go.git
+        cd $path
         sudo git clone https://github.com/bottos-project/core.git $GOPATH/src/github.com/bottos-project/core
         
-        sed -ir $cmd $GOPATH/src/github.com/bottos-project/bottos/service/node/config/config.go
         cmd="/WALLET_IP/c\WALLET_IP=\"$eth0_ip\""
         sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/bottos/service/node/config/config.go
-        cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip\""
+        cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip,\""
         sudo sed -ir $cmd /opt/go/bin/config.json
-        cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip\""
+        cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip,\""
         sudo sed -ir $cmd /opt/go/bin/config.json
         cmd="/bind_ip/c\bind_ip=$eth0_ip"
         sudo sed -ir $cmd /etc/mongodb.conf
+        sudo chmod 777 $GOPATH/src/github.com/bottos-project/* -R
         echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
     fi
 }
 
 function build_all_modules()
 {
-    mkdir -p $GOPATH/src/github.com/bottos-project/buildfiles
-    cd $GOPATH/src/github.com/bottos-project/buildfiles
-
-    go build github.com/bottos-project/core
-    go build github.com/bottos-project/bottos/service/node
-    go build github.com/bottos-project/bottos/service/asset
-    go build github.com/bottos-project/bottos/service/storage
-    go build github.com/bottos-project/bottos/service/requirement
-    go build github.com/bottos-project/bottos/service/exchange
-    go build github.com/bottos-project/bottos/service/dashboard/dasApi
-    go build github.com/bottos-project/bottos/service/dashboard   
-    go build github.com/bottos-project/bottos/service/data
-    go build github.com/bottos-project/bottos/service/data/datApi
+    export GOPATH=/mnt/bottos
+    export GOROOT=/usr/lib/go
+    
+    /usr/lib/go/bin/./go build github.com/bottos-project/core
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/node
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/asset
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/storage
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/requirement
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/exchange
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/dashboard/dasApi
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/dashboard   
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/data
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/data/datApi
 
     cp -f core        /opt/go/bin/core
     cp -f node        /opt/go/bin
@@ -569,9 +600,10 @@ function build_all_modules()
     cp -f dashboard   /opt/go/bin
     cp -f data        /opt/go/bin
     cp -f datApi      /opt/go/bin
+
     cp -f /opt/go/bin/log.xml  /opt/go/bin/config
     cp -f /opt/go/bin/log.xml  /opt/go/bin/config/log-req.xml
-    
+
     cd /opt/go/bin
 }
 
