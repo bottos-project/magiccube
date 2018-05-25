@@ -3,19 +3,19 @@
 import (
 	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
-	user_proto "github.com/bottos-project/bottos/service/user/proto"
+	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	"golang.org/x/net/context"
-	"github.com/bottos-project/bottos/service/common/data"
+	"github.com/bottos-project/magiccube/service/common/data"
 	"encoding/hex"
 	"github.com/bottos-project/crypto-go/crypto"
 	"github.com/protobuf/proto"
-	"github.com/bottos-project/bottos/service/common/util"
-	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
-	pack "github.com/bottos-project/bottos/core/contract/msgpack"
-	"github.com/bottos-project/bottos/service/common/bean"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
+	"github.com/bottos-project/magiccube/service/common/util"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/config"
 )
 
 type User struct{}
