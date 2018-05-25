@@ -127,9 +127,10 @@ message PreSaleNoticeResponse {
 message QueryRequest {
     uint32 page_size = 1;
     uint32 page_num = 2;
-    string username = 3;
-    string random = 4;
-    string signature = 5;
+    uint64 asset_type = 3;
+    string username = 4;
+    string random = 5;
+    string signature = 6;
 }
 
 message QueryAssetResponse {
@@ -147,7 +148,7 @@ message AssetData {
     string asset_id = 1;
     string username = 2;
     string asset_name = 3;
-    string asset_type = 4;
+    uint64 asset_type = 4;
     string feature_tag = 5;
     string sample_hash = 6;
     string storage_hash = 7;
