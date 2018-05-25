@@ -2,7 +2,7 @@
 
 import(
 	"gopkg.in/mgo.v2"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/config"
 )
 
 var mgoSession *mgo.Session
