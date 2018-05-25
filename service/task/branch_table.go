@@ -3,9 +3,9 @@ package main
 import(
 	"github.com/robfig/cron"
 	log "github.com/cihub/seelog"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/bean"
 )
 
 var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
