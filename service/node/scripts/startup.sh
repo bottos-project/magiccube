@@ -550,19 +550,19 @@ function download_git_newcode()
     read eth0_ip
 
     if [ ! -z $GOPATH ]; then
-        sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
+        sudo rm -rf $GOPATH/src/github.com/bottos-project/magiccube 2>&1>/dev/null
         sudo rm -rf $GOPATH/src/github.com/bottos-project/core   2>&1>/dev/null
-        sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore/crypto-go 2>&1>/dev/null
-        sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project/bottos
+        sudo rm -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/keystore/crypto-go 2>&1>/dev/null
+        sudo git clone https://github.com/bottos-project/magiccube.git $GOPATH/src/github.com/bottos-project/magiccube
         
         path=`pwd`
-        cd $GOPATH/src/github.com/bottos-project/bottos/service/node/keystore
+        cd $GOPATH/src/github.com/bottos-project/magiccube/service/node/keystore
         sudo git clone https://github.com/bottos-project/crypto-go.git
         cd $path
         sudo git clone https://github.com/bottos-project/core.git $GOPATH/src/github.com/bottos-project/core
         
         cmd="/WALLET_IP/c\WALLET_IP=\"$eth0_ip\""
-        sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/bottos/service/node/config/config.go
+        sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
         cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip,\""
         sudo sed -ir $cmd /opt/go/bin/config.json
         cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip,\""
@@ -580,15 +580,15 @@ function build_all_modules()
     export GOROOT=/usr/lib/go
     
     /usr/lib/go/bin/./go build github.com/bottos-project/core
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/node
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/asset
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/storage
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/requirement
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/exchange
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/dashboard/dasApi
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/dashboard   
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/data
-    /usr/lib/go/bin/./go build github.com/bottos-project/bottos/service/data/datApi
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/asset
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/storage
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/requirement
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/exchange
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard/dasApi
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data/datApi
 
     cp -f core        /opt/go/bin/core
     cp -f node        /opt/go/bin
