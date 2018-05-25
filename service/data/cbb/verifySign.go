@@ -2,12 +2,12 @@ package verifySi
 
 import (
 	"github.com/bitly/go-simplejson"
-	proto "github.com/bottos-project/bottos/service/asset/proto"
+	proto "github.com/bottos-project/magiccube/service/asset/proto"
 	"github.com/mikemintang/go-curl"
 	"golang.org/x/net/context"
 	"log"
 
-	storage "github.com/bottos-project/bottos/service/storage/proto"
+	storage "github.com/bottos-project/magiccube/service/storage/proto"
 	"github.com/micro/go-micro/client"
 	//"reflect"
 	"bytes"
@@ -15,7 +15,7 @@ import (
 	"net/http"
 	//"html/template"
 	"fmt"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/config"
 	"os"
 	"runtime"
 	"strconv"
