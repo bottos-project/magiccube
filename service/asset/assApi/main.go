@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	log "github.com/cihub/seelog"
 
-	"github.com/bottos-project/bottos/service/asset/proto"
+	"github.com/bottos-project/magiccube/service/asset/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"os"
-	sign "github.com/bottos-project/bottos/service/common/signature"
-	errcode "github.com/bottos-project/bottos/error"
+	sign "github.com/bottos-project/magiccube/service/common/signature"
+	errcode "github.com/bottos-project/magiccube/error"
 )
 
 type Asset struct {
