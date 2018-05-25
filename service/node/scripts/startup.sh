@@ -586,11 +586,6 @@ function download_git_newcode()
     
     sudo cp -rf /opt/go/bin/*.json ~/
     sudo cp -rf /opt/go/bin/*.json /home/bottos
-    
-    sudo cp -rf /opt/go/bin/config/log.xml req-log.xml 
-    sudo cp -rf /opt/go/bin/config/log.xml ass-log.xml 
-    sudo cp -rf /opt/go/bin/config/log.xml exc-log.xml 
-    sudo cp -rf /opt/go/bin/config/log.xml dash-log.xml 
 }
 
 function build_all_modules()
