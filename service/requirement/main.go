@@ -69,7 +69,6 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 
 	var rows = []*requirement_proto.RequirementData{}
 	for _, v := range ret {
-
 		rows = append(rows, &requirement_proto.RequirementData{
 			RequirementId : v.Param.DataReqId,
 			Username : v.Param.Info.Username,

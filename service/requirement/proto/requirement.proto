@@ -63,7 +63,6 @@ message RequirementData {
     string requirement_name = 3;
     uint64 req_type = 4;
     uint64 feature_tag = 5;
-    string sample_path = 6;
     string sample_hash = 7;
     uint64 expire_time = 8;
     uint64 price = 9;
