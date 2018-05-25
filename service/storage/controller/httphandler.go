@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"github.com/bottos-project/bottos/service/storage/util"
-	baseConfig "github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/service/storage/util"
+	baseConfig "github.com/bottos-project/magiccube/config"
 )
 
 var (

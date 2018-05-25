@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
 func (c *SqliteContext) createTx() {

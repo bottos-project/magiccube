@@ -7,7 +7,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/bottos-project/bottos/service/storage/util"
+	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
 func (c *SqliteContext) InsertUserfile(file util.FileDBInfo) error {
