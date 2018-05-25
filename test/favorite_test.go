@@ -3,12 +3,12 @@ package test
 import (
 	"testing"
 	"encoding/hex"
-	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
-	query_sign "github.com/bottos-project/bottos/service/common/signature/query"
-	"github.com/bottos-project/bottos/service/common/util"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	query_sign "github.com/bottos-project/magiccube/service/common/signature/query"
+	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
-	pack "github.com/bottos-project/bottos/core/contract/msgpack"
+	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
 )
 
 type Favorite struct {
