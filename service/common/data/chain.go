@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"encoding/json"
-	"github.com/bottos-project/bottos/service/common/bean"
-	user_proto "github.com/bottos-project/bottos/service/user/proto"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	"errors"
 	"fmt"
 )

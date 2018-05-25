@@ -3,7 +3,7 @@ package main
 import (
 	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/bottos/service/data/proto"
+	"github.com/bottos-project/magiccube/service/data/proto"
 	"github.com/micro/go-micro"
 	//"github.com/micro/go-micro/client"
 	//"github.com/micro/go-micro/client"

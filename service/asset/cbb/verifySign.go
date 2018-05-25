@@ -3,13 +3,13 @@
 import (
 	"log"
 	//"github.com/micro/go-micro"
-	proto "github.com/bottos-project/bottos/service/asset/proto"
+	proto "github.com/bottos-project/magiccube/service/asset/proto"
 	"golang.org/x/net/context"
 	"github.com/mikemintang/go-curl"
 	"github.com/bitly/go-simplejson"
 	//"os/user"
 	//storage "code/service/storage/proto"
-	storage "github.com/bottos-project/bottos/service/storage/proto"
+	storage "github.com/bottos-project/magiccube/service/storage/proto"
 	"github.com/micro/go-micro/client"
 	//"reflect"
 	"bytes"
@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"os"
 	"runtime"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/config"
 )
 
 const (

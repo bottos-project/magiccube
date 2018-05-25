@@ -3,12 +3,12 @@
 import (
 	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/bottos/service/dashboard/proto"
+	"github.com/bottos-project/magiccube/service/dashboard/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
 	"os"
-	errcode "github.com/bottos-project/bottos/error"
+	errcode "github.com/bottos-project/magiccube/error"
 )
 
 type Dashboard struct {

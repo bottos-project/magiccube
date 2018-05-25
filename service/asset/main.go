@@ -2,7 +2,7 @@
 
 import (
 	"github.com/micro/go-micro"
-	proto "github.com/bottos-project/bottos/service/asset/proto"
+	proto "github.com/bottos-project/magiccube/service/asset/proto"
 	"golang.org/x/net/context"
 	"github.com/bitly/go-simplejson"
 	"time"
@@ -10,13 +10,13 @@ import (
 	"net/http"
 	"strings"
 	"fmt"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/config"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/service/common/bean"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	log "github.com/cihub/seelog"
 	"os"
-	"github.com/bottos-project/bottos/service/common/data"
+	"github.com/bottos-project/magiccube/service/common/data"
 	"github.com/mikemintang/go-curl"
 )
 

@@ -1,17 +1,17 @@
 package signature
 
 import (
-	query_sign "github.com/bottos-project/bottos/service/common/signature/query"
-	push_sign "github.com/bottos-project/bottos/service/common/signature/push"
+	query_sign "github.com/bottos-project/magiccube/service/common/signature/query"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
 	"github.com/golang/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
 	"encoding/hex"
 	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/bottos/service/common/util"
+	"github.com/bottos-project/magiccube/service/common/util"
 	"errors"
-	"github.com/bottos-project/bottos/service/common/bean"
-	"github.com/bottos-project/bottos/service/common/data"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/data"
 )
 
 func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {

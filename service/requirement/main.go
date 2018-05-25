@@ -3,14 +3,14 @@
 import (
 	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
-	requirement_proto "github.com/bottos-project/bottos/service/requirement/proto"
+	requirement_proto "github.com/bottos-project/magiccube/service/requirement/proto"
 	"golang.org/x/net/context"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/bottos-project/bottos/service/common/bean"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/config"
 	"os"
-	"github.com/bottos-project/bottos/service/common/data"
+	"github.com/bottos-project/magiccube/service/common/data"
 )
 
 
@@ -33,7 +33,7 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 {
+	if req.PageSize > 0 && req.PageSize < 20{
 		pageSize = int(req.PageSize)
 	}
 
@@ -42,7 +42,11 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	var where interface{}
 	where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
 	if len(req.Username) > 0{
-		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	}
+
+	if len(req.ReqId) > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.datareqid": req.ReqId}
 	}
 
 	var ret []bean.Requirement
