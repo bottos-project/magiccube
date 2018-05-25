@@ -54,6 +54,7 @@ func (s *Contract) Query(ctx context.Context, req *api.Request, rsp *api.Respons
 		return err
 	}
 
+	rsp.StatusCode = 200
 	rsp.Body = string(body)
 	return nil
 }
