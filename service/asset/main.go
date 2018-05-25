@@ -72,6 +72,15 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
 	}
 
+	if req.AssetType > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.assettype": req.AssetType}
+	}
+
+	if len(req.Username) > 0 && req.AssetType > 0 {
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username, "param.info.assettype": req.AssetType}
+	}
+	log.Info(where)
+
 	var ret []bean.AssetBean
 
 	var mgo = mgo.Session()

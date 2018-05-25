@@ -163,7 +163,7 @@ type AssetBean struct {
 		Info    	struct {
 			UserName    string `bson:"username"`
 			AssetName   string `bson:"assetname"`
-			AssetType   string `bson:"assettype"`
+			AssetType   uint64 `bson:"assettype"`
 			FeatureTag  string `bson:"featuretag"`
 			SampleHash  string `bson:"samplehash"`
 			StorageHash string `bson:"storagehash"`
