@@ -38,13 +38,14 @@ message PublishResponse {
 message QueryRequest {
     uint32 page_size = 1;
     uint32 page_num = 2;
-    string username = 3;
-    string random = 4;
-    string signature = 5;
+    string req_id = 3;
+    string username = 4;
+    string random = 5;
+    string signature = 6;
 }
 
 message QueryResponse {
-    int32 code = 1;a
+    int32 code = 1;
     QueryData data = 2;
     string msg = 3;
 }

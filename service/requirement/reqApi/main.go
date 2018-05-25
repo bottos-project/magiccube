@@ -3,12 +3,12 @@
 import (
 	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/bottos/service/requirement/proto"
+	"github.com/bottos-project/magiccube/service/requirement/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	errcode "github.com/bottos-project/bottos/error"
-	sign "github.com/bottos-project/bottos/service/common/signature"
+	errcode "github.com/bottos-project/magiccube/error"
+	sign "github.com/bottos-project/magiccube/service/common/signature"
 	"os"
 )
 
