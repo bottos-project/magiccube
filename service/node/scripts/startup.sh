@@ -584,8 +584,16 @@ function download_git_newcode()
         echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
     #fi
     
-    sudo cp -rf /opt/go/bin/*.json ~/
-    sudo cp -rf /opt/go/bin/*.json /home/bottos
+    sudo cp -rf /opt/go/bin/*.json ~/ 2>/dev/null
+    sudo cp -rf /opt/go/bin/*.json /home/bottos 2>/dev/null
+
+    sudo cp -rf /opt/go/bin/log.xml /opt/go/bin/config 2>/dev/null
+    
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/ass-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/dash-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/exc-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/log.json 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/req-log.xml 2>/dev/null
 }
 
 function build_all_modules()
