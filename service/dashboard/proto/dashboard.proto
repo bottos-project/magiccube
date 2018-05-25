@@ -1,4 +1,4 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 service Dashboard {
 	rpc GetBlockList(GetBlockListRequest) returns(GetBlockListResponse) {};

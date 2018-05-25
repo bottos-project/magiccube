@@ -187,7 +187,7 @@ message Buy {
 	string username = 2;
 	string asset_id = 3;
 	string asset_name = 4;
-	string asset_type = 5;
+	uint64 asset_type = 5;
 	string feature_tag = 6;
 	uint64 price = 7;
 	string sample_hash = 8;

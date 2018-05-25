@@ -11,7 +11,7 @@ import (
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/magiccube/service/common/util"
 	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
-	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
+	pack "github.com/bottos-project/msgpack-go"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
