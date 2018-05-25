@@ -18,9 +18,14 @@ MINIO_GRP=minio-user
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
-SERVER_IPADR=
+if [ $1 != "stop" ]; then 
+    read -p "Please input your server ip address:" SERVER_IPADR
+else
+    SERVER_IPADR=""    
+fi
+
 SERVER_PORT=9000
-WALLET_SERV=
+WALLET_SERV=$SERVER_IPADR
 CHAIN_PORT=8888
 EXTERNAL_IPADR=
 
@@ -57,8 +62,8 @@ function check_gzpackages() {
     
     #if [ ! -d /opt/go/bin/core ]; then
 
+    sudo rm -rf /opt/go/bin/core 2>/dev/null
 /usr/bin/expect <<-EOF
-sudo rm -rf /opt/go/bin/core 2>/dev/null
 spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
 set timeout 600
 
@@ -323,9 +328,9 @@ function varcheck()
 
 function startcore()
 {
-    if [ ! -e /opt/go/bin/core/core ];
+    if [ ! -e /opt/go/bin/core/bottos ];
 	then
-		echo -e "\033[31m *ERROR* Fail to find core process under : /opt/go/bin/core !!! \033[0m"
+		echo -e "\033[31m *ERROR* Fail to find bottos process under : /opt/go/bin/core !!! \033[0m"
 		exit 1
 	fi
 	
@@ -355,11 +360,11 @@ function startcore()
 	#	exit 1
 	#fi
 	
-	CHK_CORE=`ps -elf | grep "/opt/go/bin/core/core" | grep -v grep | wc -l`
-	if [ "$CHK_CORE" -lt 1 ];
+	CHK_CORE=`ps -elf | grep "/opt/go/bin/core/bottos" | grep -v grep | wc -l`
+    if [ "$CHK_CORE" -lt 1 ];
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
-		sudo nohup /opt/go/bin/core/core 2>&1 & 
+		sudo nohup /opt/go/bin/core/bottos 2>&1 & 
         	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
         	sleep 3
 	fi
@@ -368,15 +373,15 @@ function startcore()
 
 function stopcore()
 {
-    RUNNING_CORE_PID=`ps -elf | grep /opt/go/bin/core | grep -v grep | awk '{print $4}'`
+    RUNNING_CORE_PID=`ps -elf | grep /opt/go/bin/core/bottos | grep -v grep | awk '{print $4}'`
     if [ -z "$RUNNING_CORE_PID" ];
     then
-        echo -e "\033[33m *WRAN* core process hadn't been running ... \033[0m"
+        echo -e "\033[33m *WRAN* bottos process hadn't been running ... \033[0m"
         return
     fi
 
     kill -SIGINT $RUNNING_CORE_PID
-    ps -ef | grep ${SERVER_PATH}"core" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+    ps -ef | grep "opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 
     return
 }
@@ -509,7 +514,7 @@ function stopserv()
 	ps -ef | grep -w ${SERVER_PATH}"identity" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep -w ${SERVER_PATH}"ideApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"storage" | grep -v grep | cut -c 9-15 | xargs kill -s 9
-	ps -ef | grep ${SERVER_PATH}"core" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+	ps -ef | grep "/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 9
     miniopid=$(pidof minio)
     kill -9 $miniopid 2>/dev/null
     datapid=$(pidof data)
@@ -546,32 +551,49 @@ function download_git_newcode()
         exit 1
     fi
 
-    echo "Please input your eth0's IP address:"
-    read eth0_ip
+    eth0_ip=$SERVER_IPADR
 
-    if [ ! -z $GOPATH ]; then
+    #if [ ! -z $GOPATH ]; then
         sudo rm -rf $GOPATH/src/github.com/bottos-project/magiccube 2>&1>/dev/null
-        sudo rm -rf $GOPATH/src/github.com/bottos-project/core   2>&1>/dev/null
+        sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
         sudo rm -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/keystore/crypto-go 2>&1>/dev/null
+        
         sudo git clone https://github.com/bottos-project/magiccube.git $GOPATH/src/github.com/bottos-project/magiccube
         
         path=`pwd`
         cd $GOPATH/src/github.com/bottos-project/magiccube/service/node/keystore
         sudo git clone https://github.com/bottos-project/crypto-go.git
         cd $path
-        sudo git clone https://github.com/bottos-project/core.git $GOPATH/src/github.com/bottos-project/core
+        sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project/bottos
         
+        cmd="/MONGO_DB_URL/c\MONGO_DB_URL=\"$eth0_ip\""
+        sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
         cmd="/WALLET_IP/c\WALLET_IP=\"$eth0_ip\""
         sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
-        cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip,\""
+        
+        cmd="/option_db/c\\\"option_db\":\"$eth0_ip:27017\","
+        sudo sed -ir $cmd /opt/go/bin/chainconfig.json
+        
+        cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip\","
         sudo sed -ir $cmd /opt/go/bin/config.json
-        cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip,\""
+        cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip\","
         sudo sed -ir $cmd /opt/go/bin/config.json
         cmd="/bind_ip/c\bind_ip=$eth0_ip"
         sudo sed -ir $cmd /etc/mongodb.conf
         sudo chmod 777 $GOPATH/src/github.com/bottos-project/* -R
         echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
-    fi
+    #fi
+    
+    sudo cp -rf /opt/go/bin/*.json ~/ 2>/dev/null
+    sudo cp -rf /opt/go/bin/*.json /home/bottos 2>/dev/null
+
+    sudo cp -rf /opt/go/bin/log.xml /opt/go/bin/config 2>/dev/null
+    
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/ass-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/dash-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/exc-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/log.json 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/req-log.xml 2>/dev/null
 }
 
 function build_all_modules()
@@ -579,28 +601,37 @@ function build_all_modules()
     export GOPATH=/mnt/bottos
     export GOROOT=/usr/lib/go
     
-    /usr/lib/go/bin/./go build github.com/bottos-project/core
+    #sudo mv /opt/go/bin/core /opt/go/bin/core_dir
+
+    /usr/lib/go/bin/./go build github.com/bottos-project/bottos
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/asset
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/storage
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/requirement
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/exchange
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard/dasApi
-    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard   
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data/datApi
-
-    cp -f core        /opt/go/bin/core
-    cp -f node        /opt/go/bin
-    cp -f asset       /opt/go/bin
-    cp -f storage     /opt/go/bin
-    cp -f requirement /opt/go/bin
-    cp -f exchange    /opt/go/bin
-    cp -f dasApi      /opt/go/bin
-    cp -f dashboard   /opt/go/bin
-    cp -f data        /opt/go/bin
-    cp -f datApi      /opt/go/bin
-
+    
+    #sudo rm -rf /opt/go/bin/core
+    #sudo mv /opt/go/bin/core_dir /opt/go/bin/core
+    
+    cp -f bottos      /opt/go/bin/core/
+    
+    path=`pwd`
+    if [ $path != "/opt/go/bin" ];
+    then
+        cp -f node        /opt/go/bin
+        cp -f asset       /opt/go/bin
+        cp -f storage     /opt/go/bin
+        cp -f requirement /opt/go/bin
+        cp -f exchange    /opt/go/bin
+        cp -f dasApi      /opt/go/bin
+        cp -f dashboard   /opt/go/bin
+        cp -f data        /opt/go/bin
+        cp -f datApi      /opt/go/bin
+    fi
     cp -f /opt/go/bin/log.xml  /opt/go/bin/config
     cp -f /opt/go/bin/log.xml  /opt/go/bin/config/log-req.xml
 
@@ -632,10 +663,10 @@ case $1 in
     "deploy")
         usercheck
         varcheck   
-	    check_gzpackages
         prepcheck
         sslcheck
 	    unpackpackages
+	    check_gzpackages
         ;;
     "startcore")
         startcore
