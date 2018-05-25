@@ -3,11 +3,11 @@ package main
 import (
 	"github.com/robfig/cron"
 	"time"
-	"github.com/bottos-project/bottos/tools/db/mongodb"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	log "github.com/cihub/seelog"
-	"github.com/bottos-project/bottos/service/query"
-	"github.com/bottos-project/bottos/service/bean"
-	"github.com/bottos-project/bottos/config"
+	"github.com/bottos-project/magiccube/service/query"
+	"github.com/bottos-project/magiccube/service/bean"
+	"github.com/bottos-project/magiccube/config"
 )
 
 func init() {
