@@ -82,7 +82,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:116.240405,
 			Latitude:39.953014,
 		},
@@ -91,7 +91,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:117.006668,
 			Latitude:39.959003,
 		},
@@ -100,7 +100,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:116.471118,
 			Latitude:39.607907,
 		},
@@ -109,7 +109,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:116.214313,
 			Latitude:40.08658,
 		},
@@ -118,7 +118,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:121.295489,
 			Latitude:31.250492,
 		},
@@ -127,7 +127,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:121.141681,
 			Latitude:31.259884,
 		},
@@ -136,7 +136,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:121.652545,
 			Latitude:31.250492,
 		},
@@ -145,7 +145,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:121.545428,
 			Latitude:31.161224,
 		},
@@ -154,7 +154,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:120.147418,
 			Latitude:30.154743,
 		},
@@ -163,7 +163,7 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	data =append(data, &dashboard.NodeInfoData{
 		Ip:"127.0.0.1",
 		Port:"8080",
-		Longitude:&dashboard.Longitude{
+		Position:&dashboard.Position{
 			Longitude:119.949903,
 			Latitude:30.166617,
 		},
