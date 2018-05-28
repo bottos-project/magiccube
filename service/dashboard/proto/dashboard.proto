@@ -26,7 +26,12 @@ message GetNodeInfosResponse {
 message NodeInfoData {
 	string ip = 1;
 	string port = 2;
-	string address = 3;
+	Longitude longitude = 3;
+}
+
+message Longitude {
+	float longitude = 1;
+	float latitude = 2;
 }
 
 //message AddressData {

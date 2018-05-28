@@ -71,13 +71,109 @@ func (s *Dashboard) GetBlockInfo(ctx context.Context, req *api.Request, rsp *api
 }
 
 func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	response, err := s.Client.GetNodeInfos(ctx, &dashboard.GetNodeInfosRequest{})
-	if err != nil {
-		return err
-	}
+	//response, err := s.Client.GetNodeInfos(ctx, &dashboard.GetNodeInfosRequest{})
+	//if err != nil {
+	//	return err
+	//}
 
 	rsp.StatusCode = 200
-	rsp.Body = errcode.Return(response)
+	var data []*dashboard.NodeInfoData
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:116.240405,
+			Latitude:39.953014,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:117.006668,
+			Latitude:39.959003,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:116.471118,
+			Latitude:39.607907,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:116.214313,
+			Latitude:40.08658,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:121.295489,
+			Latitude:31.250492,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:121.141681,
+			Latitude:31.259884,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:121.652545,
+			Latitude:31.250492,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:121.545428,
+			Latitude:31.161224,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:120.147418,
+			Latitude:30.154743,
+		},
+	})
+
+	data =append(data, &dashboard.NodeInfoData{
+		Ip:"127.0.0.1",
+		Port:"8080",
+		Longitude:&dashboard.Longitude{
+			Longitude:119.949903,
+			Latitude:30.166617,
+		},
+	})
+
+
+	rsp.Body = errcode.Return(dashboard.GetNodeInfosResponse{
+		Code:1,
+		Data:data,
+	})
 	return nil
 }
 
