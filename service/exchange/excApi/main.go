@@ -9,9 +9,11 @@ import (
 	"golang.org/x/net/context"
 	sign "github.com/bottos-project/magiccube/service/common/signature"
 	errcode "github.com/bottos-project/magiccube/error"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
+	"github.com/bottos-project/magiccube/config"
 	"os"
+	"gopkg.in/mgo.v2/bson"
 )
-
 
 type Exchange struct {
 	Client exchange.ExchangeClient
@@ -43,25 +45,44 @@ func (s *Exchange) BuyAsset(ctx context.Context, req *api.Request, rsp *api.Resp
 	return nil
 }
 
-/*func (u *Exchange) BuyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	//header, _ := json.Marshal(req.Header)
-	response, err := u.Client.ConsumerBuy(ctx, &exchange.ConsumerBuyRequest{
-		PostBody: req.Body,
-	})
+func (s *Exchange) IsBuyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	var isBuyAssetRequest exchange.IsBuyAssetRequest
+	err := json.Unmarshal([]byte(req.Body), &isBuyAssetRequest)
 	if err != nil {
+		log.Error(err)
 		return err
 	}
 
-	rsp.StatusCode = 200
-	b, _ := json.Marshal(map[string]interface{}{
-		"code": response.Code,
-		"msg":  response.Msg,
-		"data": response.Data,
-	})
-	rsp.Body = string(b)
+	is, err := sign.QueryVerifySign(req.Body)
+	if !is {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var where = &bson.M{"param.info.assetid": isBuyAssetRequest.AssetId, "param.info.username": isBuyAssetRequest.Username}
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err := mgo.DB(config.DB_NAME).C("Transactions").Find(where).Count()
+	log.Info(count)
+
+	//response, err := s.Client.GetFavorite(ctx, &isBuyAssetRequest)
+	if err != nil {
+
+		return err
+	}
+
+	var result exchange.IsBuyAssetResponse
+	result.Data = "false"
+	if count > 0 {
+		result.Data = "true"
+	}
+	rsp.Body = errcode.Return(result)
 
 	return nil
-}*/
+}
 
 //func (u *Exchange) QueryTx(ctx context.Context, req *api.Request, rsp *api.Response) error {
 //	body := req.Body
