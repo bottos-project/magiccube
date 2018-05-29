@@ -15,11 +15,11 @@ import (
 
 const (
 	BASE_URL  = config.BASE_RPC
-	TX_PARAMS = "service=core&method=CoreApi.PushTrx&request=%s"
+	TX_PARAMS = "service=bottos&method=CoreApi.PushTrx&request=%s"
 )
 
 func BlockHeader() (*user_proto.BlockHeader, error) {
-	params := `service=core&method=CoreApi.QueryChainInfo&request={}`
+	params := `service=bottos&method=CoreApi.QueryChainInfo&request={}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(params))
 	if err != nil {
@@ -110,7 +110,7 @@ func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 }
 
 func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
-	params := `service=core&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
+	params := `service=bottos&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf(params, string(account))))
 	if err != nil {

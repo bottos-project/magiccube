@@ -1,14 +1,10 @@
 ﻿syntax = "proto3";
 
 service Exchange {
-    rpc BuyAsset (PushRequest) returns (BuyAssetResponse) {
-    };
-    rpc IsBuyAsset (IsBuyAssetRequest) returns (IsBuyAssetResponse) {
-    };
-    rpc GrantCredit (PushRequest) returns (BuyAssetResponse) {
-    };
-    rpc Cancelcredit (PushRequest) returns (BuyAssetResponse) {
-    };
+	rpc BuyAsset(PushRequest) returns(BuyAssetResponse) {};
+	rpc IsBuyAsset(IsBuyAssetRequest) returns(IsBuyAssetResponse) {};
+    rpc GrantCredit (PushRequest) returns (BuyAssetResponse) {};
+    rpc CancelCredit (PushRequest) returns (BuyAssetResponse) {};
 //	rpc GetTxList(QueryRequest) returns(GetTxListResponse) {};
 
 }

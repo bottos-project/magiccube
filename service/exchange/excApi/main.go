@@ -89,7 +89,6 @@ func (s *Exchange) GrantCredit(ctx context.Context, req *api.Request, rsp *api.R
 
 	//验签
 	is_true, err := sign.PushVerifySign(req.Body)
-	is_true = true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -116,7 +115,6 @@ func (s *Exchange) CancelCredit(ctx context.Context, req *api.Request, rsp *api.
 
 	//验签
 	is_true, err := sign.PushVerifySign(req.Body)
-	is_true = true
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil

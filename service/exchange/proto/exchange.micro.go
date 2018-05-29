@@ -55,7 +55,7 @@ type ExchangeClient interface {
 	BuyAsset(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
 	IsBuyAsset(ctx context.Context, in *IsBuyAssetRequest, opts ...client.CallOption) (*IsBuyAssetResponse, error)
 	GrantCredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
-	Cancelcredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
+	CancelCredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
 }
 
 type exchangeClient struct {
@@ -106,8 +106,8 @@ func (c *exchangeClient) GrantCredit(ctx context.Context, in *PushRequest, opts 
 	return out, nil
 }
 
-func (c *exchangeClient) Cancelcredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "Exchange.Cancelcredit", in)
+func (c *exchangeClient) CancelCredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Exchange.CancelCredit", in)
 	out := new(BuyAssetResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -122,7 +122,7 @@ type ExchangeHandler interface {
 	BuyAsset(context.Context, *PushRequest, *BuyAssetResponse) error
 	IsBuyAsset(context.Context, *IsBuyAssetRequest, *IsBuyAssetResponse) error
 	GrantCredit(context.Context, *PushRequest, *BuyAssetResponse) error
-	Cancelcredit(context.Context, *PushRequest, *BuyAssetResponse) error
+	CancelCredit(context.Context, *PushRequest, *BuyAssetResponse) error
 }
 
 func RegisterExchangeHandler(s server.Server, hdlr ExchangeHandler, opts ...server.HandlerOption) {
@@ -145,6 +145,6 @@ func (h *Exchange) GrantCredit(ctx context.Context, in *PushRequest, out *BuyAss
 	return h.ExchangeHandler.GrantCredit(ctx, in, out)
 }
 
-func (h *Exchange) Cancelcredit(ctx context.Context, in *PushRequest, out *BuyAssetResponse) error {
-	return h.ExchangeHandler.Cancelcredit(ctx, in, out)
+func (h *Exchange) CancelCredit(ctx context.Context, in *PushRequest, out *BuyAssetResponse) error {
+	return h.ExchangeHandler.CancelCredit(ctx, in, out)
 }
