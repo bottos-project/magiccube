@@ -516,10 +516,10 @@ function startserv()
 	#service mongodb start
 	sleep 3
 	echo `ps -ef|grep micro`
-        echo "startcore"
+        #echo "startcore"
         startcore
 	
-	echo "start minio"
+	#echo "start minio"
 	# setup minio
 	if [ ! -e /usr/local/bin/minio ];
 	then
