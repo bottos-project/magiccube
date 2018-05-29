@@ -84,6 +84,60 @@ func (s *Exchange) IsBuyAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
+func (s *Exchange) GrantCredit(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
+	is_true = true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var buyAssetRequest exchange.PushRequest
+	err = json.Unmarshal([]byte(req.Body), &buyAssetRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.BuyAsset(ctx, &buyAssetRequest)
+	if err != nil {
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+func (s *Exchange) CancelCredit(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+
+	//验签
+	is_true, err := sign.PushVerifySign(req.Body)
+	is_true = true
+	if !is_true {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	var buyAssetRequest exchange.PushRequest
+	err = json.Unmarshal([]byte(req.Body), &buyAssetRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	response, err := s.Client.BuyAsset(ctx, &buyAssetRequest)
+	if err != nil {
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 //func (u *Exchange) QueryTx(ctx context.Context, req *api.Request, rsp *api.Response) error {
 //	body := req.Body
 //	log.Info(body)

@@ -54,6 +54,8 @@ var _ server.Option
 type ExchangeClient interface {
 	BuyAsset(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
 	IsBuyAsset(ctx context.Context, in *IsBuyAssetRequest, opts ...client.CallOption) (*IsBuyAssetResponse, error)
+	GrantCredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
+	Cancelcredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error)
 }
 
 type exchangeClient struct {
@@ -94,11 +96,33 @@ func (c *exchangeClient) IsBuyAsset(ctx context.Context, in *IsBuyAssetRequest, 
 	return out, nil
 }
 
+func (c *exchangeClient) GrantCredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Exchange.GrantCredit", in)
+	out := new(BuyAssetResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *exchangeClient) Cancelcredit(ctx context.Context, in *PushRequest, opts ...client.CallOption) (*BuyAssetResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Exchange.Cancelcredit", in)
+	out := new(BuyAssetResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Exchange service
 
 type ExchangeHandler interface {
 	BuyAsset(context.Context, *PushRequest, *BuyAssetResponse) error
 	IsBuyAsset(context.Context, *IsBuyAssetRequest, *IsBuyAssetResponse) error
+	GrantCredit(context.Context, *PushRequest, *BuyAssetResponse) error
+	Cancelcredit(context.Context, *PushRequest, *BuyAssetResponse) error
 }
 
 func RegisterExchangeHandler(s server.Server, hdlr ExchangeHandler, opts ...server.HandlerOption) {
@@ -115,4 +139,12 @@ func (h *Exchange) BuyAsset(ctx context.Context, in *PushRequest, out *BuyAssetR
 
 func (h *Exchange) IsBuyAsset(ctx context.Context, in *IsBuyAssetRequest, out *IsBuyAssetResponse) error {
 	return h.ExchangeHandler.IsBuyAsset(ctx, in, out)
+}
+
+func (h *Exchange) GrantCredit(ctx context.Context, in *PushRequest, out *BuyAssetResponse) error {
+	return h.ExchangeHandler.GrantCredit(ctx, in, out)
+}
+
+func (h *Exchange) Cancelcredit(ctx context.Context, in *PushRequest, out *BuyAssetResponse) error {
+	return h.ExchangeHandler.Cancelcredit(ctx, in, out)
 }
