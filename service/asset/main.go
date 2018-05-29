@@ -120,47 +120,54 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 	return nil
 }
 
-func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDRequest, rsp *proto.QueryAssetResponse) error {
+func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDRequest, rsp *proto.QueryAssetInfoResponse) error {
 
 	var where interface{}
 	where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.assetid": req.AssetId}
 
-	var ret []bean.AssetBean
+	var ret bean.AssetBean
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Count()
-	log.Info(count)
+	err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("-_id").One(&ret)
 	if err != nil {
 		log.Error(err)
 	}
-	mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("-_id").All(&ret)
 
-	var rows = []*proto.AssetData{}
-	for _, v := range ret {
-		rows = append(rows, &proto.AssetData{
-			AssetId:     v.Param.AssetId,
-			Username:    v.Param.Info.UserName,
-			AssetName:   v.Param.Info.AssetName,
-			AssetType:   v.Param.Info.AssetType,
-			FeatureTag:  v.Param.Info.FeatureTag,
-			SampleHash:  v.Param.Info.SampleHash,
-			StorageHash: v.Param.Info.StorageHash,
-			ExpireTime:  v.Param.Info.ExpireTime,
-			Price:       v.Param.Info.Price,
-			OpType:      v.Param.Info.OpType,
-			Description: v.Param.Info.Description,
-			CreateTime:  uint64(v.CreateTime.Unix()),
-		})
+	var count, count1 = 0, 0
+	if len(req.Sender) > 0 {
+		var where1 = &bson.M{ "param.goodsid": req.AssetId, "param.username": req.Sender}
+		//var where1 = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.goodsid": req.AssetId, "param.username": req.Sender}
+
+		count, err = mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where1).Count()
+
+		if err != nil {
+			log.Error(err)
+		}
+		var where2 = &bson.M{"param.info.assetid": req.AssetId, "param.info.username": req.Sender}
+		count1, err = mgo.DB(config.DB_NAME).C("Transactions").Find(where2).Count()
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
-	var data = &proto.QueryAssetData{
-		RowCount: uint32(count),
-		PageNum:  uint32(1),
-		Row:      rows,
+	rsp.Data = &proto.QueryAssetInfoData{
+		AssetId:        ret.Param.AssetId,
+		Username:       ret.Param.Info.UserName,
+		AssetName:      ret.Param.Info.AssetName,
+		AssetType:      ret.Param.Info.AssetType,
+		FeatureTag:     ret.Param.Info.FeatureTag,
+		SampleHash:     ret.Param.Info.SampleHash,
+		StorageHash:    ret.Param.Info.StorageHash,
+		ExpireTime:     ret.Param.Info.ExpireTime,
+		Price:          ret.Param.Info.Price,
+		OpType:         ret.Param.Info.OpType,
+		Description:    ret.Param.Info.Description,
+		CreateTime:     uint64(ret.CreateTime.Unix()),
+		FavoriteFlag:   count > 0,
+		IsBuyAssetFlag: count1 > 0,
 	}
-	log.Info(data)
-	rsp.Data = data
+
 	return nil
 }
 

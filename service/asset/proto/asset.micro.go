@@ -24,6 +24,8 @@ It has these top-level messages:
 	QueryAssetData
 	AssetData
 	QueryAssetByIDRequest
+	QueryAssetInfoResponse
+	QueryAssetInfoData
 	QueryMyNoticeRequest
 	QueryMyNoticeResponse
 	QueryNoticeData
@@ -69,7 +71,7 @@ type AssetClient interface {
 	GetDownLoadURL(ctx context.Context, in *GetDownLoadURLRequest, opts ...client.CallOption) (*GetDownLoadURLResponse, error)
 	RegisterAsset(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*RegisterResponse, error)
 	QueryAsset(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryAssetResponse, error)
-	QueryAssetByID(ctx context.Context, in *QueryAssetByIDRequest, opts ...client.CallOption) (*QueryAssetResponse, error)
+	QueryAssetByID(ctx context.Context, in *QueryAssetByIDRequest, opts ...client.CallOption) (*QueryAssetInfoResponse, error)
 	PreSaleNotice(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PreSaleNoticeResponse, error)
 	QueryMyNotice(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
 	QueryMyPreSale(ctx context.Context, in *QueryMyNoticeRequest, opts ...client.CallOption) (*QueryMyNoticeResponse, error)
@@ -143,9 +145,9 @@ func (c *assetClient) QueryAsset(ctx context.Context, in *QueryRequest, opts ...
 	return out, nil
 }
 
-func (c *assetClient) QueryAssetByID(ctx context.Context, in *QueryAssetByIDRequest, opts ...client.CallOption) (*QueryAssetResponse, error) {
+func (c *assetClient) QueryAssetByID(ctx context.Context, in *QueryAssetByIDRequest, opts ...client.CallOption) (*QueryAssetInfoResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Asset.QueryAssetByID", in)
-	out := new(QueryAssetResponse)
+	out := new(QueryAssetInfoResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -195,7 +197,7 @@ type AssetHandler interface {
 	GetDownLoadURL(context.Context, *GetDownLoadURLRequest, *GetDownLoadURLResponse) error
 	RegisterAsset(context.Context, *PushTxRequest, *RegisterResponse) error
 	QueryAsset(context.Context, *QueryRequest, *QueryAssetResponse) error
-	QueryAssetByID(context.Context, *QueryAssetByIDRequest, *QueryAssetResponse) error
+	QueryAssetByID(context.Context, *QueryAssetByIDRequest, *QueryAssetInfoResponse) error
 	PreSaleNotice(context.Context, *PushTxRequest, *PreSaleNoticeResponse) error
 	QueryMyNotice(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
 	QueryMyPreSale(context.Context, *QueryMyNoticeRequest, *QueryMyNoticeResponse) error
@@ -229,7 +231,7 @@ func (h *Asset) QueryAsset(ctx context.Context, in *QueryRequest, out *QueryAsse
 	return h.AssetHandler.QueryAsset(ctx, in, out)
 }
 
-func (h *Asset) QueryAssetByID(ctx context.Context, in *QueryAssetByIDRequest, out *QueryAssetResponse) error {
+func (h *Asset) QueryAssetByID(ctx context.Context, in *QueryAssetByIDRequest, out *QueryAssetInfoResponse) error {
 	return h.AssetHandler.QueryAssetByID(ctx, in, out)
 }
 
