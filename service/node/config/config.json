@@ -2,15 +2,15 @@
   "node": [
     {
       "nodeName":    "node1",
-      "ipAddr":      "10.104.11.184",
+      "ipAddr":      "10.10.10.184",
       "userName":    "xxxx",
       "passWord":    "xxxx",
       "btoPort":    "8888",
       "btoUser":     "xxxx",
       "prodUser":    "xxxx",
-      "btoPath":     "/home/bot/workspace",
-      "walletIP":    "10.104.11.184",
-      "keyPath":     "/home/bot",
+      "btoPath":     "/home/bto",
+      "walletIP":    "10.10.10.184",
+      "keyPath":     "/home/bto",
       "dbUser":      "xxxx",
       "dbPass":      "xxxx",
       "storageSize": "1T",
@@ -29,6 +29,11 @@
         "dasApi",
         "dashboard"
       ]
+	  "SeedipAddr": "10.10.10.184",	
+	  "SlaveipAddr": [
+        "139.219.139.184",
+		"139.104.11.184"
+	  ]	
     }
   ]
 }

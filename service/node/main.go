@@ -14,12 +14,22 @@ import (
     "bytes"
     "strings"
     "errors"
-    "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
+    "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/secp256k1"
+    aes "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
     "runtime"  
     "syscall"  
     slog "github.com/cihub/seelog"
-
-    //"log"
+	"golang.org/x/net/context"
+	"github.com/bottos-project/magiccube/service/common/bean" 
+ 	"github.com/bottos-project/magiccube/service/common/util"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	pack "github.com/bottos-project/bottos/contract/msgpack"
+	"github.com/bottos-project/magiccube/service/common/data"
+	"encoding/hex"
+	"github.com/protobuf/proto"
+	node_proto "github.com/bottos-project/magiccube/service/node/proto"  
+    datautil "github.com/bottos-project/magiccube/service/data/util"
+	//"log"
 	//"sync"
 	//"reflect"
 	//"github.com/micro/cli"
@@ -74,7 +84,7 @@ func exec_process(shellPath string) error {
 
 func CreateAccount(nodeinfo api.NodeInfos, UserPwd string) error {
     
-    keystore.AccountCreate_Ex(nodeinfo.Node[0].BtoPath, nodeinfo.Node[0].KeyPath, UserPwd)
+    keystore.AccountCreate_Ex("/home/bto", "/home/bto", UserPwd)
     
     return nil
 }
@@ -293,18 +303,105 @@ func slog_init() {
 
 }
 
+func Sign(msg, seckey []byte) ([]byte, error) {
+	sign, err := secp256k1.Sign(msg, seckey)
+	return sign[:len(sign)-1], err
+}
+
+type nodeTrxInfo struct{}
+
+func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequest, rsp *node_proto.RegisterResponse) error {
+	slog.Info("req:", req);
+	block_header, err:= data.BlockHeader()
+	if err != nil {
+		rsp.Code = 1003
+		rsp.Msg = err.Error()
+		return nil
+	}
+	//Register account
+	rsp.Code = 1004
+    req.NodeUUIDInfo.UserName = keystore.GetAccount()
+	req.NodeUUIDInfo.PubKey   = keystore.GetPubKey()
+
+	account_buf,err := pack.Marshal(req.NodeUUIDInfo)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+	tx_account_sign := &push_sign.TransactionSign{
+		Version:1,
+		CursorNum: block_header.HeadBlockNum,
+		CursorLabel: block_header.CursorLabel,
+		Lifetime: block_header.HeadBlockTime + 20,
+		Sender: req.NodeUUIDInfo.UserName,
+		Contract: "nodemng",
+		Method: "nodeinforeg",
+		Param: account_buf,
+		SigAlg: 1,
+	}
+
+	msg, err := proto.Marshal(tx_account_sign)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+    
+	key := keystore.GetPubKey()
+	
+	if len(key) <= 0 { 
+	    key = "81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e"
+    }
+    
+    seckey, err := hex.DecodeString(key)
+    
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+   
+    signature, err := Sign(util.Sha256(msg), seckey)
+	if err != nil {
+		rsp.Msg = err.Error()
+		return nil
+	}
+    
+	tx_account := &bean.TxBean{
+		Version:1,
+		CursorNum: block_header.HeadBlockNum,
+		CursorLabel: block_header.CursorLabel,
+		Lifetime: block_header.HeadBlockTime + 20,
+		Sender: req.NodeUUIDInfo.UserName,
+		Contract: "nodemng",
+		Method: "nodeinforeg",
+		Param: hex.EncodeToString(account_buf),
+		SigAlg: 1,
+		Signature: hex.EncodeToString(signature),
+	}
+
+	ret, err := data.PushTransaction(tx_account)
+	if err != nil {
+		rsp.Code = 1005
+		rsp.Msg = err.Error()
+		return nil
+	}
+
+	slog.Info("ret-account:", ret.Result.TrxHash)
+	
+	return nil
+}
+
 func main() {
     var inputReader *bufio.Reader
     var input, input1, input2 string
     var err error
 
     inputReader = bufio.NewReader(os.Stdin)
-    fmt.Println("Please input your password: ")
+    fmt.Println("Please input your password for generating keystore: ")
     input1, err = inputReader.ReadString('\n')
     
     fmt.Println("Please input your password again: ")
     input2, err = inputReader.ReadString('\n')
-    
+
     if input1 != input2 || err != nil || len(input1) <= 0 || input1 == "\n" {
         fmt.Println("Input error! Failed to start node.")
         return
@@ -315,6 +412,7 @@ func main() {
     UserPwd := input
     
     slog_init()
+    
 
 	service := micro.NewService(
 		micro.Name("go.micro.srv.node"),
@@ -330,6 +428,8 @@ func main() {
 			}
 		}),*/
 	)
+    
+	//node_proto.RegisterUserHandler(service.Server(), new(nodeTrxInfo))
 
 	if api.PathExist(config.CONFIG_FILE) == false {
 		fmt.Println("*ERROR* configuration file :",config.CONFIG_FILE," doesn't exist !!!")
@@ -343,7 +443,7 @@ func main() {
 	//check if exists keystone file
     if CheckKeyStore(nodeinfos, UserPwd) != nil {return}
 	
-    log.Println("now call Save_ip_ponix_to_blockchain")
+    //log.Println("now call Save_ip_ponix_to_blockchain")
 	api.Save_ip_ponix_to_blockchain()
 
 	//set server according to the json file
@@ -363,4 +463,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+}
+
+func GetNodeDBInfoList (nodedbinfo *datautil.NodeDBInfo) {
+    node_infos := api.ReadFile(config.CONFIG_FILE)
+
+    nodedbinfo.NodeId   = ""//api.BytesToString(byte[](keystore.GetUUID()))
+    nodedbinfo.NodeIP   = node_infos.Node[0].IpAddr
+    nodedbinfo.NodePort = node_infos.Node[0].BtoPort
+ 	nodedbinfo.NodeAddress = node_infos.Node[0].IpAddr
+    //nodedbinfo.SeedIP      = node_infos.Node[0].SeedIP
+    //nodedbinfo.SlaveIP     = node_infos.Node[0].SlaveIPList
+}
+
+type NodeApi interface {
+    GetNodeDBInfoList(nodedbinfo *datautil.NodeDBInfo)
 }

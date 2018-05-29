@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+service User {
+	rpc Register(RegisterRequest) returns(RegisterResponse) {};
+}
+
+
+message NodeInfoReq {
+    string nodeId     = 1;
+    NodeBaseInfo info = 2;
+}
+
+message NodeBaseInfo {
+    string nodeIp    = 1;
+    string nodePort  = 2;
+    string city      = 3;
+    string osSystem  = 4;
+    string serviceProvider = 5;
+    string longitude = 6;
+    string latitude  = 7;
+}
+
+message RegisterRequest {
+	NodeTrxUUIDIP   NodeUUIDInfo = 1;
+	SignInfo        SignInfo     = 2;       
+}
+
+message NodeTrxUUIDIP {
+	string UserName = 1;
+	string PubKey = 2;
+}
+
+message NodeClusterInfoRequest {
+    NODEClusterInfo NodeClusterInfo = 1;
+    SignInfo        signInfo     = 2;   
+ 
+}
+
+message NODEClusterInfo {
+    bytes  NodeId   = 1;
+    string NodeIp   = 2;
+    string NodePort = 3;
+    string NodeAddress = 4;
+    string SeedIP = 6;
+    repeated string SlaveIP = 7;
+}
+
+message SignInfo {
+	 uint32 version = 1;
+     uint32 cursor_num = 2;
+     uint32 cursor_label = 3;
+	 uint64 lifetime = 4;
+	 string sender = 5;
+     string contract = 6;
+	 string method = 7;
+	 string param = 8;
+	 uint32 sig_alg = 9;
+	 string signature =10;
+}
+
+message RegisterResponse {
+	uint32 code = 1;
+	string msg = 2;
+}
+
+

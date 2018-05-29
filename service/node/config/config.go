@@ -6,15 +6,14 @@ const(
 	//SERV_IP="10.104.14.169"
 	//SERV_PORT="8888"
 	//SERV_URL=SERV_IP+":"+SERV_PORT
-	WALLET_IP="10.104.11.184"
+WALLET_IP="10.0.3.4"
 
 	//RUN_PLATFORM="windows"
 	RUN_PLATFORM="linux"
 
 	SCRIPT_PATH="/opt/go/bin/build.sh"
-	//KEYSTONE_PATH="/home/bot/keystone.bto"
         
-        MONGO_DB_URL = "127.0.0.1:27017"
+MONGO_DB_URL="10.0.3.4"
         DB_BOTTOS = "local"
         TABLE_POINTXY = "pointxy"
 )

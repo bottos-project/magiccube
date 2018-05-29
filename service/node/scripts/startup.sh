@@ -55,7 +55,7 @@ if [ $1 == "deploy" ]; then
         read -p "Please input source package server ip:" PACKAGE_SVR
         read -p "Please input source package server packages directory:" PACKAGE_SVR_PACKAGE_DIR
         read -p "Please input source package server user name:" PACKAGE_SVR_USRNAME
-        read -p "Please input source package server password:" PACKAGE_SVR_PWD
+        read -s -p "Please input source package server password:" PACKAGE_SVR_PWD
         counts=1
     done
     sudo apt-get install -y tcl tk expect   
@@ -515,7 +515,7 @@ function startserv()
 	# start mongodb service
 	#service mongodb start
 	sleep 3
-	echo `ps -ef|grep micro`
+	#echo `ps -ef|grep micro`
         #echo "startcore"
         startcore
 	
