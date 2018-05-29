@@ -481,10 +481,10 @@ function prepcheck()
 
 function startcontract()
 {
-	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/cmd
-    sudo cp -rf cmd ${CORE_PROC_FILE_DIR} 2>/dev/null
-	sudo ${CORE_PROC_FILE_DIR}/./cmd newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
-	sudo ${CORE_PROC_FILE_DIR}/./cmd deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/bcli
+    sudo cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
+	sudo ${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
+	sudo ${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	echo "===CONTRACT DONE==="
 }
 
