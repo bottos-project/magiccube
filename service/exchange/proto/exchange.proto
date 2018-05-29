@@ -3,8 +3,9 @@
 service Exchange {
 	rpc BuyAsset(PushRequest) returns(BuyAssetResponse) {};
 	rpc IsBuyAsset(IsBuyAssetRequest) returns(IsBuyAssetResponse) {};
+    rpc GrantCredit (PushRequest) returns (BuyAssetResponse) {};
+    rpc CancelCredit (PushRequest) returns (BuyAssetResponse) {};
 //	rpc GetTxList(QueryRequest) returns(GetTxListResponse) {};
-
 
 }
 

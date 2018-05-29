@@ -112,7 +112,7 @@ func (u *Requirement) QueryById(ctx context.Context, req *requirement_proto.Quer
 			log.Error(err)
 		}
 
-		where3 := bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.info.datareqid": req.ReqId, "param.info.consumer":req.Sender}
+		where3 := bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.info.datareqid": req.ReqId, "param.info.username":req.Sender}
 		count2, err = mgo.DB(config.DB_NAME).C("pre_presale").Find(where3).Count();
 		if err != nil {
 			log.Error(err)

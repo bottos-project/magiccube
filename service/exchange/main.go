@@ -45,6 +45,26 @@ func (u *Exchange) IsBuyAsset(ctx context.Context, req *proto.IsBuyAssetRequest,
 	return nil
 }
 
+func (u *Exchange) GrantCredit(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
+	i, err := data.PushTransaction(req)
+	if err != nil {
+		rsp.Code = 4011
+		rsp.Msg = err.Error()
+	}
+	log.Info(i)
+	return nil
+}
+
+func (u *Exchange) CancelCredit(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
+	i, err := data.PushTransaction(req)
+	if err != nil {
+		rsp.Code = 4021
+		rsp.Msg = err.Error()
+	}
+	log.Info(i)
+	return nil
+}
+
 /*func (u *Exchange) QueryTx(ctx context.Context, req *proto.QueryTxRequest, rsp *proto.QueryTxResponse) error {
 
 	dataBody, signValue, account := "", "", ""

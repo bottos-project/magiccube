@@ -34,7 +34,7 @@ func (s *Contract) Query(ctx context.Context, req *api.Request, rsp *api.Respons
 		return err
 	}
 
-	params := `service=core&method=CoreApi.QueryAbi&request={"contract":"`+queryRequest.Contract+`"}`
+	params := `service=bottos&method=CoreApi.QueryAbi&request={"contract":"`+queryRequest.Contract+`"}`
 	resp, err := http.Post(data.BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(params))
 	if err != nil {
