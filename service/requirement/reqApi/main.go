@@ -42,6 +42,25 @@ func (s *Requirement) Publish(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
+func (s *Requirement) QueryById(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryByIdRequest requirement.QueryByIdRequest
+	err := json.Unmarshal([]byte(body), &queryByIdRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	response, err := s.Client.QueryById(ctx, &queryByIdRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 func (s *Requirement) Query(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body

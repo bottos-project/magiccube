@@ -14,6 +14,9 @@ It has these top-level messages:
 	QueryResponse
 	QueryData
 	RequirementData
+	QueryByIdRequest
+	QueryByIdResponse
+	QueryByIdData
 */
 package requirement
 
@@ -48,6 +51,7 @@ var _ server.Option
 type RequirementClient interface {
 	Publish(ctx context.Context, in *PublishRequest, opts ...client.CallOption) (*PublishResponse, error)
 	Query(ctx context.Context, in *QueryRequest, opts ...client.CallOption) (*QueryResponse, error)
+	QueryById(ctx context.Context, in *QueryByIdRequest, opts ...client.CallOption) (*QueryByIdResponse, error)
 }
 
 type requirementClient struct {
@@ -88,11 +92,22 @@ func (c *requirementClient) Query(ctx context.Context, in *QueryRequest, opts ..
 	return out, nil
 }
 
+func (c *requirementClient) QueryById(ctx context.Context, in *QueryByIdRequest, opts ...client.CallOption) (*QueryByIdResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Requirement.QueryById", in)
+	out := new(QueryByIdResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Requirement service
 
 type RequirementHandler interface {
 	Publish(context.Context, *PublishRequest, *PublishResponse) error
 	Query(context.Context, *QueryRequest, *QueryResponse) error
+	QueryById(context.Context, *QueryByIdRequest, *QueryByIdResponse) error
 }
 
 func RegisterRequirementHandler(s server.Server, hdlr RequirementHandler, opts ...server.HandlerOption) {
@@ -109,4 +124,8 @@ func (h *Requirement) Publish(ctx context.Context, in *PublishRequest, out *Publ
 
 func (h *Requirement) Query(ctx context.Context, in *QueryRequest, out *QueryResponse) error {
 	return h.RequirementHandler.Query(ctx, in, out)
+}
+
+func (h *Requirement) QueryById(ctx context.Context, in *QueryByIdRequest, out *QueryByIdResponse) error {
+	return h.RequirementHandler.QueryById(ctx, in, out)
 }

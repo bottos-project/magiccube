@@ -93,6 +93,53 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 	return nil
 }
 
+func (u *Requirement) QueryById(ctx context.Context, req *requirement_proto.QueryByIdRequest, rsp *requirement_proto.QueryByIdResponse) error {
+	var mgo = mgo.Session()
+	defer mgo.Close()
+
+	var ret bean.Requirement
+	where := bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}},"param.datareqid": req.ReqId}
+	err := mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(where).One(&ret)
+	if err != nil {
+		log.Error(err)
+	}
+
+	var count1, count2 int= 0,0;
+	if len(req.Sender) > 0 {
+		where2 := bson.M{"param.optype": bson.M{"$in": []int32{1,2}}, "param.goodstype":"requirement", "param.goodsid": req.ReqId, "param.username":req.Sender}
+		count1, err = mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where2).Count();
+		if err != nil {
+			log.Error(err)
+		}
+
+		where3 := bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.info.datareqid": req.ReqId, "param.info.consumer":req.Sender}
+		count2, err = mgo.DB(config.DB_NAME).C("pre_presale").Find(where3).Count();
+		if err != nil {
+			log.Error(err)
+		}
+	}
+
+	if (count1 > 0 || count2 > 0) {
+
+	}
+
+	rsp.Data = &requirement_proto.QueryByIdData{
+		RequirementId : ret.Param.DataReqId,
+		Username : ret.Param.Info.Username,
+		RequirementName : ret.Param.Info.Reqname,
+		ReqType: ret.Param.Info.Reqtype,
+		FeatureTag : ret.Param.Info.Featuretag,
+		SampleHash : ret.Param.Info.Samplehash,
+		ExpireTime : ret.Param.Info.Expiretime,
+		Price : ret.Param.Info.Price,
+		Description : ret.Param.Info.Description,
+		PublishDate : uint64(ret.CreateTime.Unix()),
+		IsCollection: count1 > 0,
+		IsPresale: count2 > 0,
+	}
+	return nil
+}
+
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/req-log.xml")
 	if err != nil{
