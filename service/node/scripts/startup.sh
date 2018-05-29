@@ -46,8 +46,7 @@ PACKAGE_SVR_USRNAME=""
 PACKAGE_SVR_PWD=""
 PACKAGE_SVR_PACKAGE_DIR=""
 
-function check_gzpackages() {
-    sudo apt-get install -y tcl tk expect   
+if [ $1 == "deploy" ]; then
     counts=0
     while ( [ -z "$PACKAGE_SVR" ] || [ -z "$PACKAGE_SVR_USRNAME" ] || [ -z "$PACKAGE_SVR_PWD" ] || [ -z "$PACKAGE_SVR_PACKAGE_DIR" ]); do
         if [ $counts -gt 0 ]; then
@@ -59,22 +58,25 @@ function check_gzpackages() {
         read -p "Please input source package server password:" PACKAGE_SVR_PWD
         counts=1
     done
+    sudo apt-get install -y tcl tk expect   
+fi
+
+function check_gzpackages() {
     
     #if [ ! -d /opt/go/bin/core ]; then
+  
+#/usr/bin/expect <<-EOF
+#spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
+#set timeout 600
 
-    sudo rm -rf /opt/go/bin/core 2>/dev/null
-/usr/bin/expect <<-EOF
-spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
-set timeout 600
+#expect {
+#"*yes/no" { send "yes\r"; exp_continue }
+#"*password:" { send "$PACKAGE_SVR_PWD\r" }
+#}
 
-expect {
-"*yes/no" { send "yes\r"; exp_continue }
-"*password:" { send "$PACKAGE_SVR_PWD\r" }
-}
+#expect eof
 
-expect eof
-
-EOF
+#EOF
 
     #fi
 
@@ -148,20 +150,44 @@ EOF
         echo -e "\033[31m *ERROR* Please get your missing gz packages [ $GOLANG_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
         exit 1
     fi
-    
+	sudo cp -rf /opt/go/bin/cmd_dir /opt/go/bin/core    
+
     echo "!!All files done."    
 }
 
 function unpackpackages() {
+    
+	sudo rm -rf /opt/go/bin 2>/dev/null
+	
 	echo "start unpack $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK:"
 	mkdir -p /opt/go/bin
-	tar zxvf $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK -C /opt/go
+	sudo tar zxvf $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK -C /opt/go
 	
+    sudo rm -rf /opt/go/bin/core 2>/dev/null
+    #if [ ! -d /opt/go/bin/core ]; then
+  
+/usr/bin/expect <<-EOF
+spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
+set timeout 600
+
+expect {
+"*yes/no" { send "yes\r"; exp_continue }
+"*password:" { send "$PACKAGE_SVR_PWD\r" }
+}
+
+expect eof
+
+EOF
+
+    #fi
+    sudo cp -rf /opt/go/bin/cmd_dir /opt/go/bin/core 2>/dev/null
+
 	echo "start unpack $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK:"
-	tar zxvf $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK -C $SYS_GOPATH
+	sudo tar zxvf $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK -C $SYS_GOPATH
 	
     echo "start unpack $GZ_PACKAGE_DIR/$GOLANG_PACK:"
-	tar -C /usr/lib -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
+	sudo tar -C /usr/lib -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
+	sudo tar -C /usr/bin -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
 	
     cmd=$(sed  -n "/GOPATH/p" /etc/profile |wc -l)
     if [ $cmd -lt 1 ]; then
@@ -193,13 +219,18 @@ function unpackpackages() {
 
     cmd=$(sed -n "/export PATH/p" ~/.profile |wc -l)
     if [ $cmd -lt 1 ]; then
-        sed -i '$a\export PATH=$PATH:/usr/local/go/bin' ~/.profile
+        sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' ~/.profile
     fi
     
-    sudo cp -rf /usr/bin/go /usr/lib
+    cmd=$(sed -n "/export PATH/p" /etc/profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+        sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' /etc/profile
+    fi
+    #sudo cp -rf /usr/bin/go /usr/lib
 
+    
     source /etc/profile
-    source ~/.profile
+    #source ~/.profile
 }
 
 function miniocheck(){
@@ -289,14 +320,14 @@ function ssldepends()
         exit 1
     fi
     
-    tar xzf mongo-c-driver-1.9.2.tar.gz
+    sudo tar xzf mongo-c-driver-1.9.2.tar.gz
     cd mongo-c-driver-1.9.2
     ./configure --disable-automatic-init-and-cleanup --enable-static
     make
     make install
     cd ..
 
-    tar xzf mongo-cxx-driver-r3.2.0-rc1.tar.gz
+    sudo tar xzf mongo-cxx-driver-r3.2.0-rc1.tar.gz
     cd mongo-cxx-driver-r3.2.0-rc1/build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
     make EP_mnmlstc_core
@@ -340,8 +371,9 @@ function startcore()
 		exit 1
 	fi
 
-    cp -f /opt/go/bin/core/chainconfig.json /opt/go/bin
-	cp -f /opt/go/bin/core/genesis.json /opt/go/bin
+    cp -f /opt/go/bin/*.json /home/bottos
+    cp -f /opt/go/bin/*.json /opt/go/bin/core
+	cp -f /opt/go/bin/*.json /opt/go/bin/core/cmd_dir
 
     if [ ! -d ${CORE_PROC_FILE_DIR} ];
 	then
@@ -350,6 +382,8 @@ function startcore()
 	fi
 	
     sudo rm -r /opt/go/bin/datadir 2>/dev/null
+    sudo rm -r /home/bottos/datadir 2>/dev/null
+    sudo rm -r /opt/go/bin/core/datadir 2>/dev/null
 	sudo rm -r ${CORE_PROC_FILE_DIR}/datadir 2>/dev/null
 	sudo rm -r $GO_PATH/bin/datadir 2>/dev/null
 
@@ -447,6 +481,8 @@ function prepcheck()
 
 function startcontract()
 {
+	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/cmd
+    sudo cp -rf cmd ${CORE_PROC_FILE_DIR} 2>/dev/null
 	sudo ${CORE_PROC_FILE_DIR}/./cmd newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
 	sudo ${CORE_PROC_FILE_DIR}/./cmd deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	echo "===CONTRACT DONE==="
@@ -514,7 +550,9 @@ function stopserv()
 	ps -ef | grep -w ${SERVER_PATH}"identity" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep -w ${SERVER_PATH}"ideApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"storage" | grep -v grep | cut -c 9-15 | xargs kill -s 9
-	ps -ef | grep "/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+	ps -ef | grep "/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+	sleep 2
+	ps -ef | grep "/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
     miniopid=$(pidof minio)
     kill -9 $miniopid 2>/dev/null
     datapid=$(pidof data)
@@ -570,8 +608,13 @@ function download_git_newcode()
         sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
         cmd="/WALLET_IP/c\WALLET_IP=\"$eth0_ip\""
         sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
-        
+    	
+		sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/chainconfig.json /opt/go/bin
+		sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/genesis.json /opt/go/bin
+
         cmd="/option_db/c\\\"option_db\":\"$eth0_ip:27017\","
+        sudo sed -ir $cmd /opt/go/bin/chainconfig.json
+        cmd="/api_service_enable/c\\\"api_service_enable\":true,"
         sudo sed -ir $cmd /opt/go/bin/chainconfig.json
         
         cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip\","
@@ -586,14 +629,26 @@ function download_git_newcode()
     
     sudo cp -rf /opt/go/bin/*.json ~/ 2>/dev/null
     sudo cp -rf /opt/go/bin/*.json /home/bottos 2>/dev/null
+    sudo cp -rf /opt/go/bin/*.json /opt/go/bin/core 2>/dev/null
+    sudo cp -rf /opt/go/bin/*.json /opt/go/bin/core/cmd_dir 2>/dev/null
+	sudo cp /opt/go/bin/*.xml /opt/go/bin/config 2>/dev/null
 
-    sudo cp -rf /opt/go/bin/log.xml /opt/go/bin/config 2>/dev/null
-    
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/ass-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/dash-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/exc-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/log.json 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/req-log.xml 2>/dev/null
+    sudo cp -rf /opt/go/bin/*.xml /opt/go/bin/config 2>/dev/null
+	
+	    
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/ass-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/dash-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/exc-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/log.json 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/req-log.xml 2>/dev/null
+    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/dash-log.xml 2>/dev/null
+
+    sudo cp -f /opt/go/bin/config/*.xml /opt/go/bin 2>/dev/null
+
+    sudo cp -rf /opt/go/bin/config/* /home/bottos 2>/dev/null
+	sudo mkdir /opt/go/bin/coreconfig 2>/dev/null
+    sudo cp -rf /opt/go/bin/config/*.xml /opt/go/bin/core/config/ 2>/dev/null
+    sudo cp -rf /opt/go/bin/config /opt/go/bin/core/cmd_dir 2>/dev/null
 }
 
 function build_all_modules()
@@ -661,12 +716,12 @@ case $1 in
         stopserv
         ;;
     "deploy")
+	    check_gzpackages
+	    unpackpackages
         usercheck
         varcheck   
         prepcheck
         sslcheck
-	    unpackpackages
-	    check_gzpackages
         ;;
     "startcore")
         startcore
