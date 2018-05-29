@@ -45,6 +45,10 @@ type Ret struct {
 	Msg     string		`json:"msg"`
 }
 
+type CoreRet struct {
+	Errcode int64 		`json:"errcode"`
+}
+
 func GetErrorInfo(code int64) ErrorCode {
 	d := GetAllErrorInfos()
 	for _, v := range d {
@@ -75,8 +79,28 @@ func Return(b interface{}) string {
 		return string(body)
 	}
 
-
 	d := GetAllErrorInfos()
+
+	if len(ret.Msg) > 0 {
+		var coreRet CoreRet
+		err = json.Unmarshal([]byte(ret.Msg), &coreRet)
+		if err != nil {
+			log.Error(err)
+			panic(err)
+		}
+		for _, v := range d {
+			if coreRet.Errcode == v.Code {
+				json, err := json.Marshal(v)
+				if err != nil {
+					log.Error(err)
+					panic(err)
+				}
+				return string(json)
+			}
+
+		}
+	}
+
 	for _, v := range d {
 		if ret.Code == v.Code {
 			v.Details = ret.Msg

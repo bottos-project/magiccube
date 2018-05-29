@@ -1,4 +1,4 @@
-﻿[{
+[{
   "code": 1,
   "msg": {
     "en": "ok",
@@ -101,6 +101,20 @@
   "msg": {
     "en": "Buy Asset failure",
     "cn": "购买资产失败"
+  },
+  "details": ""
+},{
+  "code": 10001,
+  "msg": {
+    "en": "check Pending pool max num error",
+    "cn": "..."
+  },
+  "details": ""
+},{
+  "code":45007,
+  "msg": {
+    "en": "check Pending pool max num error",
+    "cn": "..."
   },
   "details": ""
 }
