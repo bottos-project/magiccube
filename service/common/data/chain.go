@@ -1,4 +1,4 @@
-package data
+﻿package data
 
 import (
 	log "github.com/cihub/seelog"
@@ -10,10 +10,11 @@ import (
 	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	"errors"
 	"fmt"
+	"github.com/bottos-project/magiccube/config"
 )
 
 const (
-	BASE_URL = "http://139.217.206.43:8080/rpc"
+	BASE_URL  = config.BASE_RPC
 	TX_PARAMS = "service=core&method=CoreApi.PushTrx&request=%s"
 )
 

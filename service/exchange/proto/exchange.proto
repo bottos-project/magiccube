@@ -1,7 +1,8 @@
-syntax = "proto3";
+﻿syntax = "proto3";
 
 service Exchange {
 	rpc BuyAsset(PushRequest) returns(BuyAssetResponse) {};
+	rpc IsBuyAsset(IsBuyAssetRequest) returns(IsBuyAssetResponse) {};
 //	rpc GetTxList(QueryRequest) returns(GetTxListResponse) {};
 
 
@@ -78,6 +79,19 @@ message QueryTransferResponse {
 	string msg = 3;
 }
 
+message IsBuyAssetRequest {
+	uint32 page_size = 1;
+	uint32 page_num = 2;
+	string username = 3;
+	string random = 4;
+	string signature = 5;
+	string asset_id = 6;
+}
+message IsBuyAssetResponse {
+	uint32 code = 1;
+	string data = 2;
+	string msg = 3;
+}
 
 
 

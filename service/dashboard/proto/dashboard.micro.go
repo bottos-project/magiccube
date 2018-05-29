@@ -11,6 +11,7 @@ It has these top-level messages:
 	GetNodeInfosRequest
 	GetNodeInfosResponse
 	NodeInfoData
+	Position
 	GetTxListRequest
 	GetTxListResponse
 	TxListData
