@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	cbb "github.com/bottos-project/magiccube/service/asset/cbb"
-	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/magiccube/service/bean"*/
 	"github.com/bottos-project/magiccube/config"
@@ -42,6 +41,9 @@ func (u *Exchange) BuyAsset(ctx context.Context, req *proto.PushRequest, rsp *pr
 	return nil
 }
 
+func (u *Exchange) IsBuyAsset(ctx context.Context, req *proto.IsBuyAssetRequest, rsp *proto.IsBuyAssetResponse) error {
+	return nil
+}
 
 /*func (u *Exchange) QueryTx(ctx context.Context, req *proto.QueryTxRequest, rsp *proto.QueryTxResponse) error {
 
