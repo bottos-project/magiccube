@@ -15,7 +15,7 @@ service Asset {
     };
     rpc QueryAsset (QueryRequest) returns (QueryAssetResponse) {
     };
-    rpc QueryAssetByID (QueryAssetByIDRequest) returns (QueryAssetResponse) {
+    rpc QueryAssetByID (QueryAssetByIDRequest) returns (QueryAssetInfoResponse) {
     };
 
 
@@ -161,6 +161,34 @@ message AssetData {
 
 message QueryAssetByIDRequest {
     string asset_id = 1;
+    string sender = 2;
+}
+message QueryAssetInfoResponse {
+    int32 code = 1;
+    QueryAssetInfoData data = 2;
+    string msg = 3;
+}
+
+/*message QueryAssetInfoData {
+    uint32 page_num = 1;
+    uint32 row_count = 2;
+    repeated AssetInfoData row = 3;
+}*/
+message QueryAssetInfoData {
+    string asset_id = 1;
+    string username = 2;
+    string asset_name = 3;
+    uint64 asset_type = 4;
+    string feature_tag = 5;
+    string sample_hash = 6;
+    string storage_hash = 7;
+    uint32 expire_time = 8;
+    uint32 op_type = 9;
+    uint64 price = 10;
+    string description = 11;
+    uint64 create_time = 12;
+    bool favorite_flag = 13;
+    bool isBuy_asset_flag = 14;
 }
 
 
