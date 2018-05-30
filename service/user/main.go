@@ -16,7 +16,6 @@ import (
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/magiccube/config"
-	"time"
 )
 
 type User struct{}
@@ -99,7 +98,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 
 	log.Info("ret-account:", ret.Result.TrxHash)
 	
-	time.Sleep(time.Duration(2)*time.Second)
+	//time.Sleep(time.Duration(2)*time.Second)
 
 	//did
 	var did bean.Did
