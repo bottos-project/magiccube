@@ -656,6 +656,8 @@ function build_all_modules()
     export GOPATH=/mnt/bottos
     export GOROOT=/usr/lib/go
     
+    sudo mkdir -p $GOPATH/src/github.com/howeyc
+    sudo cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/github.com/gopass $GOPATH/src/github.com/howeyc
     #sudo mv /opt/go/bin/core /opt/go/bin/core_dir
 
     /usr/lib/go/bin/./go build github.com/bottos-project/bottos
@@ -699,6 +701,9 @@ case $1 in
         download_git_newcode        
         ;;
     "buildstart")
+        usercheck
+        stopserv
+        
         build_all_modules
         usercheck
         varcheck
@@ -706,6 +711,9 @@ case $1 in
         startserv
         ;;
 	"start")
+        usercheck
+        stopserv
+        
         usercheck
         varcheck
         service mongodb start

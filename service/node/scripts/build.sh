@@ -52,7 +52,7 @@ case $1 in
         setserv)
             usercheck
             paramcheck $# 3
-            echo "setserv ..."
+            #echo "setserv ..."
             SERV_CMD=$2"/"$3" > "$3".file 2>&1"
             chmod a+x $2"/"$3
             setserv "$COMMON_STRATUP"

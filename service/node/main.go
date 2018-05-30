@@ -2,7 +2,7 @@ package main
 
 import (
     "time"
-    "bufio"
+    //"bufio"
     "fmt"
     "github.com/bottos-project/magiccube/service/node/config"
     "github.com/bottos-project/magiccube/service/node/api"
@@ -29,7 +29,8 @@ import (
 	"github.com/protobuf/proto"
 	node_proto "github.com/bottos-project/magiccube/service/node/proto"  
     datautil "github.com/bottos-project/magiccube/service/data/util"
-	//"log"
+	"github.com/howeyc/gopass"
+    //"log"
 	//"sync"
 	//"reflect"
 	//"github.com/micro/cli"
@@ -144,7 +145,6 @@ func GenerateKeyStone(nodeinfo api.NodeInfos) error {
 func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 	username := nodeinfo.Node[0].BtoUser
 	url      := nodeinfo.Node[0].IpAddr + ":" + nodeinfo.Node[0].BtoPort
-
 	if accountinfo , err := api.GetAccountInfo(url , username); err != nil || accountinfo.AccountName != username {
 		//user doesn't exist
 		fmt.Println("*WARN* Account doesn't exist , create it ...")
@@ -170,8 +170,8 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 			}
 
 		}else if "linux" == config.RUN_PLATFORM {
-            filename := nodeinfo.Node[0].UserName + ".keystore"
-            filepath := nodeinfo.Node[0].KeyPath + "/" + filename 
+            filename := "bto.keystore"
+            filepath :="/home/bto/" + filename
 			
             if api.PathExist(filepath) == false {
 				errinfo := "*ERROR* Failed to search the keystone file : "+filepath
@@ -206,6 +206,7 @@ func InitServer(nodeinfo api.NodeInfos) error {
 			}
 		}else if "linux" == config.RUN_PLATFORM {
 			//wg.Add(1)
+            fmt.Println("Start service", nodeinfo.Node[0].ServLst[i], "...")
 			go exec_shell(command)
                         time.Sleep(1 * time.Second)
 		}
@@ -391,24 +392,25 @@ func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequ
 }
 
 func main() {
-    var inputReader *bufio.Reader
-    var input, input1, input2 string
+    var input string
+    var input1 []byte
     var err error
 
-    inputReader = bufio.NewReader(os.Stdin)
     fmt.Println("Please input your password for generating keystore: ")
-    input1, err = inputReader.ReadString('\n')
-    
-    fmt.Println("Please input your password again: ")
-    input2, err = inputReader.ReadString('\n')
+    input1, err = gopass.GetPasswd()
 
-    if input1 != input2 || err != nil || len(input1) <= 0 || input1 == "\n" {
+    if err != nil || len(input1) <= 0 {
         fmt.Println("Input error! Failed to start node.")
         return
     }
 
-    input = input1
+    input = string(input1)
     
+    if input == "\n" || len(input) <= 0 {
+        fmt.Println("Input error! Failed to start node.")
+        return
+    }
+
     UserPwd := input
     
     slog_init()
