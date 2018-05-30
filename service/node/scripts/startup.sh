@@ -18,6 +18,11 @@ MINIO_GRP=minio-user
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
+if [ -z $1 ]; then
+    echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
+    exit 1
+fi
+
 if [ $1 != "stop" ]; then 
     read -p "Please input your server ip address:" SERVER_IPADR
 else
@@ -506,6 +511,8 @@ function startserv()
 		exit 1
 	fi
 
+    cd /opt/go/bin
+
 	# start consul for go-micro
 	nohup ${CONSUL_PATH}consul agent -dev > consul.log 2>&1 &
 	sleep 1
@@ -651,7 +658,7 @@ function download_git_newcode()
     sudo cp -rf /opt/go/bin/config /opt/go/bin/core/cmd_dir 2>/dev/null
 }
 
-function build_all_modules()
+function setenv()
 {
     export GOPATH=/mnt/bottos
     export GOROOT=/usr/lib/go
@@ -662,6 +669,10 @@ function build_all_modules()
     
     sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin/core/cmd_dir
     sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin
+}
+
+function build_all_modules()
+{
 
     /usr/lib/go/bin/./go build github.com/bottos-project/bottos
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
@@ -707,6 +718,7 @@ case $1 in
         usercheck
         stopserv
         
+        setenv
         build_all_modules
         usercheck
         varcheck
@@ -716,7 +728,8 @@ case $1 in
 	"start")
         usercheck
         stopserv
-        
+          
+        setenv
         usercheck
         varcheck
         service mongodb start
