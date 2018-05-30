@@ -10,12 +10,12 @@ It is generated from these files:
 It has these top-level messages:
 	NodeInfoReq
 	NodeBaseInfo
-	RegisterRequest
+	RegisterRequests
 	NodeTrxUUIDIP
 	NodeClusterInfoRequest
 	NODEClusterInfo
 	SignInfo
-	RegisterResponse
+	RegisterResponses
 */
 package node
 
@@ -48,7 +48,7 @@ var _ server.Option
 // Client API for User service
 
 type UserService interface {
-	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
+	Register(ctx context.Context, in *RegisterRequests, opts ...client.CallOption) (*RegisterResponses, error)
 }
 
 type userService struct {
@@ -69,9 +69,9 @@ func UserServiceClient(serviceName string, c client.Client) UserService {
 	}
 }
 
-func (c *userService) Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error) {
+func (c *userService) Register(ctx context.Context, in *RegisterRequests, opts ...client.CallOption) (*RegisterResponses, error) {
 	req := c.c.NewRequest(c.serviceName, "User.Register", in)
-	out := new(RegisterResponse)
+	out := new(RegisterResponses)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (c *userService) Register(ctx context.Context, in *RegisterRequest, opts ..
 // Server API for User service
 
 type UserHandler interface {
-	Register(context.Context, *RegisterRequest, *RegisterResponse) error
+	Register(context.Context, *RegisterRequests, *RegisterResponses) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -93,6 +93,6 @@ type User struct {
 	UserHandler
 }
 
-func (h *User) Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error {
+func (h *User) Register(ctx context.Context, in *RegisterRequests, out *RegisterResponses) error {
 	return h.UserHandler.Register(ctx, in, out)
 }

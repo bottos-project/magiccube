@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 service User {
-	rpc Register(RegisterRequest) returns(RegisterResponse) {};
+	rpc Register(RegisterRequests) returns(RegisterResponses) {};
 }
 
 
@@ -20,7 +20,7 @@ message NodeBaseInfo {
     string latitude  = 7;
 }
 
-message RegisterRequest {
+message RegisterRequests {
 	NodeTrxUUIDIP   NodeUUIDInfo = 1;
 	SignInfo        SignInfo     = 2;       
 }
@@ -58,7 +58,7 @@ message SignInfo {
 	 string signature =10;
 }
 
-message RegisterResponse {
+message RegisterResponses {
 	uint32 code = 1;
 	string msg = 2;
 }

@@ -22,7 +22,7 @@ type nodeTrxInfo struct {
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	log.Info(req.Body)
-	var registerRequest user.RegisterRequest
+	var registerRequest user.RegisterRequests
 	err := json.Unmarshal([]byte(req.Body), &registerRequest)
 	if err != nil {
 		log.Error(err)

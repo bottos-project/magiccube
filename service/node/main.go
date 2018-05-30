@@ -311,7 +311,7 @@ func Sign(msg, seckey []byte) ([]byte, error) {
 
 type nodeTrxInfo struct{}
 
-func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequest, rsp *node_proto.RegisterResponse) error {
+func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequests, rsp *node_proto.RegisterResponses) error {
 	slog.Info("req:", req);
 	block_header, err:= data.BlockHeader()
 	if err != nil {
@@ -396,7 +396,7 @@ func main() {
     var input1 []byte
     var err error
 
-    fmt.Println("Please input your password for generating keystore: ")
+    fmt.Println("\nPlease input your password for generating keystore: ")
     input1, err = gopass.GetPasswd()
 
     if err != nil || len(input1) <= 0 {

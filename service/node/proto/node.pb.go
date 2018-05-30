@@ -10,12 +10,12 @@ It is generated from these files:
 It has these top-level messages:
 	NodeInfoReq
 	NodeBaseInfo
-	RegisterRequest
+	RegisterRequests
 	NodeTrxUUIDIP
 	NodeClusterInfoRequest
 	NODEClusterInfo
 	SignInfo
-	RegisterResponse
+	RegisterResponses
 */
 package node
 
@@ -122,24 +122,24 @@ func (m *NodeBaseInfo) GetLatitude() string {
 	return ""
 }
 
-type RegisterRequest struct {
+type RegisterRequests struct {
 	NodeUUIDInfo *NodeTrxUUIDIP `protobuf:"bytes,1,opt,name=NodeUUIDInfo" json:"NodeUUIDInfo,omitempty"`
 	SignInfo     *SignInfo      `protobuf:"bytes,2,opt,name=SignInfo" json:"SignInfo,omitempty"`
 }
 
-func (m *RegisterRequest) Reset()                    { *m = RegisterRequest{} }
-func (m *RegisterRequest) String() string            { return proto.CompactTextString(m) }
-func (*RegisterRequest) ProtoMessage()               {}
-func (*RegisterRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (m *RegisterRequests) Reset()                    { *m = RegisterRequests{} }
+func (m *RegisterRequests) String() string            { return proto.CompactTextString(m) }
+func (*RegisterRequests) ProtoMessage()               {}
+func (*RegisterRequests) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
-func (m *RegisterRequest) GetNodeUUIDInfo() *NodeTrxUUIDIP {
+func (m *RegisterRequests) GetNodeUUIDInfo() *NodeTrxUUIDIP {
 	if m != nil {
 		return m.NodeUUIDInfo
 	}
 	return nil
 }
 
-func (m *RegisterRequest) GetSignInfo() *SignInfo {
+func (m *RegisterRequests) GetSignInfo() *SignInfo {
 	if m != nil {
 		return m.SignInfo
 	}
@@ -338,24 +338,24 @@ func (m *SignInfo) GetSignature() string {
 	return ""
 }
 
-type RegisterResponse struct {
+type RegisterResponses struct {
 	Code uint32 `protobuf:"varint,1,opt,name=code" json:"code,omitempty"`
 	Msg  string `protobuf:"bytes,2,opt,name=msg" json:"msg,omitempty"`
 }
 
-func (m *RegisterResponse) Reset()                    { *m = RegisterResponse{} }
-func (m *RegisterResponse) String() string            { return proto.CompactTextString(m) }
-func (*RegisterResponse) ProtoMessage()               {}
-func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
+func (m *RegisterResponses) Reset()                    { *m = RegisterResponses{} }
+func (m *RegisterResponses) String() string            { return proto.CompactTextString(m) }
+func (*RegisterResponses) ProtoMessage()               {}
+func (*RegisterResponses) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
 
-func (m *RegisterResponse) GetCode() uint32 {
+func (m *RegisterResponses) GetCode() uint32 {
 	if m != nil {
 		return m.Code
 	}
 	return 0
 }
 
-func (m *RegisterResponse) GetMsg() string {
+func (m *RegisterResponses) GetMsg() string {
 	if m != nil {
 		return m.Msg
 	}
@@ -365,12 +365,12 @@ func (m *RegisterResponse) GetMsg() string {
 func init() {
 	proto.RegisterType((*NodeInfoReq)(nil), "NodeInfoReq")
 	proto.RegisterType((*NodeBaseInfo)(nil), "NodeBaseInfo")
-	proto.RegisterType((*RegisterRequest)(nil), "RegisterRequest")
+	proto.RegisterType((*RegisterRequests)(nil), "RegisterRequests")
 	proto.RegisterType((*NodeTrxUUIDIP)(nil), "NodeTrxUUIDIP")
 	proto.RegisterType((*NodeClusterInfoRequest)(nil), "NodeClusterInfoRequest")
 	proto.RegisterType((*NODEClusterInfo)(nil), "NODEClusterInfo")
 	proto.RegisterType((*SignInfo)(nil), "SignInfo")
-	proto.RegisterType((*RegisterResponse)(nil), "RegisterResponse")
+	proto.RegisterType((*RegisterResponses)(nil), "RegisterResponses")
 }
 
 func init() { proto.RegisterFile("node.proto", fileDescriptor0) }
