@@ -16,7 +16,6 @@ import (
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/magiccube/config"
-	"time"
 )
 
 type User struct{}
