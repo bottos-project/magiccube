@@ -1,4 +1,4 @@
-[{
+﻿[{
   "code": 1,
   "msg": {
     "en": "ok",
@@ -104,9 +104,198 @@
   },
   "details": ""
 },{
+  "code": 4011,
+  "msg": {
+    "en": "Grant Credit failure",
+    "cn": "预授权失败"
+  },
+  "details": ""
+},{
+  "code": 4021,
+  "msg": {
+    "en": "Cancel Credit failure",
+    "cn": "取消预授权失败"
+  },
+  "details": ""
+},{
   "code": 10001,
   "msg": {
     "en": "check Pending pool max num error",
+    "cn": "..."
+  },
+  "details": ""
+},{
+  "code": 10002,
+  "msg": {
+    "en": "check signature error",
+    "cn": "Chain 验签失败"
+  },
+  "details": ""
+},{
+  "code": 10003,
+  "msg": {
+    "en": "check account valid error",
+    "cn": "账号无效"
+  },
+  "details": ""
+},{
+  "code": 10004,
+  "msg": {
+    "en": "check lifetime error",
+    "cn": "获取块高时间不对"
+  },
+  "details": ""
+},{
+  "code": 10005,
+  "msg": {
+    "en": "check trx unique error",
+    "cn": "不能发起相同的交易"
+  },
+  "details": ""
+},{
+  "code": 10006,
+  "msg": {
+    "en": "check match chain error",
+    "cn": "参数校验错误"
+  },
+  "details": ""
+},{
+  "code": 10007,
+  "msg": {
+    "en": "process contract error",
+    "cn": "..."
+  },
+  "details": ""
+},{
+  "code": 10101,
+  "msg": {
+    "en": "illegal account name",
+    "cn": "账号不存在"
+  },
+  "details": ""
+},{
+  "code": 10102,
+  "msg": {
+    "en": "check Pending pool max num error",
+    "cn": "..."
+  },
+  "details": ""
+},{
+  "code": 10103,
+  "msg": {
+    "en": "account name already exist",
+    "cn": "账号已存在"
+  },
+  "details": ""
+},{
+  "code": 10104,
+  "msg": {
+    "en": "transaction param error",
+    "cn": "请求param参数错误"
+  },
+  "details": ""
+},{
+  "code": 10105,
+  "msg": {
+    "en": "transfer account insufficient funds",
+    "cn": "账户余额不足"
+  },
+  "details": ""
+},{
+  "code": 10106,
+  "msg": {
+    "en": "invalide contract code",
+    "cn": "合约无效"
+  },
+  "details": ""
+},{
+  "code": 10107,
+  "msg": {
+    "en": "invalide contract abi",
+    "cn": "无效的合约ABI"
+  },
+  "details": ""
+},{
+  "code": 10108,
+  "msg": {
+    "en": "unknown contract",
+    "cn": "未知的合约"
+  },
+  "details": ""
+},{
+  "code": 10109,
+  "msg": {
+    "en": "unknown contract method",
+    "cn": "未知的合约方法"
+  },
+  "details": ""
+},{
+  "code": 10110,
+  "msg": {
+    "en": "transfer overflow",
+    "cn": "转账溢出"
+  },
+  "details": ""
+},{
+  "code": 10111,
+  "msg": {
+    "en": "sender and param account mismatch",
+    "cn": "sender和账号不一致"
+  },
+  "details": ""
+},{
+  "code": 10112,
+  "msg": {
+    "en": "insufficient credits",
+    "cn": "信用额度不足"
+  },
+  "details": ""
+},{
+  "code": 10201,
+  "msg": {
+    "en": "query trx: trx not found",
+    "cn": "交易不存在"
+  },
+  "details": ""
+},{
+  "code": 10202,
+  "msg": {
+    "en":  "query block: block not found",
+    "cn": "block不存在"
+  },
+  "details": ""
+},{
+  "code": 10203,
+  "msg": {
+    "en": "query chain info: error",
+    "cn": "查询链信息错误"
+  },
+  "details": ""
+},{
+  "code": 10204,
+  "msg": {
+    "en": "query account: account not found",
+    "cn": "账号不存在"
+  },
+  "details": ""
+},{
+  "code": 10205,
+  "msg": {
+    "en": "query object: object not found",
+    "cn": "对象不存在"
+  },
+  "details": ""
+},{
+  "code": 10206,
+  "msg": {
+    "en": "query credit: credit not found",
+    "cn": "..."
+  },
+  "details": ""
+},{
+  "code": 10301,
+  "msg": {
+    "en": "actor: " + "process error",
     "cn": "..."
   },
   "details": ""
