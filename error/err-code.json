@@ -295,7 +295,7 @@
 },{
   "code": 10301,
   "msg": {
-    "en": "actor: " + "process error",
+    "en": "actor: process error",
     "cn": "..."
   },
   "details": ""
