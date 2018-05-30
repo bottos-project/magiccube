@@ -23,11 +23,11 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-if [ $1 != "stop" ]; then 
-    read -p "Please input your server ip address:" SERVER_IPADR
-else
-    SERVER_IPADR=""    
-fi
+#if [ $1 != "stop" ]; then 
+#    read -p "Please input your server ip address:" SERVER_IPADR
+#else
+    SERVER_IPADR="127.0.0.1"    
+#fi
 
 SERVER_PORT=9000
 WALLET_SERV=$SERVER_IPADR
@@ -488,7 +488,7 @@ function startcontract()
 {
 	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/bcli
     sudo cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
-	sudo ${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
+	sudo ${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
 	sudo ${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	echo "===CONTRACT DONE==="
 }
