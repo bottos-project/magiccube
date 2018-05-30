@@ -659,6 +659,9 @@ function build_all_modules()
     sudo mkdir -p $GOPATH/src/github.com/howeyc
     sudo cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/github.com/gopass $GOPATH/src/github.com/howeyc
     #sudo mv /opt/go/bin/core /opt/go/bin/core_dir
+    
+    sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin/core/cmd_dir
+    sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin
 
     /usr/lib/go/bin/./go build github.com/bottos-project/bottos
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
