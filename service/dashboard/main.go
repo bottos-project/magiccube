@@ -292,12 +292,12 @@ func (u *Dashboard) GetTxAmountByDay(ctx context.Context, req *dashboard_proto.G
 		var ret2 bean.AssetBean
 		var amount uint64 = 0
 
-		err :=mgo.DB("bottos").C("Transactions").Find(bson.M{"method": "buydata", "create_time": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).All(&ret)
+		err :=mgo.DB(config.DB_NAME).C("Transactions").Find(bson.M{"method": "buydata", "create_time": bson.M{"$gte": query.TimestampToUTC(int64(timeSlice[i])), "$lt": query.TimestampToUTC(int64(timeSlice[i+1]))}}).All(&ret)
 		if err!= nil {
 			log.Error(err)
 		}
 		for _, v := range ret {
-			mgo.DB("bottos").C("pre_assetreg").Find(bson.M{"param.assetid":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+			mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.assetid":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
 			amount += ret2.Param.Info.Price
 		}
 
