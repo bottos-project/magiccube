@@ -271,11 +271,6 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 }
 
 func init() {
-	if !config.LoadJsonConfig() {
-		log.Error("加载配置文件失败")
-		os.Exit(1)
-	}
-
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{
 		log.Error(err)
