@@ -80,14 +80,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	}
 	log.Info(registerRequest)
 
-	if config.Enable_verification {
-		if !base64Captcha.VerifyCaptcha(registerRequest.VerifyId, registerRequest.VerifyValue) {
-			rsp.Body = errcode.ReturnError(1001)
-			return nil
-		}
-	}
-
-	match,err :=regexp.MatchString("^[a-km-z][a-km-z1-9]{2,15}$",registerRequest.Account.Name)
+	match,err :=regexp.MatchString("^[a-z][a-z1-9]{2,15}$",registerRequest.Account.Name)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -95,6 +88,13 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	if !match {
 		rsp.Body = errcode.ReturnError(1002)
 		return nil
+	}
+
+	if config.Enable_verification {
+		if !base64Captcha.VerifyCaptcha(registerRequest.VerifyId, registerRequest.VerifyValue) {
+			rsp.Body = errcode.ReturnError(1001)
+			return nil
+		}
 	}
 
 	user_json_buf, err := json.Marshal(registerRequest.User)
@@ -271,6 +271,11 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 }
 
 func init() {
+	if !config.LoadJsonConfig() {
+		log.Error("加载配置文件失败")
+		os.Exit(1)
+	}
+
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{
 		log.Error(err)
