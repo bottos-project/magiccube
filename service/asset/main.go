@@ -136,11 +136,10 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDReq
 
 	var count, count1 = 0, 0
 	if len(req.Sender) > 0 {
-		var where1 = &bson.M{ "param.goodsid": req.AssetId, "param.username": req.Sender}
-		//var where1 = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.goodsid": req.AssetId, "param.username": req.Sender}
-
+		var where1 = &bson.M{"param.optype": bson.M{"$in": []uint32{1, 2}}, "param.goodsid": req.AssetId, "param.username": req.Sender}
+		log.Debug(where1)
 		count, err = mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where1).Count()
-
+		log.Debug("pre_favoritepro: ", count)
 		if err != nil {
 			log.Error(err)
 		}

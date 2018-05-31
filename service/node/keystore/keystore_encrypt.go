@@ -51,6 +51,11 @@ UserPwd = ""
 
 var (
 	KeyStoreScheme = "keystore"
+	
+	myNodeAccountPubKey = ""
+	myNodeAccountPriKey = ""
+	myNodeAccount       = "" 
+	myNodeUUID  aes.UUID
 )
 
 type NodeConfig struct {
@@ -242,8 +247,8 @@ func (ks keyStorePassphrase) GetKey(addr aes.UUID, filename, auth string) (*aes.
 
 // StoreKey generates a key, encrypts with 'auth' and stores in the given directory
 func StoreKey(dir, auth string, scryptN, scryptP int) (aes.UUID, error) {
-	key, a, err := storeNewKey(&keyStorePassphrase{dir, scryptN, scryptP}, crand.Reader, auth)
-    fmt.Println("==> storeKey-> dir is: ", dir, ", key is:", key)
+	/*key*/_, a, err := storeNewKey(&keyStorePassphrase{dir, scryptN, scryptP}, crand.Reader, auth)
+    //fmt.Println("==> storeKey-> dir is: ", dir, ", key is:", key)
 
     return a.UUID, err
 }
@@ -355,16 +360,30 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 	a := Account{UUID: key.UUID, URL: URL{Scheme: KeyStoreScheme, Path: ks.JoinPath(keyFileName(key.UUID))}}
     
     nodeinfos := api.ReadFile(config.CONFIG_FILE)
-    filename := nodeinfos.Node[0].UserName + ".keystore"
+    filename := "bto.keystore"
     filepath := ks.JoinPath(filename)
 
     if err := ks.StoreKey(nodeinfos.Node[0].UserName, filepath/*a.URL.Path*/, key, auth); err != nil {
 		zeroKey(key.PrivateKey)
 		return nil, a, err
 	}
-    fmt.Println("=====>storeNewKey: [ PATH: ", filepath, ", KEY ID:",key.Id,", KEY ADDRESS:", key.UUID,",PUB KEY:", hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp)), "KEY PRI KEY:", hex.EncodeToString(FromECDSA(key.PrivateKey)), "]filename: ", keyFileName(key.UUID), "path: ", ks.JoinPath(keyFileName(key.UUID)))
+    fmt.Println("\n====================== Keystore Generated ===========================\n")
+    fmt.Println("==>PATH: ", filepath, "\n==>KEY ID:",key.Id,"\n==>KEY UUID:", key.UUID,"\n==>PUB KEY:", hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp)), /*"KEY PRI KEY:", hex.EncodeToString(FromECDSA(key.PrivateKey)), "]*/"\n==>KEYSTORE FILE: ", filepath, "\n")
+	
+	myNodeAccountPubKey = hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp))
+	myNodeAccountPriKey = hex.EncodeToString(FromECDSA(key.PrivateKey))
+	myNodeAccount       = nodeinfos.Node[0].UserName
+    myNodeUUID          = key.UUID
+    
+    fmt.Println("=====================================================================\n")
+
 	return key, a, err
 }
+
+func GetPubKey() string { return myNodeAccountPubKey }
+func GetPriKey() string { return myNodeAccountPriKey }
+func GetAccount() string { return myNodeAccount }
+func GetUUID() aes.UUID { return myNodeUUID }
 
 var Stdin = newTerminalPrompter()
 
@@ -583,9 +602,9 @@ func accountCreate(ctx *cli.Context) error {
     
     UserPwd = password
 
-	UUID, err := StoreKey(keydir, password, scryptN, scryptP)
+	/*UUID, err := */StoreKey(keydir, password, scryptN, scryptP)
 
-	fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
+	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
 }
 
@@ -606,9 +625,9 @@ func AccountCreate_Ex( datadir string , keydir string, password string) error {
     
     UserPwd = password
 
-	UUID, err := StoreKey(keydir, password, scryptN, scryptP)
+	/*UUID, err := */StoreKey(keydir, password, scryptN, scryptP)
 
-	fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
+	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
 }
 

@@ -147,7 +147,7 @@ func MonitorConfigFile(config_file string) error {
 
     defer watch.Close()
 
-    var command string
+    //var command string
 
     err = watch.Add(config_file)
         if err != nil {
@@ -172,16 +172,16 @@ func MonitorConfigFile(config_file string) error {
                 for i := 0;i < len(node_infos.Node);i++ {
                     //fmt.Println(node_infos.Node[i].IpAddr)
                     for j := 0;j<len(node_infos.Node[i].ServLst);j++ {
-                        command = "echo \""+node_infos.Node[i].PassWord+"\" | sudo -S echo \""+node_infos.Node[i].ServLst[j]+"\" > /etc/rc.local"
-                        fmt.Println("command = ",command)
+                        //command = "echo \""+node_infos.Node[i].PassWord+"\" | sudo -S echo \""+node_infos.Node[i].ServLst[j]+"\" > /etc/rc.local"
+                        //fmt.Println("command = ",command)
 
 
-                        if buf,err := SshCommand(node_infos.Node[i].UserName ,
+                        if /*buf*/_,err := SshCommand(node_infos.Node[i].UserName ,
                             node_infos.Node[i].PassWord ,
                             node_infos.Node[i].IpAddr ,
                             22 ,
                             "ls /"); err == nil {
-                            fmt.Println("buf = ",buf)
+                            //fmt.Println("buf = ",buf)
                         }
 
                     }
@@ -336,7 +336,7 @@ func use_international_policy(ipaddr string) (string, string) {
     if ee == nil && resp_body != nil {
         s := strings.Split(string(resp_body), ";")
         
-        fmt.Println(s[len(s)-3:len(s)-1])
+        //fmt.Println(s[len(s)-3:len(s)-1])
         pointx, pointy := s[len(s)-3], s[len(s)-2]
         return pointx, pointy
     } else {
@@ -474,7 +474,7 @@ func (c *MongoContext) SetCollectionByDB(db string, collection string, s func(*m
     session := c.mgoSession
     defer session.Close()
     collects := session.DB(db).C(collection)
-    fmt.Println("SetCollectionByDB: collects:", collects)
+    //fmt.Println("SetCollectionByDB: collects:", collects)
     return s(collects)
 }
 
@@ -507,11 +507,11 @@ func (r *MongoRepository) CallInsertPointxy(ip string, pointx string, pointy str
         selector := bson.M{"ip": ip}
         data := bson.M{"$set": bson.M{"pointx": pointx, "pointy": pointy}}
     
-        changeInfo, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
+        /*changeInfo*/_, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
         if err != nil {
             fmt.Println("update failed!") 
         }
-            fmt.Printf("%+v\n", changeInfo)
+        //fmt.Printf("%+v\n", changeInfo)
 	    return 1, err
     }
 }

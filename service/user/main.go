@@ -97,7 +97,8 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	}
 
 	log.Info("ret-account:", ret.Result.TrxHash)
-	//time.Sleep(time.Duration(3)*time.Second)
+	
+	//time.Sleep(time.Duration(2)*time.Second)
 
 	//did
 	var did bean.Did

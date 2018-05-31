@@ -18,11 +18,16 @@ MINIO_GRP=minio-user
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
-if [ $1 != "stop" ]; then 
-    read -p "Please input your server ip address:" SERVER_IPADR
-else
-    SERVER_IPADR=""    
+if [ -z $1 ]; then
+    echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
+    exit 1
 fi
+
+#if [ $1 != "stop" ]; then 
+#    read -p "Please input your server ip address:" SERVER_IPADR
+#else
+    SERVER_IPADR="127.0.0.1"    
+#fi
 
 SERVER_PORT=9000
 WALLET_SERV=$SERVER_IPADR
@@ -55,7 +60,7 @@ if [ $1 == "deploy" ]; then
         read -p "Please input source package server ip:" PACKAGE_SVR
         read -p "Please input source package server packages directory:" PACKAGE_SVR_PACKAGE_DIR
         read -p "Please input source package server user name:" PACKAGE_SVR_USRNAME
-        read -p "Please input source package server password:" PACKAGE_SVR_PWD
+        read -s -p "Please input source package server password:" PACKAGE_SVR_PWD
         counts=1
     done
     sudo apt-get install -y tcl tk expect   
@@ -483,7 +488,7 @@ function startcontract()
 {
 	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/bcli
     sudo cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
-	sudo ${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 7QBxKhpppiy7q4AcNYKRY2ofb3mR5RP8ssMAX65VEWjpAgaAnF &
+	sudo ${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
 	sudo ${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	echo "===CONTRACT DONE==="
 }
@@ -506,6 +511,8 @@ function startserv()
 		exit 1
 	fi
 
+    cd /opt/go/bin
+
 	# start consul for go-micro
 	nohup ${CONSUL_PATH}consul agent -dev > consul.log 2>&1 &
 	sleep 1
@@ -515,7 +522,7 @@ function startserv()
 	# start mongodb service
 	#service mongodb start
 	sleep 3
-	echo `ps -ef|grep micro`
+	#echo `ps -ef|grep micro`
         #echo "startcore"
         startcore
 	
@@ -651,12 +658,21 @@ function download_git_newcode()
     sudo cp -rf /opt/go/bin/config /opt/go/bin/core/cmd_dir 2>/dev/null
 }
 
-function build_all_modules()
+function setenv()
 {
     export GOPATH=/mnt/bottos
     export GOROOT=/usr/lib/go
     
+    sudo mkdir -p $GOPATH/src/github.com/howeyc
+    sudo cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/github.com/gopass $GOPATH/src/github.com/howeyc
     #sudo mv /opt/go/bin/core /opt/go/bin/core_dir
+    
+    sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin/core/cmd_dir
+    sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin
+}
+
+function build_all_modules()
+{
 
     /usr/lib/go/bin/./go build github.com/bottos-project/bottos
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
@@ -699,6 +715,10 @@ case $1 in
         download_git_newcode        
         ;;
     "buildstart")
+        usercheck
+        stopserv
+        
+        setenv
         build_all_modules
         usercheck
         varcheck
@@ -706,6 +726,10 @@ case $1 in
         startserv
         ;;
 	"start")
+        usercheck
+        stopserv
+          
+        setenv
         usercheck
         varcheck
         service mongodb start
