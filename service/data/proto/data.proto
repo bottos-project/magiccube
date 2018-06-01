@@ -152,6 +152,7 @@ message GetStorageIPResponse {
 	uint64 result = 1;
     string message = 2;
 	string storage_addr = 3;
+	string file_name = 4;
 }
 message GetFileDownloadURLRequest {
 	string username = 1;
