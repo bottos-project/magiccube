@@ -2,11 +2,11 @@ package mongodb
 
 import (
 	"errors"
-	"fmt"
 	"github.com/bottos-project/magiccube/service/data/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
+	log "github.com/cihub/seelog"
 )
 
 type NodeMessage struct {
@@ -30,21 +30,19 @@ type NodeMessage struct {
 }
 
 func (r *MongoRepository) CallNodeRequest(seedip string) (*util.NodeDBInfo, error) {
+	log.Info("call node")
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return nil, errors.New("Get session faild" + r.mgoEndpoint)
 	}
 	//defer session.Close()
-	fmt.Println(session)
 	var mesgs NodeMessage
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "nodeinforeg", "node.basic_info.seed_ip": seedip}).One(&mesgs)
 	}
 
 	session.SetCollection("pre_node", query)
-	fmt.Println("mesgs")
-	fmt.Println(mesgs)
 	reqs := &util.NodeDBInfo{
 		mesgs.Node.NodeID,
 		mesgs.Node.BasicInfo.NodeIP,

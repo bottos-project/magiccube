@@ -2,11 +2,10 @@ package mongodb
 
 import (
 	"errors"
-	"fmt"
-
 	"github.com/bottos-project/magiccube/service/data/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	log "github.com/cihub/seelog"
 )
 
 type DataMessage struct {
@@ -25,12 +24,12 @@ type DataMessage struct {
 		Filehash      string `bson:"filehash"`
 		Info struct {
 			Username string     `bson:"username"`
-			Filesize       string     `bson:"filesize"`
 			Filename       string     `bson:"filename"`
+			Filesize       uint64     `bson:"filesize"`
 			Filepolicy      string     `bson:"filepolicy"`
 			Filenumber       uint64     `bson:"filenumber"`
-			Simorass       string     `bson:"simorass"`
-			Optype     string     `bson:"optype"`
+			Simorass       uint64     `bson:"simorass"`
+			Optype     uint64     `bson:"optype"`
 			Storeaddr     string     `bson:"storeaddr"`
 
 		} `bson:"info"`
@@ -42,46 +41,42 @@ type DataMessage struct {
 }
 
 func (r *MongoRepository) CallIsDataExists(merkleroothash string) (uint64, error) {
+	log.Info("call is data exists")
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
-		fmt.Println(err)
+		log.Info("err")
 		return 0, errors.New("Get session faild" + r.mgoEndpoint)
 	}
 	//defer session.Close()
-	fmt.Println(session)
 	var mesgs []DataMessage
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"method": "datafilereg", "param.filehash": merkleroothash}).All(&mesgs)
 	}
 	session.SetCollection("pre_datafilereg", query)
-	fmt.Println(mesgs)
 	var reqs uint64 = 0
 	if mesgs != nil {
 		reqs = 1
 	}
-	fmt.Println(session)
 	return reqs, err
 }
 func (r *MongoRepository) CallDataSliceIPRequest(guid string) (*util.DataDBInfo, error) {
+	log.Info("call datasliceip")
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return nil, errors.New("Get session faild" + r.mgoEndpoint)
 	}
 	//defer session.Close()
-	fmt.Println(session)
 	var mesgs DataMessage
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"method": "datafilereg", "param.filehash": guid}).One(&mesgs)
 	}
 	session.SetCollection("pre_datafilereg", query)
-	fmt.Println("mesgs")
-	fmt.Println(mesgs)
 	reqs := &util.DataDBInfo{
 		mesgs.Param.Filehash,
 		mesgs.Param.Info.Username,
-		mesgs.Param.Info.Filesize,
 		mesgs.Param.Info.Filename,
+		mesgs.Param.Info.Filesize,
 		mesgs.Param.Info.Filepolicy,
 		mesgs.Param.Info.Filenumber,
 		mesgs.Param.Info.Simorass,

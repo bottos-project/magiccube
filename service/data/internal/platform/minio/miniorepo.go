@@ -3,7 +3,8 @@ package minio
 import (
 	"errors"
 	"fmt"
-	"log"
+	//"log"
+	log "github.com/cihub/seelog"
 	//	"net/url"
 	"github.com/minio/minio-go"
 	"io"
@@ -23,11 +24,16 @@ func NewMinioRepository(endpoint string, accessKey string, secretKey string) *Mi
 }
 func (r *MinioRepository) GetCacheURL(username string, objectName string) (string, error) {
 
-	fmt.Println("get cache")
+
+	log.Info("get cache")
 	useSSL := false
-	fmt.Println(r.minioEndpoint)
-	fmt.Println(r.minioAccessKey)
-	fmt.Println(r.minioSecretKey)
+	log.Info("r.minioEndpoint")
+	log.Info(r.minioEndpoint)
+	log.Info("r.minioAccessKey")
+	log.Info(r.minioAccessKey)
+	log.Info("r.minioSecretKey")
+	log.Info(r.minioSecretKey)
+	
 
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 	if err != nil {
@@ -37,7 +43,11 @@ func (r *MinioRepository) GetCacheURL(username string, objectName string) (strin
 	}
 	if objectName == "" || username == "" {
 		result := "invalid para"
-		log.Println("invalid para", objectName, username)
+		log.Info("invalid para")
+		log.Info("objectName")
+		log.Info(objectName)
+		log.Info("username")
+		log.Info(username)
 		return result, errors.New("invalid para")
 	}
 	location := "us-east-1"
@@ -46,142 +56,168 @@ func (r *MinioRepository) GetCacheURL(username string, objectName string) (strin
 		// Check to see if we already own this bucket (which happens if you run this twice)
 		exists, err := minioClient.BucketExists(username)
 		if err == nil && exists {
-			log.Printf("We already own %s\n", username)
+			log.Info("We already own")
+			log.Info(username)
 		} else {
-			log.Fatalln(err)
+			log.Info(err)
 		}
-		log.Println(err)
+		log.Info(err)
 	}
-	fmt.Println("GetCacheURL %s", objectName)
-
+    log.Info("GetCacheURL")
+	log.Info(objectName)
 	CacheURL, err := minioClient.PresignedPutObject(username, objectName, 1000*time.Second)
 	if err != nil {
 		result := "get presigned put url failed"
-		log.Println(err)
+		log.Info(err)
 		return result, errors.New("get presigned url failed")
 	}
-	fmt.Println("get signed")
-	fmt.Println(CacheURL)
+	log.Info("get signed")
+	log.Info(CacheURL)
 	url := CacheURL.String()
 	return url, nil
 }
 func (r *MinioRepository) GetCacheFile(username string, objectName string) (*minio.Object, error) {
-
-	fmt.Println("get cache file")
+    
+	log.Info("get cache file")
 	useSSL := false
-	fmt.Println(r.minioEndpoint)
-	fmt.Println(r.minioAccessKey)
-	fmt.Println(r.minioSecretKey)
+	log.Info("r.minioEndpoint")
+	log.Info(r.minioEndpoint)
+	log.Info("r.minioAccessKey")
+	log.Info(r.minioAccessKey)
+	log.Info("r.minioSecretKey")
+	log.Info(r.minioSecretKey)
 
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 
 	if objectName == "" || username == "" {
-		log.Println("invalid para", objectName, username)
-		fmt.Println("invalid para")
+		log.Info("invalid para")
+		log.Info("objectName")
+		log.Info(objectName)
+		log.Info("username")
+		log.Info(username)
 	}
 	file, err := minioClient.GetObject(username, objectName, minio.GetObjectOptions{})
 	if err != nil {
-		log.Println(err)
-		fmt.Println(err)
+		log.Info(err)
 	}
 	return file, nil
 }
 func (r *MinioRepository) PutFile(username string, objectName string, reader io.Reader, objectSize int64) (int64, error) {
 
-	fmt.Println("put file")
+	log.Info("put file")
 	useSSL := false
-	fmt.Println(r.minioEndpoint)
-	fmt.Println(r.minioAccessKey)
-	fmt.Println(r.minioSecretKey)
+	log.Info("r.minioEndpoint")
+	log.Info(r.minioEndpoint)
+	log.Info("r.minioAccessKey")
+	log.Info(r.minioAccessKey)
+	log.Info("r.minioSecretKey")
+	log.Info(r.minioSecretKey)
 
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 
 	if objectName == "" || username == "" {
-		log.Println("invalid para", objectName, username)
-		fmt.Println("invalid para")
+		log.Info("invalid para")
+		log.Info("objectName")
+		log.Info(objectName)
+		log.Info("username")
+		log.Info(username)
 	}
 	n, err := minioClient.PutObject(username, objectName, reader, objectSize, minio.PutObjectOptions{ContentType: "application/octet-stream"})
 	if err != nil {
-		log.Println(err)
-		fmt.Println(err)
+		log.Info(err)
 	}
 	return n, nil
 }
 func (r *MinioRepository) ComposeFile(dst minio.DestinationInfo, srcs []minio.SourceInfo) error {
 
-	fmt.Println("ComposeFile")
+	log.Info("ComposeFile")
 	useSSL := false
-	fmt.Println(r.minioEndpoint)
-	fmt.Println(r.minioAccessKey)
-	fmt.Println(r.minioSecretKey)
+	log.Info("r.minioEndpoint")
+	log.Info(r.minioEndpoint)
+	log.Info("r.minioAccessKey")
+	log.Info(r.minioAccessKey)
+	log.Info("r.minioSecretKey")
+	log.Info(r.minioSecretKey)
 
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 	}
 	err = minioClient.ComposeObject(dst, srcs)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 	}
 	return nil
 }
 
 func (r *MinioRepository) GetPutState(username string, objectName string) (int64, error) {
-
+	
+	log.Info("get put state")
 	useSSL := false
-
+    log.Info("r.minioEndpoint")
+	log.Info(r.minioEndpoint)
+	log.Info("r.minioAccessKey")
+	log.Info(r.minioAccessKey)
+	log.Info("r.minioSecretKey")
+	log.Info(r.minioSecretKey)
+	
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 	if err != nil {
-		log.Println(err)
+		log.Info(err)
 		return 0, err
 	}
 
 	reader, err := minioClient.GetObject(username, objectName, minio.GetObjectOptions{})
 	if err != nil {
-		fmt.Println("getobject")
-		log.Println(err)
+		log.Info(err)
 		return 0, err
 	}
 	defer reader.Close()
 
 	objectInfo, err := reader.Stat()
 	if err != nil {
-		fmt.Println("stat")
-		log.Println(err)
+		log.Info(err)
 		return 0, err
 	}
-	fmt.Println("size", objectInfo.Size)
-	fmt.Println("gooo", objectInfo)
+	
 	return objectInfo.Size, nil
 }
 
 func (r *MinioRepository) GetFileDownloadURL(username string, objectName string) (string, error) {
-
+    
+	log.Info("get file downloadURL")
+	log.Info("r.minioEndpoint")
+	log.Info(r.minioEndpoint)
+	log.Info("r.minioAccessKey")
+	log.Info(r.minioAccessKey)
+	log.Info("r.minioSecretKey")
+	log.Info(r.minioSecretKey)
 	//useSSL := true
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, false)
 	if err != nil {
 		result := "failed"
 		return result, nil
 	}
-	fmt.Println(objectName)
-	fmt.Println(username)
+
 	if objectName == "" || username == "" {
-		result := "invalid para"
-		return result, errors.New("invalid para")
+		log.Info("invalid para")
+		log.Info("objectName")
+		log.Info(objectName)
+		log.Info("username")
+		log.Info(username)
 	}
 	//reqParams := make(url.Values)
 	//reqParams.Set("response-content-disposition", "attachment; filename=\"your-filename.txt\"")
 	location, _ := minioClient.GetBucketLocation(username)
-	fmt.Println("location", location)
+	log.Info(location)
 	// Generates a presigned url which expires in a day.
 	presignedURL, err := minioClient.PresignedGetObject(username, objectName, time.Second*24*60*60, nil)
 
 	if err != nil {
 		result := "get url failed"
-		fmt.Println(err)
 		return result, errors.New("get presigned url failed")
 	}
 	url := presignedURL.String()
-	fmt.Println(url)
+
 	return url, nil
 }
