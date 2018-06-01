@@ -26,10 +26,11 @@ import (
 	pack "github.com/bottos-project/bottos/contract/msgpack"
 	"github.com/bottos-project/magiccube/service/common/data"
 	"encoding/hex"
-	"github.com/protobuf/proto"
 	node_proto "github.com/bottos-project/magiccube/service/node/proto"  
     datautil "github.com/bottos-project/magiccube/service/data/util"
 	"github.com/howeyc/gopass"
+    commonutil "github.com/bottos-project/magiccube/service/common/util"
+    "github.com/protobuf/proto"
     //"log"
 	//"sync"
 	//"reflect"
@@ -454,6 +455,8 @@ func main() {
 	//init mangodb
 	if InitDatabase(nodeinfos) != nil {return}
 	
+    SetNodeDBClusterInfo()
+
     fmt.Println("Starting Server ...")
     
     daemon(0, 1)  
@@ -464,18 +467,86 @@ func main() {
     if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
-
 }
 
-func GetNodeDBInfoList (nodedbinfo *datautil.NodeDBInfo) {
-    node_infos := api.ReadFile(config.CONFIG_FILE)
+func PushNodeClusterTrx(value interface{}, pri_key string) {
+   
+	block_header, err:= data.BlockHeader()
+	if err != nil {
+		return
+	}
+	
+    account_buf,err := pack.Marshal(value)
+        if err != nil {
+		return
+	}
+	tx_account_sign := &push_sign.TransactionSign{
+		Version:1,
+		CursorNum: block_header.HeadBlockNum,
+		CursorLabel: block_header.CursorLabel,
+		Lifetime: block_header.HeadBlockTime + 20,
+		Sender: "bottos",
+		Contract: "nodemng",
+		Method: "nodeinforeg2",
+		Param: account_buf,
+		SigAlg: 1,
+	}
 
-    nodedbinfo.NodeId   = ""//api.BytesToString(byte[](keystore.GetUUID()))
-    nodedbinfo.NodeIP   = node_infos.Node[0].IpAddr
-    nodedbinfo.NodePort = node_infos.Node[0].BtoPort
- 	nodedbinfo.NodeAddress = node_infos.Node[0].IpAddr
-    //nodedbinfo.SeedIP      = node_infos.Node[0].SeedIP
-    //nodedbinfo.SlaveIP     = node_infos.Node[0].SlaveIPList
+	msg, err := proto.Marshal(tx_account_sign)
+	if err != nil {
+		return
+	}
+	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
+	seckey, err := hex.DecodeString(pri_key)   //("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
+	if err != nil {
+		return
+	}
+
+	signature, err := Sign(commonutil.Sha256(msg), seckey)
+	if err != nil {
+		return
+	}
+
+	tx_account := &bean.TxBean{
+		Version:1,
+		CursorNum: block_header.HeadBlockNum,
+		CursorLabel: block_header.CursorLabel,
+		Lifetime: block_header.HeadBlockTime + 20,
+		Sender: "bottos",
+		Contract: "bottos",
+		Method: "newaccount",
+		Param: hex.EncodeToString(account_buf),
+		SigAlg: 1,
+		Signature: hex.EncodeToString(signature),
+	}
+
+	ret, err := data.PushTransaction(tx_account)
+	if err != nil {
+		return
+	}
+
+	log.Info("ret-account:", ret.Result.TrxHash)
+}
+
+func SetNodeDBClusterInfo () {
+    node_infos := api.ReadFile(config.CONFIG_FILE)
+    
+    var dbclusterinfo api.StorageDBClusterInfo
+    
+    node_uuid := keystore.GetUUID()
+    dbclusterinfo.Nodetype            = node_uuid
+    dbclusterinfo.Nodedbinfo.NodeId   = node_uuid
+    dbclusterinfo.Nodedbinfo.NodeIP   = node_infos.Node[0].IpAddr
+    dbclusterinfo.Nodedbinfo.NodePort = node_infos.Node[0].BtoPort
+ 	dbclusterinfo.Nodedbinfo.NodeAddress = node_infos.Node[0].IpAddr
+    dbclusterinfo.Nodedbinfo.SeedIP      = node_infos.Node[0].SeedIp
+    dbclusterinfo.Nodedbinfo.SlaveIP     = node_infos.Node[0].SlaveIpLst
+    
+    log.Println("Repository: ", config.MONGO_DB_URL)
+    Repository := api.NewMongoRepository(config.MONGO_DB_URL)
+    log.Println("Repository: ", Repository)
+            
+    PushNodeClusterTrx(dbclusterinfo, keystore.GetPriKey()) 
 }
 
 type NodeApi interface {

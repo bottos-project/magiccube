@@ -55,7 +55,7 @@ var (
 	myNodeAccountPubKey = ""
 	myNodeAccountPriKey = ""
 	myNodeAccount       = "" 
-	myNodeUUID  aes.UUID
+	myNodeUUID          = ""
 )
 
 type NodeConfig struct {
@@ -373,7 +373,7 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 	myNodeAccountPubKey = hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp))
 	myNodeAccountPriKey = hex.EncodeToString(FromECDSA(key.PrivateKey))
 	myNodeAccount       = nodeinfos.Node[0].UserName
-    myNodeUUID          = key.UUID
+    myNodeUUID          = key.Id.String()
     
     fmt.Println("=====================================================================\n")
 
@@ -383,7 +383,7 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 func GetPubKey() string { return myNodeAccountPubKey }
 func GetPriKey() string { return myNodeAccountPriKey }
 func GetAccount() string { return myNodeAccount }
-func GetUUID() aes.UUID { return myNodeUUID }
+func GetUUID() string { return myNodeUUID }
 
 var Stdin = newTerminalPrompter()
 
