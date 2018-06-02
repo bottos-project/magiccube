@@ -125,14 +125,13 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			addr := "http://" + Sip + ":8080/rpc"
 			//2.2.2 get slice storage url
             log.Info("get slice storage url")
-			params := `service=go.micro.srv.v3.data&method=Data.GetFileStorageURL&request={
+			params := `service=go.micro.srv.v3.data&method=Data.GetFileSliceUploadURL&request={
 					"username":"%s",
 					"guid":"%s"}`
 			s := fmt.Sprintf(params, userName, sguid)
 			resp_body, err := http.Post(addr, "application/x-www-form-urlencoded",
 				strings.NewReader(s))
-			log.Info("GetFileStorageURL Result")
-			log.Info(resp_body)	
+			
 			if err != nil {
 				log.Info(err)
 			}
@@ -146,7 +145,8 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 				url = jss.Get("url").MustString()
 
 			}
-			
+			log.Info("GetFileStorageURL Result")
+			log.Info(url)	
 
 			//2.2.3 storage slice file
 			log.Info("storage slice file")
@@ -316,7 +316,7 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 }
 
 func init() {
-	logger, err := log.LoggerFromConfigAsFile("./config/data-log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/datApi-log.xml")
 	if err != nil {
 		log.Error(err)
 		panic(err)

@@ -125,6 +125,35 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 	rsp.Message = "OK"
 	return nil
 }
+func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetFileSliceUploadURLRequest, rsp *proto.GetFileSliceUploadURLResponse) error {
+
+	log.Info("Start Get File Slice Upload URL!")
+	if req == nil {
+		rsp.Result = 404
+		rsp.Message = "para error"
+		return errors.New("Missing storage request")
+	}
+
+	userName := req.Username
+	guid := req.Guid
+
+
+
+	url, err := d.minioRepo.GetCacheURL(userName, guid)
+	if err != nil {
+		rsp.Result = 404
+		rsp.Message = "get url failed"
+		log.Info(err)
+		return errors.New("Failed get put url")
+	}
+
+		
+
+    rsp.Url = url
+	rsp.Result = 200
+	rsp.Message = "OK"
+	return nil
+}
 func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFileDownloadURLRequest, rsp *proto.GetFileDownloadURLResponse) error {
 
 	log.Info("Start Get FileDownload URL!")
@@ -219,6 +248,8 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 	i := 0
 	n := len(nodeInfo.SlaveIP)
 	k := rand.Intn(n)
+
+	
 	for _, slice := range fileSlice {
 		j := (i + k) % n
 		node := nodeInfo.SlaveIP[j]
@@ -271,12 +302,13 @@ func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rs
 	url := req.Url
 	userName := req.Username
 	guid := req.Guid
-
 	client := &http.Client{}
 	//create form data
 	bodyBuf := &bytes.Buffer{}
 	//get cache file
 	file, err := d.minioRepo.GetCacheFile(userName, guid)
+	log.Info("file")
+	log.Info(file)
 	if err != nil {
 		log.Info("error read file")
 		return nil
