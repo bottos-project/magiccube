@@ -25,7 +25,7 @@ import (
 	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
-	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
+	pack "github.com/bottos-project/msgpack-go"
 )
 
 type Favorite struct {
@@ -73,7 +73,6 @@ func TestGetFavoriteSignature(t *testing.T){
 		Username: "test",
 		Random:"1",
 	}
-
 
 	msg, _ := proto.Marshal(data)
 	seckey,_ := hex.DecodeString("e4877f7665e3c22d4e5acb1a24a2fc3554ceaa575e2a3a9e794a98d9c4c3940f")

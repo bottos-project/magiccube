@@ -24,7 +24,7 @@ import (
 	"github.com/bottos-project/crypto-go/crypto"
 	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/protobuf/proto"
-	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
+	pack "github.com/bottos-project/msgpack-go"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/service/common/data"
 )
@@ -32,7 +32,6 @@ import (
 func TestRegitser(t *testing.T) {
 
 }
-
 
 func TestSignature(t *testing.T){
 	dids := bean.Did{
@@ -56,15 +55,12 @@ func TestSignature(t *testing.T){
 	msg, _ := proto.Marshal(data)
 	seckey,_ := hex.DecodeString("e4877f7665e3c22d4e5acb1a24a2fc3554ceaa575e2a3a9e794a98d9c4c3940f")
 
-
-
 	t.Log(msg)
 	t.Log(seckey)
 	sign, _ := crypto.Sign(util.Sha256(msg), seckey)
 
 	t.Log(hex.EncodeToString(sign))
 }
-
 
 func TestNewUser(t *testing.T){
 	dids := bean.Did{
@@ -75,7 +71,6 @@ func TestNewUser(t *testing.T){
 	param,_ := pack.Marshal(dids)
 	t.Log(param)
 }
-
 
 func TestGenKey(t *testing.T) {
 	/**

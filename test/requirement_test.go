@@ -24,7 +24,7 @@ import (
 	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/protobuf/proto"
 	"github.com/bottos-project/crypto-go/crypto"
-	pack "github.com/bottos-project/magiccube/core/contract/msgpack"
+	pack "github.com/bottos-project/msgpack-go"
 )
 
 type Requirement struct {
