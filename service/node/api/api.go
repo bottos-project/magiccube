@@ -1,3 +1,20 @@
+﻿/*Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Service Layer
+  Created by Developers Team of Bottos.
+
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+ */
 package api
 
 import (
@@ -182,7 +199,6 @@ func MonitorConfigFile(config_file string) error {
                     for j := 0;j<len(node_infos.Node[i].ServLst);j++ {
                         //command = "echo \""+node_infos.Node[i].PassWord+"\" | sudo -S echo \""+node_infos.Node[i].ServLst[j]+"\" > /etc/rc.local"
                         //fmt.Println("command = ",command)
-
 
                         if /*buf*/_,err := SshCommand(node_infos.Node[i].UserName ,
                             node_infos.Node[i].PassWord ,
@@ -386,7 +402,6 @@ func ip2pointxy(ip string) szTong_sPoint{
             }
         }
         
-
     } else {
         fmt.Println("Error when Unmarshal infos!")
         return szTong_sPoint{}
@@ -453,7 +468,6 @@ func checkError(err error) {
         os.Exit(1)
     }
 }
-
 
 func NewMongoRepository(endpoint string) *MongoRepository {
     return &MongoRepository{mgoEndpoint: endpoint}
@@ -556,4 +570,3 @@ func (r *MongoRepository) InsertRecord(tablename string, keyname string, key str
 	    return 1, err
     }
 }
-
