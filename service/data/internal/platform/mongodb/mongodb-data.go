@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -95,15 +95,15 @@ func (r *MongoRepository) CallDataSliceIPRequest(guid string) (*util.DataDBInfo,
 	}
 	session.SetCollection("pre_datafilereg", query)
 	reqs := &util.DataDBInfo{
-		Filehash: mesgs.Param.Filehash,
-		Username:mesgs.Param.Info.Username,
-		Filename:mesgs.Param.Info.Filename,
-		Filesize:mesgs.Param.Info.Filesize,
-		Filepolicy:mesgs.Param.Info.Filepolicy,
-		Filenumber:mesgs.Param.Info.Filenumber,
-		Simorass:mesgs.Param.Info.Simorass,
-		Optype:mesgs.Param.Info.Optype,
-		Storeaddr:mesgs.Param.Info.Storeaddr,
+		Filehash:   mesgs.Param.Filehash,
+		Username:   mesgs.Param.Info.Username,
+		Filename:   mesgs.Param.Info.Filename,
+		Filesize:   mesgs.Param.Info.Filesize,
+		Filepolicy: mesgs.Param.Info.Filepolicy,
+		Filenumber: mesgs.Param.Info.Filenumber,
+		Simorass:   mesgs.Param.Info.Simorass,
+		Optype:     mesgs.Param.Info.Optype,
+		Storeaddr:  mesgs.Param.Info.Storeaddr,
 	}
 
 	return reqs, err

@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,23 +14,23 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
 	log "github.com/cihub/seelog"
 
+	"encoding/json"
+	"errors"
+	"github.com/bottos-project/magiccube/service/common/data"
 	"github.com/bottos-project/magiccube/service/contract/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"os"
-	"strings"
 	"io/ioutil"
 	"net/http"
-	"github.com/bottos-project/magiccube/service/common/data"
-	"errors"
-	"encoding/json"
+	"os"
+	"strings"
 )
 
 type Contract struct {
@@ -51,7 +51,7 @@ func (s *Contract) Query(ctx context.Context, req *api.Request, rsp *api.Respons
 		return err
 	}
 
-	params := `service=bottos&method=CoreApi.QueryAbi&request={"contract":"`+queryRequest.Contract+`"}`
+	params := `service=bottos&method=CoreApi.QueryAbi&request={"contract":"` + queryRequest.Contract + `"}`
 	resp, err := http.Post(data.BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(params))
 	if err != nil {
@@ -62,7 +62,7 @@ func (s *Contract) Query(ctx context.Context, req *api.Request, rsp *api.Respons
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		log.Error(resp.Status)
 		return errors.New(string(body))
 	}
@@ -78,7 +78,7 @@ func (s *Contract) Query(ctx context.Context, req *api.Request, rsp *api.Respons
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/con-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}

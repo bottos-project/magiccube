@@ -14,14 +14,15 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package main
 
 import (
 	"os"
 	"time"
 	//	"github.com/bottos-project/magiccube/service/storage/blockchain"
+	baseConfig "github.com/bottos-project/magiccube/config"
 	"github.com/bottos-project/magiccube/service/storage/internal/platform/config"
 	"github.com/bottos-project/magiccube/service/storage/internal/platform/minio"
 	"github.com/bottos-project/magiccube/service/storage/internal/platform/mongodb"
@@ -29,7 +30,6 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 	"github.com/micro/go-micro"
 	log "github.com/sirupsen/logrus"
-	baseConfig "github.com/bottos-project/magiccube/config"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,23 +14,23 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package config
 
-const(
+const (
 	//CONFIG_FILE = "C:\\Users\\stewa\\go\\src\\github.com\\code\\bottos\\service\\node\\config\\config.json"
 	CONFIG_FILE = "/opt/go/bin/config.json"
 	//SERV_IP="10.104.14.169"
 	//SERV_PORT="8888"
 	//SERV_URL=SERV_IP+":"+SERV_PORT
-WALLET_IP="10.0.3.4"
+	WALLET_IP = "10.0.3.4"
 
 	//RUN_PLATFORM="windows"
-	RUN_PLATFORM="linux"
+	RUN_PLATFORM = "linux"
 
-	SCRIPT_PATH="/opt/go/bin/build.sh"
-        
-MONGO_DB_URL="10.0.3.4"
-        DB_BOTTOS = "local"
-        TABLE_POINTXY = "pointxy"
+	SCRIPT_PATH = "/opt/go/bin/build.sh"
+
+	MONGO_DB_URL  = "10.0.3.4"
+	DB_BOTTOS     = "local"
+	TABLE_POINTXY = "pointxy"
 )

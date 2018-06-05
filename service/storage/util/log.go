@@ -14,13 +14,13 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package util
 
 import (
-	"runtime"
 	"fmt"
+	"runtime"
 	"strings"
 )
 

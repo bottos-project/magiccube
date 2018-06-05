@@ -14,13 +14,14 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package util
+
 type Info struct {
 	ServerVersion            string `json:"server_version"`
-	HeadBlockNum             uint64    `json:"head_block_num"`
-	LastIrreversibleBlockNum uint64    `json:"last_irreversible_block_num"`
+	HeadBlockNum             uint64 `json:"head_block_num"`
+	LastIrreversibleBlockNum uint64 `json:"last_irreversible_block_num"`
 	HeadBlockID              string `json:"head_block_id"`
 	HeadBlockTime            string `json:"head_block_time"`
 	HeadBlockProducer        string `json:"head_block_producer"`
@@ -36,6 +37,6 @@ type Block struct {
 	ProducerSignature     string        `json:"producer_signature"`
 	Cycles                []interface{} `json:"cycles"`
 	ID                    string        `json:"id"`
-	BlockNum              uint64           `json:"block_num"`
-	RefBlockPrefix        uint64           `json:"ref_block_prefix"`
+	BlockNum              uint64        `json:"block_num"`
+	RefBlockPrefix        uint64        `json:"ref_block_prefix"`
 }

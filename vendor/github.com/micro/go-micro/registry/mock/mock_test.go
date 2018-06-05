@@ -8,7 +8,7 @@ import (
 
 var (
 	testData = map[string][]*registry.Service{
-		"foo": []*registry.Service{
+		"foo": {
 			{
 				Name:    "foo",
 				Version: "1.0.0",
@@ -48,7 +48,7 @@ var (
 				},
 			},
 		},
-		"bar": []*registry.Service{
+		"bar": {
 			{
 				Name:    "bar",
 				Version: "default",

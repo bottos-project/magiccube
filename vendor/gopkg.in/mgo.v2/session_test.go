@@ -3047,7 +3047,7 @@ func (s *S) TestEnsureIndex(c *C) {
 		if wantIndex.LanguageOverride == "" {
 			wantIndex.LanguageOverride = gotIndex.LanguageOverride
 		}
-		for name, _ := range gotIndex.Weights {
+		for name := range gotIndex.Weights {
 			if _, ok := wantIndex.Weights[name]; !ok {
 				if wantIndex.Weights == nil {
 					wantIndex.Weights = make(map[string]int)

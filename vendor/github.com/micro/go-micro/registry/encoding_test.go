@@ -8,7 +8,7 @@ import (
 
 func TestEncodingEndpoints(t *testing.T) {
 	eps := []*Endpoint{
-		&Endpoint{
+		{
 			Name: "endpoint1",
 			Request: &Value{
 				Name: "request",
@@ -22,7 +22,7 @@ func TestEncodingEndpoints(t *testing.T) {
 				"foo1": "bar1",
 			},
 		},
-		&Endpoint{
+		{
 			Name: "endpoint2",
 			Request: &Value{
 				Name: "request",
@@ -36,7 +36,7 @@ func TestEncodingEndpoints(t *testing.T) {
 				"foo2": "bar2",
 			},
 		},
-		&Endpoint{
+		{
 			Name: "endpoint3",
 			Request: &Value{
 				Name: "request",

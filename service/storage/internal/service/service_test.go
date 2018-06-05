@@ -14,7 +14,7 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package service_test
 
 import (
@@ -202,8 +202,8 @@ func (r *fakeRepo) GetCategories() (categories []*catalog.ProductCategory, err e
 		return nil, stderrors.New("Faily Fail")
 	}
 	return []*catalog.ProductCategory{
-		&catalog.ProductCategory{CategoryId: 42, Name: "Electronics", Description: "Super electronicy electronics"},
-		&catalog.ProductCategory{CategoryId: 12, Name: "Toys", Description: "Toys"},
+		{CategoryId: 42, Name: "Electronics", Description: "Super electronicy electronics"},
+		{CategoryId: 12, Name: "Toys", Description: "Toys"},
 	}, nil
 }
 
@@ -213,8 +213,8 @@ func (r *fakeRepo) GetProductsInCategory(categoryID uint64) (products []*catalog
 	}
 	if categoryID == 42 {
 		return []*catalog.Product{
-			&catalog.Product{Sku: "ABC000"},
-			&catalog.Product{Sku: "ABC123"},
+			{Sku: "ABC000"},
+			{Sku: "ABC123"},
 		}, nil
 	}
 	return

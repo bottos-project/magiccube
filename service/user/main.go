@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,25 +14,25 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	log "github.com/cihub/seelog"
-	"github.com/micro/go-micro"
-	user_proto "github.com/bottos-project/magiccube/service/user/proto"
-	"golang.org/x/net/context"
-	"github.com/bottos-project/magiccube/service/common/data"
 	"encoding/hex"
 	"github.com/bottos-project/crypto-go/crypto"
-	"github.com/protobuf/proto"
-	"github.com/bottos-project/magiccube/service/common/util"
-	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
-	pack "github.com/bottos-project/msgpack-go"
-	"github.com/bottos-project/magiccube/service/common/bean"
-	"github.com/bottos-project/magiccube/tools/db/mongodb"
-	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/magiccube/config"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/data"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	"github.com/bottos-project/magiccube/service/common/util"
+	user_proto "github.com/bottos-project/magiccube/service/user/proto"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
+	pack "github.com/bottos-project/msgpack-go"
+	log "github.com/cihub/seelog"
+	"github.com/micro/go-micro"
+	"github.com/protobuf/proto"
+	"golang.org/x/net/context"
+	"gopkg.in/mgo.v2/bson"
 	"os"
 )
 
@@ -44,7 +44,7 @@ type User struct{}
  * @return error
  */
 func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
-	block_header, err:= data.BlockHeader()
+	block_header, err := data.BlockHeader()
 	log.Info(block_header)
 	if block_header != nil {
 		rsp.Data = block_header
@@ -62,7 +62,7 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
  */
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
 	log.Info("req:", req)
-	block_header, err:= data.BlockHeader()
+	block_header, err := data.BlockHeader()
 	if err != nil {
 		rsp.Code = 1003
 		rsp.Msg = err.Error()
@@ -70,21 +70,21 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	}
 	//注册账号
 	rsp.Code = 1004
-	account_buf,err := pack.Marshal(req.Account)
+	account_buf, err := pack.Marshal(req.Account)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
 	tx_account_sign := &push_sign.TransactionSign{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
+		Version:     1,
+		CursorNum:   block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime + 20,
+		Lifetime:    block_header.HeadBlockTime + 20,
 		Sender:      "delta",
-		Contract: "bottos",
-		Method: "newaccount",
-		Param: account_buf,
-		SigAlg: 1,
+		Contract:    "bottos",
+		Method:      "newaccount",
+		Param:       account_buf,
+		SigAlg:      1,
 	}
 
 	msg, err := proto.Marshal(tx_account_sign)
@@ -106,16 +106,16 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	}
 
 	tx_account := &bean.TxBean{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
+		Version:     1,
+		CursorNum:   block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime + 20,
+		Lifetime:    block_header.HeadBlockTime + 20,
 		Sender:      "delta",
-		Contract: "bottos",
-		Method: "newaccount",
-		Param: hex.EncodeToString(account_buf),
-		SigAlg: 1,
-		Signature: hex.EncodeToString(signature),
+		Contract:    "bottos",
+		Method:      "newaccount",
+		Param:       hex.EncodeToString(account_buf),
+		SigAlg:      1,
+		Signature:   hex.EncodeToString(signature),
 	}
 
 	ret, err := data.PushTransaction(tx_account)
@@ -125,12 +125,12 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	}
 
 	log.Info("ret-account:", ret.Result.TrxHash)
-	
+
 	//time.Sleep(time.Duration(2)*time.Second)
 
 	//did
 	var did bean.Did
-	d, _:= hex.DecodeString(req.User.Param)
+	d, _ := hex.DecodeString(req.User.Param)
 	pack.Unmarshal(d, &did)
 	log.Info("did:", did)
 
@@ -153,7 +153,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
  * @return error
  */
 func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
-	account_info, err:= data.AccountInfo(req.AccountName)
+	account_info, err := data.AccountInfo(req.AccountName)
 	if account_info != nil {
 		rsp.Data = account_info
 	} else {
@@ -194,29 +194,29 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
  * @return error
  */
 func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
-	var pageNum, pageSize, skip int= 1, 20, 0
+	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 && req.PageSize <= 50{
+	if req.PageSize > 0 && req.PageSize <= 50 {
 		pageSize = int(req.PageSize)
 	}
 
-	if len(req.GoodsType) < 1{
+	if len(req.GoodsType) < 1 {
 		req.GoodsType = "asset"
 	}
 
-	skip = (pageNum - 1) *  pageSize
+	skip = (pageNum - 1) * pageSize
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
 	var where = bson.M{
-		"param.optype": bson.M{"$in": []int32{1,2}},
-		"param.username": req.Username,
-		"param.goodstype":req.GoodsType}
+		"param.optype":    bson.M{"$in": []int32{1, 2}},
+		"param.username":  req.Username,
+		"param.goodstype": req.GoodsType}
 	log.Info(where)
-	count, err:=mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Count()
+	count, err := mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
@@ -235,21 +235,19 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 			}
 
 			rows = append(rows, &user_proto.FavoriteData{
-				Username:ret2.Param.Info.UserName,
-				GoodsId:v.Param.Goodsid,
-				GoodsName:ret2.Param.Info.AssetName,
-				Price:ret2.Param.Info.Price,
-				Time:uint64(v.CreateTime.Unix()),
+				Username:  ret2.Param.Info.UserName,
+				GoodsId:   v.Param.Goodsid,
+				GoodsName: ret2.Param.Info.AssetName,
+				Price:     ret2.Param.Info.Price,
+				Time:      uint64(v.CreateTime.Unix()),
 			})
 		}
 	}
 
-
-
 	var data = &user_proto.FavoriteArr{
-		PageNum: uint64(pageNum),
+		PageNum:  uint64(pageNum),
 		RowCount: uint64(count),
-		Row: rows,
+		Row:      rows,
 	}
 
 	rsp.Data = data
@@ -278,24 +276,24 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
  * @return error
  */
 func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest, rsp *user_proto.QueryMyBuyResponse) error {
-	var pageNum, pageSize, skip int= 1, 20, 0
+	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 && req.PageSize < 20{
+	if req.PageSize > 0 && req.PageSize < 20 {
 		pageSize = int(req.PageSize)
 	}
 
-	skip = (pageNum - 1) *  pageSize
+	skip = (pageNum - 1) * pageSize
 
-	var where = &bson.M{"method":"buydata", "param.info.username": req.Username}
+	var where = &bson.M{"method": "buydata", "param.info.username": req.Username}
 
 	var ret []bean.Buy
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err:= mgo.DB(config.DB_NAME).C("Transactions").Find(where).Count()
+	count, err := mgo.DB(config.DB_NAME).C("Transactions").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
@@ -305,26 +303,26 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 	var rows = []*user_proto.Buy{}
 	for _, v := range ret {
 		var ret2 bean.AssetBean
-		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.assetid":v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.assetid": v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
 		rows = append(rows, &user_proto.Buy{
-			ExchangeId : v.Param.DataExchangeId,
-			Username : ret2.Param.Info.UserName,
-			AssetId : v.Param.Info.AssetId,
-			AssetName : ret2.Param.Info.AssetName,
-			AssetType : ret2.Param.Info.AssetType,
-			FeatureTag : ret2.Param.Info.FeatureTag,
-			Price : ret2.Param.Info.Price,
-			SampleHash : ret2.Param.Info.SampleHash,
-			StorageHash : ret2.Param.Info.StorageHash,
-			Expiretime : uint64(ret2.Param.Info.ExpireTime),
-			Timestamp: uint64(v.CreateTime.Unix()),
+			ExchangeId:  v.Param.DataExchangeId,
+			Username:    ret2.Param.Info.UserName,
+			AssetId:     v.Param.Info.AssetId,
+			AssetName:   ret2.Param.Info.AssetName,
+			AssetType:   ret2.Param.Info.AssetType,
+			FeatureTag:  ret2.Param.Info.FeatureTag,
+			Price:       ret2.Param.Info.Price,
+			SampleHash:  ret2.Param.Info.SampleHash,
+			StorageHash: ret2.Param.Info.StorageHash,
+			Expiretime:  uint64(ret2.Param.Info.ExpireTime),
+			Timestamp:   uint64(v.CreateTime.Unix()),
 		})
 	}
 
 	rsp.Data = &user_proto.BuyData{
 		RowCount: int32(count),
-		PageNum: int32(pageNum),
-		Row:rows,
+		PageNum:  int32(pageNum),
+		Row:      rows,
 	}
 	return nil
 }
@@ -336,7 +334,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
  */
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}

@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,22 +14,22 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/magiccube/service/user/proto"
-	"github.com/micro/go-micro"
-	api "github.com/micro/micro/api/proto"
-	"golang.org/x/net/context"
-	"github.com/mojocn/base64Captcha"
-	"os"
 	"github.com/bottos-project/magiccube/config"
-	"regexp"
 	errcode "github.com/bottos-project/magiccube/error"
 	sign "github.com/bottos-project/magiccube/service/common/signature"
+	"github.com/bottos-project/magiccube/service/user/proto"
+	log "github.com/cihub/seelog"
+	"github.com/micro/go-micro"
+	api "github.com/micro/micro/api/proto"
+	"github.com/mojocn/base64Captcha"
+	"golang.org/x/net/context"
+	"os"
+	"regexp"
 )
 
 type User struct {
@@ -69,7 +69,7 @@ func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Respons
 	b, _ := json.Marshal(map[string]interface{}{
 		"code": 1,
 		"data": map[string]interface{}{
-			"verify_id": idKeyD,
+			"verify_id":   idKeyD,
 			"verify_data": base64stringD,
 		},
 		"msg": "OK",
@@ -112,7 +112,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	}
 	log.Info(registerRequest)
 
-	match,err :=regexp.MatchString("^[a-z][a-z1-9]{2,15}$",registerRequest.Account.Name)
+	match, err := regexp.MatchString("^[a-z][a-z1-9]{2,15}$", registerRequest.Account.Name)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -194,7 +194,7 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 		}
 	}
 
-	is, err:=sign.QueryVerifySign(req.Body)
+	is, err := sign.QueryVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -219,7 +219,7 @@ func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is, err:=sign.PushVerifySign(req.Body)
+	is, err := sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -250,7 +250,7 @@ func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Respo
 		return err
 	}
 
-	is, err:=sign.QueryVerifySign(req.Body)
+	is, err := sign.QueryVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -281,7 +281,7 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is, err:=sign.PushVerifySign(req.Body)
+	is, err := sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -336,7 +336,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
  */
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}

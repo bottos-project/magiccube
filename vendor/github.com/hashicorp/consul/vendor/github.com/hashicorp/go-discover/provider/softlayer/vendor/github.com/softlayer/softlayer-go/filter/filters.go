@@ -87,7 +87,7 @@ func (fs Filters) Build() string {
 				cursor[branch] = map[string]interface{}{}
 			}
 			cursor = cursor[branch].(map[string]interface{})
-			nodes = nodes[1:len(nodes)]
+			nodes = nodes[1:]
 		}
 
 		leaf := nodes[0]

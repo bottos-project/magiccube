@@ -9,11 +9,11 @@ import (
 
 func TestMDNS(t *testing.T) {
 	testData := []*registry.Service{
-		&registry.Service{
+		{
 			Name:    "test1",
 			Version: "1.0.1",
 			Nodes: []*registry.Node{
-				&registry.Node{
+				{
 					Id:      "test1-1",
 					Address: "10.0.0.1",
 					Port:    10001,
@@ -23,11 +23,11 @@ func TestMDNS(t *testing.T) {
 				},
 			},
 		},
-		&registry.Service{
+		{
 			Name:    "test2",
 			Version: "1.0.2",
 			Nodes: []*registry.Node{
-				&registry.Node{
+				{
 					Id:      "test2-1",
 					Address: "10.0.0.2",
 					Port:    10002,
@@ -37,11 +37,11 @@ func TestMDNS(t *testing.T) {
 				},
 			},
 		},
-		&registry.Service{
+		{
 			Name:    "test3",
 			Version: "1.0.3",
 			Nodes: []*registry.Node{
-				&registry.Node{
+				{
 					Id:      "test3-1",
 					Address: "10.0.0.3",
 					Port:    10003,

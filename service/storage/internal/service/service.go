@@ -14,11 +14,10 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package service
 
 import (
-	
 	"time"
 
 	"github.com/bottos-project/magiccube/service/storage/proto"
@@ -46,8 +45,6 @@ type dbRepository interface {
 	CallGetUserToken(string, string) (*util.TokenDBInfo, error)
 	CallDelUserToken(string, string) (uint32, error)
 	CallGetSyncBlockCount() (uint64, error)
-
-
 }
 type mgoRepository interface {
 	CallInsertUserToken(string, string) (uint32, error)

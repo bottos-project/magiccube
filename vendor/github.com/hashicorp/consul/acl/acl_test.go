@@ -238,73 +238,73 @@ func TestPolicyACL(t *testing.T) {
 	all := AllowAll()
 	policy := &Policy{
 		Events: []*EventPolicy{
-			&EventPolicy{
+			{
 				Event:  "",
 				Policy: PolicyRead,
 			},
-			&EventPolicy{
+			{
 				Event:  "foo",
 				Policy: PolicyWrite,
 			},
-			&EventPolicy{
+			{
 				Event:  "bar",
 				Policy: PolicyDeny,
 			},
 		},
 		Keys: []*KeyPolicy{
-			&KeyPolicy{
+			{
 				Prefix: "foo/",
 				Policy: PolicyWrite,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "foo/priv/",
 				Policy: PolicyDeny,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "bar/",
 				Policy: PolicyDeny,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "zip/",
 				Policy: PolicyRead,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "zap/",
 				Policy: PolicyList,
 			},
 		},
 		PreparedQueries: []*PreparedQueryPolicy{
-			&PreparedQueryPolicy{
+			{
 				Prefix: "",
 				Policy: PolicyRead,
 			},
-			&PreparedQueryPolicy{
+			{
 				Prefix: "foo",
 				Policy: PolicyWrite,
 			},
-			&PreparedQueryPolicy{
+			{
 				Prefix: "bar",
 				Policy: PolicyDeny,
 			},
-			&PreparedQueryPolicy{
+			{
 				Prefix: "zoo",
 				Policy: PolicyWrite,
 			},
 		},
 		Services: []*ServicePolicy{
-			&ServicePolicy{
+			{
 				Name:   "",
 				Policy: PolicyWrite,
 			},
-			&ServicePolicy{
+			{
 				Name:   "foo",
 				Policy: PolicyRead,
 			},
-			&ServicePolicy{
+			{
 				Name:   "bar",
 				Policy: PolicyDeny,
 			},
-			&ServicePolicy{
+			{
 				Name:   "barfoo",
 				Policy: PolicyWrite,
 			},
@@ -420,31 +420,31 @@ func TestPolicyACL_Parent(t *testing.T) {
 	deny := DenyAll()
 	policyRoot := &Policy{
 		Keys: []*KeyPolicy{
-			&KeyPolicy{
+			{
 				Prefix: "foo/",
 				Policy: PolicyWrite,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "bar/",
 				Policy: PolicyRead,
 			},
 		},
 		PreparedQueries: []*PreparedQueryPolicy{
-			&PreparedQueryPolicy{
+			{
 				Prefix: "other",
 				Policy: PolicyWrite,
 			},
-			&PreparedQueryPolicy{
+			{
 				Prefix: "foo",
 				Policy: PolicyRead,
 			},
 		},
 		Services: []*ServicePolicy{
-			&ServicePolicy{
+			{
 				Name:   "other",
 				Policy: PolicyWrite,
 			},
-			&ServicePolicy{
+			{
 				Name:   "foo",
 				Policy: PolicyRead,
 			},
@@ -457,27 +457,27 @@ func TestPolicyACL_Parent(t *testing.T) {
 
 	policy := &Policy{
 		Keys: []*KeyPolicy{
-			&KeyPolicy{
+			{
 				Prefix: "foo/priv/",
 				Policy: PolicyRead,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "bar/",
 				Policy: PolicyDeny,
 			},
-			&KeyPolicy{
+			{
 				Prefix: "zip/",
 				Policy: PolicyRead,
 			},
 		},
 		PreparedQueries: []*PreparedQueryPolicy{
-			&PreparedQueryPolicy{
+			{
 				Prefix: "bar",
 				Policy: PolicyDeny,
 			},
 		},
 		Services: []*ServicePolicy{
-			&ServicePolicy{
+			{
 				Name:   "bar",
 				Policy: PolicyDeny,
 			},
@@ -573,19 +573,19 @@ func TestPolicyACL_Agent(t *testing.T) {
 	deny := DenyAll()
 	policyRoot := &Policy{
 		Agents: []*AgentPolicy{
-			&AgentPolicy{
+			{
 				Node:   "root-nope",
 				Policy: PolicyDeny,
 			},
-			&AgentPolicy{
+			{
 				Node:   "root-ro",
 				Policy: PolicyRead,
 			},
-			&AgentPolicy{
+			{
 				Node:   "root-rw",
 				Policy: PolicyWrite,
 			},
-			&AgentPolicy{
+			{
 				Node:   "override",
 				Policy: PolicyDeny,
 			},
@@ -598,19 +598,19 @@ func TestPolicyACL_Agent(t *testing.T) {
 
 	policy := &Policy{
 		Agents: []*AgentPolicy{
-			&AgentPolicy{
+			{
 				Node:   "child-nope",
 				Policy: PolicyDeny,
 			},
-			&AgentPolicy{
+			{
 				Node:   "child-ro",
 				Policy: PolicyRead,
 			},
-			&AgentPolicy{
+			{
 				Node:   "child-rw",
 				Policy: PolicyWrite,
 			},
-			&AgentPolicy{
+			{
 				Node:   "override",
 				Policy: PolicyWrite,
 			},
@@ -708,19 +708,19 @@ func TestPolicyACL_Node(t *testing.T) {
 	deny := DenyAll()
 	policyRoot := &Policy{
 		Nodes: []*NodePolicy{
-			&NodePolicy{
+			{
 				Name:   "root-nope",
 				Policy: PolicyDeny,
 			},
-			&NodePolicy{
+			{
 				Name:   "root-ro",
 				Policy: PolicyRead,
 			},
-			&NodePolicy{
+			{
 				Name:   "root-rw",
 				Policy: PolicyWrite,
 			},
-			&NodePolicy{
+			{
 				Name:   "override",
 				Policy: PolicyDeny,
 			},
@@ -733,19 +733,19 @@ func TestPolicyACL_Node(t *testing.T) {
 
 	policy := &Policy{
 		Nodes: []*NodePolicy{
-			&NodePolicy{
+			{
 				Name:   "child-nope",
 				Policy: PolicyDeny,
 			},
-			&NodePolicy{
+			{
 				Name:   "child-ro",
 				Policy: PolicyRead,
 			},
-			&NodePolicy{
+			{
 				Name:   "child-rw",
 				Policy: PolicyWrite,
 			},
-			&NodePolicy{
+			{
 				Name:   "override",
 				Policy: PolicyWrite,
 			},
@@ -791,19 +791,19 @@ func TestPolicyACL_Session(t *testing.T) {
 	deny := DenyAll()
 	policyRoot := &Policy{
 		Sessions: []*SessionPolicy{
-			&SessionPolicy{
+			{
 				Node:   "root-nope",
 				Policy: PolicyDeny,
 			},
-			&SessionPolicy{
+			{
 				Node:   "root-ro",
 				Policy: PolicyRead,
 			},
-			&SessionPolicy{
+			{
 				Node:   "root-rw",
 				Policy: PolicyWrite,
 			},
-			&SessionPolicy{
+			{
 				Node:   "override",
 				Policy: PolicyDeny,
 			},
@@ -816,19 +816,19 @@ func TestPolicyACL_Session(t *testing.T) {
 
 	policy := &Policy{
 		Sessions: []*SessionPolicy{
-			&SessionPolicy{
+			{
 				Node:   "child-nope",
 				Policy: PolicyDeny,
 			},
-			&SessionPolicy{
+			{
 				Node:   "child-ro",
 				Policy: PolicyRead,
 			},
-			&SessionPolicy{
+			{
 				Node:   "child-rw",
 				Policy: PolicyWrite,
 			},
-			&SessionPolicy{
+			{
 				Node:   "override",
 				Policy: PolicyWrite,
 			},

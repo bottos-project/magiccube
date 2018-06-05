@@ -1090,9 +1090,9 @@ func TestAgent_UpdateCheck(t *testing.T) {
 	}
 
 	cases := []checkUpdate{
-		checkUpdate{api.HealthPassing, "hello-passing"},
-		checkUpdate{api.HealthCritical, "hello-critical"},
-		checkUpdate{api.HealthWarning, "hello-warning"},
+		{api.HealthPassing, "hello-passing"},
+		{api.HealthCritical, "hello-critical"},
+		{api.HealthWarning, "hello-warning"},
 	}
 
 	for _, c := range cases {
@@ -1203,10 +1203,10 @@ func TestAgent_RegisterService(t *testing.T) {
 			TTL: 15 * time.Second,
 		},
 		Checks: []*structs.CheckType{
-			&structs.CheckType{
+			{
 				TTL: 20 * time.Second,
 			},
-			&structs.CheckType{
+			{
 				TTL: 30 * time.Second,
 			},
 		},
@@ -1286,10 +1286,10 @@ func TestAgent_RegisterService_ACLDeny(t *testing.T) {
 			TTL: 15 * time.Second,
 		},
 		Checks: []*structs.CheckType{
-			&structs.CheckType{
+			{
 				TTL: 20 * time.Second,
 			},
-			&structs.CheckType{
+			{
 				TTL: 30 * time.Second,
 			},
 		},

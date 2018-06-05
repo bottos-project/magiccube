@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,22 +14,22 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	"github.com/robfig/cron"
-	"time"
+	"github.com/bottos-project/magiccube/config"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/query"
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	log "github.com/cihub/seelog"
-	"github.com/bottos-project/magiccube/service/query"
-	"github.com/bottos-project/magiccube/service/common/bean"
-	"github.com/bottos-project/magiccube/config"
+	"github.com/robfig/cron"
+	"time"
 )
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/task-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}
@@ -43,7 +43,7 @@ func main() {
 	spec := "0, 5, 0, *, *, *" //每天凌晨0:05执行一次
 	c.AddFunc(spec, DiurnalStatis)
 	c.Start()
-	select{} //阻塞主线程不退出
+	select {} //阻塞主线程不退出
 }
 
 func DiurnalStatis() {
@@ -66,5 +66,3 @@ func DiurnalStatis() {
 		log.Error(err.Error())
 	}
 }
-
-

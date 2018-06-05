@@ -14,17 +14,16 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package blockchain
 
 import (
-
 	"github.com/bottos-project/magiccube/service/storage/controller"
 )
 
 func GetLatestBlockNumber() uint64 {
-	blockInfo,err := controller.GetInfo()
+	blockInfo, err := controller.GetInfo()
 	if err != nil {
 		return 0
 	}

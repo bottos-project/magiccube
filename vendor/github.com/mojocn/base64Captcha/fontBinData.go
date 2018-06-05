@@ -288,15 +288,15 @@ type bintree struct {
 }
 
 var _bintree = &bintree{nil, map[string]*bintree{
-	"fonts": &bintree{nil, map[string]*bintree{
-		"3Dumb.ttf":             &bintree{fonts3dumbTtf, map[string]*bintree{}},
-		"ApothecaryFont.ttf":    &bintree{fontsApothecaryfontTtf, map[string]*bintree{}},
-		"Comismsh.ttf":          &bintree{fontsComismshTtf, map[string]*bintree{}},
-		"DENNEthree-dee.ttf":    &bintree{fontsDennethreeDeeTtf, map[string]*bintree{}},
-		"DeborahFancyDress.ttf": &bintree{fontsDeborahfancydressTtf, map[string]*bintree{}},
-		"Flim-Flam.ttf":         &bintree{fontsFlimFlamTtf, map[string]*bintree{}},
-		"RitaSmith.ttf":         &bintree{fontsRitasmithTtf, map[string]*bintree{}},
-		"actionj.ttf":           &bintree{fontsActionjTtf, map[string]*bintree{}},
-		"chromohv.ttf":          &bintree{fontsChromohvTtf, map[string]*bintree{}},
+	"fonts": {nil, map[string]*bintree{
+		"3Dumb.ttf":             {fonts3dumbTtf, map[string]*bintree{}},
+		"ApothecaryFont.ttf":    {fontsApothecaryfontTtf, map[string]*bintree{}},
+		"Comismsh.ttf":          {fontsComismshTtf, map[string]*bintree{}},
+		"DENNEthree-dee.ttf":    {fontsDennethreeDeeTtf, map[string]*bintree{}},
+		"DeborahFancyDress.ttf": {fontsDeborahfancydressTtf, map[string]*bintree{}},
+		"Flim-Flam.ttf":         {fontsFlimFlamTtf, map[string]*bintree{}},
+		"RitaSmith.ttf":         {fontsRitasmithTtf, map[string]*bintree{}},
+		"actionj.ttf":           {fontsActionjTtf, map[string]*bintree{}},
+		"chromohv.ttf":          {fontsChromohvTtf, map[string]*bintree{}},
 	}},
 }}

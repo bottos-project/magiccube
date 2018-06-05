@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,65 +14,65 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package keystore
 
 import (
-    "time"	
-    "os"
-    "os/user"
-    "crypto/ecdsa"
-    "crypto/elliptic"
-    "io"
-    "fmt"
-    "log"
-    "strings"
-    "encoding/hex"
-   // "github.com/code/bottos/service/node/common"
-   // "github.com/code/bottos/service/node/common/math"
-   // "github.com/code/bottos/service/node/crypto"
-   // "github.com/code/bottos/service/node/crypto/randentropy"
-    "github.com/bottos-project/magiccube/service/node/config"
-    "github.com/bottos-project/magiccube/service/node/api"
-    "github.com/peterh/liner"
-    "gopkg.in/urfave/cli.v1"  
-    "runtime"
-     crand "crypto/rand"
-    "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"encoding/hex"
+	"fmt"
+	"io"
+	"log"
+	"os"
+	"os/user"
+	"strings"
+	"time"
+	// "github.com/code/bottos/service/node/common"
+	// "github.com/code/bottos/service/node/common/math"
+	// "github.com/code/bottos/service/node/crypto"
+	// "github.com/code/bottos/service/node/crypto/randentropy"
+	crand "crypto/rand"
+	"github.com/bottos-project/magiccube/service/node/api"
+	"github.com/bottos-project/magiccube/service/node/config"
+	"github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
+	"github.com/peterh/liner"
+	"gopkg.in/urfave/cli.v1"
+	"runtime"
 	//log "github.com/jeanphorn/log4go"
-        //"github.com/micro/go-micro"
-        //proto "github.com/code/bottos/service/asset/proto"
-        //"golang.org/x/net/context"
-        //"github.com/mikemintang/go-curl"
-        //"github.com/bitly/go-simplejson"
-        //"time"
-        //storage "github.com/code/bottos/service/storage/proto"
-        //"github.com/micro/go-micro/client"
-        //"bytes"
-        "io/ioutil"
-        //"fmt"
-        //"strconv"
-        //"golang.org/x/net/html/atom"
-        //"encoding/json"
-        //"github.com/code/bottos/config"
-        //"gopkg.in/mgo.v2/bson"
-        //"github.com/code/bottos/service/bean"
-        //"github.com/code/bottos/tools/db/mongodb"
-        //"errors"
-        //cbb "github.com/code/bottos/service/asset/cbb"
+	//"github.com/micro/go-micro"
+	//proto "github.com/code/bottos/service/asset/proto"
+	//"golang.org/x/net/context"
+	//"github.com/mikemintang/go-curl"
+	//"github.com/bitly/go-simplejson"
+	//"time"
+	//storage "github.com/code/bottos/service/storage/proto"
+	//"github.com/micro/go-micro/client"
+	//"bytes"
+	"io/ioutil"
+	//"fmt"
+	//"strconv"
+	//"golang.org/x/net/html/atom"
+	//"encoding/json"
+	//"github.com/code/bottos/config"
+	//"gopkg.in/mgo.v2/bson"
+	//"github.com/code/bottos/service/bean"
+	//"github.com/code/bottos/tools/db/mongodb"
+	//"errors"
+	//cbb "github.com/code/bottos/service/asset/cbb"
 	"path/filepath"
 )
 
 var (
-UserPwd = ""
+	UserPwd = ""
 )
 
 var (
 	KeyStoreScheme = "keystore"
-	
+
 	myNodeAccountPubKey = ""
 	myNodeAccountPriKey = ""
-	myNodeAccount       = "" 
+	myNodeAccount       = ""
 	myNodeUUID          = ""
 )
 
@@ -188,9 +188,9 @@ type keyStore interface {
 	JoinPath(filename string) string
 }
 
-var DefaultConfig = NodeConfig {
-	DataDir:         DefaultDataDir(),
-    KeyStoreDir:     DefaultKeystoreDir(),
+var DefaultConfig = NodeConfig{
+	DataDir:     DefaultDataDir(),
+	KeyStoreDir: DefaultKeystoreDir(),
 }
 
 type keyStorePassphrase struct {
@@ -208,22 +208,22 @@ type URL struct {
 // by the optional URL field.
 type Account struct {
 	UUID aes.UUID `json:"address"` // Ethereum account address derived from the key
-	URL     URL            `json:"url"`     // Optional resource locator within a backend
+	URL  URL      `json:"url"`     // Optional resource locator within a backend
 }
 
 var PasswordFileFlag = cli.StringFlag{
-		Name:  "password_filepath",
-		Usage: "Password path file to use for non-interactive password input",
-		Value: "",
-	}
+	Name:  "password_filepath",
+	Usage: "Password path file to use for non-interactive password input",
+	Value: "",
+}
 
 func MakePasswordList(ctx *cli.Context) []string {
-    
-    if len(ctx.String("password")) >0 {
-        return strings.Split(ctx.String("password"), " ")
-    } else if len(ctx.String("password_filepath")) <=0 {
-        return nil
-    }
+
+	if len(ctx.String("password")) > 0 {
+		return strings.Split(ctx.String("password"), " ")
+	} else if len(ctx.String("password_filepath")) <= 0 {
+		return nil
+	}
 
 	path := ctx.GlobalString(PasswordFileFlag.Name)
 	if path == "" {
@@ -265,10 +265,10 @@ func (ks keyStorePassphrase) GetKey(addr aes.UUID, filename, auth string) (*aes.
 
 // StoreKey generates a key, encrypts with 'auth' and stores in the given directory
 func StoreKey(dir, auth string, scryptN, scryptP int) (aes.UUID, error) {
-	/*key*/_, a, err := storeNewKey(&keyStorePassphrase{dir, scryptN, scryptP}, crand.Reader, auth)
-    //fmt.Println("==> storeKey-> dir is: ", dir, ", key is:", key)
+	/*key*/ _, a, err := storeNewKey(&keyStorePassphrase{dir, scryptN, scryptP}, crand.Reader, auth)
+	//fmt.Println("==> storeKey-> dir is: ", dir, ", key is:", key)
 
-    return a.UUID, err
+	return a.UUID, err
 }
 
 func (ks keyStorePassphrase) StoreKey(username string, filename string, key *aes.Key, auth string) error {
@@ -289,17 +289,17 @@ func (ks keyStorePassphrase) JoinPath(filename string) string {
 
 // FromECDSA exports a private key into a binary dump.
 func FromECDSA(priv *ecdsa.PrivateKey) []byte {
-    if priv == nil {
-        return nil
-    }
-    return aes.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
+	if priv == nil {
+		return nil
+	}
+	return aes.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
 }
 
 func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
-    if pub == nil || pub.X == nil || pub.Y == nil {
-            return nil
-    }
-    return elliptic.Marshal(aes.S256(), pub.X, pub.Y)
+	if pub == nil || pub.X == nil || pub.Y == nil {
+		return nil
+	}
+	return elliptic.Marshal(aes.S256(), pub.X, pub.Y)
 }
 
 func homeDir() string {
@@ -353,8 +353,8 @@ func defaultNodeConfig() NodeConfig {
 func (c *NodeConfig) AccountConfig() (int, int, string) {
 	scryptN := aes.StandardScryptN
 	scryptP := aes.StandardScryptP
-        
-    keydir := c.KeyStoreDir
+
+	keydir := c.KeyStoreDir
 	return scryptN, scryptP, keydir
 }
 
@@ -366,40 +366,40 @@ func zeroKey(k *ecdsa.PrivateKey) {
 }
 
 func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, error) {
-	
-    key, err := aes.NewKey(rand)
+
+	key, err := aes.NewKey(rand)
 
 	if err != nil {
 		return nil, Account{}, err
 	}
 
 	a := Account{UUID: key.UUID, URL: URL{Scheme: KeyStoreScheme, Path: ks.JoinPath(keyFileName(key.UUID))}}
-    
-    nodeinfos := api.ReadFile(config.CONFIG_FILE)
-    filename := "bto.keystore"
-    filepath := ks.JoinPath(filename)
 
-    if err := ks.StoreKey(nodeinfos.Node[0].UserName, filepath/*a.URL.Path*/, key, auth); err != nil {
+	nodeinfos := api.ReadFile(config.CONFIG_FILE)
+	filename := "bto.keystore"
+	filepath := ks.JoinPath(filename)
+
+	if err := ks.StoreKey(nodeinfos.Node[0].UserName, filepath /*a.URL.Path*/, key, auth); err != nil {
 		zeroKey(key.PrivateKey)
 		return nil, a, err
 	}
-    fmt.Println("\n====================== Keystore Generated ===========================\n")
-    fmt.Println("==>PATH: ", filepath, "\n==>KEY ID:",key.Id,"\n==>KEY UUID:", key.UUID,"\n==>PUB KEY:", hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp)), /*"KEY PRI KEY:", hex.EncodeToString(FromECDSA(key.PrivateKey)), "]*/"\n==>KEYSTORE FILE: ", filepath, "\n")
-	
+	fmt.Println("\n====================== Keystore Generated ===========================\n")
+	fmt.Println("==>PATH: ", filepath, "\n==>KEY ID:", key.Id, "\n==>KEY UUID:", key.UUID, "\n==>PUB KEY:", hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp)) /*"KEY PRI KEY:", hex.EncodeToString(FromECDSA(key.PrivateKey)), "]*/, "\n==>KEYSTORE FILE: ", filepath, "\n")
+
 	myNodeAccountPubKey = hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp))
 	myNodeAccountPriKey = hex.EncodeToString(FromECDSA(key.PrivateKey))
-	myNodeAccount       = nodeinfos.Node[0].UserName
-    myNodeUUID          = key.Id.String()
-    
-    fmt.Println("=====================================================================\n")
+	myNodeAccount = nodeinfos.Node[0].UserName
+	myNodeUUID = key.Id.String()
+
+	fmt.Println("=====================================================================\n")
 
 	return key, a, err
 }
 
-func GetPubKey() string { return myNodeAccountPubKey }
-func GetPriKey() string { return myNodeAccountPriKey }
+func GetPubKey() string  { return myNodeAccountPubKey }
+func GetPriKey() string  { return myNodeAccountPriKey }
 func GetAccount() string { return myNodeAccount }
-func GetUUID() string { return myNodeUUID }
+func GetUUID() string    { return myNodeUUID }
 
 var Stdin = newTerminalPrompter()
 
@@ -589,59 +589,61 @@ func toISO8601(t time.Time) string {
 }
 
 func accountCreate(ctx *cli.Context) error {
-    
-    if len(ctx.String("keystore_decrypt")) > 0 {
-        if len(ctx.String("password")) <= 0 {
-            fmt.Println("WRONG! Please input format with --keystore_decrypt <keystore file path> --password <your password>!")
-            return nil
-        }
-        UserPwd = ctx.String("password")
-        fmt.Println("===> test keystore_decrypt: ", ctx.String("keystore_decrypt"))
-        aes.KeyDecrypt(ctx.String("keystore_decrypt"), ctx.String("password"))
-        return nil
-    }
+
+	if len(ctx.String("keystore_decrypt")) > 0 {
+		if len(ctx.String("password")) <= 0 {
+			fmt.Println("WRONG! Please input format with --keystore_decrypt <keystore file path> --password <your password>!")
+			return nil
+		}
+		UserPwd = ctx.String("password")
+		fmt.Println("===> test keystore_decrypt: ", ctx.String("keystore_decrypt"))
+		aes.KeyDecrypt(ctx.String("keystore_decrypt"), ctx.String("password"))
+		return nil
+	}
 
 	NodeCfg := defaultNodeConfig()
 
-    if len(ctx.String("data_dir")) > 0 {
-        NodeCfg.DataDir = ctx.String("data_dir")
-    }
-
-    if len(ctx.String("keystore_dir")) > 0 {
-        NodeCfg.KeyStoreDir = ctx.String("keystore_dir")
+	if len(ctx.String("data_dir")) > 0 {
+		NodeCfg.DataDir = ctx.String("data_dir")
 	}
-    
-    scryptN, scryptP, keydir := NodeCfg.AccountConfig()
-    //fmt.Println("===> parameters is:", os.Args, ", data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir)
+
+	if len(ctx.String("keystore_dir")) > 0 {
+		NodeCfg.KeyStoreDir = ctx.String("keystore_dir")
+	}
+
+	scryptN, scryptP, keydir := NodeCfg.AccountConfig()
+	//fmt.Println("===> parameters is:", os.Args, ", data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir)
 
 	password := getPassPhrase("Your new account is locked with a password. Please give a password. Do not forget this password.", true, 0, MakePasswordList(ctx))
-    
-    UserPwd = password
 
-	/*UUID, err := */StoreKey(keydir, password, scryptN, scryptP)
+	UserPwd = password
+
+	/*UUID, err := */
+	StoreKey(keydir, password, scryptN, scryptP)
 
 	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
 }
 
-func AccountCreate_Ex( datadir string , keydir string, password string) error {
-    if len(datadir) <= 0 || len(keydir) <= 0 || len(password) <= 0 {
-        log.Println("keydir or UserPwd invalid: datadir:", datadir ,", keydir:", keydir, ", password:", password)
-        return nil
-    }
+func AccountCreate_Ex(datadir string, keydir string, password string) error {
+	if len(datadir) <= 0 || len(keydir) <= 0 || len(password) <= 0 {
+		log.Println("keydir or UserPwd invalid: datadir:", datadir, ", keydir:", keydir, ", password:", password)
+		return nil
+	}
 
 	NodeCfg := defaultNodeConfig()
 
-    NodeCfg.DataDir = datadir
+	NodeCfg.DataDir = datadir
 
-    NodeCfg.KeyStoreDir = keydir
-    
-    scryptN, scryptP, keydir := NodeCfg.AccountConfig()
-    //log.Println("===>  data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir, ", password is:", password)
-    
-    UserPwd = password
+	NodeCfg.KeyStoreDir = keydir
 
-	/*UUID, err := */StoreKey(keydir, password, scryptN, scryptP)
+	scryptN, scryptP, keydir := NodeCfg.AccountConfig()
+	//log.Println("===>  data_dir is: ", NodeCfg.DataDir, ", keystore_dir is:", NodeCfg.KeyStoreDir, ", password is:", password)
+
+	UserPwd = password
+
+	/*UUID, err := */
+	StoreKey(keydir, password, scryptN, scryptP)
 
 	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
@@ -649,37 +651,37 @@ func AccountCreate_Ex( datadir string , keydir string, password string) error {
 
 func main() {
 
-    app := cli.NewApp()
+	app := cli.NewApp()
 
-    app.Flags = []cli.Flag {
-        cli.StringFlag{
-            Name: "keystore_dir",
-            Value: "",
-            Usage: "keystore file's dir",
-        },
-        cli.StringFlag{
-            Name: "data_dir",
-            Value: "",
-            Usage: "data files' dir",
-        },
-        cli.StringFlag{
-            Name: "password",
-            Value: "",
-            Usage: "Password by default",
-        },
-        cli.StringFlag{
-            Name: "password_filepath",
-            Value: "",
-            Usage: "Password path file stored in path",
-        },
-        cli.StringFlag{
-            Name: "keystore_decrypt",
-            Value: "",
-            Usage: "Decryption keystore file, need user input same password as before",
-        },
-    }
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "keystore_dir",
+			Value: "",
+			Usage: "keystore file's dir",
+		},
+		cli.StringFlag{
+			Name:  "data_dir",
+			Value: "",
+			Usage: "data files' dir",
+		},
+		cli.StringFlag{
+			Name:  "password",
+			Value: "",
+			Usage: "Password by default",
+		},
+		cli.StringFlag{
+			Name:  "password_filepath",
+			Value: "",
+			Usage: "Password path file stored in path",
+		},
+		cli.StringFlag{
+			Name:  "keystore_decrypt",
+			Value: "",
+			Usage: "Decryption keystore file, need user input same password as before",
+		},
+	}
 
-    app.Action = accountCreate
+	app.Action = accountCreate
 
-    app.Run(os.Args)
+	app.Run(os.Args)
 }

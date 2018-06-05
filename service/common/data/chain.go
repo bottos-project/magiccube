@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,20 +14,20 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package data
 
 import (
-	log "github.com/cihub/seelog"
-	"strings"
-	"io/ioutil"
-	"net/http"
 	"encoding/json"
-	"github.com/bottos-project/magiccube/service/common/bean"
-	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	"errors"
 	"fmt"
 	"github.com/bottos-project/magiccube/config"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	user_proto "github.com/bottos-project/magiccube/service/user/proto"
+	log "github.com/cihub/seelog"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 const (
@@ -48,7 +48,7 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		log.Error(resp.Status)
 		return nil, errors.New(string(body))
 	}
@@ -83,18 +83,18 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 }
 
 // push transaction
-func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
+func PushTransaction(i interface{}) (*bean.CoreCommonReturn, error) {
 	var params = ""
 	switch i.(type) {
-		case string:
-			params = fmt.Sprintf(TX_PARAMS, i.(string))
-		default:
-			r, err := json.Marshal(i)
-			if err != nil {
-				log.Error(err)
-				return nil, err
-			}
-			params = fmt.Sprintf(TX_PARAMS, string(r))
+	case string:
+		params = fmt.Sprintf(TX_PARAMS, i.(string))
+	default:
+		r, err := json.Marshal(i)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		params = fmt.Sprintf(TX_PARAMS, string(r))
 	}
 	log.Info(params)
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -111,7 +111,7 @@ func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 		return nil, err
 	}
 
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		return nil, errors.New(string(body))
 	}
 	log.Info("body:", string(body))
@@ -141,7 +141,7 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	log.Info(string(body))
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		return nil, errors.New(string(body))
 	}
 	if err != nil {

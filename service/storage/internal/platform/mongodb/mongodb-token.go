@@ -14,8 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package mongodb
 
 import (
@@ -62,7 +62,7 @@ func (r *MongoRepository) CallGetUserToken(username string, token string) (*util
 	}
 	var mesgs UserToken
 	query := func(c *mgo.Collection) error {
-		return c.Find(bson.M{"$or": []bson.M{bson.M{"user_name": username}, bson.M{"token": token}}}).One(&mesgs)
+		return c.Find(bson.M{"$or": []bson.M{{"user_name": username}, {"token": token}}}).One(&mesgs)
 	}
 	session.SetCollectionByDB("local", "usertoken", query)
 	tokeninfo := &util.TokenDBInfo{

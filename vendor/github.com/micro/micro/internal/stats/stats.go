@@ -41,7 +41,7 @@ var (
 
 func render(w http.ResponseWriter, r *http.Request, tmpl string, data interface{}) {
 	t, err := template.New("template").Funcs(template.FuncMap{
-		//		"format": format,
+	//		"format": format,
 	}).Parse(layoutTemplate)
 	if err != nil {
 		http.Error(w, "Error occurred:"+err.Error(), 500)
@@ -175,7 +175,7 @@ func New() *stats {
 		Memory:  fmt.Sprintf("%.2fmb", float64(mstat.Alloc)/float64(1024*1024)),
 		GC:      fmt.Sprintf("%.3fms", float64(mstat.PauseTotalNs)/(1000*1000)),
 		Counters: []*counter{
-			&counter{
+			{
 				Timestamp: time.Now().Unix(),
 				Status:    make(map[string]int),
 			},

@@ -44,7 +44,7 @@ func TestOperator_RaftGetConfiguration(t *testing.T) {
 	me := future.Configuration().Servers[0]
 	expected := structs.RaftConfigurationResponse{
 		Servers: []*structs.RaftServer{
-			&structs.RaftServer{
+			{
 				ID:              me.ID,
 				Node:            s1.config.NodeName,
 				Address:         me.Address,
@@ -120,7 +120,7 @@ func TestOperator_RaftGetConfiguration_ACLDeny(t *testing.T) {
 	me := future.Configuration().Servers[0]
 	expected := structs.RaftConfigurationResponse{
 		Servers: []*structs.RaftServer{
-			&structs.RaftServer{
+			{
 				ID:              me.ID,
 				Node:            s1.config.NodeName,
 				Address:         me.Address,

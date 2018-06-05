@@ -8,13 +8,13 @@ import (
 
 func TestEncoding(t *testing.T) {
 	testData := []*mdnsTxt{
-		&mdnsTxt{
+		{
 			Version: "1.0.0",
 			Metadata: map[string]string{
 				"foo": "bar",
 			},
 			Endpoints: []*registry.Endpoint{
-				&registry.Endpoint{
+				{
 					Name: "endpoint1",
 					Request: &registry.Value{
 						Name: "request",

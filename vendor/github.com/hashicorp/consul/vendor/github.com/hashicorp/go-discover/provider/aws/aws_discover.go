@@ -98,11 +98,11 @@ func (p *Provider) Addrs(args map[string]string, l *log.Logger) ([]string, error
 	l.Printf("[INFO] discover-aws: Filter instances with %s=%s", tagKey, tagValue)
 	resp, err := svc.DescribeInstances(&ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
-			&ec2.Filter{
+			{
 				Name:   aws.String("tag:" + tagKey),
 				Values: []*string{aws.String(tagValue)},
 			},
-			&ec2.Filter{
+			{
 				Name:   aws.String("instance-state-name"),
 				Values: []*string{aws.String("running")},
 			},

@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,41 +14,41 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-    "time"
-    //"bufio"
-    "fmt"
-    "github.com/bottos-project/magiccube/service/node/config"
-    "github.com/bottos-project/magiccube/service/node/api"
-    "github.com/bottos-project/magiccube/service/node/keystore"
-    "github.com/micro/go-micro"
-    log "github.com/sirupsen/logrus"
-    "os"
-    "os/exec"
-    "bytes"
-    "strings"
-    "errors"
-    "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/secp256k1"
-    aes "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
-    "runtime"  
-    "syscall"  
-    slog "github.com/cihub/seelog"
-	"golang.org/x/net/context"
-	"github.com/bottos-project/magiccube/service/common/bean" 
- 	"github.com/bottos-project/magiccube/service/common/util"
-	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
-	pack "github.com/bottos-project/bottos/contract/msgpack"
-	"github.com/bottos-project/magiccube/service/common/data"
+	"time"
+	//"bufio"
+	"bytes"
 	"encoding/hex"
-	node_proto "github.com/bottos-project/magiccube/service/node/proto"  
-    datautil "github.com/bottos-project/magiccube/service/data/util"
+	"errors"
+	"fmt"
+	pack "github.com/bottos-project/bottos/contract/msgpack"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/data"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	"github.com/bottos-project/magiccube/service/common/util"
+	commonutil "github.com/bottos-project/magiccube/service/common/util"
+	datautil "github.com/bottos-project/magiccube/service/data/util"
+	"github.com/bottos-project/magiccube/service/node/api"
+	"github.com/bottos-project/magiccube/service/node/config"
+	"github.com/bottos-project/magiccube/service/node/keystore"
+	aes "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
+	"github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/secp256k1"
+	node_proto "github.com/bottos-project/magiccube/service/node/proto"
+	slog "github.com/cihub/seelog"
 	"github.com/howeyc/gopass"
-    commonutil "github.com/bottos-project/magiccube/service/common/util"
-    "github.com/protobuf/proto"
-    //"log"
+	"github.com/micro/go-micro"
+	"github.com/protobuf/proto"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/context"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"syscall"
+	//"log"
 	//"sync"
 	//"reflect"
 	//"github.com/micro/cli"
@@ -86,7 +86,7 @@ func exec_process(shellPath string) error {
 	//shellPath := "/home/xx/test.sh"
 	argv := make([]string, 1)
 	attr := new(os.ProcAttr)
-	newProcess, err := os.StartProcess(shellPath, argv, attr)  //run script
+	newProcess, err := os.StartProcess(shellPath, argv, attr) //run script
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -95,44 +95,44 @@ func exec_process(shellPath string) error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("processState PID:", processState.Pid())//get PID
+	fmt.Println("processState PID:", processState.Pid()) //get PID
 	fmt.Println("ProcessExit:", processState.Exited())
 
 	return nil
 }
 
 func CreateAccount(nodeinfo api.NodeInfos, UserPwd string) error {
-    
-    keystore.AccountCreate_Ex("/home/bto", "/home/bto", UserPwd)
-    
-    return nil
+
+	keystore.AccountCreate_Ex("/home/bto", "/home/bto", UserPwd)
+
+	return nil
 }
 
 func CreateAccountOld(nodeinfo api.NodeInfos) error {
 	//username := nodeinfo.Node[0].BtoUser
 	//var out bytes.Buffer
 	//url      := nodeinfo.Node[0].IpAddr + ":" + nodeinfo.Node[0].BtoPort
-	command := config.SCRIPT_PATH+" createuser "+"\""+nodeinfo.Node[0].IpAddr+"\" "+"\""+nodeinfo.Node[0].WalletIP+"\" "+"\""+nodeinfo.Node[0].BtoPort+"\" "+"\""+nodeinfo.Node[0].BtoPath+"\" "+"\""+nodeinfo.Node[0].ProdUser+"\" "+"\""+nodeinfo.Node[0].BtoUser+"\""
-	fmt.Println("command = ",command)
+	command := config.SCRIPT_PATH + " createuser " + "\"" + nodeinfo.Node[0].IpAddr + "\" " + "\"" + nodeinfo.Node[0].WalletIP + "\" " + "\"" + nodeinfo.Node[0].BtoPort + "\" " + "\"" + nodeinfo.Node[0].BtoPath + "\" " + "\"" + nodeinfo.Node[0].ProdUser + "\" " + "\"" + nodeinfo.Node[0].BtoUser + "\""
+	fmt.Println("command = ", command)
 	if "windows" == config.RUN_PLATFORM {
-		if buf,err := api.SshCommand(nodeinfo.Node[0].UserName ,
-			nodeinfo.Node[0].PassWord ,
-			nodeinfo.Node[0].IpAddr ,
-			22 ,
+		if buf, err := api.SshCommand(nodeinfo.Node[0].UserName,
+			nodeinfo.Node[0].PassWord,
+			nodeinfo.Node[0].IpAddr,
+			22,
 			command); err == nil {
 			//fmt.Println(buf)
-			if strings.Contains(buf , "error") {
+			if strings.Contains(buf, "error") {
 				errinfo := "*ERROR* Fail to create a account !!!"
 				fmt.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
 			} else {
-				fmt.Println("Create account "+nodeinfo.Node[0].BtoUser+" ok ...")
+				fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
 			}
 		}
 	} else if "linux" == config.RUN_PLATFORM {
 		go exec_shell(command)
-		fmt.Println("Create account "+nodeinfo.Node[0].BtoUser+" ok ...")
+		fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
 	}
 
 	return nil
@@ -140,46 +140,48 @@ func CreateAccountOld(nodeinfo api.NodeInfos) error {
 
 func GenerateKeyStone(nodeinfo api.NodeInfos) error {
 	//var out bytes.Buffer
-	command := config.SCRIPT_PATH+" createkey "+"\""+nodeinfo.Node[0].BtoPath+"\" "+"\""+nodeinfo.Node[0].KeyPath+"\" "
-	fmt.Println("command = ",command)
+	command := config.SCRIPT_PATH + " createkey " + "\"" + nodeinfo.Node[0].BtoPath + "\" " + "\"" + nodeinfo.Node[0].KeyPath + "\" "
+	fmt.Println("command = ", command)
 	if "windows" == config.RUN_PLATFORM {
-		if _,err := api.SshCommand(nodeinfo.Node[0].UserName ,
-			nodeinfo.Node[0].PassWord ,
-			nodeinfo.Node[0].IpAddr ,
-			22 ,
+		if _, err := api.SshCommand(nodeinfo.Node[0].UserName,
+			nodeinfo.Node[0].PassWord,
+			nodeinfo.Node[0].IpAddr,
+			22,
 			command); err != nil {
-			errinfo := "*ERROR* Failed to generate the keystone file : "+nodeinfo.Node[0].KeyPath
+			errinfo := "*ERROR* Failed to generate the keystone file : " + nodeinfo.Node[0].KeyPath
 			fmt.Println(errinfo)
 			err = errors.New(errinfo)
 		}
 	} else if "linux" == config.RUN_PLATFORM {
 		go exec_shell(command)
 		//fmt.Println("buf = ",buf)
-		fmt.Println("Generate keyStone file "+nodeinfo.Node[0].KeyPath+" ok ...")
+		fmt.Println("Generate keyStone file " + nodeinfo.Node[0].KeyPath + " ok ...")
 	}
 	return nil
 }
 
 func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 	username := nodeinfo.Node[0].BtoUser
-	url      := nodeinfo.Node[0].IpAddr + ":" + nodeinfo.Node[0].BtoPort
-	if accountinfo , err := api.GetAccountInfo(url , username); err != nil || accountinfo.AccountName != username {
+	url := nodeinfo.Node[0].IpAddr + ":" + nodeinfo.Node[0].BtoPort
+	if accountinfo, err := api.GetAccountInfo(url, username); err != nil || accountinfo.AccountName != username {
 		//user doesn't exist
 		fmt.Println("*WARN* Account doesn't exist , create it ...")
-		if err = CreateAccount(nodeinfo, UserPwd); err != nil {return err}
+		if err = CreateAccount(nodeinfo, UserPwd); err != nil {
+			return err
+		}
 		//if err = GenerateKeyStore(nodeinfo);err != nil {return err}
-	}else{
+	} else {
 		//check if keystone file exists, it need add public key check in the feture
 		fmt.Println("Check account exists ok ...")
-		command := config.SCRIPT_PATH+" chkfile "+"\""+nodeinfo.Node[0].KeyPath+"\""
+		command := config.SCRIPT_PATH + " chkfile " + "\"" + nodeinfo.Node[0].KeyPath + "\""
 		//fmt.Println("command = ",command)
 		if "windows" == config.RUN_PLATFORM {
-			if buf,err := api.SshCommand(nodeinfo.Node[0].UserName ,
-				nodeinfo.Node[0].PassWord ,
-				nodeinfo.Node[0].IpAddr ,
-				22 ,
+			if buf, err := api.SshCommand(nodeinfo.Node[0].UserName,
+				nodeinfo.Node[0].PassWord,
+				nodeinfo.Node[0].IpAddr,
+				22,
 				command); err != nil || len(buf) != 0 {
-				errinfo := "*ERROR* Failed to search the keystone file : "+nodeinfo.Node[0].KeyPath
+				errinfo := "*ERROR* Failed to search the keystone file : " + nodeinfo.Node[0].KeyPath
 				fmt.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
@@ -187,19 +189,19 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 				fmt.Println("Check keystone file ok ...")
 			}
 
-		}else if "linux" == config.RUN_PLATFORM {
-            filename := "bto.keystore"
-            filepath :="/home/bto/" + filename
-			
-            if api.PathExist(filepath) == false {
-				errinfo := "*ERROR* Failed to search the keystone file : "+filepath
+		} else if "linux" == config.RUN_PLATFORM {
+			filename := "bto.keystore"
+			filepath := "/home/bto/" + filename
+
+			if api.PathExist(filepath) == false {
+				errinfo := "*ERROR* Failed to search the keystone file : " + filepath
 				log.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
 			} else {
 				log.Println("Check keystone file ok ...Now decrypt file:", filepath)
-                key, Account := aes.KeyDecrypt(filepath, UserPwd)
-                log.Println("DECRYPT KEYSTORE DONE! Account:",Account,", key:", key)
+				key, Account := aes.KeyDecrypt(filepath, UserPwd)
+				log.Println("DECRYPT KEYSTORE DONE! Account:", Account, ", key:", key)
 			}
 		}
 	}
@@ -210,23 +212,23 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 func InitServer(nodeinfo api.NodeInfos) error {
 	// read configurated servers from config file and set it
 
-	for i := 0;i < len(nodeinfo.Node[0].ServLst);i++ {
-		command := config.SCRIPT_PATH+" setserv "+"\""+nodeinfo.Node[0].ServPath+"\" "+"\""+nodeinfo.Node[0].ServLst[i]+"\""
+	for i := 0; i < len(nodeinfo.Node[0].ServLst); i++ {
+		command := config.SCRIPT_PATH + " setserv " + "\"" + nodeinfo.Node[0].ServPath + "\" " + "\"" + nodeinfo.Node[0].ServLst[i] + "\""
 		if "windows" == config.RUN_PLATFORM {
 			//command := config.SCRIPT_PATH+" setserv "+"\""+nodeinfo.Node[0].ServPath+"\" "+"\""+nodeinfo.Node[0].ServLst[i]+"\""
 			//fmt.Println("command = ",command)
-			if buf,err := api.SshCommand(nodeinfo.Node[0].UserName ,
-				nodeinfo.Node[0].PassWord ,
-				nodeinfo.Node[0].IpAddr ,
-				22 ,
+			if buf, err := api.SshCommand(nodeinfo.Node[0].UserName,
+				nodeinfo.Node[0].PassWord,
+				nodeinfo.Node[0].IpAddr,
+				22,
 				command); err == nil {
-				fmt.Println("buf = ",buf)
+				fmt.Println("buf = ", buf)
 			}
-		}else if "linux" == config.RUN_PLATFORM {
+		} else if "linux" == config.RUN_PLATFORM {
 			//wg.Add(1)
-            fmt.Println("Start service", nodeinfo.Node[0].ServLst[i], "...")
+			fmt.Println("Start service", nodeinfo.Node[0].ServLst[i], "...")
 			go exec_shell(command)
-                        time.Sleep(1 * time.Second)
+			time.Sleep(1 * time.Second)
 		}
 	}
 	//wg.Wait()
@@ -238,87 +240,86 @@ func InitServer(nodeinfo api.NodeInfos) error {
 func InitDatabase(nodeinfo api.NodeInfos) error {
 	if "windows" == config.RUN_PLATFORM {
 		//
-	}else if "linux" == config.RUN_PLATFORM {
+	} else if "linux" == config.RUN_PLATFORM {
 		//
 	}
 	return nil
 }
 
+func daemon(nochdir, noclose int) int {
+	var ret, ret2 uintptr
+	var err syscall.Errno
 
-func daemon(nochdir, noclose int) int {  
-    var ret, ret2 uintptr  
-    var err syscall.Errno  
-   
-    darwin := runtime.GOOS == "darwin"  
-   
-    // already a daemon  
-    if syscall.Getppid() == 1 {  
-        return 0  
-    }  
-   
-    // fork off the parent process  
-    ret, ret2, err = syscall.RawSyscall(syscall.SYS_FORK, 0, 0, 0)  
-    if err != 0 {  
-        return -1  
-    }  
-   
-    // failure  
-    if ret2 < 0 {  
-        os.Exit(-1)  
-    }  
-   
-    // handle exception for darwin  
-    if darwin && ret2 == 1 {  
-        ret = 0  
-    }  
-   
-    // if we got a good PID, then we call exit the parent process.  
-    if ret > 0 {  
-        os.Exit(0)  
-    }  
-   
-    /* Change the file mode mask */  
-    _ = syscall.Umask(0)  
-   
-    // create a new SID for the child process  
-    s_ret, s_errno := syscall.Setsid()  
-    if s_errno != nil {  
-        log.Printf("Error: syscall.Setsid errno: %d", s_errno)  
-    }  
-    if s_ret < 0 {  
-        return -1  
-    }  
-   
-    if nochdir == 0 {  
-        os.Chdir("/")  
-    }  
-   
-    if noclose == 0 {  
-        f, e := os.OpenFile("/dev/null", os.O_RDWR, 0)  
-        if e == nil {  
-            fd := f.Fd()  
-            syscall.Dup2(int(fd), int(os.Stdin.Fd()))  
-            syscall.Dup2(int(fd), int(os.Stdout.Fd()))  
-            syscall.Dup2(int(fd), int(os.Stderr.Fd()))  
-        }  
-    }  
-   
-    return 0  
-}  
+	darwin := runtime.GOOS == "darwin"
+
+	// already a daemon
+	if syscall.Getppid() == 1 {
+		return 0
+	}
+
+	// fork off the parent process
+	ret, ret2, err = syscall.RawSyscall(syscall.SYS_FORK, 0, 0, 0)
+	if err != 0 {
+		return -1
+	}
+
+	// failure
+	if ret2 < 0 {
+		os.Exit(-1)
+	}
+
+	// handle exception for darwin
+	if darwin && ret2 == 1 {
+		ret = 0
+	}
+
+	// if we got a good PID, then we call exit the parent process.
+	if ret > 0 {
+		os.Exit(0)
+	}
+
+	/* Change the file mode mask */
+	_ = syscall.Umask(0)
+
+	// create a new SID for the child process
+	s_ret, s_errno := syscall.Setsid()
+	if s_errno != nil {
+		log.Printf("Error: syscall.Setsid errno: %d", s_errno)
+	}
+	if s_ret < 0 {
+		return -1
+	}
+
+	if nochdir == 0 {
+		os.Chdir("/")
+	}
+
+	if noclose == 0 {
+		f, e := os.OpenFile("/dev/null", os.O_RDWR, 0)
+		if e == nil {
+			fd := f.Fd()
+			syscall.Dup2(int(fd), int(os.Stdin.Fd()))
+			syscall.Dup2(int(fd), int(os.Stdout.Fd()))
+			syscall.Dup2(int(fd), int(os.Stderr.Fd()))
+		}
+	}
+
+	return 0
+}
 
 func slog_init() {
 
-    defer slog.Flush()
-    logger, err := slog.LoggerFromConfigAsFile("./log.xml")
-    if err != nil {
-        slog.Critical("err parsing config log file", err)
-        os.Exit(1)
-        return
-    }
-    slog.ReplaceLogger(logger)
+	defer slog.Flush()
+	logger, err := slog.LoggerFromConfigAsFile("./log.xml")
+	if err != nil {
+		slog.Critical("err parsing config log file", err)
+		os.Exit(1)
+		return
+	}
+	slog.ReplaceLogger(logger)
 
-    slog.Trace("Hello , World !!!")
-    slog.Debug("Hello , World !!!")
+	slog.Trace("Hello , World !!!")
+	slog.Debug("Hello , World !!!")
 
 }
 
@@ -330,8 +331,8 @@ func Sign(msg, seckey []byte) ([]byte, error) {
 type nodeTrxInfo struct{}
 
 func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequests, rsp *node_proto.RegisterResponses) error {
-	slog.Info("req:", req);
-	block_header, err:= data.BlockHeader()
+	slog.Info("req:", req)
+	block_header, err := data.BlockHeader()
 	if err != nil {
 		rsp.Code = 1003
 		rsp.Msg = err.Error()
@@ -339,24 +340,24 @@ func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequ
 	}
 	//Register account
 	rsp.Code = 1004
-    req.NodeUUIDInfo.UserName = keystore.GetAccount()
-	req.NodeUUIDInfo.PubKey   = keystore.GetPubKey()
+	req.NodeUUIDInfo.UserName = keystore.GetAccount()
+	req.NodeUUIDInfo.PubKey = keystore.GetPubKey()
 
-	account_buf,err := pack.Marshal(req.NodeUUIDInfo)
+	account_buf, err := pack.Marshal(req.NodeUUIDInfo)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
 	tx_account_sign := &push_sign.TransactionSign{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
+		Version:     1,
+		CursorNum:   block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime + 20,
-		Sender: req.NodeUUIDInfo.UserName,
-		Contract: "nodemng",
-		Method: "nodeinforeg",
-		Param: account_buf,
-		SigAlg: 1,
+		Lifetime:    block_header.HeadBlockTime + 20,
+		Sender:      req.NodeUUIDInfo.UserName,
+		Contract:    "nodemng",
+		Method:      "nodeinforeg",
+		Param:       account_buf,
+		SigAlg:      1,
 	}
 
 	msg, err := proto.Marshal(tx_account_sign)
@@ -364,37 +365,37 @@ func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequ
 		rsp.Msg = err.Error()
 		return nil
 	}
-    
+
 	key := keystore.GetPubKey()
-	
-	if len(key) <= 0 { 
-	    key = "81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e"
-    }
-    
-    seckey, err := hex.DecodeString(key)
-    
+
+	if len(key) <= 0 {
+		key = "81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e"
+	}
+
+	seckey, err := hex.DecodeString(key)
+
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
-   
-    signature, err := Sign(util.Sha256(msg), seckey)
+
+	signature, err := Sign(util.Sha256(msg), seckey)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
-    
+
 	tx_account := &bean.TxBean{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
+		Version:     1,
+		CursorNum:   block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime + 20,
-		Sender: req.NodeUUIDInfo.UserName,
-		Contract: "nodemng",
-		Method: "nodeinforeg",
-		Param: hex.EncodeToString(account_buf),
-		SigAlg: 1,
-		Signature: hex.EncodeToString(signature),
+		Lifetime:    block_header.HeadBlockTime + 20,
+		Sender:      req.NodeUUIDInfo.UserName,
+		Contract:    "nodemng",
+		Method:      "nodeinforeg",
+		Param:       hex.EncodeToString(account_buf),
+		SigAlg:      1,
+		Signature:   hex.EncodeToString(signature),
 	}
 
 	ret, err := data.PushTransaction(tx_account)
@@ -405,34 +406,33 @@ func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequ
 	}
 
 	slog.Info("ret-account:", ret.Result.TrxHash)
-	
+
 	return nil
 }
 
 func main() {
-    var input string
-    var input1 []byte
-    var err error
+	var input string
+	var input1 []byte
+	var err error
 
-    fmt.Println("\nPlease input your password for generating keystore: ")
-    input1, err = gopass.GetPasswd()
+	fmt.Println("\nPlease input your password for generating keystore: ")
+	input1, err = gopass.GetPasswd()
 
-    if err != nil || len(input1) <= 0 {
-        fmt.Println("Input error! Failed to start node.")
-        return
-    }
+	if err != nil || len(input1) <= 0 {
+		fmt.Println("Input error! Failed to start node.")
+		return
+	}
 
-    input = string(input1)
-    
-    if input == "\n" || len(input) <= 0 {
-        fmt.Println("Input error! Failed to start node.")
-        return
-    }
+	input = string(input1)
 
-    UserPwd := input
-    
-    slog_init()
-    
+	if input == "\n" || len(input) <= 0 {
+		fmt.Println("Input error! Failed to start node.")
+		return
+	}
+
+	UserPwd := input
+
+	slog_init()
 
 	service := micro.NewService(
 		micro.Name("go.micro.srv.node"),
@@ -440,7 +440,7 @@ func main() {
 	)
 
 	service.Init(
-		/*
+	/*
 		micro.Action(func(c *cli.Context) {
 			env := c.StringFlag("environment")
 			if len(env) > 0 {
@@ -448,11 +448,11 @@ func main() {
 			}
 		}),*/
 	)
-    
+
 	//node_proto.RegisterUserHandler(service.Server(), new(nodeTrxInfo))
 
 	if api.PathExist(config.CONFIG_FILE) == false {
-		fmt.Println("*ERROR* configuration file :",config.CONFIG_FILE," doesn't exist !!!")
+		fmt.Println("*ERROR* configuration file :", config.CONFIG_FILE, " doesn't exist !!!")
 		return
 	}
 
@@ -461,52 +461,58 @@ func main() {
 	nodeinfos = api.ReadFile(config.CONFIG_FILE)
 
 	//check if exists keystone file
-    if CheckKeyStore(nodeinfos, UserPwd) != nil {return}
-	
-    //log.Println("now call Save_ip_ponix_to_blockchain")
+	if CheckKeyStore(nodeinfos, UserPwd) != nil {
+		return
+	}
+
+	//log.Println("now call Save_ip_ponix_to_blockchain")
 	api.Save_ip_ponix_to_blockchain()
 
 	//set server according to the json file
-	if InitServer(nodeinfos) != nil {return}
+	if InitServer(nodeinfos) != nil {
+		return
+	}
 
 	//init mangodb
-	if InitDatabase(nodeinfos) != nil {return}
-	
-    SetNodeDBClusterInfo()
+	if InitDatabase(nodeinfos) != nil {
+		return
+	}
 
-    fmt.Println("Starting Server ...")
-    
-    daemon(0, 1)  
+	SetNodeDBClusterInfo()
+
+	fmt.Println("Starting Server ...")
+
+	daemon(0, 1)
 
 	//go monitorConfigFile(config.Conf_File)
 	//user_proto.RegisterUserHandler(service.Server(), new(User))
-	
-    if err := service.Run(); err != nil {
+
+	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func PushNodeClusterTrx(value interface{}, pri_key string) {
-   
-	block_header, err:= data.BlockHeader()
+
+	block_header, err := data.BlockHeader()
 	if err != nil {
 		return
 	}
-	
-    account_buf,err := pack.Marshal(value)
-        if err != nil {
+
+	account_buf, err := pack.Marshal(value)
+	if err != nil {
 		return
 	}
 	tx_account_sign := &push_sign.TransactionSign{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
+		Version:     1,
+		CursorNum:   block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime + 20,
-		Sender: "bottos",
-		Contract: "nodemng",
-		Method: "nodeinforeg2",
-		Param: account_buf,
-		SigAlg: 1,
+		Lifetime:    block_header.HeadBlockTime + 20,
+		Sender:      "bottos",
+		Contract:    "nodemng",
+		Method:      "nodeinforeg2",
+		Param:       account_buf,
+		SigAlg:      1,
 	}
 
 	msg, err := proto.Marshal(tx_account_sign)
@@ -514,7 +520,7 @@ func PushNodeClusterTrx(value interface{}, pri_key string) {
 		return
 	}
 	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
-	seckey, err := hex.DecodeString(pri_key)   //("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
+	seckey, err := hex.DecodeString(pri_key) //("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
 	if err != nil {
 		return
 	}
@@ -525,16 +531,16 @@ func PushNodeClusterTrx(value interface{}, pri_key string) {
 	}
 
 	tx_account := &bean.TxBean{
-		Version:1,
-		CursorNum: block_header.HeadBlockNum,
+		Version:     1,
+		CursorNum:   block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
-		Lifetime: block_header.HeadBlockTime + 20,
-		Sender: "bottos",
-		Contract: "bottos",
-		Method: "newaccount",
-		Param: hex.EncodeToString(account_buf),
-		SigAlg: 1,
-		Signature: hex.EncodeToString(signature),
+		Lifetime:    block_header.HeadBlockTime + 20,
+		Sender:      "bottos",
+		Contract:    "bottos",
+		Method:      "newaccount",
+		Param:       hex.EncodeToString(account_buf),
+		SigAlg:      1,
+		Signature:   hex.EncodeToString(signature),
 	}
 
 	ret, err := data.PushTransaction(tx_account)
@@ -545,27 +551,27 @@ func PushNodeClusterTrx(value interface{}, pri_key string) {
 	log.Info("ret-account:", ret.Result.TrxHash)
 }
 
-func SetNodeDBClusterInfo () {
-    node_infos := api.ReadFile(config.CONFIG_FILE)
-    
-    var dbclusterinfo api.StorageDBClusterInfo
-    
-    node_uuid := keystore.GetUUID()
-    dbclusterinfo.Nodetype            = node_uuid
-    dbclusterinfo.Nodedbinfo.NodeId   = node_uuid
-    dbclusterinfo.Nodedbinfo.NodeIP   = node_infos.Node[0].IpAddr
-    dbclusterinfo.Nodedbinfo.NodePort = node_infos.Node[0].BtoPort
- 	dbclusterinfo.Nodedbinfo.NodeAddress = node_infos.Node[0].IpAddr
-    dbclusterinfo.Nodedbinfo.SeedIP      = node_infos.Node[0].SeedIp
-    dbclusterinfo.Nodedbinfo.SlaveIP     = node_infos.Node[0].SlaveIpLst
-    
-    log.Println("Repository: ", config.MONGO_DB_URL)
-    Repository := api.NewMongoRepository(config.MONGO_DB_URL)
-    log.Println("Repository: ", Repository)
-            
-    PushNodeClusterTrx(dbclusterinfo, keystore.GetPriKey()) 
+func SetNodeDBClusterInfo() {
+	node_infos := api.ReadFile(config.CONFIG_FILE)
+
+	var dbclusterinfo api.StorageDBClusterInfo
+
+	node_uuid := keystore.GetUUID()
+	dbclusterinfo.Nodetype = node_uuid
+	dbclusterinfo.Nodedbinfo.NodeId = node_uuid
+	dbclusterinfo.Nodedbinfo.NodeIP = node_infos.Node[0].IpAddr
+	dbclusterinfo.Nodedbinfo.NodePort = node_infos.Node[0].BtoPort
+	dbclusterinfo.Nodedbinfo.NodeAddress = node_infos.Node[0].IpAddr
+	dbclusterinfo.Nodedbinfo.SeedIP = node_infos.Node[0].SeedIp
+	dbclusterinfo.Nodedbinfo.SlaveIP = node_infos.Node[0].SlaveIpLst
+
+	log.Println("Repository: ", config.MONGO_DB_URL)
+	Repository := api.NewMongoRepository(config.MONGO_DB_URL)
+	log.Println("Repository: ", Repository)
+
+	PushNodeClusterTrx(dbclusterinfo, keystore.GetPriKey())
 }
 
 type NodeApi interface {
-    GetNodeDBInfoList(nodedbinfo *datautil.NodeDBInfo)
+	GetNodeDBInfoList(nodedbinfo *datautil.NodeDBInfo)
 }

@@ -244,7 +244,7 @@ type InstanceAttributesType struct {
 	SerialNumber       string
 	Status             InstanceStatus
 	OperationLocks     OperationLocksType
-	SecurityGroupIds struct {
+	SecurityGroupIds   struct {
 		SecurityGroupId []string
 	}
 	PublicIpAddress         IpAddressSetType
@@ -259,7 +259,7 @@ type InstanceAttributesType struct {
 	IoOptimized             StringOrBool
 	InstanceChargeType      common.InstanceChargeType
 	ExpiredTime             util.ISO6801Time
-	Tags struct {
+	Tags                    struct {
 		Tag []TagItemType
 	}
 	SpotStrategy SpotStrategyType
@@ -658,7 +658,7 @@ func (client *Client) DetachInstanceRamRole(args *AttachInstancesArgs) (err erro
 
 type DescribeInstanceRamRoleResponse struct {
 	common.Response
-	InstanceRamRoleSets struct{
+	InstanceRamRoleSets struct {
 		InstanceRamRoleSet []InstanceRamRoleSetType
 	}
 }

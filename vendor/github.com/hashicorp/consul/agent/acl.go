@@ -79,13 +79,13 @@ func newACLManager(config *config.RuntimeConfig) (*aclManager, error) {
 	// Build a policy for the agent master token.
 	policy := &acl.Policy{
 		Agents: []*acl.AgentPolicy{
-			&acl.AgentPolicy{
+			{
 				Node:   config.NodeName,
 				Policy: acl.PolicyWrite,
 			},
 		},
 		Nodes: []*acl.NodePolicy{
-			&acl.NodePolicy{
+			{
 				Name:   "",
 				Policy: acl.PolicyRead,
 			},

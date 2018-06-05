@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,28 +14,28 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package signature
 
 import (
-	query_sign "github.com/bottos-project/magiccube/service/common/signature/query"
-	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
-	"github.com/golang/protobuf/proto"
-	"github.com/bottos-project/crypto-go/crypto"
 	"encoding/hex"
-	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/magiccube/service/common/util"
 	"errors"
+	"github.com/bottos-project/crypto-go/crypto"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/service/common/data"
+	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	query_sign "github.com/bottos-project/magiccube/service/common/signature/query"
+	"github.com/bottos-project/magiccube/service/common/util"
+	log "github.com/cihub/seelog"
+	"github.com/golang/protobuf/proto"
 )
 
 // push verify sign
 func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
 
 	var tx bean.TxBean
-	err:=json.Unmarshal([]byte(jsonstr), &tx)
+	err := json.Unmarshal([]byte(jsonstr), &tx)
 	if err != nil {
 		log.Error(err)
 		return false, err
@@ -92,9 +92,9 @@ func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
 	return crypto.VerifySign(pub_key, util.Sha256(seri_data), sign), nil
 }
 
-type CommonQuery struct{
-	Username string `json:"username"`
-	Random string `json:"random"`
+type CommonQuery struct {
+	Username  string `json:"username"`
+	Random    string `json:"random"`
 	Signature string `json:"signature"`
 }
 
@@ -122,8 +122,8 @@ func QueryVerifySign(b string) (bool, error) {
 	}
 
 	msg := &query_sign.QuerySign{
-		Username:commonQuery.Username,
-		Random:commonQuery.Random,
+		Username: commonQuery.Username,
+		Random:   commonQuery.Random,
 	}
 	//data serialization
 	seri_data, err := proto.Marshal(msg)
@@ -151,4 +151,3 @@ func QueryVerifySign(b string) (bool, error) {
 	}
 	return crypto.VerifySign(pub_key, util.Sha256(seri_data), sign), nil
 }
-

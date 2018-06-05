@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,7 +14,7 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package config
 
 const (
@@ -34,7 +34,7 @@ const (
 	BASE_MINIO_ACCESS_KEY = ""
 	BASE_MINIO_SECRET_KEY = ""
 
-	BASE_LOG_CONF	= "config/log.json"
+	BASE_LOG_CONF = "config/log.json"
 
 	//Token expired
 	TOKEN_EXPIRE_TIME = 2 * 60 * 60
