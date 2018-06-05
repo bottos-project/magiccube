@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package keystore
 
 import (
@@ -64,18 +65,23 @@ import (
 )
 
 var (
+	//UserPwd is UserPwd
 	UserPwd = ""
 )
 
 var (
+	//KeyStoreScheme is KeyStoreScheme
 	KeyStoreScheme = "keystore"
-
+    //myNodeAccountPubKey is myNodeAccountPubKey
 	myNodeAccountPubKey = ""
+	//myNodeAccountPriKey is myNodeAccountPriKey
 	myNodeAccountPriKey = ""
+	//myNodeAccount is myNodeAccount
 	myNodeAccount       = ""
+	//myNodeUUID is myNodeUUID
 	myNodeUUID          = ""
 )
-
+//NodeConfig struct
 type NodeConfig struct {
 	// Name sets the instance name of the node. It must not contain the / character and is
 	// used in the devp2p node identifier. The instance name of geth is "geth". If no
@@ -178,7 +184,7 @@ type NodeConfig struct {
 	// Logger is a custom logger to use with the p2p.Server.
 	Logger log.Logger `toml:",omitempty"`
 }
-
+//keyStore interface
 type keyStore interface {
 	// Loads and decrypts the key from disk.
 	GetKey(addr aes.UUID, filename string, auth string) (*aes.Key, string, error)
@@ -192,13 +198,13 @@ var DefaultConfig = NodeConfig{
 	DataDir:     DefaultDataDir(),
 	KeyStoreDir: DefaultKeystoreDir(),
 }
-
+//keyStorePassphrase struct
 type keyStorePassphrase struct {
 	keysDirPath string
 	scryptN     int
 	scryptP     int
 }
-
+//URL struct
 type URL struct {
 	Scheme string // Protocol scheme to identify a capable account backend
 	Path   string // Path for the backend to identify a unique entity
@@ -206,6 +212,7 @@ type URL struct {
 
 // Account represents an Ethereum account located at a specific location defined
 // by the optional URL field.
+//Account struct
 type Account struct {
 	UUID aes.UUID `json:"address"` // Ethereum account address derived from the key
 	URL  URL      `json:"url"`     // Optional resource locator within a backend
@@ -216,7 +223,7 @@ var PasswordFileFlag = cli.StringFlag{
 	Usage: "Password path file to use for non-interactive password input",
 	Value: "",
 }
-
+//MakePasswordList is to MakePasswordList
 func MakePasswordList(ctx *cli.Context) []string {
 
 	if len(ctx.String("password")) > 0 {
@@ -240,12 +247,12 @@ func MakePasswordList(ctx *cli.Context) []string {
 	}
 	return lines
 }
-
+//keyFileName is to keyFileName
 func keyFileName(keyAddr aes.UUID) string {
 	ts := time.Now().UTC()
 	return fmt.Sprintf("UTC--%s--%s", toISO8601(ts), hex.EncodeToString(keyAddr[:]))
 }
-
+//GetKey is to GetKey
 func (ks keyStorePassphrase) GetKey(addr aes.UUID, filename, auth string) (*aes.Key, string, error) {
 	// Load the key from the keystore and decrypt its contents
 	keyjson, err := ioutil.ReadFile(filename)
@@ -270,7 +277,7 @@ func StoreKey(dir, auth string, scryptN, scryptP int) (aes.UUID, error) {
 
 	return a.UUID, err
 }
-
+//StoreKey is to StoreKey
 func (ks keyStorePassphrase) StoreKey(username string, filename string, key *aes.Key, auth string) error {
 	keyjson, err := aes.EncryptKey(username, key, auth, ks.scryptN, ks.scryptP)
 	if err != nil {
@@ -278,7 +285,7 @@ func (ks keyStorePassphrase) StoreKey(username string, filename string, key *aes
 	}
 	return aes.WriteKeyFile(filename, keyjson)
 }
-
+//JoinPath is to JoinPath 
 func (ks keyStorePassphrase) JoinPath(filename string) string {
 	if filepath.IsAbs(filename) {
 		return filename
@@ -294,14 +301,14 @@ func FromECDSA(priv *ecdsa.PrivateKey) []byte {
 	}
 	return aes.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
 }
-
+//FromECDSAPub is to FromECDSAPub
 func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
 	if pub == nil || pub.X == nil || pub.Y == nil {
 		return nil
 	}
 	return elliptic.Marshal(aes.S256(), pub.X, pub.Y)
 }
-
+// homeDir is to homeDir
 func homeDir() string {
 	if home := os.Getenv("HOME"); home != "" {
 		return home
@@ -311,7 +318,7 @@ func homeDir() string {
 	}
 	return ""
 }
-
+//DefaultDataDir is DefaultDataDir
 func DefaultDataDir() string {
 	// Try to place the data folder in the user's home dir
 	home := homeDir()
@@ -327,7 +334,7 @@ func DefaultDataDir() string {
 	// As we cannot guess a stable location, return empty and handle later
 	return ""
 }
-
+// DefaultKeystoreDir is DefaultKeystoreDir
 func DefaultKeystoreDir() string {
 	// Try to place the data folder in the user's home dir
 	home := homeDir()
@@ -343,13 +350,13 @@ func DefaultKeystoreDir() string {
 	// As we cannot guess a stable location, return empty and handle later
 	return ""
 }
-
+//defaultNodeConfig is defaultNodeConfig
 func defaultNodeConfig() NodeConfig {
 	cfg := DefaultConfig //Dir setting
 	cfg.Name = "user UUID"
 	return cfg
 }
-
+// AccountConfig is AccountConfig
 func (c *NodeConfig) AccountConfig() (int, int, string) {
 	scryptN := aes.StandardScryptN
 	scryptP := aes.StandardScryptP
@@ -357,14 +364,14 @@ func (c *NodeConfig) AccountConfig() (int, int, string) {
 	keydir := c.KeyStoreDir
 	return scryptN, scryptP, keydir
 }
-
+//zeroKey is zeroKey 
 func zeroKey(k *ecdsa.PrivateKey) {
 	b := k.D.Bits()
 	for i := range b {
 		b[i] = 0
 	}
 }
-
+// storeNewKey is storeNewKey
 func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, error) {
 
 	key, err := aes.NewKey(rand)
@@ -577,6 +584,7 @@ func getPassPhrase(prompt string, confirmation bool, i int, passwords []string) 
 	return password
 }
 
+//toISO8601 is toISO8601
 func toISO8601(t time.Time) string {
 	var tz string
 	name, offset := t.Zone()
@@ -588,6 +596,7 @@ func toISO8601(t time.Time) string {
 	return fmt.Sprintf("%04d-%02d-%02dT%02d-%02d-%02d.%09d%s", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), tz)
 }
 
+// accountCreate is to accountCreate
 func accountCreate(ctx *cli.Context) error {
 
 	if len(ctx.String("keystore_decrypt")) > 0 {
@@ -624,7 +633,7 @@ func accountCreate(ctx *cli.Context) error {
 	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
 }
-
+//AccountCreate_Ex is to AccountCreate_Ex
 func AccountCreate_Ex(datadir string, keydir string, password string) error {
 	if len(datadir) <= 0 || len(keydir) <= 0 || len(password) <= 0 {
 		log.Println("keydir or UserPwd invalid: datadir:", datadir, ", keydir:", keydir, ", password:", password)
