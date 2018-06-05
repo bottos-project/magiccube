@@ -25,6 +25,7 @@ import (
 	"strconv"
 )
 
+// MapToObject is to conver data type
 func MapToObject(source interface{}, dst interface{}) error {
 	b, err := json.Marshal(source)
 	if err != nil {
@@ -33,10 +34,12 @@ func MapToObject(source interface{}, dst interface{}) error {
 	return json.Unmarshal(b, dst)
 }
 
+// ParseQuantity is to parse quantity
 func ParseQuantity(q string) (int64, error) {
 	return strconv.ParseInt(q, 0, 64)
 }
 
+//EncodeJSON is to encode json
 func EncodeJSON(data interface{}) ([]byte, error) {
 	encoded, err := json.Marshal(data)
 	if err != nil {
@@ -45,6 +48,7 @@ func EncodeJSON(data interface{}) ([]byte, error) {
 	return encoded, nil
 }
 
+// EncodeJSONString is to encode json string
 func EncodeJSONString(data interface{}) (string, error) {
 	encoded, err := EncodeJSON(data)
 	if err != nil {
@@ -53,6 +57,7 @@ func EncodeJSONString(data interface{}) (string, error) {
 	return string(encoded), err
 }
 
+// EncodeJSONToBuffer is to encode json to buffer
 func EncodeJSONToBuffer(data interface{}, b *bytes.Buffer) error {
 	encoded, err := EncodeJSON(data)
 	if err != nil {
@@ -62,6 +67,7 @@ func EncodeJSONToBuffer(data interface{}, b *bytes.Buffer) error {
 	return err
 }
 
+// JSON2Request is definition of json rpc struct
 type JSON2Request struct {
 	JSONRPC string      `json:"jsonrpc"`
 	ID      interface{} `json:"id"`
@@ -69,29 +75,35 @@ type JSON2Request struct {
 	Method  string      `json:"method,omitempty"`
 }
 
+// JSONByte is to convert json to byte
 func (e *JSON2Request) JSONByte() ([]byte, error) {
 	return EncodeJSON(e)
 }
 
+// JSONString is to covert json to byte
 func (e *JSON2Request) JSONString() (string, error) {
 	return EncodeJSONString(e)
 }
 
+// JSONBuffer is to convert json to buffer
 func (e *JSON2Request) JSONBuffer(b *bytes.Buffer) error {
 	return EncodeJSONToBuffer(e, b)
 }
 
+// String is to get string format
 func (e *JSON2Request) String() string {
 	str, _ := e.JSONString()
 	return str
 }
 
+// NewJSON2RequestBlank is to construct a request struct
 func NewJSON2RequestBlank() *JSON2Request {
 	j := new(JSON2Request)
 	j.JSONRPC = "2.0"
 	return j
 }
 
+// NewJSON2Request is to construct a request struct
 func NewJSON2Request(id, params interface{}, method string) *JSON2Request {
 	j := new(JSON2Request)
 	j.JSONRPC = "2.0"
@@ -101,6 +113,7 @@ func NewJSON2Request(id, params interface{}, method string) *JSON2Request {
 	return j
 }
 
+// ParseJSON2Request is to parse json request
 func ParseJSON2Request(request string) (*JSON2Request, error) {
 	j := new(JSON2Request)
 	err := json.Unmarshal([]byte(request), j)
@@ -113,6 +126,7 @@ func ParseJSON2Request(request string) (*JSON2Request, error) {
 	return j, nil
 }
 
+// JSON2Response is definition of jsonrpc rsp
 type JSON2Response struct {
 	JSONRPC string      `json:"jsonrpc"`
 	ID      interface{} `json:"id"`
@@ -120,40 +134,48 @@ type JSON2Response struct {
 	Result  interface{} `json:"result,omitempty"`
 }
 
+// JSONByte is to encode json
 func (e *JSON2Response) JSONByte() ([]byte, error) {
 	return EncodeJSON(e)
 }
 
+// JSONString is to encode json to string
 func (e *JSON2Response) JSONString() (string, error) {
 	return EncodeJSONString(e)
 }
 
+// JSONBuffer is to encode json to buffer
 func (e *JSON2Response) JSONBuffer(b *bytes.Buffer) error {
 	return EncodeJSONToBuffer(e, b)
 }
 
+// String is to get string format data
 func (e *JSON2Response) String() string {
 	str, _ := e.JSONString()
 	return str
 }
 
+// NewJSON2Response is to construct json rpc rsp
 func NewJSON2Response() *JSON2Response {
 	j := new(JSON2Response)
 	j.JSONRPC = "2.0"
 	return j
 }
 
-func (j *JSON2Response) AddError(code int, message string, data interface{}) {
-	e := NewJSONError(code, message, data)
-	j.Error = e
+// AddError is to add error
+func (e *JSON2Response) AddError(code int, message string, data interface{}) {
+	jsonError := NewJSONError(code, message, data)
+	e.Error = jsonError
 }
 
+// JSONError is definition of json error
 type JSONError struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
+// NewJSONError is to construct json erro
 func NewJSONError(code int, message string, data interface{}) *JSONError {
 	j := new(JSONError)
 	j.Code = code
