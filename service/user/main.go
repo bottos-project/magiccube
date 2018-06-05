@@ -79,7 +79,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		SigAlg:      1,
 	}
 
-	msg, err := proto.Marshal(txAccount_sign)
+	msg, err := proto.Marshal(txAccountSign)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
