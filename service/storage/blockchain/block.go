@@ -22,6 +22,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/controller"
 )
 
+// GetLatestBlockNumber is to get latest block number
 func GetLatestBlockNumber() uint64 {
 	blockInfo, err := controller.GetInfo()
 	if err != nil {
