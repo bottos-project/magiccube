@@ -35,9 +35,9 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"os"
 )
+
 // User struct
 type User struct{}
-
 
 //GetBlockHeader is to get block header
 func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
@@ -51,7 +51,6 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
 	}
 	return nil
 }
-
 
 //Register is to Register account
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
@@ -127,7 +126,6 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	pack.Unmarshal(d, &did)
 	log.Info("did:", did)
 
-	
 	rsp.Code = 1005
 	retUser, err := data.PushTransaction(&req.User)
 
@@ -142,9 +140,9 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 
 //GetAccountInfo is to get AccountInfo
 func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
-	accountInfo , err := data.AccountInfo(req.AccountName)
+	accountInfo, err := data.AccountInfo(req.AccountName)
 	if accountInfo != nil {
-		rsp.Data = accountInfo 
+		rsp.Data = accountInfo
 	} else {
 		rsp.Code = 1006
 		rsp.Msg = err.Error()
@@ -156,7 +154,6 @@ func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInf
 func (u *User) Login(ctx context.Context, req *user_proto.LoginRequest, rsp *user_proto.LoginResponse) error {
 	return nil
 }
-
 
 //Favorite is Favorite info
 func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rsp *user_proto.FavoriteResponse) error {
@@ -170,8 +167,7 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 	return nil
 }
 
-
-//GetFavorite is to get Favorite 
+//GetFavorite is to get Favorite
 func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
 	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
@@ -233,7 +229,6 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	return nil
 }
 
-
 //Transfer Info
 func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp *user_proto.PushTxResponse) error {
 
@@ -245,7 +240,6 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	}
 	return nil
 }
-
 
 //QueryMyBuy is to query buyInfo
 func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest, rsp *user_proto.QueryMyBuyResponse) error {

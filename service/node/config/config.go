@@ -15,22 +15,28 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package config
 
+/* const */
 const (
-	//CONFIG_FILE = "C:\\Users\\stewa\\go\\src\\github.com\\code\\bottos\\service\\node\\config\\config.json"
-	CONFIG_FILE = "/opt/go/bin/config.json"
-	//SERV_IP="10.104.14.169"
-	//SERV_PORT="8888"
-	//SERV_URL=SERV_IP+":"+SERV_PORT
+	
+    //CONFIG_FILE FOR NODE USAGE
+    CONFIG_FILE = "/opt/go/bin/config.json"
+	
+    //WALLET_IP FOR NODE USAGE
 	WALLET_IP = "10.0.3.4"
 
-	//RUN_PLATFORM="windows"
+    //RUN_PLATFORM FOR NODE USAGE
 	RUN_PLATFORM = "linux"
 
+	//SCRIPT_PATH FOR NODE USAGE*/
 	SCRIPT_PATH = "/opt/go/bin/build.sh"
 
+	//MONGO_DB_URL FOR NODE USAGE*/
 	MONGO_DB_URL  = "10.0.3.4"
+	//DB_BOTTOS FOR NODE USAGE*/
 	DB_BOTTOS     = "local"
+	//TABLE_POINTXY FOR NODE USAGE*/
 	TABLE_POINTXY = "pointxy"
 )
