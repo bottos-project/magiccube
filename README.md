@@ -1,4 +1,7 @@
-# BRIEF INTRODUCTION
+# Bottos Blockchain Service Layer
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/bottos-project/magiccube)](https://goreportcard.com/report/github.com/bottos-project/magiccube)
+
 BOTTOS is the decentralized data sharing network protocol based on the blockchain technology. It is also a consensus-based one-stop platform to implement the registration, distribution and transformation of the data among different participants within the broad-based AI ecosystem.
 
  Our Vision
