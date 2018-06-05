@@ -111,7 +111,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return nil
 	}
 
-	if config.Enable_verification {
+	if config.EnableVerification {
 		if !base64Captcha.VerifyCaptcha(registerRequest.VerifyId, registerRequest.VerifyValue) {
 			rsp.Body = errcode.ReturnError(1001)
 			return nil
