@@ -49,6 +49,7 @@ type CoreRet struct {
 	Errcode int64 		`json:"errcode"`
 }
 
+// get error info
 func GetErrorInfo(code int64) ErrorCode {
 	d := GetAllErrorInfos()
 	for _, v := range d {
@@ -59,6 +60,7 @@ func GetErrorInfo(code int64) ErrorCode {
 	return ErrorCode{}
 }
 
+// return
 func Return(b interface{}) string {
 	buf, err:= json.Marshal(b)
 	if err != nil {
@@ -121,6 +123,7 @@ func Return(b interface{}) string {
 	return string(json)
 }
 
+// return error
 func ReturnError(code int64, e ...error) string {
 	log.Info(e)
 	d := GetAllErrorInfos()
@@ -146,6 +149,7 @@ func ReturnError(code int64, e ...error) string {
 	return string(json)
 }
 
+//get all info
 func GetAllErrorInfos() []ErrorCode {
 	fr, err := ioutil.ReadFile("./error/err-code.json")
 	if err != nil {
