@@ -14,31 +14,34 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"encoding/json"
+	"os"
+
+	errcode "github.com/bottos-project/magiccube/error"
+	sign "github.com/bottos-project/magiccube/service/common/signature"
 	"github.com/bottos-project/magiccube/service/requirement/proto"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	errcode "github.com/bottos-project/magiccube/error"
-	sign "github.com/bottos-project/magiccube/service/common/signature"
-	"os"
 )
 
+// Requirement struct
 type Requirement struct {
 	Client requirement.RequirementClient
 }
 
+// Publish requirement
 func (s *Requirement) Publish(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
 	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	if !is_true {
+	isTrue, err := sign.PushVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -59,6 +62,7 @@ func (s *Requirement) Publish(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
+// QueryById on chain
 func (s *Requirement) QueryById(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -78,6 +82,7 @@ func (s *Requirement) QueryById(ctx context.Context, req *api.Request, rsp *api.
 	return nil
 }
 
+// Query on chain
 func (s *Requirement) Query(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -99,6 +104,7 @@ func (s *Requirement) Query(ctx context.Context, req *api.Request, rsp *api.Resp
 	return nil
 }
 
+// QueryByUsername on chain
 func (s *Requirement) QueryByUsername(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -110,8 +116,8 @@ func (s *Requirement) QueryByUsername(ctx context.Context, req *api.Request, rsp
 	}
 
 	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	if !is_true {
+	isTrue, err := sign.QueryVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -128,7 +134,7 @@ func (s *Requirement) QueryByUsername(ctx context.Context, req *api.Request, rsp
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/req-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}
