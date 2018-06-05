@@ -94,7 +94,7 @@ func (r *MongoRepository) CallGetAssetListByUser(username string) ([]*util.Asset
 	return assets, nil
 }
 
-// CallGetUserPurchaseAssetList is to get user pruchase asset list
+// CallGetUserPurchaseAssetList is to get user purchase asset list
 func (r *MongoRepository) CallGetUserPurchaseAssetList(username string) ([]*util.AssetDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
