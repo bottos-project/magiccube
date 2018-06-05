@@ -14,19 +14,21 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package mongodb
 
 import (
 	"errors"
+	"time"
+
 	"github.com/bottos-project/magiccube/service/data/util"
+	log "github.com/cihub/seelog"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"time"
-	log "github.com/cihub/seelog"
 )
 
+// NodeMessage struct
 type NodeMessage struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	MessageID          int           `bson:"message_id"`
@@ -47,6 +49,7 @@ type NodeMessage struct {
 	CreatedAt time.Time `bson:"createdAt"`
 }
 
+// CallNodeRequest on server
 func (r *MongoRepository) CallNodeRequest(seedip string) (*util.NodeDBInfo, error) {
 	log.Info("call node")
 	session, err := GetSession(r.mgoEndpoint)
@@ -62,12 +65,12 @@ func (r *MongoRepository) CallNodeRequest(seedip string) (*util.NodeDBInfo, erro
 
 	session.SetCollection("pre_node", query)
 	reqs := &util.NodeDBInfo{
-		mesgs.Node.NodeID,
-		mesgs.Node.BasicInfo.NodeIP,
-		mesgs.Node.BasicInfo.NodePort,
-		mesgs.Node.BasicInfo.NodeAddress,
-		mesgs.Node.BasicInfo.SeedIP,
-		mesgs.Node.BasicInfo.SlaveIP}
+		NodeId:      mesgs.Node.NodeID,
+		NodeIP:      mesgs.Node.BasicInfo.NodeIP,
+		NodePort:    mesgs.Node.BasicInfo.NodePort,
+		NodeAddress: mesgs.Node.BasicInfo.NodeAddress,
+		SeedIP:      mesgs.Node.BasicInfo.SeedIP,
+		SlaveIP:     mesgs.Node.BasicInfo.SlaveIP}
 
 	return reqs, err
 }

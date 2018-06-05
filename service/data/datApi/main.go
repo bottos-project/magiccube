@@ -34,6 +34,7 @@ import (
 	"strings"
 )
 
+// Data struct
 type Data struct {
 	Client data.DataClient
 }
@@ -42,6 +43,7 @@ type Data struct {
 var mslice = make(map[string]int)
 var msliceip = make(map[string]string)
 
+// FileCheck on server
 func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info("Start File Check !")
@@ -68,6 +70,8 @@ func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Respons
 	log.Info(rsp.Body)
 	return nil
 }
+
+// GetFileUploadURL on chain
 func (d *Data) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info("Start Get File URL!")
@@ -97,6 +101,8 @@ func (d *Data) GetFileUploadURL(ctx context.Context, req *api.Request, rsp *api.
 
 	return nil
 }
+
+// GetUploadProgress on chain
 func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info("Start Get Upload Progress !")
@@ -147,14 +153,14 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 					"username":"%s",
 					"guid":"%s"}`
 			s := fmt.Sprintf(params, userName, sguid)
-			resp_body, err := http.Post(addr, "application/x-www-form-urlencoded",
+			respBody, err := http.Post(addr, "application/x-www-form-urlencoded",
 				strings.NewReader(s))
 
 			if err != nil {
 				log.Info(err)
 			}
-			defer resp_body.Body.Close()
-			body, err := ioutil.ReadAll(resp_body.Body)
+			defer respBody.Body.Close()
+			body, err := ioutil.ReadAll(respBody.Body)
 			var url string
 			if err != nil {
 				log.Info(err)
@@ -181,12 +187,12 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			}
 			mslice[sguid] = 1
 			msliceip[sguid] = Sip
-			nodeTag := &data.Ip{sguid,
-				Sip}
+			nodeTag := &data.Ip{Sguid: sguid,
+				SnodeIp: Sip}
 			sliceIp = append(sliceIp, nodeTag)
 		} else {
-			nodeTag := &data.Ip{sguid,
-				msliceip[sguid]}
+			nodeTag := &data.Ip{Sguid: sguid,
+				SnodeIp: msliceip[sguid]}
 			sliceIp = append(sliceIp, nodeTag)
 		}
 		storageOK++
@@ -207,6 +213,7 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 
 }
 
+// GetStorageIP on chain
 func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info("Start Get Storage IP !")
@@ -235,6 +242,8 @@ func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Resp
 
 	return nil
 }
+
+// GetFileDownloadURL from server
 func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info("Start Get File Download URL!")
@@ -269,23 +278,22 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 					"username":"%s",
 					"guid":"%s"}`
 		s := fmt.Sprintf(params, userName, sguid)
-		resp_body, err := http.Post(addr, "application/x-www-form-urlencoded",
+		respBody, err := http.Post(addr, "application/x-www-form-urlencoded",
 			strings.NewReader(s))
 		log.Info("GetFileStorageURL Result")
-		log.Info(resp_body)
+		log.Info(respBody)
 		if err != nil {
 			return err
 		}
-		defer resp_body.Body.Close()
-		dbody, err := ioutil.ReadAll(resp_body.Body)
+		defer respBody.Body.Close()
+		dbody, err := ioutil.ReadAll(respBody.Body)
 		var url string
 		if err != nil {
 			return err
-		} else {
-			jss, _ := simplejson.NewJson([]byte(dbody))
-			url = jss.Get("url").MustString()
-
 		}
+		jss, _ := simplejson.NewJson([]byte(dbody))
+		url = jss.Get("url").MustString()
+
 		//1.3 storage slice file
 		log.Info("storage slice file")
 		downloadResult, err := d.Client.DownloadFile(ctx, &data.DownloadFileRequest{

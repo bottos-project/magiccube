@@ -14,13 +14,19 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"bytes"
+	"errors"
+	"io"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"time"
+
 	baseConfig "github.com/bottos-project/magiccube/config"
 	"github.com/bottos-project/magiccube/service/data/internal/platform/config"
 	hash "github.com/bottos-project/magiccube/service/data/internal/platform/hash"
@@ -28,15 +34,10 @@ import (
 	"github.com/bottos-project/magiccube/service/data/internal/platform/mongodb"
 	proto "github.com/bottos-project/magiccube/service/data/proto"
 	util "github.com/bottos-project/magiccube/service/data/util"
-	basicMinio "github.com/minio/minio-go"
-	"errors"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
+	basicMinio "github.com/minio/minio-go"
 	"golang.org/x/net/context"
-	"io/ioutil"
-	"math/rand"
-	"net/http"
-	"io"
-	"time"
 )
 
 const (
@@ -124,7 +125,6 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 	fileSlice := req.Slice
 	rsp.Url = []*proto.Url{}
 
-
 	for _, slice := range fileSlice {
 		cacheUrl, err := d.minioRepo.GetCacheURL(userName, slice.Sguid)
 		if err != nil {
@@ -155,8 +155,6 @@ func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetF
 	userName := req.Username
 	guid := req.Guid
 
-
-
 	url, err := d.minioRepo.GetCacheURL(userName, guid)
 	if err != nil {
 		rsp.Result = 404
@@ -165,9 +163,7 @@ func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetF
 		return errors.New("Failed get put url")
 	}
 
-		
-
-    rsp.Url = url
+	rsp.Url = url
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
@@ -180,7 +176,6 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-
 
 	userName := req.Username
 	guid := req.Guid
@@ -251,7 +246,6 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 		return errors.New("Missing storage node request")
 	}
 
-
 	fileSlice := req.Slice
 	rsp.Ip = []*proto.Ip{}
 
@@ -267,7 +261,6 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 	n := len(nodeInfo.SlaveIP)
 	k := rand.Intn(n)
 
-	
 	for _, slice := range fileSlice {
 		j := (i + k) % n
 		node := nodeInfo.SlaveIP[j]
@@ -289,7 +282,6 @@ func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileS
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-
 
 	userName := req.Username
 	guid := req.Guid
@@ -388,7 +380,6 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 	file1 := bytes.NewReader(body_http)
 	fileSize := int64(len(body_http))
 
-	
 	////putfile
 	log.Info("start upload")
 	n, err := d.minioRepo.PutFile(userName, guid, file1, fileSize)
@@ -454,14 +445,13 @@ func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPR
 	log.Info("get StorageIP")
 
 	guid := req.Guid
-	
 
 	DataInfo, err := d.mgoRepo.CallDataSliceIPRequest(guid)
-	
+
 	if err != nil {
 		log.Info(err)
 	}
-    log.Info("DataInfo.Filename")
+	log.Info("DataInfo.Filename")
 	log.Info(DataInfo.Filename)
 	log.Info("DataInfo")
 	log.Info(DataInfo)
