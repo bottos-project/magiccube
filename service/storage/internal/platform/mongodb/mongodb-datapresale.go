@@ -27,6 +27,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// DataPresaleMessage is definition of data presale msg
 type DataPresaleMessage struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	BlockNum           int           `bson:"block_num"`
@@ -50,6 +51,7 @@ type DataPresaleMessage struct {
 	CreatedAt string `bson:"createdAt"`
 }
 
+// CallGetDataPresaleByUser is to get data presale by user
 func (r *MongoRepository) CallGetDataPresaleByUser(username string) ([]*util.DataPresaleDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -67,11 +69,11 @@ func (r *MongoRepository) CallGetDataPresaleByUser(username string) ([]*util.Dat
 	var pres = []*util.DataPresaleDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.DataPresaleDBInfo{
-			mesgs[i].Data.DataPresaleID,
-			mesgs[i].Data.BasicInfo.UserName,
-			mesgs[i].Data.BasicInfo.AssetID,
-			mesgs[i].Data.BasicInfo.DataReqID,
-			mesgs[i].Data.BasicInfo.Consumer}
+			DataPresaleID :	mesgs[i].Data.DataPresaleID,
+			UserName      :	mesgs[i].Data.BasicInfo.UserName,
+			AssetID       :	mesgs[i].Data.BasicInfo.AssetID,
+			DataReqID     :	mesgs[i].Data.BasicInfo.DataReqID,
+			Consumer      :	mesgs[i].Data.BasicInfo.Consumer}
 		pres = append(pres, dbtag)
 	}
 

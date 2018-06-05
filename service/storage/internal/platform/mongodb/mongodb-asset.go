@@ -21,7 +21,6 @@ package mongodb
 import (
 	"errors"
 	"fmt"
-
 	"time"
 
 	"github.com/bottos-project/magiccube/service/storage/util"
@@ -29,6 +28,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// AssetMessage is definition of asset msg
 type AssetMessage struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	MessageID          int           `bson:"message_id"`
@@ -57,6 +57,7 @@ type AssetMessage struct {
 	CreatedAt time.Time `bson:"createdAt"`
 }
 
+// CallGetAssetListByUser is to get asset list by user
 func (r *MongoRepository) CallGetAssetListByUser(username string) ([]*util.AssetDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -74,24 +75,26 @@ func (r *MongoRepository) CallGetAssetListByUser(username string) ([]*util.Asset
 	var assets = []*util.AssetDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.AssetDBInfo{
-			mesgs[i].Data.AssetID,
-			mesgs[i].Data.BasicInfo.UserName,
-			mesgs[i].Data.BasicInfo.AssetName,
-			mesgs[i].Data.BasicInfo.FeatureTag,
-			mesgs[i].Data.BasicInfo.SamplePath,
-			mesgs[i].Data.BasicInfo.SampleHash,
-			mesgs[i].Data.BasicInfo.StoragePath,
-			mesgs[i].Data.BasicInfo.StorageHash,
-			mesgs[i].Data.BasicInfo.ExpireTime,
-			mesgs[i].Data.BasicInfo.Price,
-			mesgs[i].Data.BasicInfo.Description,
-			mesgs[i].Data.BasicInfo.UploadDate}
+			AssetID    	: mesgs[i].Data.AssetID,
+			UserName   	: mesgs[i].Data.BasicInfo.UserName,
+			AssetName  	: mesgs[i].Data.BasicInfo.AssetName,
+			FeatureTag 	: mesgs[i].Data.BasicInfo.FeatureTag,
+			SamplePath 	: mesgs[i].Data.BasicInfo.SamplePath,
+			SampleHash 	: mesgs[i].Data.BasicInfo.SampleHash,
+			StoragePath	: mesgs[i].Data.BasicInfo.StoragePath,
+			StorageHash	: mesgs[i].Data.BasicInfo.StorageHash,
+			ExpireTime 	: mesgs[i].Data.BasicInfo.ExpireTime,
+			Price      	: mesgs[i].Data.BasicInfo.Price,
+			Description	: mesgs[i].Data.BasicInfo.Description,
+			UploadDate 	: mesgs[i].Data.BasicInfo.UploadDate}
 		assets = append(assets, dbtag)
 	}
 
 	fmt.Println(assets)
 	return assets, nil
 }
+
+// CallGetUserPurchaseAssetList is to get user pruchase asset list
 func (r *MongoRepository) CallGetUserPurchaseAssetList(username string) ([]*util.AssetDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -121,6 +124,8 @@ func (r *MongoRepository) CallGetUserPurchaseAssetList(username string) ([]*util
 
 	return tfxs, nil
 }
+
+// CallGetAllAssetList is to get all asset list
 func (r *MongoRepository) CallGetAllAssetList() ([]*util.AssetDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -138,24 +143,26 @@ func (r *MongoRepository) CallGetAllAssetList() ([]*util.AssetDBInfo, error) {
 	var assets = []*util.AssetDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.AssetDBInfo{
-			mesgs[i].Data.AssetID,
-			mesgs[i].Data.BasicInfo.UserName,
-			mesgs[i].Data.BasicInfo.AssetName,
-			mesgs[i].Data.BasicInfo.FeatureTag,
-			mesgs[i].Data.BasicInfo.SamplePath,
-			mesgs[i].Data.BasicInfo.SampleHash,
-			mesgs[i].Data.BasicInfo.StoragePath,
-			mesgs[i].Data.BasicInfo.StorageHash,
-			mesgs[i].Data.BasicInfo.ExpireTime,
-			mesgs[i].Data.BasicInfo.Price,
-			mesgs[i].Data.BasicInfo.Description,
-			mesgs[i].Data.BasicInfo.UploadDate}
+			AssetID    	: mesgs[i].Data.AssetID,
+			UserName   	: mesgs[i].Data.BasicInfo.UserName,
+			AssetName  	: mesgs[i].Data.BasicInfo.AssetName,
+			FeatureTag 	: mesgs[i].Data.BasicInfo.FeatureTag,
+			SamplePath 	: mesgs[i].Data.BasicInfo.SamplePath,
+			SampleHash 	: mesgs[i].Data.BasicInfo.SampleHash,
+			StoragePath	: mesgs[i].Data.BasicInfo.StoragePath,
+			StorageHash	: mesgs[i].Data.BasicInfo.StorageHash,
+			ExpireTime 	: mesgs[i].Data.BasicInfo.ExpireTime,
+			Price      	: mesgs[i].Data.BasicInfo.Price,
+			Description	: mesgs[i].Data.BasicInfo.Description,
+			UploadDate 	: mesgs[i].Data.BasicInfo.UploadDate}
 		assets = append(assets, dbtag)
 	}
 
 	fmt.Println(assets)
 	return assets, nil
 }
+
+// CallGetAssetNumByDay is to get asset num by day
 func (r *MongoRepository) CallGetAssetNumByDay(begin time.Time, end time.Time) (uint64, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -180,6 +187,7 @@ func (r *MongoRepository) CallGetAssetNumByDay(begin time.Time, end time.Time) (
 
 }
 
+// CallGetAssetById is to get asset by id
 func (r *MongoRepository) CallGetAssetById(assertId string) (*util.AssetDBInfo, error) {
 
 	session, err := GetSession(r.mgoEndpoint)
@@ -197,18 +205,18 @@ func (r *MongoRepository) CallGetAssetById(assertId string) (*util.AssetDBInfo, 
 
 	fmt.Println(mesgs)
 	dbtag := &util.AssetDBInfo{
-		mesgs.Data.AssetID,
-		mesgs.Data.BasicInfo.UserName,
-		mesgs.Data.BasicInfo.AssetName,
-		mesgs.Data.BasicInfo.FeatureTag,
-		mesgs.Data.BasicInfo.SamplePath,
-		mesgs.Data.BasicInfo.SampleHash,
-		mesgs.Data.BasicInfo.StoragePath,
-		mesgs.Data.BasicInfo.StorageHash,
-		mesgs.Data.BasicInfo.ExpireTime,
-		mesgs.Data.BasicInfo.Price,
-		mesgs.Data.BasicInfo.Description,
-		mesgs.Data.BasicInfo.UploadDate}
+		AssetID     : mesgs.Data.AssetID,
+		UserName    : mesgs.Data.BasicInfo.UserName,
+		AssetName   : mesgs.Data.BasicInfo.AssetName,
+		FeatureTag  : mesgs.Data.BasicInfo.FeatureTag,
+		SamplePath  : mesgs.Data.BasicInfo.SamplePath,
+		SampleHash  : mesgs.Data.BasicInfo.SampleHash,
+		StoragePath : mesgs.Data.BasicInfo.StoragePath,
+		StorageHash : mesgs.Data.BasicInfo.StorageHash,
+		ExpireTime  : mesgs.Data.BasicInfo.ExpireTime,
+		Price       : mesgs.Data.BasicInfo.Price,
+		Description : mesgs.Data.BasicInfo.Description,
+		UploadDate  : mesgs.Data.BasicInfo.UploadDate}
 
 	fmt.Println(dbtag)
 	return dbtag, nil
