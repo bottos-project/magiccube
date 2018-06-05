@@ -33,9 +33,12 @@ var (
 
 //https://github.com/ethereum/wiki/wiki/JSON-RPC
 
+// SetServer is to set server url
 func SetServer(newServer string) {
 	serverurl = newServer
 }
+
+// GetInfo is to get chain info
 func GetInfo() (*util.Info, error) {
 	resp, err := http.Get("http://" + serverurl + "/v1/chain/get_info")
 	if err != nil {
@@ -57,8 +60,10 @@ func GetInfo() (*util.Info, error) {
 
 	return jResp, nil
 }
-func GetBlock(num_or_id string) (*util.Block, error) {
-	body := strings.NewReader(`{"block_num_or_id":` + num_or_id + `}`)
+
+// GetBlock is to get block info of special id
+func GetBlock(numOrId string) (*util.Block, error) {
+	body := strings.NewReader(`{"block_num_or_id":` + numOrId + `}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/chain/get_block", body)
 	if err != nil {
 		return nil, err
@@ -85,6 +90,8 @@ func GetBlock(num_or_id string) (*util.Block, error) {
 
 	return block, nil
 }
+
+// GetAccountInfo is to get account info
 func GetAccountInfo() (*util.AccountInfo, error) {
 
 	body := strings.NewReader(`{"account_name":"testa"}`)
@@ -113,6 +120,8 @@ func GetAccountInfo() (*util.AccountInfo, error) {
 
 	return account, nil
 }
+
+// GetTxInfo is to get tx info
 func GetTxInfo() (*util.TxInfo, error) {
 	body := strings.NewReader(`{"transaction_id":"06ffce7503d82a4e19bd7cdfb9c507c5c3c40fda3bd316ee35f344d42807db6e"}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/account_history/get_transaction", body)
@@ -142,6 +151,7 @@ func GetTxInfo() (*util.TxInfo, error) {
 
 }
 
+// GetCodeInfo is to get code of a contract
 func GetCodeInfo() (string, error) {
 	body := strings.NewReader(`{"account_name":"currency"}`)
 	req, err := http.NewRequest("POST", "http://"+serverurl+"/v1/chain/get_code", body)
