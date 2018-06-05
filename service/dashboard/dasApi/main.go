@@ -14,24 +14,27 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"encoding/json"
+	"os"
+
+	errcode "github.com/bottos-project/magiccube/error"
 	"github.com/bottos-project/magiccube/service/dashboard/proto"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"os"
-	errcode "github.com/bottos-project/magiccube/error"
 )
 
+// Dashboard struct
 type Dashboard struct {
 	Client dashboard.DashboardClient
 }
 
+// GetTxNum on chain
 func (s *Dashboard) GetTxNum(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetTxNum(ctx, &dashboard.GetTxNumRequest{})
 	if err != nil {
@@ -43,6 +46,7 @@ func (s *Dashboard) GetTxNum(ctx context.Context, req *api.Request, rsp *api.Res
 	return nil
 }
 
+// GetTxList on chain
 func (s *Dashboard) GetTxList(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -57,6 +61,7 @@ func (s *Dashboard) GetTxList(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
+// GetBlockList on chain
 func (s *Dashboard) GetBlockList(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -72,6 +77,7 @@ func (s *Dashboard) GetBlockList(ctx context.Context, req *api.Request, rsp *api
 	return nil
 }
 
+// GetBlockInfo on chain
 func (s *Dashboard) GetBlockInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -87,6 +93,7 @@ func (s *Dashboard) GetBlockInfo(ctx context.Context, req *api.Request, rsp *api
 	return nil
 }
 
+// GetNodeInfos on chain
 func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//response, err := s.Client.GetNodeInfos(ctx, &dashboard.GetNodeInfosRequest{})
 	//if err != nil {
@@ -96,103 +103,104 @@ func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api
 	rsp.StatusCode = 200
 	var data []*dashboard.NodeInfoData
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:116.240405,
-			Latitude:39.953014,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 116.240405,
+			Latitude:  39.953014,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:117.006668,
-			Latitude:39.959003,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 117.006668,
+			Latitude:  39.959003,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:116.471118,
-			Latitude:39.607907,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 116.471118,
+			Latitude:  39.607907,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:116.214313,
-			Latitude:40.08658,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 116.214313,
+			Latitude:  40.08658,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:121.295489,
-			Latitude:31.250492,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 121.295489,
+			Latitude:  31.250492,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:121.141681,
-			Latitude:31.259884,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 121.141681,
+			Latitude:  31.259884,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:121.652545,
-			Latitude:31.250492,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 121.652545,
+			Latitude:  31.250492,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:121.545428,
-			Latitude:31.161224,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 121.545428,
+			Latitude:  31.161224,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:120.147418,
-			Latitude:30.154743,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 120.147418,
+			Latitude:  30.154743,
 		},
 	})
 
-	data =append(data, &dashboard.NodeInfoData{
-		Ip:"127.0.0.1",
-		Port:"8080",
-		Position:&dashboard.Position{
-			Longitude:119.949903,
-			Latitude:30.166617,
+	data = append(data, &dashboard.NodeInfoData{
+		Ip:   "127.0.0.1",
+		Port: "8080",
+		Position: &dashboard.Position{
+			Longitude: 119.949903,
+			Latitude:  30.166617,
 		},
 	})
 
 	rsp.Body = errcode.Return(dashboard.GetNodeInfosResponse{
-		Code:1,
-		Data:data,
+		Code: 1,
+		Data: data,
 	})
 	return nil
 }
 
+// GetRequirementNumByDay on chain
 func (s *Dashboard) GetRequirementNumByDay(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetRequirementNumByDay(ctx, &dashboard.GetRequirementNumByDayRequest{})
 	if err != nil {
@@ -204,6 +212,7 @@ func (s *Dashboard) GetRequirementNumByDay(ctx context.Context, req *api.Request
 	return nil
 }
 
+// GetAssetNumByDay on chain
 func (s *Dashboard) GetAssetNumByDay(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetAssetNumByDay(ctx, &dashboard.GetAssetNumByDayRequest{})
 	if err != nil {
@@ -215,6 +224,7 @@ func (s *Dashboard) GetAssetNumByDay(ctx context.Context, req *api.Request, rsp 
 	return nil
 }
 
+// GetAccountNumByDay on chain
 func (s *Dashboard) GetAccountNumByDay(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetAccountNumByDay(ctx, &dashboard.GetAccountNumByDayRequest{})
 	if err != nil {
@@ -226,6 +236,7 @@ func (s *Dashboard) GetAccountNumByDay(ctx context.Context, req *api.Request, rs
 	return nil
 }
 
+// GetTxAmount  on chain
 func (s *Dashboard) GetTxAmount(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetTxAmount(ctx, &dashboard.GetTxAmountRequest{})
 	if err != nil {
@@ -237,6 +248,7 @@ func (s *Dashboard) GetTxAmount(ctx context.Context, req *api.Request, rsp *api.
 	return nil
 }
 
+// GetTxNumByDay on chain
 func (s *Dashboard) GetTxNumByDay(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetTxNumByDay(ctx, &dashboard.GetTxNumByDayRequest{})
 	if err != nil {
@@ -248,6 +260,7 @@ func (s *Dashboard) GetTxNumByDay(ctx context.Context, req *api.Request, rsp *ap
 	return nil
 }
 
+// GetTxAmountByDay on chain
 func (s *Dashboard) GetTxAmountByDay(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetTxAmountByDay(ctx, &dashboard.GetTxAmountByDayRequest{})
 	if err != nil {
@@ -259,6 +272,7 @@ func (s *Dashboard) GetTxAmountByDay(ctx context.Context, req *api.Request, rsp 
 	return nil
 }
 
+// GetAllTypeTotal on chain
 func (s *Dashboard) GetAllTypeTotal(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	response, err := s.Client.GetAllTypeTotal(ctx, &dashboard.GetAllTypeTotalRequest{})
 	if err != nil {
@@ -272,7 +286,7 @@ func (s *Dashboard) GetAllTypeTotal(ctx context.Context, req *api.Request, rsp *
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/dash-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}
