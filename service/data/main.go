@@ -45,11 +45,17 @@ const (
 	BASE_CHAIN_IP           = baseConfig.BASE_CHAIN_IP
 	//BASE_URL baseURL
 	BASE_URL                = baseConfig.BASE_CHAIN_URL
+	//GET_INFO_URL getinfoURL
 	GET_INFO_URL            = BASE_URL + "v1/chain/get_info"
+	//GET_BLOCK_URL getblockURL
 	GET_BLOCK_URL           = BASE_URL + "v1/chain/get_block"
+	//ABI_JSON_TO_BIN_URL binURL
 	ABI_JSON_TO_BIN_URL     = BASE_URL + "v1/chain/abi_json_to_bin"
+	//PUSH_TRANSACTION_URL push_transactionURL
 	PUSH_TRANSACTION_URL    = BASE_URL + "v1/chain/push_transaction"
+	//GET_TABLE_ROW_BY_STRING get_table_row_by_string_key
 	GET_TABLE_ROW_BY_STRING = BASE_URL + "v1/chain/get_table_row_by_string_key"
+	//STORAGE_RPC_URL BASE_RPC
 	STORAGE_RPC_URL         = baseConfig.BASE_RPC
 )
 // DataService struct
