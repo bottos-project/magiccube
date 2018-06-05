@@ -28,7 +28,6 @@ import (
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/service/common/data"
 	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
-	"github.com/bottos-project/magiccube/service/common/util"
 	commonutil "github.com/bottos-project/magiccube/service/common/util"
 	datautil "github.com/bottos-project/magiccube/service/data/util"
 	"github.com/bottos-project/magiccube/service/node/api"
@@ -36,13 +35,11 @@ import (
 	"github.com/bottos-project/magiccube/service/node/keystore"
 	aes "github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
 	"github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/secp256k1"
-	node_proto "github.com/bottos-project/magiccube/service/node/proto"
 	slog "github.com/cihub/seelog"
 	"github.com/howeyc/gopass"
 	"github.com/micro/go-micro"
 	"github.com/protobuf/proto"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/net/context"
 	"os"
 	"os/exec"
 	"runtime"
@@ -69,7 +66,7 @@ import (
 )
 
 //var wg sync.WaitGroup
-func exec_shell(s string) {
+func execShell(s string) {
 	//defer wg.Done()
 	cmd := exec.Command("/bin/bash", "-c", s)
 	var out bytes.Buffer
@@ -82,7 +79,7 @@ func exec_shell(s string) {
 	fmt.Printf("%s", out.String())
 }
 
-func exec_process(shellPath string) error {
+func execProcess(shellPath string) error {
 	//shellPath := "/home/xx/test.sh"
 	argv := make([]string, 1)
 	attr := new(os.ProcAttr)
@@ -101,6 +98,7 @@ func exec_process(shellPath string) error {
 	return nil
 }
 
+//CreateAccount function
 func CreateAccount(nodeinfo api.NodeInfos, UserPwd string) error {
 
 	keystore.AccountCreate_Ex("/home/bto", "/home/bto", UserPwd)
@@ -108,6 +106,7 @@ func CreateAccount(nodeinfo api.NodeInfos, UserPwd string) error {
 	return nil
 }
 
+//CreateAccountOld function
 func CreateAccountOld(nodeinfo api.NodeInfos) error {
 	//username := nodeinfo.Node[0].BtoUser
 	//var out bytes.Buffer
@@ -126,18 +125,20 @@ func CreateAccountOld(nodeinfo api.NodeInfos) error {
 				fmt.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
-			} else {
-				fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
-			}
+			} 
+			
+            fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
+			
 		}
 	} else if "linux" == config.RUN_PLATFORM {
-		go exec_shell(command)
+		go execShell(command)
 		fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
 	}
 
 	return nil
 }
 
+//GenerateKeyStone function
 func GenerateKeyStone(nodeinfo api.NodeInfos) error {
 	//var out bytes.Buffer
 	command := config.SCRIPT_PATH + " createkey " + "\"" + nodeinfo.Node[0].BtoPath + "\" " + "\"" + nodeinfo.Node[0].KeyPath + "\" "
@@ -153,13 +154,14 @@ func GenerateKeyStone(nodeinfo api.NodeInfos) error {
 			err = errors.New(errinfo)
 		}
 	} else if "linux" == config.RUN_PLATFORM {
-		go exec_shell(command)
+		go execShell(command)
 		//fmt.Println("buf = ",buf)
 		fmt.Println("Generate keyStone file " + nodeinfo.Node[0].KeyPath + " ok ...")
 	}
 	return nil
 }
 
+//CheckKeyStore function
 func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 	username := nodeinfo.Node[0].BtoUser
 	url := nodeinfo.Node[0].IpAddr + ":" + nodeinfo.Node[0].BtoPort
@@ -185,9 +187,9 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 				fmt.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
-			} else {
-				fmt.Println("Check keystone file ok ...")
-			}
+			} 
+			
+            fmt.Println("Check keystone file ok ...")
 
 		} else if "linux" == config.RUN_PLATFORM {
 			filename := "bto.keystore"
@@ -198,17 +200,19 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 				log.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
-			} else {
-				log.Println("Check keystone file ok ...Now decrypt file:", filepath)
-				key, Account := aes.KeyDecrypt(filepath, UserPwd)
-				log.Println("DECRYPT KEYSTORE DONE! Account:", Account, ", key:", key)
-			}
+			} 
+		    
+            log.Println("Check keystone file ok ...Now decrypt file:", filepath)
+			key, Account := aes.KeyDecrypt(filepath, UserPwd)
+			log.Println("DECRYPT KEYSTORE DONE! Account:", Account, ", key:", key)
+			
 		}
 	}
 
 	return nil
 }
 
+//InitServer function
 func InitServer(nodeinfo api.NodeInfos) error {
 	// read configurated servers from config file and set it
 
@@ -227,7 +231,7 @@ func InitServer(nodeinfo api.NodeInfos) error {
 		} else if "linux" == config.RUN_PLATFORM {
 			//wg.Add(1)
 			fmt.Println("Start service", nodeinfo.Node[0].ServLst[i], "...")
-			go exec_shell(command)
+			go execShell(command)
 			time.Sleep(1 * time.Second)
 		}
 	}
@@ -237,6 +241,7 @@ func InitServer(nodeinfo api.NodeInfos) error {
 	return nil
 }
 
+//InitDatabase function
 func InitDatabase(nodeinfo api.NodeInfos) error {
 	if "windows" == config.RUN_PLATFORM {
 		//
@@ -282,11 +287,11 @@ func daemon(nochdir, noclose int) int {
 	_ = syscall.Umask(0)
 
 	// create a new SID for the child process
-	s_ret, s_errno := syscall.Setsid()
-	if s_errno != nil {
-		log.Printf("Error: syscall.Setsid errno: %d", s_errno)
+	sret, serrno := syscall.Setsid()
+	if serrno != nil {
+		log.Printf("Error: syscall.Setsid errno: %d", serrno)
 	}
-	if s_ret < 0 {
+	if sret < 0 {
 		return -1
 	}
 
@@ -307,7 +312,7 @@ func daemon(nochdir, noclose int) int {
 	return 0
 }
 
-func slog_init() {
+func sloginit() {
 
 	defer slog.Flush()
 	logger, err := slog.LoggerFromConfigAsFile("./log.xml")
@@ -323,91 +328,10 @@ func slog_init() {
 
 }
 
+//Sign function
 func Sign(msg, seckey []byte) ([]byte, error) {
 	sign, err := secp256k1.Sign(msg, seckey)
 	return sign[:len(sign)-1], err
-}
-
-type nodeTrxInfo struct{}
-
-func (u *nodeTrxInfo) Register(ctx context.Context, req *node_proto.RegisterRequests, rsp *node_proto.RegisterResponses) error {
-	slog.Info("req:", req)
-	block_header, err := data.BlockHeader()
-	if err != nil {
-		rsp.Code = 1003
-		rsp.Msg = err.Error()
-		return nil
-	}
-	//Register account
-	rsp.Code = 1004
-	req.NodeUUIDInfo.UserName = keystore.GetAccount()
-	req.NodeUUIDInfo.PubKey = keystore.GetPubKey()
-
-	account_buf, err := pack.Marshal(req.NodeUUIDInfo)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-	tx_account_sign := &push_sign.TransactionSign{
-		Version:     1,
-		CursorNum:   block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime:    block_header.HeadBlockTime + 20,
-		Sender:      req.NodeUUIDInfo.UserName,
-		Contract:    "nodemng",
-		Method:      "nodeinforeg",
-		Param:       account_buf,
-		SigAlg:      1,
-	}
-
-	msg, err := proto.Marshal(tx_account_sign)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-
-	key := keystore.GetPubKey()
-
-	if len(key) <= 0 {
-		key = "81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e"
-	}
-
-	seckey, err := hex.DecodeString(key)
-
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-
-	signature, err := Sign(util.Sha256(msg), seckey)
-	if err != nil {
-		rsp.Msg = err.Error()
-		return nil
-	}
-
-	tx_account := &bean.TxBean{
-		Version:     1,
-		CursorNum:   block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime:    block_header.HeadBlockTime + 20,
-		Sender:      req.NodeUUIDInfo.UserName,
-		Contract:    "nodemng",
-		Method:      "nodeinforeg",
-		Param:       hex.EncodeToString(account_buf),
-		SigAlg:      1,
-		Signature:   hex.EncodeToString(signature),
-	}
-
-	ret, err := data.PushTransaction(tx_account)
-	if err != nil {
-		rsp.Code = 1005
-		rsp.Msg = err.Error()
-		return nil
-	}
-
-	slog.Info("ret-account:", ret.Result.TrxHash)
-
-	return nil
 }
 
 func main() {
@@ -432,7 +356,7 @@ func main() {
 
 	UserPwd := input
 
-	slog_init()
+	sloginit()
 
 	service := micro.NewService(
 		micro.Name("go.micro.srv.node"),
@@ -449,7 +373,6 @@ func main() {
 		}),*/
 	)
 
-	//node_proto.RegisterUserHandler(service.Server(), new(nodeTrxInfo))
 
 	if api.PathExist(config.CONFIG_FILE) == false {
 		fmt.Println("*ERROR* configuration file :", config.CONFIG_FILE, " doesn't exist !!!")
@@ -492,35 +415,36 @@ func main() {
 	}
 }
 
-func PushNodeClusterTrx(value interface{}, pri_key string) {
+//PushNodeClusterTrx function
+func PushNodeClusterTrx(value interface{}, prikey string) {
 
-	block_header, err := data.BlockHeader()
+	blockheader, err := data.BlockHeader()
 	if err != nil {
 		return
 	}
 
-	account_buf, err := pack.Marshal(value)
+	accountbuf, err := pack.Marshal(value)
 	if err != nil {
 		return
 	}
-	tx_account_sign := &push_sign.TransactionSign{
+	txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
-		CursorNum:   block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime:    block_header.HeadBlockTime + 20,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 20,
 		Sender:      "bottos",
 		Contract:    "nodemng",
 		Method:      "nodeinforeg2",
-		Param:       account_buf,
+		Param:       accountbuf,
 		SigAlg:      1,
 	}
 
-	msg, err := proto.Marshal(tx_account_sign)
+	msg, err := proto.Marshal(txAccountSign)
 	if err != nil {
 		return
 	}
 	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
-	seckey, err := hex.DecodeString(pri_key) //("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
+	seckey, err := hex.DecodeString(prikey) //("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
 	if err != nil {
 		return
 	}
@@ -530,20 +454,20 @@ func PushNodeClusterTrx(value interface{}, pri_key string) {
 		return
 	}
 
-	tx_account := &bean.TxBean{
+	txAccount := &bean.TxBean{
 		Version:     1,
-		CursorNum:   block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime:    block_header.HeadBlockTime + 20,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 20,
 		Sender:      "bottos",
 		Contract:    "bottos",
 		Method:      "newaccount",
-		Param:       hex.EncodeToString(account_buf),
+		Param:       hex.EncodeToString(accountbuf),
 		SigAlg:      1,
 		Signature:   hex.EncodeToString(signature),
 	}
 
-	ret, err := data.PushTransaction(tx_account)
+	ret, err := data.PushTransaction(txAccount)
 	if err != nil {
 		return
 	}
@@ -551,19 +475,20 @@ func PushNodeClusterTrx(value interface{}, pri_key string) {
 	log.Info("ret-account:", ret.Result.TrxHash)
 }
 
+//SetNodeDBClusterInfo function
 func SetNodeDBClusterInfo() {
-	node_infos := api.ReadFile(config.CONFIG_FILE)
+	nodeinfos := api.ReadFile(config.CONFIG_FILE)
 
 	var dbclusterinfo api.StorageDBClusterInfo
 
-	node_uuid := keystore.GetUUID()
-	dbclusterinfo.Nodetype = node_uuid
-	dbclusterinfo.Nodedbinfo.NodeId = node_uuid
-	dbclusterinfo.Nodedbinfo.NodeIP = node_infos.Node[0].IpAddr
-	dbclusterinfo.Nodedbinfo.NodePort = node_infos.Node[0].BtoPort
-	dbclusterinfo.Nodedbinfo.NodeAddress = node_infos.Node[0].IpAddr
-	dbclusterinfo.Nodedbinfo.SeedIP = node_infos.Node[0].SeedIp
-	dbclusterinfo.Nodedbinfo.SlaveIP = node_infos.Node[0].SlaveIpLst
+	nodeuuid := keystore.GetUUID()
+	dbclusterinfo.Nodetype = nodeuuid
+	dbclusterinfo.Nodedbinfo.NodeId = nodeuuid
+	dbclusterinfo.Nodedbinfo.NodeIP = nodeinfos.Node[0].IpAddr
+	dbclusterinfo.Nodedbinfo.NodePort = nodeinfos.Node[0].BtoPort
+	dbclusterinfo.Nodedbinfo.NodeAddress = nodeinfos.Node[0].IpAddr
+	dbclusterinfo.Nodedbinfo.SeedIP = nodeinfos.Node[0].SeedIp
+	dbclusterinfo.Nodedbinfo.SlaveIP = nodeinfos.Node[0].SlaveIpLst
 
 	log.Println("Repository: ", config.MONGO_DB_URL)
 	Repository := api.NewMongoRepository(config.MONGO_DB_URL)
@@ -572,6 +497,7 @@ func SetNodeDBClusterInfo() {
 	PushNodeClusterTrx(dbclusterinfo, keystore.GetPriKey())
 }
 
+//NodeApi interface
 type NodeApi interface {
 	GetNodeDBInfoList(nodedbinfo *datautil.NodeDBInfo)
 }
