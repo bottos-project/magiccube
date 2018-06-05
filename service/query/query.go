@@ -45,8 +45,8 @@ func TxNum(min int64, max int64) int {
 	return count
 }
 
-//TxAmounte tx amount
-func TxAmounte(min int64, max int64) uint64 {
+//TxAmount tx amount
+func TxAmount(min int64, max int64) uint64 {
 	var amount uint64
 	var ret []bean.Tx
 
