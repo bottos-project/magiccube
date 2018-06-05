@@ -16,10 +16,16 @@ import (
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/magiccube/config"
+	"os"
 )
 
 type User struct{}
 
+/**
+ * Get block information
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
 	block_header, err:= data.BlockHeader()
 	log.Info(block_header)
@@ -32,6 +38,11 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
 	return nil
 }
 
+/**
+ * Registered account
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
 	log.Info("req:", req);
 	block_header, err:= data.BlockHeader()
@@ -119,6 +130,11 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	return nil
 }
 
+/**
+ * Get account information
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
 	account_info, err:= data.AccountInfo(req.AccountName)
 	if account_info != nil {
@@ -130,10 +146,20 @@ func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInf
 	return nil
 }
 
+/**
+ * Login
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) Login(ctx context.Context, req *user_proto.LoginRequest, rsp *user_proto.LoginResponse) error {
 	return nil
 }
 
+/**
+ * Favorite
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rsp *user_proto.FavoriteResponse) error {
 
 	i, err := data.PushTransaction(req)
@@ -145,6 +171,11 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 	return nil
 }
 
+/**
+ * GetFavorite
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
 	var pageNum, pageSize, skip int= 1, 20, 0
 	if req.PageNum > 0 {
@@ -208,6 +239,11 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	return nil
 }
 
+/**
+ * Transfer
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp *user_proto.PushTxResponse) error {
 
 	i, err := data.PushTransaction(req)
@@ -219,6 +255,11 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	return nil
 }
 
+/**
+ * QueryMyBuy
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest, rsp *user_proto.QueryMyBuyResponse) error {
 	var pageNum, pageSize, skip int= 1, 20, 0
 	if req.PageNum > 0 {
@@ -271,6 +312,11 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 	return nil
 }
 
+/**
+ * Init
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil{
@@ -281,6 +327,11 @@ func init() {
 	log.ReplaceLogger(logger)
 }
 
+/**
+ * Main
+ * @author 星空之钥丶 <778774780@qq.com>
+ * @return error
+ */
 func main() {
 
 	service := micro.NewService(
@@ -295,6 +346,7 @@ func main() {
 
 	if err := service.Run(); err != nil {
 		log.Critical(err)
+		os.Exit(1)
 	}
 
 }
