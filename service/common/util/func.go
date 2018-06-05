@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package util
 
 import (
@@ -22,7 +23,7 @@ import (
 	"encoding/hex"
 )
 
-//sha256
+//Sha256 sha256
 func Sha256(msg []byte) []byte {
 	sha := sha256.New()
 	sha.Write([]byte(hex.EncodeToString(msg)))

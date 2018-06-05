@@ -22,26 +22,30 @@ import (
 
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strings"
+
 	"github.com/bottos-project/magiccube/service/common/data"
 	"github.com/bottos-project/magiccube/service/contract/proto"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"strings"
 )
 
+// Contract struct
 type Contract struct {
 	Client contract.ContractClient
 }
 
+// Publish Publish
 func (s *Contract) Publish(ctx context.Context, req *api.Request, rsp *api.Response) error {
 
 	return nil
 }
 
+// Query Query
 func (s *Contract) Query(ctx context.Context, req *api.Request, rsp *api.Response) error {
 
 	var queryRequest contract.QueryRequest
