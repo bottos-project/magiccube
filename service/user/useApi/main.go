@@ -118,13 +118,13 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		}
 	}
 
-	user_json_buf, err := json.Marshal(registerRequest.User)
+	userJSONBuf, err := json.Marshal(registerRequest.User)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	isTrue, err := sign.PushVerifySign(string(user_json_buf), registerRequest.Account.Pubkey)
+	isTrue, err := sign.PushVerifySign(string(userJSONBuf), registerRequest.Account.Pubkey)
 	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
