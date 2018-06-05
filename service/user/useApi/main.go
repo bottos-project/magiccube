@@ -31,12 +31,13 @@ import (
 	"os"
 	"regexp"
 )
+
 //User struct
 type User struct {
 	Client user.UserClient
 }
 
-//GetVerify is to verify 
+//GetVerify is to verify
 func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//var configCode = base64Captcha.ConfigCharacter{
 	//	Height:             60,
@@ -276,7 +277,6 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 		return err
 	}
 
-
 	is_true, err := sign.QueryVerifySign(req.Body)
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
@@ -303,7 +303,6 @@ func init() {
 	defer logger.Flush()
 	log.ReplaceLogger(logger)
 }
-
 
 func main() {
 	service := micro.NewService(

@@ -27,36 +27,43 @@ import (
 
 var branchTable = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
 var prefix = "pre_"
+
 //Favoritepro struct
 type Favoritepro struct {
 	GoodsId   string `bson:"goodsid"`
 	GoodsTyte string `bson:"goodstype"`
 	OpTyte    uint32 `bson:"optype"`
 }
+
 //Datareqreg struct
 type Datareqreg struct {
 	DataReqId string `bson:"datareqid"`
 	Info      `bson:"info"`
 }
+
 //Presale struct
 type Presale struct {
 	DataPresaleId string `bson:"datapresaleid"`
 	Info          `bson:"info"`
 }
+
 //Assetreg struct
 type Assetreg struct {
 	AssetId string `bson:"assetid"`
 	Info    `bson:"info"`
 }
+
 //File struct
 type File struct {
 	FileHash string `bson:"filehash"`
 	Info     `bson:"info"`
 }
+
 //Info struct
 type Info struct {
 	OpTyte uint32 `bson:"optype"`
 }
+
 //RecMessageId struct
 type RecMessageId struct {
 	MessageID string `bson:"message_id"`
@@ -77,8 +84,9 @@ func main() {
 	spec := "@every 3s"
 	c.AddFunc(spec, BranchTable)
 	c.Start()
-	select {} 
+	select {}
 }
+
 //BranchTable is to branch
 func BranchTable() {
 	log.Info("Execution of tasks!!!")

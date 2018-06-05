@@ -40,11 +40,12 @@ func init() {
 func main() {
 	//DiurnalStatis()
 	c := cron.New()
-	spec := "0, 5, 0, *, *, *" 
+	spec := "0, 5, 0, *, *, *"
 	c.AddFunc(spec, DiurnalStatis)
 	c.Start()
-	select {} 
+	select {}
 }
+
 //DiurnalStatis is to DiurnalStatis
 func DiurnalStatis() {
 	log.Info("Execution of tasks!!!")

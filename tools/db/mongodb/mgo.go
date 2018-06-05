@@ -24,6 +24,7 @@ import (
 )
 
 var mgoSession *mgo.Session
+
 //Session is mgo.session
 func Session() *mgo.Session {
 	if mgoSession == nil {
