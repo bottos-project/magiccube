@@ -79,7 +79,7 @@ func main() {
 	c.Start()
 	select {} 
 }
-
+//BranchTable is to branch
 func BranchTable() {
 	log.Info("Execution of tasks!!!")
 	var mgo = mgo.Session()
