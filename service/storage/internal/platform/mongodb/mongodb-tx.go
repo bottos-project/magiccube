@@ -116,7 +116,6 @@ func (r *MongoRepository) CallGetRecentTxList() ([]*util.TxDBInfo, error) {
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	//建议优化，支持多表查�?
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase"}).Sort("-createdAt").Limit(15).All(&purMsgs)
 	}
@@ -155,7 +154,7 @@ func (r *MongoRepository) CallGetUserTxList(username string) ([]*util.TxDBInfo, 
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	//建议优化，支持多表查�?
+	
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase", "data.basic_info.user_name": username}).All(&purMsgs)
 	}
@@ -194,7 +193,7 @@ func (r *MongoRepository) CallGetSumTxAmount() (uint64, error) {
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	//建议优化，支持多表查�?
+
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase"}).All(&purMsgs)
 	}
