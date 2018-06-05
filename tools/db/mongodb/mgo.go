@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package mgo
 
 import (
@@ -23,7 +24,7 @@ import (
 )
 
 var mgoSession *mgo.Session
-
+//Session is mgo.session
 func Session() *mgo.Session {
 	if mgoSession == nil {
 		var err error

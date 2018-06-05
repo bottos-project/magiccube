@@ -40,12 +40,12 @@ func init() {
 func main() {
 	//DiurnalStatis()
 	c := cron.New()
-	spec := "0, 5, 0, *, *, *" //每天凌晨0:05执行一次
+	spec := "0, 5, 0, *, *, *" 
 	c.AddFunc(spec, DiurnalStatis)
 	c.Start()
-	select {} //阻塞主线程不退出
+	select {} 
 }
-
+//DiurnalStatis is to DiurnalStatis
 func DiurnalStatis() {
 	log.Info("Execution of tasks!!!")
 	min, max := query.YesterdayTimeSlot()

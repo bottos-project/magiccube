@@ -35,19 +35,16 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"os"
 )
-
+// User struct
 type User struct{}
 
-/**
- * Get block information
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+
+//GetBlockHeader is to get block header
 func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeaderRequest, rsp *user_proto.GetBlockHeaderResponse) error {
-	block_header, err := data.BlockHeader()
-	log.Info(block_header)
-	if block_header != nil {
-		rsp.Data = block_header
+	blockHeader, err := data.BlockHeader()
+	log.Info(blockHeader)
+	if blockHeader != nil {
+		rsp.Data = blockHeader
 	} else {
 		rsp.Code = 1003
 		rsp.Msg = err.Error()
@@ -55,44 +52,40 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
 	return nil
 }
 
-/**
- * Registered account
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+
+//Register is to Register account
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
 	log.Info("req:", req)
-	block_header, err := data.BlockHeader()
+	blockHeader, err := data.BlockHeader()
 	if err != nil {
 		rsp.Code = 1003
 		rsp.Msg = err.Error()
 		return nil
 	}
-	//注册账号
 	rsp.Code = 1004
-	account_buf, err := pack.Marshal(req.Account)
+	accountBuf, err := pack.Marshal(req.Account)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
-	tx_account_sign := &push_sign.TransactionSign{
+	txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
-		CursorNum:   block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime:    block_header.HeadBlockTime + 20,
+		CursorNum:   blockHeader.HeadBlockNum,
+		CursorLabel: blockHeader.CursorLabel,
+		Lifetime:    blockHeader.HeadBlockTime + 20,
 		Sender:      "delta",
 		Contract:    "bottos",
 		Method:      "newaccount",
-		Param:       account_buf,
+		Param:       accountBuf,
 		SigAlg:      1,
 	}
 
-	msg, err := proto.Marshal(tx_account_sign)
+	msg, err := proto.Marshal(txAccount_sign)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
-	//配对的pubkey   0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f
+	//pubkey   0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f
 	seckey, err := hex.DecodeString("b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45")
 	if err != nil {
 		rsp.Msg = err.Error()
@@ -105,20 +98,20 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		return nil
 	}
 
-	tx_account := &bean.TxBean{
+	txAccount := &bean.TxBean{
 		Version:     1,
-		CursorNum:   block_header.HeadBlockNum,
-		CursorLabel: block_header.CursorLabel,
-		Lifetime:    block_header.HeadBlockTime + 20,
+		CursorNum:   blockHeader.HeadBlockNum,
+		CursorLabel: blockHeader.CursorLabel,
+		Lifetime:    blockHeader.HeadBlockTime + 20,
 		Sender:      "delta",
 		Contract:    "bottos",
 		Method:      "newaccount",
-		Param:       hex.EncodeToString(account_buf),
+		Param:       hex.EncodeToString(accountBuf),
 		SigAlg:      1,
 		Signature:   hex.EncodeToString(signature),
 	}
 
-	ret, err := data.PushTransaction(tx_account)
+	ret, err := data.PushTransaction(txAccount)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
@@ -134,28 +127,24 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	pack.Unmarshal(d, &did)
 	log.Info("did:", did)
 
-	//注册用户
+	
 	rsp.Code = 1005
-	ret_user, err := data.PushTransaction(&req.User)
+	retUser, err := data.PushTransaction(&req.User)
 
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
 	}
-	log.Info("ret-user:", ret_user)
+	log.Info("ret-user:", retUser)
 	rsp.Code = 1
 	return nil
 }
 
-/**
- * Get account information
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetAccountInfo is to get AccountInfo
 func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
-	account_info, err := data.AccountInfo(req.AccountName)
-	if account_info != nil {
-		rsp.Data = account_info
+	accountInfo , err := data.AccountInfo(req.AccountName)
+	if accountInfo != nil {
+		rsp.Data = accountInfo 
 	} else {
 		rsp.Code = 1006
 		rsp.Msg = err.Error()
@@ -163,20 +152,13 @@ func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInf
 	return nil
 }
 
-/**
- * Login
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//Login is to login
 func (u *User) Login(ctx context.Context, req *user_proto.LoginRequest, rsp *user_proto.LoginResponse) error {
 	return nil
 }
 
-/**
- * Favorite
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+
+//Favorite is Favorite info
 func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rsp *user_proto.FavoriteResponse) error {
 
 	i, err := data.PushTransaction(req)
@@ -188,11 +170,8 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 	return nil
 }
 
-/**
- * GetFavorite
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+
+//GetFavorite is to get Favorite 
 func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
 	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
@@ -254,11 +233,8 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	return nil
 }
 
-/**
- * Transfer
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+
+//Transfer Info
 func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp *user_proto.PushTxResponse) error {
 
 	i, err := data.PushTransaction(req)
@@ -270,11 +246,8 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	return nil
 }
 
-/**
- * QueryMyBuy
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+
+//QueryMyBuy is to query buyInfo
 func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest, rsp *user_proto.QueryMyBuyResponse) error {
 	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
