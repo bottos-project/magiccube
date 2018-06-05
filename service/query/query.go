@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package query
 
 import (
@@ -26,14 +27,14 @@ import (
 	"time"
 )
 
-// timestamp to utc timer
+// TimestampToUTC to utc timer
 func TimestampToUTC(timestamp int64) time.Time {
 	date := time.Unix(timestamp, 0)
 	local1, _ := time.LoadLocation("UTC")
 	return date.In(local1)
 }
 
-// tx number
+// TxNum number
 func TxNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -44,7 +45,7 @@ func TxNum(min int64, max int64) int {
 	return count
 }
 
-//tx amount
+//TxAmount tx amount
 func TxAmount(min int64, max int64) uint64 {
 	var amount uint64 = 0
 	var ret []bean.Tx
@@ -69,7 +70,7 @@ func TxAmount(min int64, max int64) uint64 {
 	return amount
 }
 
-//reqirement number
+//RequirementNum reqirement number
 func RequirementNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -81,7 +82,7 @@ func RequirementNum(min int64, max int64) int {
 	return count
 }
 
-//asset number
+//AssetNum asset number
 func AssetNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -93,7 +94,7 @@ func AssetNum(min int64, max int64) int {
 	return count
 }
 
-//account number
+//AccountNum account number
 func AccountNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -105,7 +106,7 @@ func AccountNum(min int64, max int64) int {
 	return count
 }
 
-//yesterday time slot
+// YesterdayTimeSlot yesterday time slot
 func YesterdayTimeSlot() (int64, int64) {
 	timeStr := time.Now().Format("2006-01-02")
 	//t, _ := time.Parse("2006-01-02", timeStr)
@@ -113,7 +114,7 @@ func YesterdayTimeSlot() (int64, int64) {
 	theTime, _ := time.ParseInLocation("2006-01-02", timeStr, loc)
 	return theTime.Unix() - 24*60*60, theTime.Unix() - 1
 }
-
+//TodayTimeSolt is to solt time
 func TodayTimeSolt() (int64, int64) {
 	timeStr := time.Now().Format("2006-01-02")
 	loc, _ := time.LoadLocation("Local") //重要：获取时区
