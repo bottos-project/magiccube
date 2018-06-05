@@ -35,6 +35,7 @@ const (
 	TX_PARAMS = "service=bottos&method=CoreApi.PushTrx&request=%s"
 )
 
+// get block header
 func BlockHeader() (*user_proto.BlockHeader, error) {
 	params := `service=bottos&method=CoreApi.QueryChainInfo&request={}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -81,6 +82,7 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	return block_header, nil
 }
 
+// push transaction
 func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 	var params = ""
 	switch i.(type) {
@@ -126,6 +128,7 @@ func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 	return nil, errors.New(string(body))
 }
 
+// get account info
 func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	params := `service=bottos&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",

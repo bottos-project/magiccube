@@ -31,6 +31,7 @@ import (
 	"github.com/bottos-project/magiccube/service/common/data"
 )
 
+// push verify sign
 func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
 
 	var tx bean.TxBean
@@ -97,6 +98,7 @@ type CommonQuery struct{
 	Signature string `json:"signature"`
 }
 
+// query verify sign
 func QueryVerifySign(b string) (bool, error) {
 
 	var commonQuery CommonQuery
