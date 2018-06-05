@@ -124,8 +124,8 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is_true, err := sign.PushVerifySign(string(user_json_buf), registerRequest.Account.Pubkey)
-	if !is_true {
+	isTrue, err := sign.PushVerifySign(string(user_json_buf), registerRequest.Account.Pubkey)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -158,7 +158,7 @@ func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Re
 }
 
 //Login is to Login
-func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
+func (u *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
 	var loginRequest user.LoginRequest
@@ -277,8 +277,8 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 		return err
 	}
 
-	is_true, err := sign.QueryVerifySign(req.Body)
-	if !is_true {
+	isTrue, err := sign.QueryVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
