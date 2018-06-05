@@ -15,43 +15,35 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package api
 
 import (
-	//"os"
-	//"time"
 	"fmt"
-	//	"github.com/code/bottos/service/storage/blockchain"
-	//"github.com/code/bottos/service/storage/internal/platform/config"
-	//"github.com/code/bottos/service/storage/internal/platform/minio"
-	//"github.com/code/bottos/service/storage/internal/platform/sqlite"
-	//"github.com/code/bottos/service/storage/internal/service"
-	//"github.com/code/bottos/service/node/config"
+
 	"github.com/fsnotify/fsnotify"
 	//"github.com/micro/go-micro"
 	"bytes"
 	"encoding/json"
 	"errors"
-	log "github.com/sirupsen/logrus"
-	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"net"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 	"unsafe"
-	//"reflect"
-	//"github.com/micro/cli"
-	//"github.com/urfave/cli"
-	//"github.com/hashicorp/consul/version"
+
 	datautil "github.com/bottos-project/magiccube/service/data/util"
 	"github.com/bottos-project/magiccube/service/node/config"
 	"github.com/bottos-project/magiccube/service/storage/util"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"net/http"
 )
 
+//NodeInfo struct
 type NodeInfo struct {
 	NodeName    string
 	IpAddr      string
@@ -73,10 +65,12 @@ type NodeInfo struct {
 	SlaveIpLst  []string
 }
 
+//NodeInfos struct
 type NodeInfos struct {
 	Node []NodeInfo
 }
 
+//Country struct
 type Country struct {
 	Country   string
 	Province  string
@@ -85,32 +79,38 @@ type Country struct {
 	Longitude float32
 }
 
-type szTong_s struct {
+//szTongS struct
+type szTongS struct {
 	Code uint64
 	Data Country
 }
 
+// CityInfo struct
 type CityInfo struct {
 	Pointx string
 	Pointy string
 }
 
+// CountryDetails struct
 type CountryDetails struct {
 	City CityInfo
 }
 
-type szTong_sPoint struct {
+type szTongSpoint struct {
 	Detail CountryDetails
 }
 
+// MongoRepository struct
 type MongoRepository struct {
 	mgoEndpoint string
 }
 
+// MongoContext struct
 type MongoContext struct {
 	mgoSession *mgo.Session
 }
 
+// Ippointxy struct
 type Ippointxy struct {
 	ID        bson.ObjectId `bson:"_id"`
 	Ip        string        `bson:"ip"`
@@ -119,17 +119,17 @@ type Ippointxy struct {
 	CreatedAt time.Time     `bson:"createdAt"`
 }
 
+// StorageDBClusterInfo struct
 type StorageDBClusterInfo struct {
 	Nodetype   string              `bson:"type"`
 	Nodedbinfo datautil.NodeDBInfo `bson:"node"`
 }
 
-var conf_file string
-
 func bytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+// ReadFile ReadFile
 func ReadFile(filename string) NodeInfos {
 	if filename == "" {
 		fmt.Println("Error ! parmeter is null")
@@ -152,18 +152,20 @@ func ReadFile(filename string) NodeInfos {
 	return ni
 }
 
+// WriteFile WriteFile
 func WriteFile(filename string, nodeInfos NodeInfos) error {
 
-	json_data, errs := json.Marshal(nodeInfos)
+	jsonData, errs := json.Marshal(nodeInfos)
 	if errs != nil {
 		log.Println("errs occurs! Marshal failed. filename:", filename)
 		return errs
 	}
-	errs = ioutil.WriteFile(filename, json_data, os.ModeAppend)
+	errs = ioutil.WriteFile(filename, jsonData, os.ModeAppend)
 	return errs
 }
 
-func MonitorConfigFile(config_file string) error {
+// MonitorConfigFile MonitorConfigFile
+func MonitorConfigFile(configFile string) error {
 
 	watch, err := fsnotify.NewWatcher()
 	if err != nil {
@@ -174,7 +176,7 @@ func MonitorConfigFile(config_file string) error {
 
 	//var command string
 
-	err = watch.Add(config_file)
+	err = watch.Add(configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -188,21 +190,21 @@ func MonitorConfigFile(config_file string) error {
 				}
 				if ev.Op&fsnotify.Write == fsnotify.Write {
 					//log.Println("Monitored file had been modified ! : ", ev.Name);
-					node_infos := ReadFile(config.CONFIG_FILE)
-					if unsafe.Sizeof(node_infos) == 0 {
+					nodeInfos := ReadFile(config.CONFIG_FILE)
+					if unsafe.Sizeof(nodeInfos) == 0 {
 						//if getting empty value from json file , skip it
 						continue
 					}
 
-					for i := 0; i < len(node_infos.Node); i++ {
+					for i := 0; i < len(nodeInfos.Node); i++ {
 						//fmt.Println(node_infos.Node[i].IpAddr)
-						for j := 0; j < len(node_infos.Node[i].ServLst); j++ {
-							//command = "echo \""+node_infos.Node[i].PassWord+"\" | sudo -S echo \""+node_infos.Node[i].ServLst[j]+"\" > /etc/rc.local"
+						for j := 0; j < len(nodeInfos.Node[i].ServLst); j++ {
+							//command = "echo \""+node_infos.Node[i].PassWord+"\" | sudo -S echo \""+nodeInfos.Node[i].ServLst[j]+"\" > /etc/rc.local"
 							//fmt.Println("command = ",command)
 
-							if /*buf*/ _, err := SshCommand(node_infos.Node[i].UserName,
-								node_infos.Node[i].PassWord,
-								node_infos.Node[i].IpAddr,
+							if /*buf*/ _, err := SshCommand(nodeInfos.Node[i].UserName,
+								nodeInfos.Node[i].PassWord,
+								nodeInfos.Node[i].IpAddr,
 								22,
 								"ls /"); err == nil {
 								//fmt.Println("buf = ",buf)
@@ -228,10 +230,10 @@ func MonitorConfigFile(config_file string) error {
 			}
 		}
 	}
-	return nil
+	// return nil
 }
 
-//about SSH
+//Connect about SSH
 func Connect(user, password, host string, port int) (*ssh.Session, error) {
 	var (
 		auth         []ssh.AuthMethod
@@ -269,6 +271,7 @@ func Connect(user, password, host string, port int) (*ssh.Session, error) {
 	return session, nil
 }
 
+// SshCommand SshCommand
 func SshCommand(user, password, host string, port int, command string) (string, error) {
 	session, err := Connect(user, password, host, port)
 	if err != nil {
@@ -290,6 +293,7 @@ func SshCommand(user, password, host string, port int, command string) (string, 
 	return buf.String(), err
 }
 
+// GetAccountInfo GetAccountInfo
 func GetAccountInfo(url, username string) (*util.AccountInfo, error) {
 
 	body := strings.NewReader("{\"account_name\":\"" + username + "\"}")
@@ -325,6 +329,7 @@ func GetAccountInfo(url, username string) (*util.AccountInfo, error) {
 
 }
 
+// PathExist PathExist
 func PathExist(_path string) bool {
 	_, err := os.Stat(_path)
 	if err != nil && os.IsNotExist(err) {
@@ -333,19 +338,19 @@ func PathExist(_path string) bool {
 	return true
 }
 
-func multi_ip2pointxy(iplist []string) map[string]CityInfo {
+func multiIp2pointxyint(iplist []string) map[string]CityInfo {
 	m := make(map[string]CityInfo)
 
 	for _, ip := range iplist {
 		infosPoint := ip2pointxy(ip)
-		if (infosPoint != szTong_sPoint{}) {
+		if (infosPoint != szTongSpoint{}) {
 			m[ip] = infosPoint.Detail.City
 		}
 	}
 	return m
 }
 
-func use_international_policy(ipaddr string) (string, string) {
+func useInternationalPolicy(ipaddr string) (string, string) {
 	client := &http.Client{}
 	url := "http://api.ipinfodb.com/v3/ip-city/?key=8ae944829cc080834bb7ee22638f1c474dd64db171dcc6e567ab7d312f365926&ip=" + ipaddr
 	req, _ := http.NewRequest("POST", url, nil)
@@ -356,21 +361,22 @@ func use_international_policy(ipaddr string) (string, string) {
 		return "", ""
 	}
 
-	resp_body, ee := ioutil.ReadAll(resp.Body)
-	if ee == nil && resp_body != nil {
-		s := strings.Split(string(resp_body), ";")
+	respBody, ee := ioutil.ReadAll(resp.Body)
+	if ee == nil && respBody != nil {
+		s := strings.Split(string(respBody), ";")
 
 		//fmt.Println(s[len(s)-3:len(s)-1])
 		pointx, pointy := s[len(s)-3], s[len(s)-2]
 		return pointx, pointy
-	} else {
-		return "", ""
 	}
+	return "", ""
+
 }
 
-func ip2pointxy(ip string) szTong_sPoint {
-	var infos szTong_s
-	var infosPoint szTong_sPoint
+//ip2pointxy ip2pointxy
+func ip2pointxy(ip string) szTongSpoint {
+	var infos szTongS
+	var infosPoint szTongSpoint
 
 	url := "http://ip.taobao.com/service/getIpInfo.php?ip=" + ip
 	client := &http.Client{}
@@ -380,31 +386,31 @@ func ip2pointxy(ip string) szTong_sPoint {
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return szTong_sPoint{}
+		return szTongSpoint{}
 	}
 
 	defer resp.Body.Close()
-	resp_body, ee := ioutil.ReadAll(resp.Body)
-	if ee == nil && resp_body != nil {
-		err = json.Unmarshal(resp_body, &infos)
+	respBody, ee := ioutil.ReadAll(resp.Body)
+	if ee == nil && respBody != nil {
+		err = json.Unmarshal(respBody, &infos)
 
 		if err != nil {
-			return szTong_sPoint{}
+			return szTongSpoint{}
 		} else if infos.Data.City == "XX" {
-			pointx, pointy := use_international_policy(ip)
+			pointx, pointy := useInternationalPolicy(ip)
 			infosPoint.Detail.City.Pointx = pointx
 			infosPoint.Detail.City.Pointy = pointy
 
 			if pointx == "" || pointy == "" {
-				return szTong_sPoint{}
-			} else {
-				return infosPoint
+				return szTongSpoint{}
 			}
+			return infosPoint
+
 		}
 
 	} else {
 		fmt.Println("Error when Unmarshal infos!")
-		return szTong_sPoint{}
+		return szTongSpoint{}
 	}
 
 	url = "http://apis.map.qq.com/jsapi?qt=poi&wd=" + infos.Data.City + "&pn=0&rn=10&rich_source=qipao&rich=web&nj=0&c=1&key=FBOBZ-VODWU-C7SVF-B2BDI-UK3JE-YBFUS&output=jsonp&pf=jsapi&ref=jsapi&cb=qq.maps._svcb3.search_service_0"
@@ -413,30 +419,30 @@ func ip2pointxy(ip string) szTong_sPoint {
 
 	if err != nil {
 		fmt.Println("Errored when sending request to the server")
-		return szTong_sPoint{}
+		return szTongSpoint{}
 	}
 
 	defer resp.Body.Close()
-	resp_body, ee = ioutil.ReadAll(resp.Body)
+	respBody, ee = ioutil.ReadAll(resp.Body)
 
-	indexS := strings.Index(string(resp_body), "(") + 2
-	indexE := strings.Index(string(resp_body), ")")
-	jsonstr := string(resp_body)[indexS:indexE]
+	indexS := strings.Index(string(respBody), "(") + 2
+	indexE := strings.Index(string(respBody), ")")
+	jsonstr := string(respBody)[indexS:indexE]
 
-	if ee == nil && resp_body != nil {
+	if ee == nil && respBody != nil {
 		err = json.Unmarshal([]byte(jsonstr), &infosPoint)
 		if err != nil {
-			return szTong_sPoint{}
+			return szTongSpoint{}
 		}
 	} else {
 		fmt.Println("Error when Unmarshal infosPoint!")
-		return szTong_sPoint{}
+		return szTongSpoint{}
 	}
 
 	return infosPoint
 }
 
-func get_ip_list() []string {
+func getIpList() []string {
 
 	var iplist []string
 
@@ -446,19 +452,20 @@ func get_ip_list() []string {
 	return iplist
 }
 
-func Save_ip_ponix_to_blockchain() map[string]CityInfo {
-	iplist := get_ip_list()
+// SaveIpPonixToBlockchain SaveIpPonixToBlockchain
+func SaveIpPonixToBlockchain() map[string]CityInfo {
+	iplist := getIpList()
 
-	ip_pointxy_map := multi_ip2pointxy(iplist)
+	ipPointxyMap := multiIp2pointxyint(iplist)
 
 	//To be saved to db
 	Repository := NewMongoRepository(config.MONGO_DB_URL)
 
-	for map_key, map_value := range ip_pointxy_map {
-		Repository.CallInsertPointxy(map_key, map_value.Pointx, map_value.Pointy)
+	for mapKey, mapValue := range ipPointxyMap {
+		Repository.CallInsertPointxy(mapKey, mapValue.Pointx, mapValue.Pointy)
 	}
 
-	return ip_pointxy_map
+	return ipPointxyMap
 }
 
 func checkError(err error) {
@@ -469,10 +476,12 @@ func checkError(err error) {
 	}
 }
 
+// NewMongoRepository NewMongoRepository
 func NewMongoRepository(endpoint string) *MongoRepository {
 	return &MongoRepository{mgoEndpoint: endpoint}
 }
 
+// GetSession GetSession
 func GetSession(url string) (*MongoContext, error) {
 	if url == "" {
 		return nil, errors.New("invalid para url")
@@ -486,12 +495,14 @@ func GetSession(url string) (*MongoContext, error) {
 	return &MongoContext{mgoSession.Clone()}, nil
 }
 
+// GetCollection GetCollection
 func (c *MongoContext) GetCollection(db string, collection string) *mgo.Collection {
 	session := c.mgoSession
 	collects := session.DB(config.DB_BOTTOS).C(collection)
 	return collects
 }
 
+// SetCollectionByDB SetCollectionByDB
 func (c *MongoContext) SetCollectionByDB(db string, collection string, s func(*mgo.Collection) error) error {
 	session := c.mgoSession
 	defer session.Close()
@@ -500,6 +511,7 @@ func (c *MongoContext) SetCollectionByDB(db string, collection string, s func(*m
 	return s(collects)
 }
 
+// CallInsertPointxy CallInsertPointxy
 func (r *MongoRepository) CallInsertPointxy(ip string, pointx string, pointy string) (uint32, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -525,21 +537,22 @@ func (r *MongoRepository) CallInsertPointxy(ip string, pointx string, pointy str
 		fmt.Println(err)
 		return 1, err
 
-	} else {
-		selector := bson.M{"ip": ip}
-		data := bson.M{"$set": bson.M{"pointx": pointx, "pointy": pointy}}
-
-		/*changeInfo*/
-		_, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
-		if err != nil {
-			fmt.Println("update failed!")
-		}
-		//fmt.Printf("%+v\n", changeInfo)
-		return 1, err
 	}
+	selector := bson.M{"ip": ip}
+	data := bson.M{"$set": bson.M{"pointx": pointx, "pointy": pointy}}
+
+	/*changeInfo*/
+	changeInfo, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
+	if err != nil {
+		fmt.Println("update failed!", changeInfo)
+	}
+	//fmt.Printf("%+v\n", changeInfo)
+	return 1, err
+
 }
 
-func (r *MongoRepository) InsertRecord(tablename string, keyname string, key string, value_name string, value interface{}) (uint32, error) {
+// InsertRecord InsertRecord
+func (r *MongoRepository) InsertRecord(tablename string, keyname string, key string, valueName string, value interface{}) (uint32, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
 		fmt.Println(err)
@@ -559,16 +572,16 @@ func (r *MongoRepository) InsertRecord(tablename string, keyname string, key str
 		fmt.Println(err)
 		return 1, err
 
-	} else {
-		selector := bson.M{keyname: key}
-		data := bson.M{"$set": bson.M{value_name: value}}
-
-		/*changeInfo*/
-		_, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
-		if err != nil {
-			fmt.Println("update failed!")
-		}
-		//fmt.Printf("%+v\n", changeInfo)
-		return 1, err
 	}
+	selector := bson.M{keyname: key}
+	data := bson.M{"$set": bson.M{valueName: value}}
+
+	/*changeInfo*/
+	changeInfo, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
+	if err != nil {
+		fmt.Println("update failed!", changeInfo)
+	}
+	//fmt.Printf("%+v\n", changeInfo)
+	return 1, err
+
 }
