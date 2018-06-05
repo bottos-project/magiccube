@@ -393,6 +393,7 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 	reqBody.Header.Set("Connection", "keep-alive")
 
 	respHttp, err := client.Do(reqBody)
+	log.Info(err)
 	defer respHttp.Body.Close()
 	log.Info("download success")
 	//**start
