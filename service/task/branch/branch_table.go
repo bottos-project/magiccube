@@ -25,39 +25,39 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var branch_table = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
+var branchTable = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
 var prefix = "pre_"
-
+//Favoritepro struct
 type Favoritepro struct {
 	GoodsId   string `bson:"goodsid"`
 	GoodsTyte string `bson:"goodstype"`
 	OpTyte    uint32 `bson:"optype"`
 }
-
+//Datareqreg struct
 type Datareqreg struct {
 	DataReqId string `bson:"datareqid"`
 	Info      `bson:"info"`
 }
-
+//Presale struct
 type Presale struct {
 	DataPresaleId string `bson:"datapresaleid"`
 	Info          `bson:"info"`
 }
-
+//Assetreg struct
 type Assetreg struct {
 	AssetId string `bson:"assetid"`
 	Info    `bson:"info"`
 }
-
+//File struct
 type File struct {
 	FileHash string `bson:"filehash"`
 	Info     `bson:"info"`
 }
-
+//Info struct
 type Info struct {
 	OpTyte uint32 `bson:"optype"`
 }
-
+//RecMessageId struct
 type RecMessageId struct {
 	MessageID string `bson:"message_id"`
 }
@@ -77,28 +77,28 @@ func main() {
 	spec := "@every 3s"
 	c.AddFunc(spec, BranchTable)
 	c.Start()
-	select {} //阻塞主线程不退出
+	select {} 
 }
-
+//BranchTable is to branch
 func BranchTable() {
 	log.Info("Execution of tasks!!!")
 	var mgo = mgo.Session()
 	defer mgo.Close()
 
-	var rec_msg RecMessageId
-	mgo.DB("bottos").C("rec_id").Find(nil).One(&rec_msg)
+	var recMsg RecMessageId
+	mgo.DB("bottos").C("rec_id").Find(nil).One(&recMsg)
 
 	var part bean.Transaction
 	mgo.DB("bottos").C("Transactions").Find(nil).Sort("-_id").Limit(1).One(&part)
 	log.Info("part-last-id:", part.ID)
 
-	if rec_msg.MessageID == part.ID.Hex() {
+	if recMsg.MessageID == part.ID.Hex() {
 		return
 	}
 
-	var where = bson.M{"_id": bson.M{"$lte": bson.ObjectIdHex(part.ID.Hex())}, "method": bson.M{"$in": branch_table}}
-	if rec_msg.MessageID != "" {
-		where = bson.M{"_id": bson.M{"$gt": bson.ObjectIdHex(rec_msg.MessageID), "$lte": bson.ObjectIdHex(part.ID.Hex())}, "method": bson.M{"$in": branch_table}}
+	var where = bson.M{"_id": bson.M{"$lte": bson.ObjectIdHex(part.ID.Hex())}, "method": bson.M{"$in": branchTable}}
+	if recMsg.MessageID != "" {
+		where = bson.M{"_id": bson.M{"$gt": bson.ObjectIdHex(recMsg.MessageID), "$lte": bson.ObjectIdHex(part.ID.Hex())}, "method": bson.M{"$in": branchTable}}
 	}
 
 	var ret []bean.Transaction
@@ -184,7 +184,7 @@ func BranchTable() {
 		//mgo.DB("zltest").C(v.Type).Insert(v)
 	}
 
-	if rec_msg.MessageID != "" {
+	if recMsg.MessageID != "" {
 		mgo.DB("bottos").C("rec_id").Update(nil, map[string]interface{}{
 			"message_id": part.ID.Hex(),
 		})
