@@ -46,8 +46,8 @@ func TxNum(min int64, max int64) int {
 }
 
 //TxAmount tx amount
-func TxAmount(min int64, max int64) uint64 {
-	amount := 0
+func TxAmounte(min int64, max int64) uint64 {
+	var amount uint64
 	var ret []bean.Tx
 
 	var mgo = mgo.Session()
