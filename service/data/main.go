@@ -352,12 +352,12 @@ func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rs
 	reqBody.Header.Set("Connection", "keep-alive")
 	resp, err := client.Do(reqBody)
 	defer reqBody.Body.Close()
-	resp_body, err := ioutil.ReadAll(resp.Body)
+	respBody , err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil
 	}
-	log.Info("resp_body")
-	log.Info(resp_body)
+	log.Info("respBody ")
+	log.Info(respBody )
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
