@@ -1,4 +1,4 @@
-# Bottos Service Layer
+# Bottos Blockchain Service Layer
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/bottos-project/magiccube)](https://goreportcard.com/report/github.com/bottos-project/magiccube)
 
