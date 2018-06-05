@@ -22,14 +22,17 @@
  * @Last Modified by:
  * @Last Modified time:
  */
+
 package error
 
 import (
 	"encoding/json"
-	log "github.com/cihub/seelog"
 	"io/ioutil"
+
+	log "github.com/cihub/seelog"
 )
 
+// ErrorCode struct
 type ErrorCode struct {
 	Code int64 `json:"code"`
 	Msg  struct {
@@ -39,17 +42,19 @@ type ErrorCode struct {
 	Details string `json:"details"`
 }
 
+// Ret struct
 type Ret struct {
 	Code int64       `json:"code"`
 	Data interface{} `json:"data"`
 	Msg  string      `json:"msg"`
 }
 
+// CoreRet struct
 type CoreRet struct {
 	Errcode int64 `json:"errcode"`
 }
 
-// get error info
+// GetErrorInfo  get error info
 func GetErrorInfo(code int64) ErrorCode {
 	d := GetAllErrorInfos()
 	for _, v := range d {
@@ -60,7 +65,7 @@ func GetErrorInfo(code int64) ErrorCode {
 	return ErrorCode{}
 }
 
-// return
+// Return return
 func Return(b interface{}) string {
 	buf, err := json.Marshal(b)
 	if err != nil {
@@ -123,7 +128,7 @@ func Return(b interface{}) string {
 	return string(json)
 }
 
-// return error
+// ReturnError return error
 func ReturnError(code int64, e ...error) string {
 	log.Info(e)
 	d := GetAllErrorInfos()
@@ -149,7 +154,7 @@ func ReturnError(code int64, e ...error) string {
 	return string(json)
 }
 
-//get all info
+// GetAllErrorInfos get all info
 func GetAllErrorInfos() []ErrorCode {
 	fr, err := ioutil.ReadFile("./error/err-code.json")
 	if err != nil {

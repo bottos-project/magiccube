@@ -19,10 +19,12 @@ package error
 
 import "testing"
 
+// Test_getErrorInfo Test_getErrorInfo
 func Test_getErrorInfo(t *testing.T) {
 	t.Log(GetErrorInfo(1002))
 }
 
+// Test_GetAllErrorInfos Test_GetAllErrorInfos
 func Test_GetAllErrorInfos(t *testing.T) {
-	t.Log(GetAllErrorInfos())
-}
+	t.Log(GetAllErrorInfos()) 
+} 

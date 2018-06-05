@@ -15,27 +15,31 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package data
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/bottos-project/magiccube/config"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	log "github.com/cihub/seelog"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 const (
-	BASE_URL  = config.BASE_RPC
+	// BASE_URL BASE_URL
+	BASE_URL = config.BASE_RPC
+	// TX_PARAMS TX_PARAMS
 	TX_PARAMS = "service=bottos&method=CoreApi.PushTrx&request=%s"
 )
 
-// get block header
+// BlockHeader get block header
 func BlockHeader() (*user_proto.BlockHeader, error) {
 	params := `service=bottos&method=CoreApi.QueryChainInfo&request={}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -56,33 +60,33 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreBaseReturn{}
-	err = json.Unmarshal(body, common_ret)
+	var commonRet = &bean.CoreBaseReturn{}
+	err = json.Unmarshal(body, commonRet)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	if common_ret.Errcode != 0 {
+	if commonRet.Errcode != 0 {
 		return nil, errors.New(string(body))
 	}
 
-	result_buf, err := json.Marshal(common_ret.Result)
+	resultBuf, err := json.Marshal(commonRet.Result)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	var block_header = &user_proto.BlockHeader{}
-	err = json.Unmarshal(result_buf, block_header)
+	var blockHeader = &user_proto.BlockHeader{}
+	err = json.Unmarshal(resultBuf, blockHeader)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	return block_header, nil
+	return blockHeader, nil
 }
 
-// push transaction
+// PushTransaction push transaction
 func PushTransaction(i interface{}) (*bean.CoreCommonReturn, error) {
 	var params = ""
 	switch i.(type) {
@@ -115,20 +119,20 @@ func PushTransaction(i interface{}) (*bean.CoreCommonReturn, error) {
 		return nil, errors.New(string(body))
 	}
 	log.Info("body:", string(body))
-	var common_ret bean.CoreCommonReturn
-	err = json.Unmarshal(body, &common_ret)
+	var commonRet bean.CoreCommonReturn
+	err = json.Unmarshal(body, &commonRet)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	if common_ret.Errcode == 0 {
-		return &common_ret, nil
+	if commonRet.Errcode == 0 {
+		return &commonRet, nil
 	}
 	return nil, errors.New(string(body))
 }
 
-// get account info
+// AccountInfo get account info
 func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	params := `service=bottos&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -148,28 +152,28 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreBaseReturn{}
-	err = json.Unmarshal(body, common_ret)
+	var commonRet = &bean.CoreBaseReturn{}
+	err = json.Unmarshal(body, commonRet)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	if common_ret.Errcode != 0 {
+	if commonRet.Errcode != 0 {
 		return nil, errors.New(string(body))
 	}
 
-	result_buf, err := json.Marshal(common_ret.Result)
+	resultBuf, err := json.Marshal(commonRet.Result)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	var account_info = &user_proto.AccountInfoData{}
-	err = json.Unmarshal(result_buf, account_info)
+	var accountInfo = &user_proto.AccountInfoData{}
+	err = json.Unmarshal(resultBuf, accountInfo)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	return account_info, nil
+	return accountInfo, nil
 }
