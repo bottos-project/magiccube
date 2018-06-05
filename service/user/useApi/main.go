@@ -32,15 +32,12 @@ import (
 	"regexp"
 )
 
+//User struct
 type User struct {
 	Client user.UserClient
 }
 
-/**
- * GetVerify
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetVerify is to verify
 func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//var configCode = base64Captcha.ConfigCharacter{
 	//	Height:             60,
@@ -79,11 +76,7 @@ func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Respons
 	return nil
 }
 
-/**
- * GetBlockHeader
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetBlockHeader is to get blockheader
 func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	response, err := u.Client.GetBlockHeader(ctx, &user.GetBlockHeaderRequest{})
@@ -96,11 +89,7 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
-/**
- * Register
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//Register is to Register
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	log.Info(req.Body)
@@ -149,11 +138,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-/**
- * GetAccountInfo
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetAccountInfo is to get AccountInfo
 func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	var getAccountInfoRequest user.GetAccountInfoRequest
@@ -172,11 +157,7 @@ func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
-/**
- * Login
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//Login is to Login
 func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -204,11 +185,7 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 	return nil
 }
 
-/**
- * Favorite
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//Favorite is to Favorite
 func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -235,11 +212,7 @@ func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-/**
- * GetFavorite
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetFavorite is to GetFavorite
 func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -266,11 +239,7 @@ func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Respo
 	return nil
 }
 
-/**
- * Transfer
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+// Transfer is to Transfer
 func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -297,11 +266,7 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-/**
- * QueryMyBuy
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+// QueryMyBuy is to QueryMyBuy
 func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -312,7 +277,6 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 		return err
 	}
 
-	//验签
 	is_true, err := sign.QueryVerifySign(req.Body)
 	if !is_true {
 		rsp.Body = errcode.ReturnError(1000, err)
@@ -329,11 +293,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 	return nil
 }
 
-/**
- * Init
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//init is to init
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
 	if err != nil {
@@ -344,11 +304,6 @@ func init() {
 	log.ReplaceLogger(logger)
 }
 
-/**
- * Main
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
 func main() {
 	service := micro.NewService(
 		micro.Name("go.micro.api.v3.user"),

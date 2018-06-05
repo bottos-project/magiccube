@@ -27,6 +27,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// FavoritMessage is definition of favorite msg
 type FavoritMessage struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	BlockNum           int           `bson:"block_num"`
@@ -46,6 +47,7 @@ type FavoritMessage struct {
 	CreatedAt string `bson:"createdAt"`
 }
 
+// CallGetFavoritListByUser is to get favorite list by user
 func (r *MongoRepository) CallGetFavoritListByUser(username string) ([]*util.FavoritDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -63,10 +65,10 @@ func (r *MongoRepository) CallGetFavoritListByUser(username string) ([]*util.Fav
 	var favors = []*util.FavoritDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.FavoritDBInfo{
-			mesgs[i].Data.UserName,
-			mesgs[i].Data.OpType,
-			mesgs[i].Data.GoodsType,
-			mesgs[i].Data.GoodsID}
+			UserName  : mesgs[i].Data.UserName,
+			OpType    : mesgs[i].Data.OpType,
+			GoodsType : mesgs[i].Data.GoodsType,
+			GoodsID   : mesgs[i].Data.GoodsID}
 		favors = append(favors, dbtag)
 	}
 

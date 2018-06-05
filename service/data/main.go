@@ -41,16 +41,24 @@ import (
 )
 
 const (
-	//BASE_CHAIN_IP
-	BASE_CHAIN_IP           = baseConfig.BASE_CHAIN_IP
-	BASE_URL                = baseConfig.BASE_CHAIN_URL
-	GET_INFO_URL            = BASE_URL + "v1/chain/get_info"
-	GET_BLOCK_URL           = BASE_URL + "v1/chain/get_block"
-	ABI_JSON_TO_BIN_URL     = BASE_URL + "v1/chain/abi_json_to_bin"
-	PUSH_TRANSACTION_URL    = BASE_URL + "v1/chain/push_transaction"
+	//BASE_CHAIN_IP baseIP
+	BASE_CHAIN_IP = baseConfig.BASE_CHAIN_IP
+	//BASE_URL baseURL
+	BASE_URL = baseConfig.BASE_CHAIN_URL
+	//GET_INFO_URL getinfoURL
+	GET_INFO_URL = BASE_URL + "v1/chain/get_info"
+	//GET_BLOCK_URL getblockURL
+	GET_BLOCK_URL = BASE_URL + "v1/chain/get_block"
+	//ABI_JSON_TO_BIN_URL binURL
+	ABI_JSON_TO_BIN_URL = BASE_URL + "v1/chain/abi_json_to_bin"
+	//PUSH_TRANSACTION_URL push_transactionURL
+	PUSH_TRANSACTION_URL = BASE_URL + "v1/chain/push_transaction"
+	//GET_TABLE_ROW_BY_STRING get_table_row_by_string_key
 	GET_TABLE_ROW_BY_STRING = BASE_URL + "v1/chain/get_table_row_by_string_key"
-	STORAGE_RPC_URL         = baseConfig.BASE_RPC
+	//STORAGE_RPC_URL BASE_RPC
+	STORAGE_RPC_URL = baseConfig.BASE_RPC
 )
+
 // DataService struct
 type DataService struct {
 	minioRepo minioRepository
@@ -73,12 +81,12 @@ type mgoRepository interface {
 	CallDataSliceIPRequest(sguid string) (*util.DataDBInfo, error)
 }
 
-// create new dataservice
+// NewDataService is to create new dataservice
 func NewDataService(minioRepo minioRepository, mgodb mgoRepository) proto.DataHandler {
 	return &DataService{minioRepo: minioRepo, mgoRepo: mgodb}
 }
 
-//check file isExist 
+//FileCheck is to  check file isExist
 func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest, rsp *proto.FileCheckResponse) error {
 
 	log.Info("Start Check File!")
@@ -114,7 +122,8 @@ func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest
 	rsp.IsExist = isSlicefileExist
 	return nil
 }
-//get file upload URL
+
+//GetFileUploadURL is to get file upload URL
 func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadURLRequest, rsp *proto.GetFileUploadURLResponse) error {
 
 	log.Info("Start Get File Upload URL!")
@@ -146,7 +155,8 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 	rsp.Message = "OK"
 	return nil
 }
-//get file slice upload URL
+
+//GetFileSliceUploadURL is to get file slice upload URL
 func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetFileSliceUploadURLRequest, rsp *proto.GetFileSliceUploadURLResponse) error {
 
 	log.Info("Start Get File Slice Upload URL!")
@@ -172,7 +182,8 @@ func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetF
 	rsp.Message = "OK"
 	return nil
 }
-//get file download URL
+
+//GetFileDownloadURL is to get file download URL
 func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFileDownloadURLRequest, rsp *proto.GetFileDownloadURLResponse) error {
 
 	log.Info("Start Get FileDownload URL!")
@@ -198,7 +209,8 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 	rsp.Message = "OK"
 	return nil
 }
-//query file upload progress and storage file
+
+//GetUploadProgress is to query file upload progress and storage file
 func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploadProgressRequest, rsp *proto.GetUploadProgressResponse) error {
 	log.Info("Start Get Upload Progress!")
 	if req == nil {
@@ -241,7 +253,8 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 	return nil
 
 }
-//get node
+
+// GetFileStorageNode is to get node
 func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFileStorageNodeRequest, rsp *proto.GetFileStorageNodeResponse) error {
 
 	log.Info("Start Get File Storage Node!")
@@ -278,7 +291,8 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 	rsp.Message = "OK"
 	return nil
 }
-//get file storage URL
+
+//GetFileStorageURL is to get file storage URL
 func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileStorageURLRequest, rsp *proto.GetFileStorageURLResponse) error {
 
 	log.Info("Start Get File Storage URL!")
@@ -305,7 +319,8 @@ func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileS
 	rsp.Message = "OK"
 	return nil
 }
-// put file to node
+
+//PutFile is to  put file to node
 func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rsp *proto.PutFileResponse) error {
 
 	log.Info("Start Put file!")
@@ -345,17 +360,18 @@ func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rs
 	reqBody.Header.Set("Connection", "keep-alive")
 	resp, err := client.Do(reqBody)
 	defer reqBody.Body.Close()
-	resp_body, err := ioutil.ReadAll(resp.Body)
+	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil
 	}
-	log.Info("resp_body")
-	log.Info(resp_body)
+	log.Info("respBody ")
+	log.Info(respBody)
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
 }
-// download file
+
+// DownloadFile is to download file
 func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileRequest, rsp *proto.DownloadFileResponse) error {
 	log.Info("Start download file!")
 	if req == nil {
@@ -401,7 +417,8 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 	rsp.Message = "OK"
 	return nil
 }
-//compose file 
+
+//ComposeFile is to compose file
 func (d *DataService) ComposeFile(ctx context.Context, req *proto.ComposeFileRequest, rsp *proto.ComposeFileResponse) error {
 
 	log.Info("Start compose file!")
@@ -441,7 +458,8 @@ func (d *DataService) ComposeFile(ctx context.Context, req *proto.ComposeFileReq
 	return nil
 
 }
-//get file slice storage IP
+
+//GetStorageIP is to get file slice storage IP
 func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPRequest, rsp *proto.GetStorageIPResponse) error {
 
 	log.Info("Start Get Storage IP!")

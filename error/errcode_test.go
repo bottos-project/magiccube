@@ -26,5 +26,5 @@ func Test_getErrorInfo(t *testing.T) {
 
 // Test_GetAllErrorInfos Test_GetAllErrorInfos
 func Test_GetAllErrorInfos(t *testing.T) {
-	t.Log(GetAllErrorInfos()) 
-} 
+	t.Log(GetAllErrorInfos())
+}
