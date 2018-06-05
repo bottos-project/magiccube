@@ -18,19 +18,23 @@
 package main
 
 import (
+	"os"
+
 	contract_proto "github.com/bottos-project/magiccube/service/contract/proto"
 	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	"golang.org/x/net/context"
-	"os"
 )
 
+// Contract struct
 type Contract struct{}
 
+// Deploy Deploy
 func (u *Contract) Deploy(ctx context.Context, req *contract_proto.DeployRequest, rsp *contract_proto.DeployResponse) error {
 	return nil
 }
 
+// Query Query
 func (u *Contract) Query(ctx context.Context, req *contract_proto.QueryRequest, rsp *contract_proto.QueryResponse) error {
 	return nil
 }

@@ -15,19 +15,23 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package bean
 
 import (
-	"gopkg.in/mgo.v2/bson"
 	"time"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
+// CoreBaseReturn struct
 type CoreBaseReturn struct {
 	Errcode int64       `json:"errcode"`
 	Msg     string      `json:"msg"`
 	Result  interface{} `json:"result"`
 }
 
+// CoreCommonReturn struct
 type CoreCommonReturn struct {
 	Errcode int64  `json:"errcode"`
 	Msg     string `json:"msg"`
@@ -48,6 +52,7 @@ type CoreCommonReturn struct {
 	} `json:"result"`
 }
 
+// Transaction struct
 type Transaction struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -67,6 +72,7 @@ type Transaction struct {
 	Version       uint32        `bson:"version"`
 }
 
+// TxBean struct
 type TxBean struct {
 	Version     uint32 `protobuf:"varint,1,opt,name=version" json:"version"`
 	CursorNum   uint32 `protobuf:"varint,2,opt,name=cursor_num,json=cursorNum" json:"cursor_num"`
@@ -80,21 +86,25 @@ type TxBean struct {
 	Signature   string `protobuf:"bytes,10,opt,name=signature" json:"signature"`
 }
 
+// UserTokenBean struct
 type UserTokenBean struct {
 	Username string `bson:"username"`
 	Token    string `bson:"token"`
 	Ctime    int64  `bson:"ctime"`
 }
 
+// Did struct
 type Did struct {
 	Didid   string
 	Didinfo string
 }
 
+// TxPublic struct
 type TxPublic struct {
 	Sender string `json:"sender"`
 }
 
+// Block struct
 type Block struct {
 	ID            bson.ObjectId   `bson:"_id,omitempty"`
 	BlockHash     string          `bson:"block_hash"`
@@ -107,6 +117,7 @@ type Block struct {
 	CreateTime    time.Time       `bson:"create_time"`
 }
 
+// Favorite struct
 type Favorite struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -131,6 +142,7 @@ type Favorite struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// Requirement struct
 type Requirement struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -163,6 +175,7 @@ type Requirement struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// AssetBean struct
 type AssetBean struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -196,6 +209,7 @@ type AssetBean struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// FileBean struct
 type FileBean struct {
 	ID          bson.ObjectId `bson:"_id,omitempty"`
 	Contract    string        `bson:"contract"`
@@ -223,6 +237,7 @@ type FileBean struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// PreSaleBean struct
 type PreSaleBean struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -251,6 +266,7 @@ type PreSaleBean struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// Buy struct
 type Buy struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -276,6 +292,7 @@ type Buy struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// Tx struct
 type Tx struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	BlockNumber   uint32        `bson:"block_number"`
@@ -301,6 +318,7 @@ type Tx struct {
 	CreateTime time.Time `bson:"create_time"`
 }
 
+// RecordNum struct
 type RecordNum struct {
 	ID             bson.ObjectId `bson:"_id,omitempty"`
 	TxNum          int           `bson:"tx_num"`
