@@ -22,18 +22,14 @@
  * @Last Modified by:
  * @Last Modified time:
  */
-
 package common
 
-import (
-)
-
 type MerkleHashTree struct {
-	Root  *MTNode
+	Root *MTNode
 }
 
 type MTNode struct {
-	Hash  Hash
+	Hash Hash
 }
 
 func dSha256(h1 Hash, h2 Hash) Hash {
@@ -55,7 +51,7 @@ func CreateMerkleTree(hs []Hash) *MerkleHashTree {
 		nodes = createNextLevel(nodes)
 	}
 	mt := &MerkleHashTree{
-		Root:  nodes[0],
+		Root: nodes[0],
 	}
 	return mt
 }
@@ -68,7 +64,7 @@ func createLeafNodes(hs []Hash) []*MTNode {
 		}
 		nodes = append(nodes, node)
 	}
-	if (len(hs) % 2 == 1) {
+	if len(hs)%2 == 1 {
 		node := &MTNode{
 			Hash: hs[len(hs)-1],
 		}
@@ -81,12 +77,12 @@ func createNextLevel(nodes []*MTNode) []*MTNode {
 	var nlNodes []*MTNode
 	for i := 0; i < len(nodes)/2; i++ {
 		hash := dSha256(nodes[i*2].Hash, nodes[i*2+1].Hash)
-		node := &MTNode{Hash:  hash}
+		node := &MTNode{Hash: hash}
 		nlNodes = append(nlNodes, node)
 	}
-	if (len(nodes) % 2 == 1) {
+	if len(nodes)%2 == 1 {
 		hash := dSha256(nodes[len(nodes)-1].Hash, nodes[len(nodes)-1].Hash)
-		node := &MTNode{Hash:  hash}
+		node := &MTNode{Hash: hash}
 		nlNodes = append(nlNodes, node)
 	}
 	return nlNodes

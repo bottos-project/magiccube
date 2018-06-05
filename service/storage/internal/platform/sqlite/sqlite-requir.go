@@ -14,7 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package sqlite
 
 import (
@@ -25,14 +26,14 @@ func (r *SqliteRepository) CallGetUserRequirementList(username string) ([]*util.
 	var reqs = []*util.RequirementDBInfo{}
 	dbtag := new(util.RequirementDBInfo)
 	dbtag.RequirementId = "idtest"
-	dbtag.RequirementName="requirename"
-	dbtag.FeatureTag=111
-	dbtag.SamplePath="pathtest"
-	dbtag.SampleHash="hashtest"
-	dbtag.ExpireTime=222
-	dbtag.Price=333
+	dbtag.RequirementName = "requirename"
+	dbtag.FeatureTag = 111
+	dbtag.SamplePath = "pathtest"
+	dbtag.SampleHash = "hashtest"
+	dbtag.ExpireTime = 222
+	dbtag.Price = 333
 	dbtag.Description = "destest"
-	dbtag.PublishDate =444
+	dbtag.PublishDate = 444
 	reqs = append(reqs, dbtag)
 	return reqs, nil
 }

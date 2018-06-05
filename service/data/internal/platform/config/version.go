@@ -14,7 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package config
 
 // Version is used to define the application version and should be overridden during the

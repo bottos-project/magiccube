@@ -18,7 +18,7 @@
 package service
 
 import (
-	//"github.com/bottos-project/magiccube/service/storage/controller"
+	
 	"time"
 
 	"github.com/bottos-project/magiccube/service/storage/proto"
@@ -47,7 +47,7 @@ type dbRepository interface {
 	CallDelUserToken(string, string) (uint32, error)
 	CallGetSyncBlockCount() (uint64, error)
 
-	//	CallAgeUserToken(timeout int64) (uint32, error)
+
 }
 type mgoRepository interface {
 	CallInsertUserToken(string, string) (uint32, error)

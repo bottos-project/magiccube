@@ -14,7 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package controller
 
 import (
@@ -23,9 +24,11 @@ import (
 	//. "github.com/xiaoping378/blockchain-on-sql/parser"
 	"fmt"
 )
+
 func TestMapToObject(t *testing.T) {
 	fmt.Print("dddd")
 }
+
 /*
 func TestParseQuantity(t *testing.T) {
 	i, err := ParseQuantity("0x41")

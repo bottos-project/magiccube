@@ -14,7 +14,7 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package minio
 
 import (
@@ -23,8 +23,9 @@ import (
 	//"log"
 	log "github.com/cihub/seelog"
 	//	"net/url"
-	"github.com/minio/minio-go"
 	"io"
+
+	"github.com/minio/minio-go"
 	//"os"
 	"time"
 )
@@ -41,7 +42,6 @@ func NewMinioRepository(endpoint string, accessKey string, secretKey string) *Mi
 }
 func (r *MinioRepository) GetCacheURL(username string, objectName string) (string, error) {
 
-
 	log.Info("get cache")
 	useSSL := false
 	log.Info("r.minioEndpoint")
@@ -50,7 +50,6 @@ func (r *MinioRepository) GetCacheURL(username string, objectName string) (strin
 	log.Info(r.minioAccessKey)
 	log.Info("r.minioSecretKey")
 	log.Info(r.minioSecretKey)
-	
 
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 	if err != nil {
@@ -80,7 +79,7 @@ func (r *MinioRepository) GetCacheURL(username string, objectName string) (strin
 		}
 		log.Info(err)
 	}
-    log.Info("GetCacheURL")
+	log.Info("GetCacheURL")
 	log.Info(objectName)
 	CacheURL, err := minioClient.PresignedPutObject(username, objectName, 1000*time.Second)
 	if err != nil {
@@ -94,7 +93,7 @@ func (r *MinioRepository) GetCacheURL(username string, objectName string) (strin
 	return url, nil
 }
 func (r *MinioRepository) GetCacheFile(username string, objectName string) (*minio.Object, error) {
-    
+
 	log.Info("get cache file")
 	useSSL := false
 	log.Info("r.minioEndpoint")
@@ -168,16 +167,16 @@ func (r *MinioRepository) ComposeFile(dst minio.DestinationInfo, srcs []minio.So
 }
 
 func (r *MinioRepository) GetPutState(username string, objectName string) (int64, error) {
-	
+
 	log.Info("get put state")
 	useSSL := false
-    log.Info("r.minioEndpoint")
+	log.Info("r.minioEndpoint")
 	log.Info(r.minioEndpoint)
 	log.Info("r.minioAccessKey")
 	log.Info(r.minioAccessKey)
 	log.Info("r.minioSecretKey")
 	log.Info(r.minioSecretKey)
-	
+
 	minioClient, err := minio.New(r.minioEndpoint, r.minioAccessKey, r.minioSecretKey, useSSL)
 	if err != nil {
 		log.Info(err)
@@ -196,12 +195,12 @@ func (r *MinioRepository) GetPutState(username string, objectName string) (int64
 		log.Info(err)
 		return 0, err
 	}
-	
+
 	return objectInfo.Size, nil
 }
 
 func (r *MinioRepository) GetFileDownloadURL(username string, objectName string) (string, error) {
-    
+
 	log.Info("get file downloadURL")
 	log.Info("r.minioEndpoint")
 	log.Info(r.minioEndpoint)

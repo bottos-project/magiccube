@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
  */
+ 
 package util
 type AccountInfo struct {
 	AccountName       string `json:"account_name"`

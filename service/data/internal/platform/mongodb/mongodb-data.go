@@ -24,7 +24,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	log "github.com/cihub/seelog"
 )
-
 type DataMessage struct {
 	ID                 string        `bson:"_id"`
 	BlockNumber          int           `bson:"block_number"`

@@ -14,7 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package errors
 
 // Error is a handy type alias that lets us create constant error messages
@@ -28,10 +29,8 @@ func (e Error) Error() string {
 const (
 	// BadSearchTerm indicates a search term validation failure
 	BadSearchTerm = Error("Bad search term")
-
 	// NoSuchCategory indicates a request for a category that doesn't exist.
 	NoSuchCategory = Error("No such category")
-
 	// NoSuchProduct indicates a request for a non-existent product
 	NoSuchProduct = Error("No such product")
 )

@@ -14,12 +14,9 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
-package service
+*/
 
-//import (
-//	"fmt"
-//)
+package service
 
 type ContractInfo struct {
 	AddressId int64  `json:"addressid"`

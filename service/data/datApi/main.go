@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,20 +14,21 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/magiccube/service/data/proto"
-	"github.com/micro/go-micro"
-	api "github.com/micro/micro/api/proto"
+	"fmt"
+	"io/ioutil"
 
 	"github.com/bitly/go-simplejson"
+	"github.com/bottos-project/magiccube/service/data/proto"
+	log "github.com/cihub/seelog"
+	"github.com/micro/go-micro"
+	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"io/ioutil"
-	"fmt"
 
 	"net/http"
 	"strings"
@@ -141,14 +142,14 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			//Sip := "127.0.0.1"
 			addr := "http://" + Sip + ":8080/rpc"
 			//2.2.2 get slice storage url
-            log.Info("get slice storage url")
+			log.Info("get slice storage url")
 			params := `service=go.micro.srv.v3.data&method=Data.GetFileSliceUploadURL&request={
 					"username":"%s",
 					"guid":"%s"}`
 			s := fmt.Sprintf(params, userName, sguid)
 			resp_body, err := http.Post(addr, "application/x-www-form-urlencoded",
 				strings.NewReader(s))
-			
+
 			if err != nil {
 				log.Info(err)
 			}
@@ -163,7 +164,7 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 
 			}
 			log.Info("GetFileStorageURL Result")
-			log.Info(url)	
+			log.Info(url)
 
 			//2.2.3 storage slice file
 			log.Info("storage slice file")
@@ -181,11 +182,11 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 			mslice[sguid] = 1
 			msliceip[sguid] = Sip
 			nodeTag := &data.Ip{sguid,
-			Sip}
+				Sip}
 			sliceIp = append(sliceIp, nodeTag)
-		}else{
+		} else {
 			nodeTag := &data.Ip{sguid,
-			msliceip[sguid]}
+				msliceip[sguid]}
 			sliceIp = append(sliceIp, nodeTag)
 		}
 		storageOK++
@@ -198,8 +199,8 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 		"message":             uploadCacheResult.Message,
 		"slice_progress_done": uploadCacheResult.SliceProgressDone,
 		"slice_progressing":   uploadCacheResult.SliceProgressing,
-		"storage_done":         storageOK,
-		"storage_ip": 		   sliceIp,
+		"storage_done":        storageOK,
+		"storage_ip":          sliceIp,
 	})
 	rsp.Body = string(b)
 	return nil
@@ -225,10 +226,10 @@ func (d *Data) GetStorageIP(ctx context.Context, req *api.Request, rsp *api.Resp
 
 	rsp.StatusCode = 200
 	b, _ := json.Marshal(map[string]interface{}{
-		"result":  rep.Result,
-		"message": rep.Message,
-		"storage_addr":      rep.StorageAddr,
-		"file_name": rep.FileName,
+		"result":       rep.Result,
+		"message":      rep.Message,
+		"storage_addr": rep.StorageAddr,
+		"file_name":    rep.FileName,
 	})
 	rsp.Body = string(b)
 
@@ -271,7 +272,7 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 		resp_body, err := http.Post(addr, "application/x-www-form-urlencoded",
 			strings.NewReader(s))
 		log.Info("GetFileStorageURL Result")
-	    log.Info(resp_body)
+		log.Info(resp_body)
 		if err != nil {
 			return err
 		}
@@ -293,7 +294,7 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 			Url:      url,
 		})
 		log.Info("DownloadFile Result")
-	    log.Info(downloadResult)
+		log.Info(downloadResult)
 		if err != nil {
 			log.Error(err)
 			return err
@@ -346,8 +347,6 @@ func main() {
 
 	service := micro.NewService(
 		micro.Name("go.micro.api.v3.data"),
-
-
 	)
 
 	// parse command line flags

@@ -14,7 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package errors
 
 // Error is a handy type alias that lets us create constant error messages

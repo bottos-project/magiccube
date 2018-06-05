@@ -24,7 +24,6 @@
  */
 
 package common
-
 import (
 	"fmt"
 	"testing"

@@ -14,26 +14,29 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package sqlite
-import(
-	"testing"
-	"github.com/bottos-project/magiccube/service/storage/util"
+
+import (
 	"fmt"
+	"testing"
+
+	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
 func TestSqliteRepository_CallInsertUserInfo(t *testing.T) {
 	var ins SqliteRepository
 	value := util.UserDBInfo{
-	        Username : "usermng",
-		Accountname:"usermng",
-		Ownerpubkey: "0xabcd1",
-		Activepubkey: "0xabcd2",
-		EncyptedInfo :"0xefgh",
-		UserType :"person",
-		RoleType:"provider",
-		CompanyName :"tuzi network",
-		CompanyAddress:"zhangjiang",
+		Username:       "usermng",
+		Accountname:    "usermng",
+		Ownerpubkey:    "0xabcd1",
+		Activepubkey:   "0xabcd2",
+		EncyptedInfo:   "0xefgh",
+		UserType:       "person",
+		RoleType:       "provider",
+		CompanyName:    "tuzi network",
+		CompanyAddress: "zhangjiang",
 	}
 	err := ins.CallInsertUserInfo(value)
 	if err != nil { //try a unit test on function

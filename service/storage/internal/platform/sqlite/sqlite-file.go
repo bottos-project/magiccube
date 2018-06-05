@@ -14,7 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package sqlite
 
 import (
@@ -64,8 +65,7 @@ func (c *SqliteContext) InsertUserfile(file util.FileDBInfo) error {
 	return nil
 }
 
-
-func (c *SqliteContext) getUserfile(username string )([]*util.FileDBInfo, error) {
+func (c *SqliteContext) getUserfile(username string) ([]*util.FileDBInfo, error) {
 	sql := "select * from fileinfo where Username= '" + username + "';"
 	rows, err := c.db.Query(sql)
 	if err != nil {
@@ -107,7 +107,7 @@ func (r *SqliteRepository) CallGetUserFileList(username string) ([]*util.FileDBI
 		log.Println(err)
 		return nil, errors.New("connectDB failed")
 	}
-	files,err2 := db.getUserfile(username)
+	files, err2 := db.getUserfile(username)
 	if err2 != nil {
 		log.Println(err2)
 		return nil, errors.New("InsertUserfile failed")

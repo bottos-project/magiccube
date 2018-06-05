@@ -23,7 +23,6 @@
  * @Last Modified time:
  */
 package common
-
 import (
 	"bytes"
 	"encoding/binary"
