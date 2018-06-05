@@ -192,7 +192,6 @@ message QueryAssetInfoData {
 }
 
 
-
 message QueryMyNoticeRequest {
     uint32 page_size = 1;
     uint32 page_num = 2;

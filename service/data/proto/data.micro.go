@@ -18,6 +18,8 @@ It has these top-level messages:
 	FileCheckResponse
 	GetFileUploadURLRequest
 	GetFileUploadURLResponse
+	GetFileSliceUploadURLRequest
+	GetFileSliceUploadURLResponse
 	GetFileStorageNodeRequest
 	GetFileStorageNodeResponse
 	PutFileRequest
@@ -35,6 +37,7 @@ It has these top-level messages:
 	GetFileDownloadURLRequest
 	GetFileDownloadURLResponse
 */
+
 package data
 
 import proto "github.com/golang/protobuf/proto"
@@ -68,6 +71,7 @@ var _ server.Option
 type DataClient interface {
 	FileCheck(ctx context.Context, in *FileCheckRequest, opts ...client.CallOption) (*FileCheckResponse, error)
 	GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, opts ...client.CallOption) (*GetFileUploadURLResponse, error)
+	GetFileSliceUploadURL(ctx context.Context, in *GetFileSliceUploadURLRequest, opts ...client.CallOption) (*GetFileSliceUploadURLResponse, error)
 	GetUploadProgress(ctx context.Context, in *GetUploadProgressRequest, opts ...client.CallOption) (*GetUploadProgressResponse, error)
 	GetFileStorageNode(ctx context.Context, in *GetFileStorageNodeRequest, opts ...client.CallOption) (*GetFileStorageNodeResponse, error)
 	PutFile(ctx context.Context, in *PutFileRequest, opts ...client.CallOption) (*PutFileResponse, error)
@@ -109,6 +113,16 @@ func (c *dataClient) FileCheck(ctx context.Context, in *FileCheckRequest, opts .
 func (c *dataClient) GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, opts ...client.CallOption) (*GetFileUploadURLResponse, error) {
 	req := c.c.NewRequest(c.serviceName, "Data.GetFileUploadURL", in)
 	out := new(GetFileUploadURLResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dataClient) GetFileSliceUploadURL(ctx context.Context, in *GetFileSliceUploadURLRequest, opts ...client.CallOption) (*GetFileSliceUploadURLResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Data.GetFileSliceUploadURL", in)
+	out := new(GetFileSliceUploadURLResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -201,6 +215,7 @@ func (c *dataClient) GetFileDownloadURL(ctx context.Context, in *GetFileDownload
 type DataHandler interface {
 	FileCheck(context.Context, *FileCheckRequest, *FileCheckResponse) error
 	GetFileUploadURL(context.Context, *GetFileUploadURLRequest, *GetFileUploadURLResponse) error
+	GetFileSliceUploadURL(context.Context, *GetFileSliceUploadURLRequest, *GetFileSliceUploadURLResponse) error
 	GetUploadProgress(context.Context, *GetUploadProgressRequest, *GetUploadProgressResponse) error
 	GetFileStorageNode(context.Context, *GetFileStorageNodeRequest, *GetFileStorageNodeResponse) error
 	PutFile(context.Context, *PutFileRequest, *PutFileResponse) error
@@ -225,6 +240,10 @@ func (h *Data) FileCheck(ctx context.Context, in *FileCheckRequest, out *FileChe
 
 func (h *Data) GetFileUploadURL(ctx context.Context, in *GetFileUploadURLRequest, out *GetFileUploadURLResponse) error {
 	return h.DataHandler.GetFileUploadURL(ctx, in, out)
+}
+
+func (h *Data) GetFileSliceUploadURL(ctx context.Context, in *GetFileSliceUploadURLRequest, out *GetFileSliceUploadURLResponse) error {
+	return h.DataHandler.GetFileSliceUploadURL(ctx, in, out)
 }
 
 func (h *Data) GetUploadProgress(ctx context.Context, in *GetUploadProgressRequest, out *GetUploadProgressResponse) error {

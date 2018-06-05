@@ -1,4 +1,22 @@
+﻿/*Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Service Layer
+  Created by Developers Team of Bottos.
+
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+ */
 package keystore
+
 import (
     "time"	
     "os"
@@ -55,7 +73,7 @@ var (
 	myNodeAccountPubKey = ""
 	myNodeAccountPriKey = ""
 	myNodeAccount       = "" 
-	myNodeUUID  aes.UUID
+	myNodeUUID          = ""
 )
 
 type NodeConfig struct {
@@ -277,8 +295,6 @@ func FromECDSA(priv *ecdsa.PrivateKey) []byte {
     return aes.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
 }
 
-
-
 func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
     if pub == nil || pub.X == nil || pub.Y == nil {
             return nil
@@ -373,7 +389,7 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 	myNodeAccountPubKey = hex.EncodeToString(FromECDSAPub(&aes.Pubkeytmp))
 	myNodeAccountPriKey = hex.EncodeToString(FromECDSA(key.PrivateKey))
 	myNodeAccount       = nodeinfos.Node[0].UserName
-    myNodeUUID          = key.UUID
+    myNodeUUID          = key.Id.String()
     
     fmt.Println("=====================================================================\n")
 
@@ -383,7 +399,7 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 func GetPubKey() string { return myNodeAccountPubKey }
 func GetPriKey() string { return myNodeAccountPriKey }
 func GetAccount() string { return myNodeAccount }
-func GetUUID() aes.UUID { return myNodeUUID }
+func GetUUID() string { return myNodeUUID }
 
 var Stdin = newTerminalPrompter()
 

@@ -5,6 +5,8 @@ service Data {
 	};
 	rpc GetFileUploadURL (GetFileUploadURLRequest) returns (GetFileUploadURLResponse) {
     };
+	rpc GetFileSliceUploadURL (GetFileSliceUploadURLRequest) returns (GetFileSliceUploadURLResponse) {
+    };
 	rpc GetUploadProgress (GetUploadProgressRequest) returns (GetUploadProgressResponse) {
     };
 	rpc GetFileStorageNode (GetFileStorageNodeRequest) returns (GetFileStorageNodeResponse) {
@@ -73,6 +75,18 @@ message GetFileUploadURLResponse {
 	uint64 result = 1;
     string message = 2;
 	repeated Url url = 3;
+
+}
+message GetFileSliceUploadURLRequest {
+	string username = 1;
+	string guid = 2;
+
+}
+
+message GetFileSliceUploadURLResponse {
+	uint64 result = 1;
+    string message = 2;
+	string url = 3;
 
 }
 
@@ -152,6 +166,7 @@ message GetStorageIPResponse {
 	uint64 result = 1;
     string message = 2;
 	string storage_addr = 3;
+	string file_name = 4;
 }
 message GetFileDownloadURLRequest {
 	string username = 1;

@@ -1,14 +1,29 @@
+﻿/*Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Service Layer
+  Created by Developers Team of Bottos.
+
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+ */
 package mongodb
 
 import (
 	"errors"
-	"fmt"
-
 	"github.com/bottos-project/magiccube/service/data/util"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	log "github.com/cihub/seelog"
 )
-
 type DataMessage struct {
 	ID                 string        `bson:"_id"`
 	BlockNumber          int           `bson:"block_number"`
@@ -25,12 +40,12 @@ type DataMessage struct {
 		Filehash      string `bson:"filehash"`
 		Info struct {
 			Username string     `bson:"username"`
-			Filesize       string     `bson:"filesize"`
 			Filename       string     `bson:"filename"`
+			Filesize       uint64     `bson:"filesize"`
 			Filepolicy      string     `bson:"filepolicy"`
 			Filenumber       uint64     `bson:"filenumber"`
-			Simorass       string     `bson:"simorass"`
-			Optype     string     `bson:"optype"`
+			Simorass       uint64     `bson:"simorass"`
+			Optype     uint64     `bson:"optype"`
 			Storeaddr     string     `bson:"storeaddr"`
 
 		} `bson:"info"`
@@ -42,46 +57,42 @@ type DataMessage struct {
 }
 
 func (r *MongoRepository) CallIsDataExists(merkleroothash string) (uint64, error) {
+	log.Info("call is data exists")
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
-		fmt.Println(err)
+		log.Info("err")
 		return 0, errors.New("Get session faild" + r.mgoEndpoint)
 	}
 	//defer session.Close()
-	fmt.Println(session)
 	var mesgs []DataMessage
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"method": "datafilereg", "param.filehash": merkleroothash}).All(&mesgs)
 	}
 	session.SetCollection("pre_datafilereg", query)
-	fmt.Println(mesgs)
 	var reqs uint64 = 0
 	if mesgs != nil {
 		reqs = 1
 	}
-	fmt.Println(session)
 	return reqs, err
 }
 func (r *MongoRepository) CallDataSliceIPRequest(guid string) (*util.DataDBInfo, error) {
+	log.Info("call datasliceip")
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
-		fmt.Println(err)
+		log.Info(err)
 		return nil, errors.New("Get session faild" + r.mgoEndpoint)
 	}
 	//defer session.Close()
-	fmt.Println(session)
 	var mesgs DataMessage
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"method": "datafilereg", "param.filehash": guid}).One(&mesgs)
 	}
 	session.SetCollection("pre_datafilereg", query)
-	fmt.Println("mesgs")
-	fmt.Println(mesgs)
 	reqs := &util.DataDBInfo{
 		mesgs.Param.Filehash,
 		mesgs.Param.Info.Username,
-		mesgs.Param.Info.Filesize,
 		mesgs.Param.Info.Filename,
+		mesgs.Param.Info.Filesize,
 		mesgs.Param.Info.Filepolicy,
 		mesgs.Param.Info.Filenumber,
 		mesgs.Param.Info.Simorass,

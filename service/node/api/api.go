@@ -1,3 +1,20 @@
+﻿/*Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Service Layer
+  Created by Developers Team of Bottos.
+
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+ */
 package api
 
 import (
@@ -22,13 +39,14 @@ import (
     "net"
     "unsafe"
     "bytes"
+    "strings"
     //"reflect"
     //"github.com/micro/cli"
     //"github.com/urfave/cli"
     //"github.com/hashicorp/consul/version"
     "github.com/bottos-project/magiccube/service/node/config"
     "github.com/bottos-project/magiccube/service/storage/util"
-    "strings"
+    datautil "github.com/bottos-project/magiccube/service/data/util"
     "net/http"
     "gopkg.in/mgo.v2"
     "gopkg.in/mgo.v2/bson"
@@ -51,6 +69,8 @@ type NodeInfo struct {
   StoragePath string
   ServPath    string
   ServLst     []string
+  SeedIp      string
+  SlaveIpLst  []string
 }
 
 type NodeInfos struct {
@@ -97,6 +117,11 @@ type Ippointxy struct {
     Pointx     string        `bson:"pointx"`
     Pointy     string        `bson:"pointy"`
     CreatedAt time.Time      `bson:"createdAt"`
+}
+
+type StorageDBClusterInfo struct {
+    Nodetype       string              `bson:"type"`
+    Nodedbinfo     datautil.NodeDBInfo `bson:"node"`
 }
 
 var conf_file string
@@ -174,7 +199,6 @@ func MonitorConfigFile(config_file string) error {
                     for j := 0;j<len(node_infos.Node[i].ServLst);j++ {
                         //command = "echo \""+node_infos.Node[i].PassWord+"\" | sudo -S echo \""+node_infos.Node[i].ServLst[j]+"\" > /etc/rc.local"
                         //fmt.Println("command = ",command)
-
 
                         if /*buf*/_,err := SshCommand(node_infos.Node[i].UserName ,
                             node_infos.Node[i].PassWord ,
@@ -378,7 +402,6 @@ func ip2pointxy(ip string) szTong_sPoint{
             }
         }
         
-
     } else {
         fmt.Println("Error when Unmarshal infos!")
         return szTong_sPoint{}
@@ -446,7 +469,6 @@ func checkError(err error) {
     }
 }
 
-
 func NewMongoRepository(endpoint string) *MongoRepository {
     return &MongoRepository{mgoEndpoint: endpoint}
 }
@@ -506,6 +528,39 @@ func (r *MongoRepository) CallInsertPointxy(ip string, pointx string, pointy str
     } else {    
         selector := bson.M{"ip": ip}
         data := bson.M{"$set": bson.M{"pointx": pointx, "pointy": pointy}}
+    
+        /*changeInfo*/_, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
+        if err != nil {
+            fmt.Println("update failed!") 
+        }
+        //fmt.Printf("%+v\n", changeInfo)
+	    return 1, err
+    }
+}
+
+func (r *MongoRepository) InsertRecord(tablename string, keyname string, key string, value_name string, value interface{}) (uint32, error) {
+    session, err := GetSession(r.mgoEndpoint)
+    if err != nil {
+        fmt.Println(err)
+        return 0, errors.New("Get session faild" + r.mgoEndpoint)
+    }
+
+    var mesgs *Ippointxy    
+    session.GetCollection(config.DB_BOTTOS, tablename).Find(bson.M{"$or": []bson.M{bson.M{keyname: key}}}).One(&mesgs)
+    fmt.Println("InsertRecord: tablename: ", tablename, ", mesgs:", mesgs)
+    if(mesgs == nil) {
+
+	insert := func(c *mgo.Collection) error {
+	              return c.Insert(value)
+	          }
+             
+	err = session.SetCollectionByDB(config.DB_BOTTOS, tablename, insert)
+	fmt.Println(err)
+        return 1, err
+    
+    } else {    
+        selector := bson.M{keyname: key}
+        data := bson.M{"$set": bson.M{value_name : value}}
     
         /*changeInfo*/_, err := session.mgoSession.DB(config.DB_BOTTOS).C(config.TABLE_POINTXY).UpdateAll(selector, data)
         if err != nil {

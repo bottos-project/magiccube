@@ -23,11 +23,11 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-#if [ $1 != "stop" ]; then 
-#    read -p "Please input your server ip address:" SERVER_IPADR
-#else
+if [ $1 != "stop" ]; then 
+    read -p "Please input your server ip address:" SERVER_IPADR
+else
     SERVER_IPADR="127.0.0.1"    
-#fi
+fi
 
 SERVER_PORT=9000
 WALLET_SERV=$SERVER_IPADR
