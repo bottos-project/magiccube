@@ -25,6 +25,8 @@ import (
 	"errors"
 	"fmt"
 	pack "github.com/bottos-project/bottos/contract/msgpack"
+	aes "github.com/bottos-project/crypto-go/crypto/aes"
+	"github.com/bottos-project/crypto-go/crypto/secp256k1"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/service/common/data"
 	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
@@ -33,8 +35,6 @@ import (
 	"github.com/bottos-project/magiccube/service/node/api"
 	"github.com/bottos-project/magiccube/service/node/config"
 	"github.com/bottos-project/magiccube/service/node/keystore"
-	aes "github.com/bottos-project/crypto-go/crypto/aes"
-	"github.com/bottos-project/crypto-go/crypto/secp256k1"
 	slog "github.com/cihub/seelog"
 	"github.com/howeyc/gopass"
 	"github.com/micro/go-micro"
@@ -125,10 +125,10 @@ func CreateAccountOld(nodeinfo api.NodeInfos) error {
 				fmt.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
-			} 
-			
-            fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
-			
+			}
+
+			fmt.Println("Create account " + nodeinfo.Node[0].BtoUser + " ok ...")
+
 		}
 	} else if "linux" == config.RUN_PLATFORM {
 		go execShell(command)
@@ -187,9 +187,9 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 				fmt.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
-			} 
-			
-            fmt.Println("Check keystone file ok ...")
+			}
+
+			fmt.Println("Check keystone file ok ...")
 
 		} else if "linux" == config.RUN_PLATFORM {
 			filename := "bto.keystore"
@@ -200,12 +200,12 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 				log.Println(errinfo)
 				err = errors.New(errinfo)
 				return err
-			} 
-		    
-            log.Println("Check keystone file ok ...Now decrypt file:", filepath)
+			}
+
+			log.Println("Check keystone file ok ...Now decrypt file:", filepath)
 			key, Account := aes.KeyDecrypt(filepath, UserPwd)
 			log.Println("DECRYPT KEYSTORE DONE! Account:", Account, ", key:", key)
-			
+
 		}
 	}
 
@@ -372,7 +372,6 @@ func main() {
 			}
 		}),*/
 	)
-
 
 	if api.PathExist(config.CONFIG_FILE) == false {
 		fmt.Println("*ERROR* configuration file :", config.CONFIG_FILE, " doesn't exist !!!")

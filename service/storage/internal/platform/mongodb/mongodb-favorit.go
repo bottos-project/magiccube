@@ -65,10 +65,10 @@ func (r *MongoRepository) CallGetFavoritListByUser(username string) ([]*util.Fav
 	var favors = []*util.FavoritDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.FavoritDBInfo{
-			UserName  : mesgs[i].Data.UserName,
-			OpType    : mesgs[i].Data.OpType,
-			GoodsType : mesgs[i].Data.GoodsType,
-			GoodsID   : mesgs[i].Data.GoodsID}
+			UserName:  mesgs[i].Data.UserName,
+			OpType:    mesgs[i].Data.OpType,
+			GoodsType: mesgs[i].Data.GoodsType,
+			GoodsID:   mesgs[i].Data.GoodsID}
 		favors = append(favors, dbtag)
 	}
 

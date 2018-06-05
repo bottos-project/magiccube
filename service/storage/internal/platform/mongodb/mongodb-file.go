@@ -69,13 +69,13 @@ func (r *MongoRepository) CallGetUserFileList(username string) ([]*util.FileDBIn
 	var reqs = []*util.FileDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.FileDBInfo{
-			FileHash:mesgs[i].Data.FileHash,
-			Username:mesgs[i].Data.BasicInfo.UserName,
-			FileName:mesgs[i].Data.BasicInfo.FileName,
-			FileSize:mesgs[i].Data.BasicInfo.FileSize,
-			FileNumber:mesgs[i].Data.BasicInfo.FileNumber,
-			FilePolicy:mesgs[i].Data.BasicInfo.FilePolicy,
-			AuthorizedStorage:mesgs[i].Data.BasicInfo.AuthPath}
+			FileHash:          mesgs[i].Data.FileHash,
+			Username:          mesgs[i].Data.BasicInfo.UserName,
+			FileName:          mesgs[i].Data.BasicInfo.FileName,
+			FileSize:          mesgs[i].Data.BasicInfo.FileSize,
+			FileNumber:        mesgs[i].Data.BasicInfo.FileNumber,
+			FilePolicy:        mesgs[i].Data.BasicInfo.FilePolicy,
+			AuthorizedStorage: mesgs[i].Data.BasicInfo.AuthPath}
 		reqs = append(reqs, dbtag)
 	}
 

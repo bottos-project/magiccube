@@ -66,9 +66,9 @@ func (r *MongoRepository) CallGetNodeInfos() ([]*util.NodeDBInfo, error) {
 	for i := 0; i < len(mesgs); i++ {
 
 		dbtag := &util.NodeDBInfo{
-			NodeId:mesgs[i].Data.BasicInfo.NodeIP,
-			NodeIP:mesgs[i].Data.BasicInfo.NodePort,
-			NodePort:mesgs[i].Data.BasicInfo.NodeAddress}
+			NodeId:   mesgs[i].Data.BasicInfo.NodeIP,
+			NodeIP:   mesgs[i].Data.BasicInfo.NodePort,
+			NodePort: mesgs[i].Data.BasicInfo.NodeAddress}
 
 		reqs = append(reqs, dbtag)
 	}

@@ -114,6 +114,7 @@ func YesterdayTimeSlot() (int64, int64) {
 	theTime, _ := time.ParseInLocation("2006-01-02", timeStr, loc)
 	return theTime.Unix() - 24*60*60, theTime.Unix() - 1
 }
+
 //TodayTimeSolt is to solt time
 func TodayTimeSolt() (int64, int64) {
 	timeStr := time.Now().Format("2006-01-02")

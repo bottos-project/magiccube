@@ -75,18 +75,18 @@ func (r *MongoRepository) CallGetAssetListByUser(username string) ([]*util.Asset
 	var assets = []*util.AssetDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.AssetDBInfo{
-			AssetID    	: mesgs[i].Data.AssetID,
-			UserName   	: mesgs[i].Data.BasicInfo.UserName,
-			AssetName  	: mesgs[i].Data.BasicInfo.AssetName,
-			FeatureTag 	: mesgs[i].Data.BasicInfo.FeatureTag,
-			SamplePath 	: mesgs[i].Data.BasicInfo.SamplePath,
-			SampleHash 	: mesgs[i].Data.BasicInfo.SampleHash,
-			StoragePath	: mesgs[i].Data.BasicInfo.StoragePath,
-			StorageHash	: mesgs[i].Data.BasicInfo.StorageHash,
-			ExpireTime 	: mesgs[i].Data.BasicInfo.ExpireTime,
-			Price      	: mesgs[i].Data.BasicInfo.Price,
-			Description	: mesgs[i].Data.BasicInfo.Description,
-			UploadDate 	: mesgs[i].Data.BasicInfo.UploadDate}
+			AssetID:     mesgs[i].Data.AssetID,
+			UserName:    mesgs[i].Data.BasicInfo.UserName,
+			AssetName:   mesgs[i].Data.BasicInfo.AssetName,
+			FeatureTag:  mesgs[i].Data.BasicInfo.FeatureTag,
+			SamplePath:  mesgs[i].Data.BasicInfo.SamplePath,
+			SampleHash:  mesgs[i].Data.BasicInfo.SampleHash,
+			StoragePath: mesgs[i].Data.BasicInfo.StoragePath,
+			StorageHash: mesgs[i].Data.BasicInfo.StorageHash,
+			ExpireTime:  mesgs[i].Data.BasicInfo.ExpireTime,
+			Price:       mesgs[i].Data.BasicInfo.Price,
+			Description: mesgs[i].Data.BasicInfo.Description,
+			UploadDate:  mesgs[i].Data.BasicInfo.UploadDate}
 		assets = append(assets, dbtag)
 	}
 
@@ -143,18 +143,18 @@ func (r *MongoRepository) CallGetAllAssetList() ([]*util.AssetDBInfo, error) {
 	var assets = []*util.AssetDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.AssetDBInfo{
-			AssetID    	: mesgs[i].Data.AssetID,
-			UserName   	: mesgs[i].Data.BasicInfo.UserName,
-			AssetName  	: mesgs[i].Data.BasicInfo.AssetName,
-			FeatureTag 	: mesgs[i].Data.BasicInfo.FeatureTag,
-			SamplePath 	: mesgs[i].Data.BasicInfo.SamplePath,
-			SampleHash 	: mesgs[i].Data.BasicInfo.SampleHash,
-			StoragePath	: mesgs[i].Data.BasicInfo.StoragePath,
-			StorageHash	: mesgs[i].Data.BasicInfo.StorageHash,
-			ExpireTime 	: mesgs[i].Data.BasicInfo.ExpireTime,
-			Price      	: mesgs[i].Data.BasicInfo.Price,
-			Description	: mesgs[i].Data.BasicInfo.Description,
-			UploadDate 	: mesgs[i].Data.BasicInfo.UploadDate}
+			AssetID:     mesgs[i].Data.AssetID,
+			UserName:    mesgs[i].Data.BasicInfo.UserName,
+			AssetName:   mesgs[i].Data.BasicInfo.AssetName,
+			FeatureTag:  mesgs[i].Data.BasicInfo.FeatureTag,
+			SamplePath:  mesgs[i].Data.BasicInfo.SamplePath,
+			SampleHash:  mesgs[i].Data.BasicInfo.SampleHash,
+			StoragePath: mesgs[i].Data.BasicInfo.StoragePath,
+			StorageHash: mesgs[i].Data.BasicInfo.StorageHash,
+			ExpireTime:  mesgs[i].Data.BasicInfo.ExpireTime,
+			Price:       mesgs[i].Data.BasicInfo.Price,
+			Description: mesgs[i].Data.BasicInfo.Description,
+			UploadDate:  mesgs[i].Data.BasicInfo.UploadDate}
 		assets = append(assets, dbtag)
 	}
 
@@ -205,18 +205,18 @@ func (r *MongoRepository) CallGetAssetById(assertId string) (*util.AssetDBInfo, 
 
 	fmt.Println(mesgs)
 	dbtag := &util.AssetDBInfo{
-		AssetID     : mesgs.Data.AssetID,
-		UserName    : mesgs.Data.BasicInfo.UserName,
-		AssetName   : mesgs.Data.BasicInfo.AssetName,
-		FeatureTag  : mesgs.Data.BasicInfo.FeatureTag,
-		SamplePath  : mesgs.Data.BasicInfo.SamplePath,
-		SampleHash  : mesgs.Data.BasicInfo.SampleHash,
-		StoragePath : mesgs.Data.BasicInfo.StoragePath,
-		StorageHash : mesgs.Data.BasicInfo.StorageHash,
-		ExpireTime  : mesgs.Data.BasicInfo.ExpireTime,
-		Price       : mesgs.Data.BasicInfo.Price,
-		Description : mesgs.Data.BasicInfo.Description,
-		UploadDate  : mesgs.Data.BasicInfo.UploadDate}
+		AssetID:     mesgs.Data.AssetID,
+		UserName:    mesgs.Data.BasicInfo.UserName,
+		AssetName:   mesgs.Data.BasicInfo.AssetName,
+		FeatureTag:  mesgs.Data.BasicInfo.FeatureTag,
+		SamplePath:  mesgs.Data.BasicInfo.SamplePath,
+		SampleHash:  mesgs.Data.BasicInfo.SampleHash,
+		StoragePath: mesgs.Data.BasicInfo.StoragePath,
+		StorageHash: mesgs.Data.BasicInfo.StorageHash,
+		ExpireTime:  mesgs.Data.BasicInfo.ExpireTime,
+		Price:       mesgs.Data.BasicInfo.Price,
+		Description: mesgs.Data.BasicInfo.Description,
+		UploadDate:  mesgs.Data.BasicInfo.UploadDate}
 
 	fmt.Println(dbtag)
 	return dbtag, nil

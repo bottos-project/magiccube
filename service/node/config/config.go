@@ -20,23 +20,23 @@ package config
 
 /* const */
 const (
-	
-    //CONFIG_FILE FOR NODE USAGE
-    CONFIG_FILE = "/opt/go/bin/config.json"
-	
-    //WALLET_IP FOR NODE USAGE
+
+	//CONFIG_FILE FOR NODE USAGE
+	CONFIG_FILE = "/opt/go/bin/config.json"
+
+	//WALLET_IP FOR NODE USAGE
 	WALLET_IP = "10.0.3.4"
 
-    //RUN_PLATFORM FOR NODE USAGE
+	//RUN_PLATFORM FOR NODE USAGE
 	RUN_PLATFORM = "linux"
 
 	//SCRIPT_PATH FOR NODE USAGE*/
 	SCRIPT_PATH = "/opt/go/bin/build.sh"
 
 	//MONGO_DB_URL FOR NODE USAGE*/
-	MONGO_DB_URL  = "10.0.3.4"
+	MONGO_DB_URL = "10.0.3.4"
 	//DB_BOTTOS FOR NODE USAGE*/
-	DB_BOTTOS     = "local"
+	DB_BOTTOS = "local"
 	//TABLE_POINTXY FOR NODE USAGE*/
 	TABLE_POINTXY = "pointxy"
 )

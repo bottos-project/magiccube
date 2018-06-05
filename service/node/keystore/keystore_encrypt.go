@@ -72,15 +72,16 @@ var (
 var (
 	//KeyStoreScheme is KeyStoreScheme
 	KeyStoreScheme = "keystore"
-    //myNodeAccountPubKey is myNodeAccountPubKey
+	//myNodeAccountPubKey is myNodeAccountPubKey
 	myNodeAccountPubKey = ""
 	//myNodeAccountPriKey is myNodeAccountPriKey
 	myNodeAccountPriKey = ""
 	//myNodeAccount is myNodeAccount
-	myNodeAccount       = ""
+	myNodeAccount = ""
 	//myNodeUUID is myNodeUUID
-	myNodeUUID          = ""
+	myNodeUUID = ""
 )
+
 //NodeConfig struct
 type NodeConfig struct {
 	// Name sets the instance name of the node. It must not contain the / character and is
@@ -184,6 +185,7 @@ type NodeConfig struct {
 	// Logger is a custom logger to use with the p2p.Server.
 	Logger log.Logger `toml:",omitempty"`
 }
+
 //keyStore interface
 type keyStore interface {
 	// Loads and decrypts the key from disk.
@@ -193,17 +195,20 @@ type keyStore interface {
 	// Joins filename with the key directory unless it is already absolute.
 	JoinPath(filename string) string
 }
+
 //DefaultConfig is DefaultConfig
 var DefaultConfig = NodeConfig{
 	DataDir:     DefaultDataDir(),
 	KeyStoreDir: DefaultKeystoreDir(),
 }
+
 //keyStorePassphrase struct
 type keyStorePassphrase struct {
 	keysDirPath string
 	scryptN     int
 	scryptP     int
 }
+
 //URL struct
 type URL struct {
 	Scheme string // Protocol scheme to identify a capable account backend
@@ -217,12 +222,14 @@ type Account struct {
 	UUID aes.UUID `json:"address"` // Ethereum account address derived from the key
 	URL  URL      `json:"url"`     // Optional resource locator within a backend
 }
+
 //PasswordFileFlag is PasswordFileFlag
 var PasswordFileFlag = cli.StringFlag{
 	Name:  "password_filepath",
 	Usage: "Password path file to use for non-interactive password input",
 	Value: "",
 }
+
 //MakePasswordList is to MakePasswordList
 func MakePasswordList(ctx *cli.Context) []string {
 
@@ -247,11 +254,13 @@ func MakePasswordList(ctx *cli.Context) []string {
 	}
 	return lines
 }
+
 //keyFileName is to keyFileName
 func keyFileName(keyAddr aes.UUID) string {
 	ts := time.Now().UTC()
 	return fmt.Sprintf("UTC--%s--%s", toISO8601(ts), hex.EncodeToString(keyAddr[:]))
 }
+
 //GetKey is to GetKey
 func (ks keyStorePassphrase) GetKey(addr aes.UUID, filename, auth string) (*aes.Key, string, error) {
 	// Load the key from the keystore and decrypt its contents
@@ -277,6 +286,7 @@ func StoreKey(dir, auth string, scryptN, scryptP int) (aes.UUID, error) {
 
 	return a.UUID, err
 }
+
 //StoreKey is to StoreKey
 func (ks keyStorePassphrase) StoreKey(username string, filename string, key *aes.Key, auth string) error {
 	keyjson, err := aes.EncryptKey(username, key, auth, ks.scryptN, ks.scryptP)
@@ -285,13 +295,14 @@ func (ks keyStorePassphrase) StoreKey(username string, filename string, key *aes
 	}
 	return aes.WriteKeyFile(filename, keyjson)
 }
-//JoinPath is to JoinPath 
+
+//JoinPath is to JoinPath
 func (ks keyStorePassphrase) JoinPath(filename string) string {
 	if filepath.IsAbs(filename) {
 		return filename
-	} 
+	}
 	return filepath.Join(ks.keysDirPath, filename)
-	
+
 }
 
 // FromECDSA exports a private key into a binary dump.
@@ -301,6 +312,7 @@ func FromECDSA(priv *ecdsa.PrivateKey) []byte {
 	}
 	return aes.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
 }
+
 //FromECDSAPub is to FromECDSAPub
 func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
 	if pub == nil || pub.X == nil || pub.Y == nil {
@@ -308,6 +320,7 @@ func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
 	}
 	return elliptic.Marshal(aes.S256(), pub.X, pub.Y)
 }
+
 // homeDir is to homeDir
 func homeDir() string {
 	if home := os.Getenv("HOME"); home != "" {
@@ -318,6 +331,7 @@ func homeDir() string {
 	}
 	return ""
 }
+
 //DefaultDataDir is DefaultDataDir
 func DefaultDataDir() string {
 	// Try to place the data folder in the user's home dir
@@ -334,6 +348,7 @@ func DefaultDataDir() string {
 	// As we cannot guess a stable location, return empty and handle later
 	return ""
 }
+
 // DefaultKeystoreDir is DefaultKeystoreDir
 func DefaultKeystoreDir() string {
 	// Try to place the data folder in the user's home dir
@@ -350,12 +365,14 @@ func DefaultKeystoreDir() string {
 	// As we cannot guess a stable location, return empty and handle later
 	return ""
 }
+
 //defaultNodeConfig is defaultNodeConfig
 func defaultNodeConfig() NodeConfig {
 	cfg := DefaultConfig //Dir setting
 	cfg.Name = "user UUID"
 	return cfg
 }
+
 // AccountConfig is AccountConfig
 func (c *NodeConfig) AccountConfig() (int, int, string) {
 	scryptN := aes.StandardScryptN
@@ -364,13 +381,15 @@ func (c *NodeConfig) AccountConfig() (int, int, string) {
 	keydir := c.KeyStoreDir
 	return scryptN, scryptP, keydir
 }
-//zeroKey is zeroKey 
+
+//zeroKey is zeroKey
 func zeroKey(k *ecdsa.PrivateKey) {
 	b := k.D.Bits()
 	for i := range b {
 		b[i] = 0
 	}
 }
+
 // storeNewKey is storeNewKey
 func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, error) {
 
@@ -402,14 +421,19 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 
 	return key, a, err
 }
+
 //GetPubKey is to GetPubKey
-func GetPubKey() string  { return myNodeAccountPubKey }
+func GetPubKey() string { return myNodeAccountPubKey }
+
 //GetPriKey is to GetPriKey
-func GetPriKey() string  { return myNodeAccountPriKey }
+func GetPriKey() string { return myNodeAccountPriKey }
+
 //GetAccount is to GetAccount
 func GetAccount() string { return myNodeAccount }
-//GetUUID is to GetUUID 
-func GetUUID() string    { return myNodeUUID }
+
+//GetUUID is to GetUUID
+func GetUUID() string { return myNodeUUID }
+
 //Stdin is Stdin
 var Stdin = newTerminalPrompter()
 
@@ -636,6 +660,7 @@ func accountCreate(ctx *cli.Context) error {
 	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
 }
+
 //AccountCreateEx is to AccountCreateEx
 func AccountCreateEx(datadir string, keydir string, password string) error {
 	if len(datadir) <= 0 || len(keydir) <= 0 || len(password) <= 0 {

@@ -69,11 +69,11 @@ func (r *MongoRepository) CallGetDataPresaleByUser(username string) ([]*util.Dat
 	var pres = []*util.DataPresaleDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.DataPresaleDBInfo{
-			DataPresaleID :	mesgs[i].Data.DataPresaleID,
-			UserName      :	mesgs[i].Data.BasicInfo.UserName,
-			AssetID       :	mesgs[i].Data.BasicInfo.AssetID,
-			DataReqID     :	mesgs[i].Data.BasicInfo.DataReqID,
-			Consumer      :	mesgs[i].Data.BasicInfo.Consumer}
+			DataPresaleID: mesgs[i].Data.DataPresaleID,
+			UserName:      mesgs[i].Data.BasicInfo.UserName,
+			AssetID:       mesgs[i].Data.BasicInfo.AssetID,
+			DataReqID:     mesgs[i].Data.BasicInfo.DataReqID,
+			Consumer:      mesgs[i].Data.BasicInfo.Consumer}
 		pres = append(pres, dbtag)
 	}
 
