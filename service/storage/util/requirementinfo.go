@@ -17,7 +17,7 @@
 */
 
 package util
-
+//RequirementDBInfo struct
 type RequirementDBInfo struct {
 	RequirementId   string `bson:"requirement_id" json:"requirement_id"`
 	Username        string `bson:"username" json:"username"`
@@ -30,5 +30,5 @@ type RequirementDBInfo struct {
 	Description     string `bson:"description" json:"description"`
 	PublishDate     uint32 `bson:"publish_date" json:"publish_date"`
 }
-
+//InsertUserRequireSql is sql 
 const InsertUserRequireSql string = "insert into fileinfo(RequirementId,Username,RequirementName,FeatureTag,SamplePath,SampleHash,ExpireTime,Price,Description,PublishDate) values(?,?,?,?,?,?,?,?,?,?)"

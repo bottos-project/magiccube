@@ -17,7 +17,7 @@
 */
 
 package util
-
+//AccountInfo struct
 type AccountInfo struct {
 	AccountName       string `json:"account_name"`
 	BtoBalance        string `json:"bto_balance"`

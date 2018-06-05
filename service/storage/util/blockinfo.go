@@ -17,7 +17,7 @@
 */
 
 package util
-
+//Info struct
 type Info struct {
 	ServerVersion            string `json:"server_version"`
 	HeadBlockNum             uint64 `json:"head_block_num"`
@@ -28,6 +28,7 @@ type Info struct {
 	RecentSlots              string `json:"recent_slots"`
 	ParticipationRate        string `json:"participation_rate"`
 }
+//Block struct
 type Block struct {
 	Previous              string        `json:"previous"`
 	Timestamp             string        `json:"timestamp"`

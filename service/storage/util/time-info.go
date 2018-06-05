@@ -21,11 +21,12 @@ package util
 import (
 	"time"
 )
-
+//DayRange struct
 type DayRange struct {
 	Begin time.Time
 	End   time.Time
 }
+//dayDur is to dayDur
 
 func dayDur(now time.Time) (time.Time, time.Time) {
 
@@ -39,11 +40,12 @@ func dayDur(now time.Time) (time.Time, time.Time) {
 
 	return yesterday_time, today_time
 }
-
+//YesterdayDur is to YesterdayDur  
 func YesterdayDur() (time.Time, time.Time) {
 	now := time.Now()
 	return dayDur(now)
 }
+//WeekDur is to WeekDur
 func WeekDur() []*DayRange {
 	var week = []*DayRange{}
 	now := time.Now()

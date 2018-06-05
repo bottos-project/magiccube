@@ -17,7 +17,7 @@
 */
 
 package util
-
+//SyncDBInfo struct
 type SyncDBInfo struct {
 	SyncedNumber string `json:"synced_number"`
 }

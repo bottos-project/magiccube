@@ -17,7 +17,7 @@
 */
 
 package util
-
+//FavoritDBInfo struct
 type FavoritDBInfo struct {
 	UserName  string `json:"user_name"`
 	OpType    string `json:"op_type"`

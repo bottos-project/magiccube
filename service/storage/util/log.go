@@ -23,7 +23,7 @@ import (
 	"runtime"
 	"strings"
 )
-
+//FuncLog is to log 
 func FuncLog(depthList ...int) string {
 	var depth int
 	if depthList == nil {
@@ -34,7 +34,7 @@ func FuncLog(depthList ...int) string {
 	function, file, line, _ := runtime.Caller(depth)
 	return fmt.Sprintf("File: %s  Function: %s Line: %d", path(file), runtime.FuncForPC(function).Name(), line)
 }
-
+//path is to get filepath
 func path(filePath string) string {
 	i := strings.LastIndex(filePath, "/")
 	if i == -1 {
