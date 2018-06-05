@@ -22,6 +22,7 @@ import (
 	"encoding/hex"
 )
 
+//sha256
 func Sha256(msg []byte) []byte {
 	sha := sha256.New()
 	sha.Write([]byte(hex.EncodeToString(msg)))
