@@ -27,6 +27,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// FileMessage is definition of file msg
 type FileMessage struct {
 	ID                 string        `bson:"_id"`
 	MessageID          int           `bson:"message_id"`
@@ -50,6 +51,7 @@ type FileMessage struct {
 	CreatedAt string `bson:"createdAt"`
 }
 
+// CallGetUserFileList is to get user file list
 func (r *MongoRepository) CallGetUserFileList(username string) ([]*util.FileDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -67,13 +69,13 @@ func (r *MongoRepository) CallGetUserFileList(username string) ([]*util.FileDBIn
 	var reqs = []*util.FileDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.FileDBInfo{
-			mesgs[i].Data.FileHash,
-			mesgs[i].Data.BasicInfo.UserName,
-			mesgs[i].Data.BasicInfo.FileName,
-			mesgs[i].Data.BasicInfo.FileSize,
-			mesgs[i].Data.BasicInfo.FileNumber,
-			mesgs[i].Data.BasicInfo.FilePolicy,
-			mesgs[i].Data.BasicInfo.AuthPath}
+			FileHash:mesgs[i].Data.FileHash,
+			Username:mesgs[i].Data.BasicInfo.UserName,
+			FileName:mesgs[i].Data.BasicInfo.FileName,
+			FileSize:mesgs[i].Data.BasicInfo.FileSize,
+			FileNumber:mesgs[i].Data.BasicInfo.FileNumber,
+			FilePolicy:mesgs[i].Data.BasicInfo.FilePolicy,
+			AuthorizedStorage:mesgs[i].Data.BasicInfo.AuthPath}
 		reqs = append(reqs, dbtag)
 	}
 
