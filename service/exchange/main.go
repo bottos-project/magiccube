@@ -14,13 +14,13 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
+	proto "github.com/bottos-project/magiccube/service/exchange/proto"
 	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
-	proto "github.com/bottos-project/magiccube/service/exchange/proto"
 	"golang.org/x/net/context"
 	/*"github.com/bitly/go-simplejson"
 	"time"
@@ -30,24 +30,21 @@ import (
 	cbb "github.com/bottos-project/magiccube/service/asset/cbb"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/bottos-project/magiccube/service/bean"*/
+	"os"
+
 	"github.com/bottos-project/magiccube/config"
 	"github.com/bottos-project/magiccube/service/common/data"
-	"os"
 )
 
 const (
-	BASE_URL             = config.BASE_CHAIN_URL
-	GET_INFO_URL         = BASE_URL + "v1/chain/get_info"
-	GET_BLOCK_URL        = BASE_URL + "v1/chain/get_block"
-	ABI_JSON_TO_BIN_URL  = BASE_URL + "v1/chain/abi_json_to_bin"
-	ABI_BIN_TO_JSON_URL  = BASE_URL + "v1/chain/abi_bin_to_json"
-	PUSH_TRANSACTION_URL = BASE_URL + "v1/chain/push_transaction"
-	GET_TABLE_ROW        = BASE_URL + "v1/chain/get_table_row_by_string_key"
-	STORAGE_RPC_URL      = config.BASE_RPC
+	// BASE_URL base url
+	BASE_URL = config.BASE_CHAIN_URL
 )
 
+// Exchange struct
 type Exchange struct{}
 
+// BuyAsset on chain
 func (u *Exchange) BuyAsset(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
@@ -58,10 +55,12 @@ func (u *Exchange) BuyAsset(ctx context.Context, req *proto.PushRequest, rsp *pr
 	return nil
 }
 
+// IsBuyAsset is or not
 func (u *Exchange) IsBuyAsset(ctx context.Context, req *proto.IsBuyAssetRequest, rsp *proto.IsBuyAssetResponse) error {
 	return nil
 }
 
+// GrantCredit on chain
 func (u *Exchange) GrantCredit(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
@@ -72,6 +71,7 @@ func (u *Exchange) GrantCredit(ctx context.Context, req *proto.PushRequest, rsp 
 	return nil
 }
 
+// CancelCredit on chain
 func (u *Exchange) CancelCredit(ctx context.Context, req *proto.PushRequest, rsp *proto.BuyAssetResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
@@ -200,7 +200,7 @@ func (u *Exchange) CancelCredit(ctx context.Context, req *proto.PushRequest, rsp
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/exc-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}

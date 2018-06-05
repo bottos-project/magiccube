@@ -14,22 +14,25 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
 	"encoding/json"
+
 	log "github.com/cihub/seelog"
 
+	"os"
+
+	errcode "github.com/bottos-project/magiccube/error"
 	"github.com/bottos-project/magiccube/service/asset/proto"
+	sign "github.com/bottos-project/magiccube/service/common/signature"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	"os"
-	sign "github.com/bottos-project/magiccube/service/common/signature"
-	errcode "github.com/bottos-project/magiccube/error"
 )
 
+// Asset struct
 type Asset struct {
 	Client asset.AssetClient
 }
@@ -90,14 +93,15 @@ func (u *Asset) GetFileUploadStat(ctx context.Context, req *api.Request, rsp *ap
 	return nil
 }*/
 
+// RegisterFile on Chain
 func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("RegisterFile Service Start")
 	rsp.StatusCode = 200
 
-	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	is_true=true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.PushVerifySign(req.Body)
+	if !isTrue {
+
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -118,7 +122,8 @@ func (s *Asset) RegisterFile(ctx context.Context, req *api.Request, rsp *api.Res
 	return nil
 }
 
-func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *api.Response) error {
+// QueryUploadedData from chain
+func (s *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryUploadedData Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
@@ -130,15 +135,15 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *ap
 		return err
 	}
 
-	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	is_true = true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.QueryVerifySign(req.Body)
+
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := u.Client.QueryUploadedData(ctx, &queryRequest)
+	response, err := s.Client.QueryUploadedData(ctx, &queryRequest)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -184,13 +189,14 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *api.Request, rsp *ap
 //	return nil
 //}
 
+// RegisterAsset on Chain
 func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
-	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	is_true=true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.PushVerifySign(req.Body)
+
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -210,6 +216,8 @@ func (s *Asset) RegisterAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	rsp.Body = errcode.Return(response)
 	return nil
 }
+
+// QueryMyAsset from chain
 func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryMyAsset Service Start")
 	rsp.StatusCode = 200
@@ -221,10 +229,10 @@ func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Res
 		return err
 	}
 
-	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	is_true = true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.QueryVerifySign(req.Body)
+
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -239,6 +247,7 @@ func (s *Asset) QueryMyAsset(ctx context.Context, req *api.Request, rsp *api.Res
 	return nil
 }
 
+// QueryAllAsset from Chain
 func (s *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryAllAsset Service Start")
 	rsp.StatusCode = 200
@@ -281,7 +290,8 @@ func (s *Asset) QueryAllAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }*/
 
-func (u *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
+// QueryAssetByID from chain
+func (s *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryAllAsset Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
@@ -292,7 +302,7 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.R
 		log.Error(err)
 		return err
 	}
-	response, err := u.Client.QueryAssetByID(ctx, &assetQuery)
+	response, err := s.Client.QueryAssetByID(ctx, &assetQuery)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -302,7 +312,7 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.R
 	return nil
 }
 
-/*func (u *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, rsp *api.Response) error {
+/*func (s *Asset) GetUserPurchaseAssetList(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	body := req.Body
 	log.Info(body)
 	//transfer to struct
@@ -322,7 +332,7 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.R
 		return nil
 	}
 
-	response, err := u.Client.GetUserPurchaseAssetList(ctx, &queryRequest)
+	response, err := s.Client.GetUserPurchaseAssetList(ctx, &queryRequest)
 	if err != nil {
 		return err
 	}
@@ -336,14 +346,16 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *api.Request, rsp *api.R
 	rsp.Body = string(b)
 	return nil
 }*/
+
+// PreSaleNotice on Chain
 func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("PreSaleNotice Service Start")
 	rsp.StatusCode = 200
 
-	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	is_true=true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.PushVerifySign(req.Body)
+
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -365,7 +377,8 @@ func (s *Asset) PreSaleNotice(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
-func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
+// QueryMyNotice from chain
+func (s *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryMyNotice Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
@@ -376,15 +389,15 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Re
 		return err
 	}
 
-	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	is_true=true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.QueryVerifySign(req.Body)
+
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := u.Client.QueryMyNotice(ctx, &queryMyNotice)
+	response, err := s.Client.QueryMyNotice(ctx, &queryMyNotice)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -394,7 +407,8 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
-func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
+// QueryMyPreSale from chain
+func (s *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryMyPreSale Service Start")
 	rsp.StatusCode = 200
 	body := req.Body
@@ -405,15 +419,15 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.R
 		return err
 	}
 
-	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	is_true = true
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.QueryVerifySign(req.Body)
+
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
 
-	response, err := u.Client.QueryMyPreSale(ctx, &queryMyNotice)
+	response, err := s.Client.QueryMyPreSale(ctx, &queryMyNotice)
 	if err != nil {
 		log.Error(err)
 		return err

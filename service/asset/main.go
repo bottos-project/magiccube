@@ -14,41 +14,42 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	"github.com/micro/go-micro"
-	proto "github.com/bottos-project/magiccube/service/asset/proto"
-	"golang.org/x/net/context"
-	"github.com/bitly/go-simplejson"
-	"time"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
-	"fmt"
+
+	"github.com/bitly/go-simplejson"
 	"github.com/bottos-project/magiccube/config"
-	"gopkg.in/mgo.v2/bson"
+	proto "github.com/bottos-project/magiccube/service/asset/proto"
 	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/data"
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	log "github.com/cihub/seelog"
-	"os"
-	"github.com/bottos-project/magiccube/service/common/data"
+	"github.com/micro/go-micro"
 	"github.com/mikemintang/go-curl"
+	"golang.org/x/net/context"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const (
-	BASE_URL                = config.BASE_CHAIN_URL
-	GET_INFO_URL            = BASE_URL + "v1/chain/get_info"
-	GET_BLOCK_URL           = BASE_URL + "v1/chain/get_block"
-	ABI_JSON_TO_BIN_URL     = BASE_URL + "v1/chain/abi_json_to_bin"
-	PUSH_TRANSACTION_URL    = BASE_URL + "v1/chain/push_transaction"
+	// BASE_URL BASE URL
+	BASE_URL = config.BASE_CHAIN_URL
+	// GET_TABLE_ROW_BY_STRING get one row service
 	GET_TABLE_ROW_BY_STRING = BASE_URL + "v1/chain/get_table_row_by_string_key"
-	STORAGE_RPC_URL         = config.BASE_RPC
+	// STORAGE_RPC_URL strorage url
+	STORAGE_RPC_URL = config.BASE_RPC
 )
 
+// Asset Struct
 type Asset struct{}
 
+// RegisterFile On Chain
 func (u *Asset) RegisterFile(ctx context.Context, req *proto.PushTxRequest, rsp *proto.RegisterFileResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
@@ -59,6 +60,7 @@ func (u *Asset) RegisterFile(ctx context.Context, req *proto.PushTxRequest, rsp 
 	return nil
 }
 
+// RegisterAsset On Chain
 func (u *Asset) RegisterAsset(ctx context.Context, req *proto.PushTxRequest, rsp *proto.RegisterResponse) error {
 	i, err := data.PushTransaction(req)
 	if err != nil {
@@ -70,6 +72,7 @@ func (u *Asset) RegisterAsset(ctx context.Context, req *proto.PushTxRequest, rsp
 	return nil
 }
 
+// QueryAsset from Chain
 func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *proto.QueryAssetResponse) error {
 
 	var pageNum, pageSize, skip int = 1, 20, 0
@@ -77,7 +80,7 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 && req.PageSize < 20{
+	if req.PageSize > 0 && req.PageSize < 20 {
 		pageSize = int(req.PageSize)
 	}
 
@@ -85,16 +88,16 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 
 	var where interface{}
 	where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}}
-	if len(req.Username) > 0{
-		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	if len(req.Username) > 0 {
+		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.info.username": req.Username}
 	}
 
 	if req.AssetType > 0 {
-		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.assettype": req.AssetType}
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.info.assettype": req.AssetType}
 	}
 
 	if len(req.Username) > 0 && req.AssetType > 0 {
-		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username, "param.info.assettype": req.AssetType}
+		where = bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.info.username": req.Username, "param.info.assettype": req.AssetType}
 	}
 	log.Info(where)
 
@@ -137,6 +140,7 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 	return nil
 }
 
+// QueryAssetByID from Chain
 func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDRequest, rsp *proto.QueryAssetInfoResponse) error {
 
 	var where interface{}
@@ -187,6 +191,7 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDReq
 	return nil
 }
 
+// QueryUploadedData by My
 func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryRequest, rsp *proto.QueryUploadedDataResponse) error {
 	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
@@ -201,8 +206,8 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryRequest, 
 
 	var where interface{}
 	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}}
-	if len(req.Username) > 0{
-		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1,2}}, "param.info.username": req.Username}
+	if len(req.Username) > 0 {
+		where = &bson.M{"param.info.optype": bson.M{"$in": []uint32{1, 2}}, "param.info.username": req.Username}
 	}
 
 	log.Info(where)
@@ -311,6 +316,7 @@ func (u *Asset) QueryUploadedData(ctx context.Context, req *proto.QueryRequest, 
 }
 
 /*
+// Get File Upload URL fs
 func (u *Asset) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadURLRequest, rsp *proto.GetFileUploadURLResponse) error {
 	log.Info("Start Get File URL!")
 	start_time := time.Now().UnixNano() / int64(time.Millisecond)
@@ -475,15 +481,12 @@ func GetAssetList(queryPara *proto.QueryRequest) (string, int, error) {
 		return "Failed", 0, err
 	}
 }
-
-
-
 */
 
+// GetDownLoadURL -get File Strage Url
 func (u *Asset) GetDownLoadURL(ctx context.Context, req *proto.GetDownLoadURLRequest, rsp *proto.GetDownLoadURLResponse) error {
-	start_time := time.Now().UnixNano() / int64(time.Millisecond)
 
-	//Test
+	//
 	params := `service=storage&method=Storage.GetDownLoadURL&request={
 	"username":"%s",
 	"file_name":"%s"
@@ -507,175 +510,24 @@ func (u *Asset) GetDownLoadURL(ctx context.Context, req *proto.GetDownLoadURLReq
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
-	} else {
-		js, _ := simplejson.NewJson([]byte(body))
-		log.Info("jss", js)
-		//result,_ :=json.Marshal(js.Get("FileList"))
-		downLoadURL := js.Get("presigned_get_url").MustString()
-		if js.Get("result").MustString() == "200" {
-
-			rsp.Code = 1
-			rsp.Msg = "Get downLoad URL Successful!"
-			rsp.Data = downLoadURL
-		}
-		//err,_ := json.Marshal(js)
-		rsp.Msg = "Get downLoad URL Successful!"
-		return nil
 	}
-	end_time := time.Now().UnixNano() / int64(time.Millisecond)
-	log.Info("Time:", end_time-start_time)
+	js, _ := simplejson.NewJson([]byte(body))
+	log.Info("jss", js)
+	//result,_ :=json.Marshal(js.Get("FileList"))
+	downLoadURL := js.Get("presigned_get_url").MustString()
+	if js.Get("result").MustString() == "200" {
+
+		rsp.Code = 1
+		rsp.Msg = "Get downLoad URL Successful!"
+		rsp.Data = downLoadURL
+	}
+	//err,_ := json.Marshal(js)
+	rsp.Msg = "Get downLoad URL Successful!"
 	return nil
+
 }
 
-/*func (u *Asset) QueryByID(ctx context.Context, req *proto.QueryByIDRequest, rsp *proto.QueryResponse) error {
-
-	var pageNum, pageSize, skip int = 1, 20, 0
-	if req.PageNum > 0 {
-		pageNum = int(req.PageNum)
-	}
-
-	if req.PageSize > 0 && req.PageSize <= 50 {
-		pageSize = int(req.PageSize)
-	}
-
-	skip = (pageNum - 1) * pageSize
-	log.Debug(skip)
-	*//*var where interface{}
-	where = &bson.M{"type": "assetreg"}
-	log.Info(req.AssetID)
-	if req.AssetID != "" {
-		where = &bson.M{"type": "assetreg", "data.asset_id": req.AssetID}
-	} else {
-		if req.AssetID != "" {
-			where = &bson.M{"type": "assetreg", "data.asset_id": req.AssetID}
-		}
-	}
-
-	log.Info(where)
-
-	var ret []bean.AssetBean
-
-	var mgo = mgo.Session()
-	defer mgo.Close()
-	count, err := mgo.DB(config.DB_NAME).C("Messages").Find(where).Count()
-	if err != nil {
-		log.Error(err)
-	}
-	mgo.DB(config.DB_NAME).C("Messages").Find(where).Skip(skip).Limit(int(req.PageSize)).All(&ret)
-	//mgo.DB(config.DB_NAME).C("Messages").Find(where).Sort("data.basic_info.publish_date").Skip(skip).Limit(int(req.PageSize)).All(&ret)
-
-	var rows = []*proto.QueryRow{}
-	for _, v := range ret {
-		rows = append(rows, &proto.QueryRow{
-			AssetId:   v.Data.AssetID,
-			Username:  v.Data.BasicInfo.UserName,
-			AssetName: v.Data.BasicInfo.AssetName,
-			AssetType: v.Data.BasicInfo.AssetType,
-			FeatureTag1: v.Data.BasicInfo.FeatureTag1,
-			FeatureTag2: v.Data.BasicInfo.FeatureTag2,
-			FeatureTag3: v.Data.BasicInfo.FeatureTag3,
-			SamplePath:  v.Data.BasicInfo.SamplePath,
-			SampleHash:  v.Data.BasicInfo.SampleHash,
-			StoragePath: v.Data.BasicInfo.StoragePath,
-			StorageHash: v.Data.BasicInfo.StorageHash,
-			ExpireTime:  v.Data.BasicInfo.ExpireTime,
-			Price:       v.Data.BasicInfo.Price,
-			Description: v.Data.BasicInfo.Description,
-			UploadDate:  v.Data.BasicInfo.UploadDate,
-		})
-	}*//*
-	rows, err := GetAssetByIdNoStoPath(req.AssetID)
-	if err != nil {
-		fmt.Println(err)
-		return errors.New("Get session faild" + req.AssetID)
-	}
-	var data = &proto.QueryData{
-		RowCount: 1,
-		//RowCount: uint64(count),
-		PageNum: uint64(pageNum),
-		Row:     rows,
-	}
-	log.Info("rows:", rows)
-	log.Info(data)
-	rsp.Code = 0
-	rsp.Data = data
-	rsp.Msg = "OK"
-
-	return nil
-}*/
-/*func GetAssetById(assertId string, userName string) ([]*proto.QueryData, error) {
-	var where interface{}
-
-	//where = &bson.M{"type": "assetreg"}
-	log.Info(assertId)
-	if assertId != "" {
-
-		//where = &bson.M{"type": "assetreg", "data.asset_id": assertId}
-		where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.assetid": assertId}
-	} else {
-		return nil, nil
-	}
-
-	log.Info(where)
-
-	var ret []bean.AssetBean
-	var ret1 []bean.AssetBean
-
-	var mgo = mgo.Session()
-	defer mgo.Close()
-
-	//mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("createdAt").All(&ret)
-	mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Sort("-_id").All(&ret)
-
-	ret1 = append(ret1, ret[len(ret)-1])
-
-	var rows = []*proto.AssetData{}
-	for _, v := range ret1 {
-		result, _, _ := GetTableRowByString(userName, v.Data.BasicInfo.StorageHash)
-		log.Info("GetTableRowByString:", result)
-		if strings.Contains(result, v.Data.BasicInfo.StorageHash) {
-			rows = append(rows, &proto.QueryRow{
-				AssetId:     v.Data.AssetID,
-				Username:    v.Data.BasicInfo.UserName,
-				AssetName:   v.Data.BasicInfo.AssetName,
-				AssetType:   v.Data.BasicInfo.AssetType,
-				FeatureTag1: v.Data.BasicInfo.FeatureTag1,
-				FeatureTag2: v.Data.BasicInfo.FeatureTag2,
-				FeatureTag3: v.Data.BasicInfo.FeatureTag3,
-				SamplePath:  v.Data.BasicInfo.SamplePath,
-				SampleHash:  v.Data.BasicInfo.SampleHash,
-				StoragePath: v.Data.BasicInfo.StoragePath,
-				StorageHash: v.Data.BasicInfo.StorageHash,
-				ExpireTime:  v.Data.BasicInfo.ExpireTime,
-				Price:       v.Data.BasicInfo.Price,
-				Description: v.Data.BasicInfo.Description,
-				UploadDate:  v.Data.BasicInfo.UploadDate,
-				CreateTime:  v.CreatedAt.String(),
-			})
-		} else {
-			rows = append(rows, &proto.QueryRow{
-				AssetId:     v.Data.AssetID,
-				Username:    v.Data.BasicInfo.UserName,
-				AssetName:   v.Data.BasicInfo.AssetName,
-				AssetType:   v.Data.BasicInfo.AssetType,
-				FeatureTag1: v.Data.BasicInfo.FeatureTag1,
-				FeatureTag2: v.Data.BasicInfo.FeatureTag2,
-				FeatureTag3: v.Data.BasicInfo.FeatureTag3,
-				SamplePath:  v.Data.BasicInfo.SamplePath,
-				SampleHash:  v.Data.BasicInfo.SampleHash,
-				StoragePath: "",
-				StorageHash: "",
-				ExpireTime:  v.Data.BasicInfo.ExpireTime,
-				Price:       v.Data.BasicInfo.Price,
-				Description: v.Data.BasicInfo.Description,
-				UploadDate:  v.Data.BasicInfo.UploadDate,
-				CreateTime:  v.CreatedAt.String(),
-			})
-		}
-
-	}
-	return rows, nil
-}*/
+// GetTableRowByString -get One Row form chain
 func GetTableRowByString(username string, fileId string) (string, int, error) {
 	postData := map[string]interface{}{
 		"scope":       username,
@@ -693,19 +545,21 @@ func GetTableRowByString(username string, fileId string) (string, int, error) {
 	log.Info(resp.Body)
 	if resp.IsOk() {
 		return resp.Body, resp.Raw.StatusCode, err
-	} else {
-		return "", resp.Raw.StatusCode, err
 	}
+	return "", resp.Raw.StatusCode, err
+
 }
 
-func GetAssetByIdNoStoPath(assertId string) ([]*proto.AssetData, error) {
+// GetAssetByIdNoStoPath -get one Asset
+func GetAssetByIdNoStoPath(assertID string) ([]*proto.AssetData, error) {
 	var where interface{}
 	//where = &bson.M{"type": "assetreg"}
-	log.Info(assertId)
-	if assertId != "" {
-		where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.assetid": assertId}
+	log.Info(assertID)
+	if assertID != "" {
+		where = bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.assetid": assertID}
 	} else {
 		return nil, nil
+
 	}
 
 	log.Info(where)
@@ -718,9 +572,9 @@ func GetAssetByIdNoStoPath(assertId string) ([]*proto.AssetData, error) {
 
 	count, err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(where).Count()
 	log.Info(count)
-	if count>1 {
+	if count > 1 {
 		log.Error(count)
-		return nil,nil
+		return nil, nil
 	}
 	if err != nil {
 		log.Error(err)
@@ -884,6 +738,7 @@ func GetAssetByIdNoStoPath(assertId string) ([]*proto.AssetData, error) {
 	return nil
 }*/
 
+// PreSaleNotice On Chain
 func (u *Asset) PreSaleNotice(ctx context.Context, req *proto.PushTxRequest, rsp *proto.PreSaleNoticeResponse) error {
 
 	i, err := data.PushTransaction(req)
@@ -896,23 +751,24 @@ func (u *Asset) PreSaleNotice(ctx context.Context, req *proto.PushTxRequest, rsp
 	return nil
 }
 
+// QueryMyNotice My received Notice
 func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeRequest, rsp *proto.QueryMyNoticeResponse) error {
 
-	var pageNum, pageSize, skip int= 1, 20, 0
+	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 && req.PageSize < 20{
+	if req.PageSize > 0 && req.PageSize < 20 {
 		pageSize = int(req.PageSize)
 	}
 
-	skip = (pageNum - 1) *  pageSize
+	skip = (pageNum - 1) * pageSize
 
 	var where interface{}
 	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
-	if len(req.Username) > 0{
-		where = &bson.M{ "param.info.consumer": req.Username}
+	if len(req.Username) > 0 {
+		where = &bson.M{"param.info.consumer": req.Username}
 	}
 
 	log.Info(where)
@@ -921,7 +777,7 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeReque
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err:= mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	count, err := mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
@@ -931,49 +787,50 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeReque
 	var rows = []*proto.QueryNoticeRow{}
 	for _, v := range ret {
 		var ret2 bean.AssetBean
-		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
 		var ret3 bean.Requirement
-		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
+		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
 
 		rows = append(rows, &proto.QueryNoticeRow{
-			NoticeId : v.Param.Datapresaleid,
-			Username : v.Param.Info.Username,
-			AssetId : v.Param.Info.Assetid,
-			AssetName : ret2.Param.Info.AssetName,
-			DataReqId : v.Param.Info.Datareqid,
-			DataReqName : ret3.Param.Info.Reqname,
-			Consumer : v.Param.Info.Consumer,
-			Time : uint64(v.CreateTime.Unix()),
+			NoticeId:    v.Param.Datapresaleid,
+			Username:    v.Param.Info.Username,
+			AssetId:     v.Param.Info.Assetid,
+			AssetName:   ret2.Param.Info.AssetName,
+			DataReqId:   v.Param.Info.Datareqid,
+			DataReqName: ret3.Param.Info.Reqname,
+			Consumer:    v.Param.Info.Consumer,
+			Time:        uint64(v.CreateTime.Unix()),
 		})
 	}
 
 	var data = &proto.QueryNoticeData{
 		RowCount: uint32(count),
-		PageNum: uint32(pageNum),
-		Row:rows,
+		PageNum:  uint32(pageNum),
+		Row:      rows,
 	}
 	log.Info(data)
 	rsp.Data = data
 	return nil
 }
 
+// QueryMyPreSale Notice
 func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequest, rsp *proto.QueryMyNoticeResponse) error {
 
-	var pageNum, pageSize, skip int= 1, 20, 0
+	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
 	}
 
-	if req.PageSize > 0 && req.PageSize < 20{
+	if req.PageSize > 0 && req.PageSize < 20 {
 		pageSize = int(req.PageSize)
 	}
 
-	skip = (pageNum - 1) *  pageSize
+	skip = (pageNum - 1) * pageSize
 
 	var where interface{}
 	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
-	if len(req.Username) > 0{
-		where = &bson.M{ "param.info.username": req.Username}
+	if len(req.Username) > 0 {
+		where = &bson.M{"param.info.username": req.Username}
 	}
 
 	log.Info(where)
@@ -982,7 +839,7 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err:= mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	count, err := mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
@@ -992,26 +849,26 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 	var rows = []*proto.QueryNoticeRow{}
 	for _, v := range ret {
 		var ret2 bean.AssetBean
-		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
 		var ret3 bean.Requirement
-		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
+		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
 
 		rows = append(rows, &proto.QueryNoticeRow{
-			NoticeId : v.Param.Datapresaleid,
-			Username : v.Param.Info.Username,
-			AssetId : v.Param.Info.Assetid,
-			AssetName : ret2.Param.Info.AssetName,
-			DataReqId : v.Param.Info.Datareqid,
-			DataReqName : ret3.Param.Info.Reqname,
-			Consumer : v.Param.Info.Consumer,
-			Time : uint64(v.CreateTime.Unix()),
+			NoticeId:    v.Param.Datapresaleid,
+			Username:    v.Param.Info.Username,
+			AssetId:     v.Param.Info.Assetid,
+			AssetName:   ret2.Param.Info.AssetName,
+			DataReqId:   v.Param.Info.Datareqid,
+			DataReqName: ret3.Param.Info.Reqname,
+			Consumer:    v.Param.Info.Consumer,
+			Time:        uint64(v.CreateTime.Unix()),
 		})
 	}
 
 	var data = &proto.QueryNoticeData{
 		RowCount: uint32(count),
-		PageNum: uint32(pageNum),
-		Row:rows,
+		PageNum:  uint32(pageNum),
+		Row:      rows,
 	}
 	log.Info(data)
 	rsp.Data = data

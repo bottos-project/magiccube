@@ -14,34 +14,37 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
 	"encoding/json"
-	log "github.com/cihub/seelog"
+	"os"
+
+	"github.com/bottos-project/magiccube/config"
+	errcode "github.com/bottos-project/magiccube/error"
+	sign "github.com/bottos-project/magiccube/service/common/signature"
 	"github.com/bottos-project/magiccube/service/exchange/proto"
+	"github.com/bottos-project/magiccube/tools/db/mongodb"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	api "github.com/micro/micro/api/proto"
 	"golang.org/x/net/context"
-	sign "github.com/bottos-project/magiccube/service/common/signature"
-	errcode "github.com/bottos-project/magiccube/error"
-	"github.com/bottos-project/magiccube/tools/db/mongodb"
-	"github.com/bottos-project/magiccube/config"
-	"os"
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Exchange struct
 type Exchange struct {
 	Client exchange.ExchangeClient
 }
 
+// BuyAsset on chain
 func (s *Exchange) BuyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
-	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.PushVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -62,6 +65,7 @@ func (s *Exchange) BuyAsset(ctx context.Context, req *api.Request, rsp *api.Resp
 	return nil
 }
 
+// IsBuyAsset or not
 func (s *Exchange) IsBuyAsset(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -101,12 +105,13 @@ func (s *Exchange) IsBuyAsset(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
+// GrantCredit on chain
 func (s *Exchange) GrantCredit(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
-	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.PushVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -127,12 +132,13 @@ func (s *Exchange) GrantCredit(ctx context.Context, req *api.Request, rsp *api.R
 	return nil
 }
 
+// CancelCredit on chain
 func (s *Exchange) CancelCredit(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
-	//验签
-	is_true, err := sign.PushVerifySign(req.Body)
-	if !is_true {
+	//verify signature
+	isTrue, err := sign.PushVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -190,7 +196,7 @@ func (s *Exchange) CancelCredit(ctx context.Context, req *api.Request, rsp *api.
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/exc-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}
