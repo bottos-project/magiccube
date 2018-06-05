@@ -22,12 +22,15 @@
  * @Last Modified by:
  * @Last Modified time:
  */
+
 package common
 
+//MerkleHashTree merkle hash tree
 type MerkleHashTree struct {
 	Root *MTNode
 }
 
+//MTNode merkle hash tree node
 type MTNode struct {
 	Hash Hash
 }
@@ -41,6 +44,7 @@ func dSha256(h1 Hash, h2 Hash) Hash {
 	return t2
 }
 
+//CreateMerkleTree create a merkle hash tree
 func CreateMerkleTree(hs []Hash) *MerkleHashTree {
 	if len(hs) == 0 {
 		return nil
@@ -88,6 +92,7 @@ func createNextLevel(nodes []*MTNode) []*MTNode {
 	return nlNodes
 }
 
+//ComputeMerkleRootHash create a merkle hash tree and return root hash
 func ComputeMerkleRootHash(hs []Hash) Hash {
 	if len(hs) == 0 {
 		return Hash{}

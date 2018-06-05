@@ -24,6 +24,7 @@
  */
 
 package common
+
 import (
 	"fmt"
 	"testing"
@@ -52,7 +53,6 @@ func TestMerkleRootHash_Even(t *testing.T) {
 	fmt.Printf("root hash: %x\n", root)
 }
 
-
 func TestMerkleRootHash_NULL(t *testing.T) {
 	var hs []Hash
 
@@ -60,9 +60,8 @@ func TestMerkleRootHash_NULL(t *testing.T) {
 	fmt.Printf("empty root hash: %x\n", root)
 }
 
-
 // https://btc.com/0000000000000000003c4601e87ab5389c15d9c48c37076472aa7d45cdd4fa30
-// bitcoin hash is of little-endian notation, Reverse before and after computing 
+// bitcoin hash is of little-endian notation, Reverse before and after computing
 func TestMerkleRootHash_BTC_0000000000000000003c4601e87ab5389c15d9c48c37076472aa7d45cdd4fa30(t *testing.T) {
 	var hs []Hash
 	hs = append(hs, bitcoinHashConvert("2fc7d439472c12c27b8eff3a758c01772d4ae0ed2d6139fc4bbddac9b8943c3c"))
@@ -96,9 +95,8 @@ func TestMerkleRootHash_BTC_00000000000010e45e3d943559acb2be2323fceb24182e811eb4
 	} else {
 		fmt.Printf("suc, root: %s, expected: %s\n", rootStr, expectedRootStr)
 	}
-	
-}
 
+}
 
 // https://btc.com/000000000000000000010f01933e19182a0d2f3f134bfd6559eff2395436e5ec
 func TestMerkleRootHash_BTC_000000000000000000010f01933e19182a0d2f3f134bfd6559eff2395436e5ec(t *testing.T) {
@@ -117,9 +115,8 @@ func TestMerkleRootHash_BTC_000000000000000000010f01933e19182a0d2f3f134bfd6559ef
 	} else {
 		fmt.Printf("suc, root: %s, expected: %s\n", rootStr, expectedRootStr)
 	}
-	
-}
 
+}
 
 //https://btc.com/000000000000030de89e7729d5785c4730839b6e16ea9fb686a54818d3860a8d
 func TestMerkleRootHash_BTC_000000000000030de89e7729d5785c4730839b6e16ea9fb686a54818d3860a8d(t *testing.T) {
@@ -153,7 +150,7 @@ func TestMerkleRootHash_BTC_000000000000030de89e7729d5785c4730839b6e16ea9fb686a5
 	} else {
 		fmt.Printf("suc, root: %s, expected: %s\n", rootStr, expectedRootStr)
 	}
-	
+
 }
 
 // https://btc.com/000000000000000000165f317acde835bc398f5186e987775afff9c43824acca
@@ -189,10 +186,10 @@ func TestMerkleRootHash_BTC_000000000000000000165f317acde835bc398f5186e987775aff
 	}
 }
 
-func reverse(a []byte) []byte{
+func reverse(a []byte) []byte {
 	b := make([]byte, len(a))
-	for i := len(a)/2-1; i >= 0; i-- {
-		opp := len(a)-1-i
+	for i := len(a)/2 - 1; i >= 0; i-- {
+		opp := len(a) - 1 - i
 		b[i], b[opp] = a[opp], a[i]
 	}
 	return b
@@ -202,10 +199,8 @@ func reverseHash(h Hash) Hash {
 	return BytesToHash(reverse(h[:]))
 }
 
-
 func bitcoinHashConvert(hashstr string) Hash {
 	h := HexToHash(hashstr)
 	h = reverseHash(h)
 	return h
 }
-
