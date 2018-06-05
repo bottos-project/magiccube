@@ -29,6 +29,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//UserToken is to user token
 type UserToken struct {
 	ID        bson.ObjectId `bson:"_id"`
 	Username  string        `bson:"user_name"`
@@ -36,6 +37,7 @@ type UserToken struct {
 	CreatedAt time.Time     `bson:"createdAt"`
 }
 
+//CallInsertUserToken is to insert user token
 func (r *MongoRepository) CallInsertUserToken(username string, token string) (uint32, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -54,6 +56,8 @@ func (r *MongoRepository) CallInsertUserToken(username string, token string) (ui
 	fmt.Println(err)
 	return 1, nil
 }
+
+//CallGetUserToken is to get user token
 func (r *MongoRepository) CallGetUserToken(username string, token string) (*util.TokenDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -66,13 +70,14 @@ func (r *MongoRepository) CallGetUserToken(username string, token string) (*util
 	}
 	session.SetCollectionByDB("local", "usertoken", query)
 	tokeninfo := &util.TokenDBInfo{
-		mesgs.Username,
-		mesgs.Token,
-		int64(mesgs.CreatedAt.Nanosecond())}
+		Username:   mesgs.Username,
+		Token:      mesgs.Token,
+		InsertTime: int64(mesgs.CreatedAt.Nanosecond())}
 
 	return tokeninfo, nil
 }
 
+//CallDelUserToken is to delete user token
 func (r *MongoRepository) CallDelUserToken(username string, token string) (uint32, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {

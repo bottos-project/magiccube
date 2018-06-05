@@ -30,6 +30,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//TxMessage is transaction message
 type TxMessage struct {
 	ID             bson.ObjectId `bson:"_id"`
 	TransactionID  string        `bson:"transaction_id"`
@@ -44,6 +45,8 @@ type TxMessage struct {
 	Messages       []string      `bson:"messages"`
 	CreatedAt      time.Time     `bson:"createdAt"`
 }
+
+//TransferMessage is transfer message
 type TransferMessage struct {
 	ID            bson.ObjectId `bson:"_id"`
 	MessageID     int           `bson:"message_id"`
@@ -64,6 +67,7 @@ type TransferMessage struct {
 	CreatedAt time.Time `bson:"createdAt"`
 }
 
+//TransferMes is transfer with quantity message
 type TransferMes struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	BlockNum           uint64        `bson:"block_num"`
@@ -80,6 +84,7 @@ type TransferMes struct {
 	CreatedAt time.Time `bson:"createdAt"`
 }
 
+//PurchaseMesssage is purchase message
 type PurchaseMesssage struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	BlockNum           uint64        `bson:"block_num"`
@@ -101,6 +106,7 @@ type PurchaseMesssage struct {
 	CreatedAt time.Time `bson:"createdAt"`
 }
 
+//CallGetRecentTxList is getting recent transaction lists
 func (r *MongoRepository) CallGetRecentTxList() ([]*util.TxDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -110,7 +116,7 @@ func (r *MongoRepository) CallGetRecentTxList() ([]*util.TxDBInfo, error) {
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	//建议优化，支持多表查询
+	//建议优化，支持多表查�?
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase"}).Sort("-createdAt").Limit(15).All(&purMsgs)
 	}
@@ -126,18 +132,20 @@ func (r *MongoRepository) CallGetRecentTxList() ([]*util.TxDBInfo, error) {
 			return nil, errors.New("failed CallGetAssetById " + purMsgs[i].Data.BasicInfo.AssetID)
 		}
 		dbtag := &util.TxDBInfo{
-			purMsgs[i].TransactionID,
-			purMsgs[i].Data.BasicInfo.UserName,
-			asset.UserName,
-			asset.Price,
-			asset.FeatureTag,
-			purMsgs[i].CreatedAt.String(),
-			purMsgs[i].BlockNum}
+			TransactionID: purMsgs[i].TransactionID,
+			From:          purMsgs[i].Data.BasicInfo.UserName,
+			To:            asset.UserName,
+			Price:         asset.Price,
+			Type:          asset.FeatureTag,
+			Date:          purMsgs[i].CreatedAt.String(),
+			BlockId:       purMsgs[i].BlockNum}
 		tfxs = append(tfxs, dbtag)
 	}
 
 	return tfxs, nil
 }
+
+//CallGetUserTxList is getting User transaction list
 func (r *MongoRepository) CallGetUserTxList(username string) ([]*util.TxDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -147,7 +155,7 @@ func (r *MongoRepository) CallGetUserTxList(username string) ([]*util.TxDBInfo, 
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	//建议优化，支持多表查询
+	//建议优化，支持多表查�?
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase", "data.basic_info.user_name": username}).All(&purMsgs)
 	}
@@ -163,18 +171,20 @@ func (r *MongoRepository) CallGetUserTxList(username string) ([]*util.TxDBInfo, 
 			return nil, errors.New("failed CallGetAssetById " + purMsgs[i].Data.BasicInfo.AssetID)
 		}
 		dbtag := &util.TxDBInfo{
-			purMsgs[i].TransactionID,
-			purMsgs[i].Data.BasicInfo.UserName,
-			asset.UserName,
-			asset.Price,
-			asset.FeatureTag,
-			purMsgs[i].CreatedAt.String(),
-			purMsgs[i].BlockNum}
+			TransactionID: purMsgs[i].TransactionID,
+			From:          purMsgs[i].Data.BasicInfo.UserName,
+			To:            asset.UserName,
+			Price:         asset.Price,
+			Type:          asset.FeatureTag,
+			Date:          purMsgs[i].CreatedAt.String(),
+			BlockId:       purMsgs[i].BlockNum}
 		tfxs = append(tfxs, dbtag)
 	}
 
 	return tfxs, nil
 }
+
+//CallGetSumTxAmount is getting sum transaction amount
 func (r *MongoRepository) CallGetSumTxAmount() (uint64, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -184,7 +194,7 @@ func (r *MongoRepository) CallGetSumTxAmount() (uint64, error) {
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	//建议优化，支持多表查询
+	//建议优化，支持多表查�?
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase"}).All(&purMsgs)
 	}
@@ -205,6 +215,7 @@ func (r *MongoRepository) CallGetSumTxAmount() (uint64, error) {
 	return sum, nil
 }
 
+//CallGetAllTxNum is getting all transaction number
 func (r *MongoRepository) CallGetAllTxNum() (uint64, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	var num uint64
@@ -225,6 +236,7 @@ func (r *MongoRepository) CallGetAllTxNum() (uint64, error) {
 	return num, nil
 }
 
+//CallGetTxNumByDay is getting transaction number by day
 func (r *MongoRepository) CallGetTxNumByDay(begin time.Time, end time.Time) (uint64, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -252,6 +264,7 @@ func (r *MongoRepository) CallGetTxNumByDay(begin time.Time, end time.Time) (uin
 	return uint64(daytxnum), nil
 }
 
+//CallGetRecentTransfersList is getting recent transfers list
 func (r *MongoRepository) CallGetRecentTransfersList() ([]*util.TransferDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -270,12 +283,12 @@ func (r *MongoRepository) CallGetRecentTransfersList() ([]*util.TransferDBInfo, 
 	var tfxs = []*util.TransferDBInfo{}
 	for i := 0; i < len(mesgs); i++ {
 		dbtag := &util.TransferDBInfo{
-			mesgs[i].TransactionID,
-			mesgs[i].Data.From,
-			mesgs[i].Data.To,
-			mesgs[i].Data.Quantity,
-			mesgs[i].CreatedAt.String(),
-			mesgs[i].BlockNum}
+			TransactionID: mesgs[i].TransactionID,
+			From:          mesgs[i].Data.From,
+			To:            mesgs[i].Data.To,
+			Price:         mesgs[i].Data.Quantity,
+			TxTime:        mesgs[i].CreatedAt.String(),
+			BlockNum:      mesgs[i].BlockNum}
 		tfxs = append(tfxs, dbtag)
 	}
 	return tfxs, nil

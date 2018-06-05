@@ -27,6 +27,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//MongoRepository is struct for mongodb struct
 type MongoRepository struct {
 	mgoEndpoint string
 }
@@ -36,10 +37,12 @@ func NewMongoRepository(endpoint string) *MongoRepository {
 	return &MongoRepository{mgoEndpoint: endpoint}
 }
 
+//MongoContext is mongo context
 type MongoContext struct {
 	mgoSession *mgo.Session
 }
 
+//GetSession is getting session
 func GetSession(url string) (*MongoContext, error) {
 	if url == "" {
 		return nil, errors.New("invalid para url")
@@ -52,12 +55,16 @@ func GetSession(url string) (*MongoContext, error) {
 	}
 	return &MongoContext{mgoSession.Clone()}, nil
 }
+
+//GetCollection is getting collection from mongodb
 func (c *MongoContext) GetCollection(db string, collection string) *mgo.Collection {
 	session := c.mgoSession
 	defer session.Close()
 	collects := session.DB("bottos").C(collection)
 	return collects
 }
+
+//SetCollection is setting collection
 func (c *MongoContext) SetCollection(collection string, s func(*mgo.Collection) error) error {
 	session := c.mgoSession
 	defer session.Close()
@@ -65,12 +72,15 @@ func (c *MongoContext) SetCollection(collection string, s func(*mgo.Collection) 
 	return s(collects)
 }
 
+//SetCollectionCount is setting collection by count
 func (c *MongoContext) SetCollectionCount(collection string, s func(*mgo.Collection) (int, error)) (int, error) {
 	session := c.mgoSession
 	defer session.Close()
 	collects := session.DB("bottos").C(collection)
 	return s(collects)
 }
+
+//SetCollectionByDB is setting collection by database
 func (c *MongoContext) SetCollectionByDB(db string, collection string, s func(*mgo.Collection) error) error {
 	session := c.mgoSession
 	defer session.Close()
@@ -78,7 +88,7 @@ func (c *MongoContext) SetCollectionByDB(db string, collection string, s func(*m
 	return s(collects)
 }
 
-// CollectionExists returns true if the collection name exists in the specified database.
+// isCollectionExists returns true if the collection name exists in the specified database.
 func (c *MongoContext) isCollectionExists(useCollection string) bool {
 	session := c.mgoSession
 	database := session.DB("bottos")
