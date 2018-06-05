@@ -47,7 +47,7 @@ func TxNum(min int64, max int64) int {
 
 //TxAmount tx amount
 func TxAmount(min int64, max int64) uint64 {
-	var amount uint64 = 0
+	amount := 0
 	var ret []bean.Tx
 
 	var mgo = mgo.Session()
@@ -74,7 +74,7 @@ func TxAmount(min int64, max int64) uint64 {
 func RequirementNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	var count = 0
+	count := 0
 	count, err := mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lt": TimestampToUTC(max)}}).Count()
 	if err != nil {
 		log.Error(err)
@@ -86,7 +86,7 @@ func RequirementNum(min int64, max int64) int {
 func AssetNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	var count = 0
+	count := 0
 	count, err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
 	if err != nil {
 		log.Error(err)
@@ -98,7 +98,7 @@ func AssetNum(min int64, max int64) int {
 func AccountNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	var count = 0
+	count := 0
 	count, err := mgo.DB(config.DB_NAME).C("Accounts").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
 	if err != nil {
 		log.Error(err)
