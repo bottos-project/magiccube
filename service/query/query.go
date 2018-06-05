@@ -98,7 +98,7 @@ func AssetNum(min int64, max int64) int {
 func AccountNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	var count = 0
+	count := 0
 	count, err := mgo.DB(config.DB_NAME).C("Accounts").Find(bson.M{"create_time": bson.M{"$gte": TimestampToUTC(min), "$lte": TimestampToUTC(max)}}).Count()
 	if err != nil {
 		log.Error(err)
