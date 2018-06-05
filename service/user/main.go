@@ -50,7 +50,7 @@ func (u *User) GetBlockHeader(ctx context.Context, req *user_proto.GetBlockHeade
 }
 
 func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rsp *user_proto.RegisterResponse) error {
-	log.Info("req:", req);
+	log.Info("req:", req)
 	block_header, err:= data.BlockHeader()
 	if err != nil {
 		rsp.Code = 1003
@@ -69,7 +69,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		CursorNum: block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
 		Lifetime: block_header.HeadBlockTime + 20,
-		Sender: "bottos",
+		Sender:      "delta",
 		Contract: "bottos",
 		Method: "newaccount",
 		Param: account_buf,
@@ -81,8 +81,8 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		rsp.Msg = err.Error()
 		return nil
 	}
-	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
-	seckey, err := hex.DecodeString("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
+	//配对的pubkey   0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f
+	seckey, err := hex.DecodeString("b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45")
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
@@ -99,7 +99,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		CursorNum: block_header.HeadBlockNum,
 		CursorLabel: block_header.CursorLabel,
 		Lifetime: block_header.HeadBlockTime + 20,
-		Sender: "bottos",
+		Sender:      "delta",
 		Contract: "bottos",
 		Method: "newaccount",
 		Param: hex.EncodeToString(account_buf),
