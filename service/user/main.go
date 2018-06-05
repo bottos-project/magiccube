@@ -63,7 +63,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		return nil
 	}
 	rsp.Code = 1004
-	account_buf, err := pack.Marshal(req.Account)
+	accountBuf, err := pack.Marshal(req.Account)
 	if err != nil {
 		rsp.Msg = err.Error()
 		return nil
@@ -76,7 +76,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		Sender:      "delta",
 		Contract:    "bottos",
 		Method:      "newaccount",
-		Param:       account_buf,
+		Param:       accountBuf,
 		SigAlg:      1,
 	}
 
@@ -106,7 +106,7 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		Sender:      "delta",
 		Contract:    "bottos",
 		Method:      "newaccount",
-		Param:       hex.EncodeToString(account_buf),
+		Param:       hex.EncodeToString(accountBuf),
 		SigAlg:      1,
 		Signature:   hex.EncodeToString(signature),
 	}
@@ -142,9 +142,9 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 
 //GetAccountInfo is to get AccountInfo
 func (u *User) GetAccountInfo(ctx context.Context, req *user_proto.GetAccountInfoRequest, rsp *user_proto.GetAccountInfoResponse) error {
-	account_info, err := data.AccountInfo(req.AccountName)
+	accountInfo , err := data.AccountInfo(req.AccountName)
 	if accountInfo != nil {
-		rsp.Data = account_info
+		rsp.Data = accountInfo 
 	} else {
 		rsp.Code = 1006
 		rsp.Msg = err.Error()
