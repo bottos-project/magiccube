@@ -193,7 +193,7 @@ type keyStore interface {
 	// Joins filename with the key directory unless it is already absolute.
 	JoinPath(filename string) string
 }
-
+//DefaultConfig is DefaultConfig
 var DefaultConfig = NodeConfig{
 	DataDir:     DefaultDataDir(),
 	KeyStoreDir: DefaultKeystoreDir(),
@@ -217,7 +217,7 @@ type Account struct {
 	UUID aes.UUID `json:"address"` // Ethereum account address derived from the key
 	URL  URL      `json:"url"`     // Optional resource locator within a backend
 }
-
+//PasswordFileFlag is PasswordFileFlag
 var PasswordFileFlag = cli.StringFlag{
 	Name:  "password_filepath",
 	Usage: "Password path file to use for non-interactive password input",
@@ -289,9 +289,9 @@ func (ks keyStorePassphrase) StoreKey(username string, filename string, key *aes
 func (ks keyStorePassphrase) JoinPath(filename string) string {
 	if filepath.IsAbs(filename) {
 		return filename
-	} else {
-		return filepath.Join(ks.keysDirPath, filename)
-	}
+	} 
+	return filepath.Join(ks.keysDirPath, filename)
+	
 }
 
 // FromECDSA exports a private key into a binary dump.
@@ -402,12 +402,15 @@ func storeNewKey(ks keyStore, rand io.Reader, auth string) (*aes.Key, Account, e
 
 	return key, a, err
 }
-
+//GetPubKey is to GetPubKey
 func GetPubKey() string  { return myNodeAccountPubKey }
+//GetPriKey is to GetPriKey
 func GetPriKey() string  { return myNodeAccountPriKey }
+//GetAccount is to GetAccount
 func GetAccount() string { return myNodeAccount }
+//GetUUID is to GetUUID 
 func GetUUID() string    { return myNodeUUID }
-
+//Stdin is Stdin
 var Stdin = newTerminalPrompter()
 
 // UserPrompter defines the methods needed by the console to promt the user for
@@ -633,8 +636,8 @@ func accountCreate(ctx *cli.Context) error {
 	//fmt.Printf("UUID: {%x}, err: %s\n", UUID, err)
 	return nil
 }
-//AccountCreate_Ex is to AccountCreate_Ex
-func AccountCreate_Ex(datadir string, keydir string, password string) error {
+//AccountCreateEx is to AccountCreateEx
+func AccountCreateEx(datadir string, keydir string, password string) error {
 	if len(datadir) <= 0 || len(keydir) <= 0 || len(password) <= 0 {
 		log.Println("keydir or UserPwd invalid: datadir:", datadir, ", keydir:", keydir, ", password:", password)
 		return nil
