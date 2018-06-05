@@ -213,8 +213,8 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 
 	rsp.SliceProgressDone = []*proto.Slice{}
 	rsp.SliceProgressing = []*proto.Slice{}
-	var i int = 0
-	var j int = 0
+	i := 0
+	j := 0
 	for _, slice := range fileSlice {
 		result, err := d.minioRepo.GetPutState(userName, slice.Sguid)
 		log.Info("result")
