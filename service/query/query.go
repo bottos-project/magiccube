@@ -26,12 +26,14 @@ import (
 	"github.com/bottos-project/magiccube/config"
 )
 
+// timestamp to utc timer
 func TimestampToUTC(timestamp int64) time.Time {
 	date := time.Unix(timestamp, 0)
 	local1, _ := time.LoadLocation("UTC")
 	return date.In(local1)
 }
 
+// tx number
 func TxNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -42,6 +44,7 @@ func TxNum(min int64, max int64) int {
 	return count
 }
 
+//tx amount
 func TxAmount(min int64, max int64) uint64 {
 	var amount uint64 = 0
 	var ret []bean.Tx
@@ -66,6 +69,7 @@ func TxAmount(min int64, max int64) uint64 {
 	return amount
 }
 
+//reqirement number
 func RequirementNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -77,6 +81,7 @@ func RequirementNum(min int64, max int64) int {
 	return count
 }
 
+//asset number
 func AssetNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -88,6 +93,7 @@ func AssetNum(min int64, max int64) int {
 	return count
 }
 
+//account number
 func AccountNum(min int64, max int64) int {
 	var mgo = mgo.Session()
 	defer mgo.Close()
@@ -99,6 +105,7 @@ func AccountNum(min int64, max int64) int {
 	return count
 }
 
+//yesterday time slot
 func YesterdayTimeSlot() (int64, int64) {
 	timeStr := time.Now().Format("2006-01-02")
 	//t, _ := time.Parse("2006-01-02", timeStr)
