@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -90,6 +90,11 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 		rsp.Msg = err.Error()
 		return nil
 	}
+
+	//Add chainID Flag
+	//chainID,_:=hex.DecodeString("000000000001")
+	//msg = bytes.Join([][]byte{msg, chainID}, []byte{})
+
 
 	signature, err := crypto.Sign(util.Sha256(msg), seckey)
 	if err != nil {

@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -91,6 +91,11 @@ func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
 		log.Error(err)
 		return false, err
 	}
+
+	//Add chainID Flag
+	//chainID,_:=hex.DecodeString("000000000001")
+	//seri_data = bytes.Join([][]byte{seri_data, chainID}, []byte{})
+
 	return crypto.VerifySign(pubKey, util.Sha256(seriData), sign), nil
 }
 
