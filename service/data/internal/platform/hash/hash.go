@@ -22,68 +22,83 @@
  * @Last Modified by:
  * @Last Modified time:
  */
+
 package common
+
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/binary"
 	"encoding/hex"
-	"crypto/sha256"
 	"fmt"
 )
 
 const (
+	//HashLength the length of hash bytes
 	HashLength = 32
 )
 
 type (
+	//Hash the hash data
 	Hash [HashLength]byte
 )
 
+//Sha256 do sha256
 func Sha256(data []byte) Hash {
 	hash := sha256.Sum256(data)
 	return hash
 }
 
+//DoubleSha256 do sha256 twice
 func DoubleSha256(data []byte) Hash {
 	temp := sha256.Sum256(data)
 	hash := sha256.Sum256(temp[:])
 	return hash
 }
 
+//BytesToHash set hash data
 func BytesToHash(b []byte) Hash {
 	var h Hash
 	h.SetBytes(b)
 	return h
 }
 
+//StringToHash hash string to hash data
 func StringToHash(s string) Hash {
 	return BytesToHash([]byte(s))
 }
 
+//EmptyHash chech hash data
 func EmptyHash(h Hash) bool {
 	return h == Hash{}
 }
 
+//HexToHash hex hash string to hash data
 func HexToHash(s string) Hash {
 	return BytesToHash(HexStringToBytes(s))
 }
 
+//ToString hash data to string
 func (h Hash) ToString() string {
 	return string(h[:])
 }
 
+//Bytes get hash data
 func (h Hash) Bytes() []byte {
 	return h[:]
 }
 
+//ToHexString hash data to hex string
 func (h Hash) ToHexString() string {
 	return BytesToHex(h[:])
 }
 
+//SetString set hash data from string
 func (h *Hash) SetString(s string) {
 	h.SetBytes([]byte(s))
 }
 
+//SetBytes  set hash data from bytes
 func (h *Hash) SetBytes(b []byte) {
 	if len(b) > len(h) {
 		b = b[len(b)-HashLength:]
@@ -92,16 +107,27 @@ func (h *Hash) SetBytes(b []byte) {
 	copy(h[HashLength-len(b):], b)
 }
 
+//Label calc lable from hash data
+func (h *Hash) Label() uint32 {
+	var chainCursorLabel uint32
+	chainCursorLabel = (uint32)(h[HashLength-1]) + (uint32)(h[HashLength-2])<<8 + (uint32)(h[HashLength-3])<<16 + (uint32)(h[HashLength-4])<<24
+
+	return chainCursorLabel
+}
+
+//BytesToHex hex data to string
 func BytesToHex(d []byte) string {
 	return hex.EncodeToString(d)
 }
 
-func HexToBytes(str string) []byte {
-	h, _ := hex.DecodeString(str)
+//HexToBytes hex string to bytes
+func HexToBytes(str string) ([]byte, error) {
+	h, err := hex.DecodeString(str)
 
-	return h
+	return h, err
 }
 
+//NumberToBytes number code covert to bytes
 func NumberToBytes(num interface{}, bits int) []byte {
 	buf := new(bytes.Buffer)
 	err := binary.Write(buf, binary.BigEndian, num)
@@ -112,6 +138,7 @@ func NumberToBytes(num interface{}, bits int) []byte {
 	return buf.Bytes()[buf.Len()-(bits/8):]
 }
 
+//HexStringToBytes hex string to bytes
 func HexStringToBytes(s string) []byte {
 	if len(s) > 1 {
 		if s[0:2] == "0x" {
@@ -120,7 +147,10 @@ func HexStringToBytes(s string) []byte {
 		if len(s)%2 == 1 {
 			s = "0" + s
 		}
-		return HexToBytes(s)
+		b, err := HexToBytes(s)
+		if err == nil {
+			return b
+		}
 	}
 	return nil
 }

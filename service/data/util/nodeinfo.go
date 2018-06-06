@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,9 +14,11 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package util
 
+// NodeDBInfo struct
 type NodeDBInfo struct {
 	NodeId      string   `json:"node_id"`
 	NodeIP      string   `json:"node_ip"`

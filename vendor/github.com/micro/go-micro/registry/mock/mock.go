@@ -10,7 +10,7 @@ type mockRegistry struct {
 
 var (
 	mockData = map[string][]*registry.Service{
-		"foo": []*registry.Service{
+		"foo": {
 			{
 				Name:    "foo",
 				Version: "1.0.0",

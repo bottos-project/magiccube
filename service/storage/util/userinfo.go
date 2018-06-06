@@ -18,6 +18,7 @@
 
 package util
 
+// UserInfo struct
 type UserInfo struct {
 	Username     string `db:"username"`
 	Accountname  string `db:"accountname"`
@@ -28,6 +29,7 @@ type UserInfo struct {
 	Info         string `db:"info"`
 }
 
+//UserDBInfo struct
 type UserDBInfo struct {
 	Username       string `db:"username"`
 	Accountname    string `db:"accountname"`
@@ -40,15 +42,22 @@ type UserDBInfo struct {
 	CompanyAddress string `db:"company_address"`
 }
 
+//TokenDBInfo struct
 type TokenDBInfo struct {
 	Username   string `db:"username"`
 	Token      string `db:"token"`
 	InsertTime int64  `db:"insert_time"`
 }
 
+// InserUserInfoSql string
 const InserUserInfoSql string = "insert into userinfo(Username, Accountname, Ownerpubkey,Activepubkey,EncyptedInfo,UserType,RoleType,CompanyName,CompanyAddress) values(?,?,?,?,?,?,?,?,?)"
+
+//QueryUserInfoSql string
+
 const QueryUserInfoSql string = "select * from userinfo"
 
+//InsertUserTokenSql string
 const InsertUserTokenSql string = "insert into tokeninfo(Username, Token,InsertTime) values(?,?,?)"
 
+//DefualtAgingTime int64
 const DefualtAgingTime int64 = 30 * 60

@@ -14,10 +14,11 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package util
 
+//FileDBInfo struct
 type FileDBInfo struct {
 	FileHash          string `json:"file_hash"`
 	Username          string `json:"username"`
@@ -28,4 +29,5 @@ type FileDBInfo struct {
 	AuthorizedStorage string `json:"authorized_storage"`
 }
 
+//InsertUserFileSql is insert sql
 const InsertUserFileSql string = "insert into fileinfo(FileHash,Username,FileName,FileSize,FileNumber,FilePolicy,AuthorizedStorage) values(?,?,?,?,?,?,?)"

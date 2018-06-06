@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,28 +14,32 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package data
 
 import (
-	log "github.com/cihub/seelog"
-	"strings"
-	"io/ioutil"
-	"net/http"
 	"encoding/json"
-	"github.com/bottos-project/magiccube/service/common/bean"
-	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/bottos-project/magiccube/config"
+	"github.com/bottos-project/magiccube/service/common/bean"
+	user_proto "github.com/bottos-project/magiccube/service/user/proto"
+	log "github.com/cihub/seelog"
 )
 
 const (
-	BASE_URL  = config.BASE_RPC
+	// BASE_URL BASE_URL
+	BASE_URL = config.BASE_RPC
+	// TX_PARAMS TX_PARAMS
 	TX_PARAMS = "service=bottos&method=CoreApi.PushTrx&request=%s"
 )
 
-// get block header
+// BlockHeader get block header
 func BlockHeader() (*user_proto.BlockHeader, error) {
 	params := `service=bottos&method=CoreApi.QueryChainInfo&request={}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -48,7 +52,7 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		log.Error(resp.Status)
 		return nil, errors.New(string(body))
 	}
@@ -56,45 +60,45 @@ func BlockHeader() (*user_proto.BlockHeader, error) {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreBaseReturn{}
-	err = json.Unmarshal(body, common_ret)
+	var commonRet = &bean.CoreBaseReturn{}
+	err = json.Unmarshal(body, commonRet)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	if common_ret.Errcode != 0 {
+	if commonRet.Errcode != 0 {
 		return nil, errors.New(string(body))
 	}
 
-	result_buf, err := json.Marshal(common_ret.Result)
+	resultBuf, err := json.Marshal(commonRet.Result)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	var block_header = &user_proto.BlockHeader{}
-	err = json.Unmarshal(result_buf, block_header)
+	var blockHeader = &user_proto.BlockHeader{}
+	err = json.Unmarshal(resultBuf, blockHeader)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	return block_header, nil
+	return blockHeader, nil
 }
 
-// push transaction
-func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
+// PushTransaction push transaction
+func PushTransaction(i interface{}) (*bean.CoreCommonReturn, error) {
 	var params = ""
 	switch i.(type) {
-		case string:
-			params = fmt.Sprintf(TX_PARAMS, i.(string))
-		default:
-			r, err := json.Marshal(i)
-			if err != nil {
-				log.Error(err)
-				return nil, err
-			}
-			params = fmt.Sprintf(TX_PARAMS, string(r))
+	case string:
+		params = fmt.Sprintf(TX_PARAMS, i.(string))
+	default:
+		r, err := json.Marshal(i)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		params = fmt.Sprintf(TX_PARAMS, string(r))
 	}
 	log.Info(params)
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -111,24 +115,24 @@ func PushTransaction (i interface{}) (*bean.CoreCommonReturn, error) {
 		return nil, err
 	}
 
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		return nil, errors.New(string(body))
 	}
 	log.Info("body:", string(body))
-	var common_ret bean.CoreCommonReturn
-	err = json.Unmarshal(body, &common_ret)
+	var commonRet bean.CoreCommonReturn
+	err = json.Unmarshal(body, &commonRet)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	if common_ret.Errcode == 0 {
-		return &common_ret, nil
+	if commonRet.Errcode == 0 {
+		return &commonRet, nil
 	}
 	return nil, errors.New(string(body))
 }
 
-// get account info
+// AccountInfo get account info
 func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	params := `service=bottos&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
@@ -141,35 +145,35 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	log.Info(string(body))
-	if (resp.StatusCode != 200) {
+	if resp.StatusCode != 200 {
 		return nil, errors.New(string(body))
 	}
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	var common_ret = &bean.CoreBaseReturn{}
-	err = json.Unmarshal(body, common_ret)
+	var commonRet = &bean.CoreBaseReturn{}
+	err = json.Unmarshal(body, commonRet)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	if common_ret.Errcode != 0 {
+	if commonRet.Errcode != 0 {
 		return nil, errors.New(string(body))
 	}
 
-	result_buf, err := json.Marshal(common_ret.Result)
+	resultBuf, err := json.Marshal(commonRet.Result)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	var account_info = &user_proto.AccountInfoData{}
-	err = json.Unmarshal(result_buf, account_info)
+	var accountInfo = &user_proto.AccountInfoData{}
+	err = json.Unmarshal(resultBuf, accountInfo)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	return account_info, nil
+	return accountInfo, nil
 }

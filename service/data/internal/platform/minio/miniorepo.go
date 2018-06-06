@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package minio
 
 import (
@@ -30,6 +31,7 @@ import (
 	"time"
 )
 
+// MinioRepository struct
 type MinioRepository struct {
 	minioEndpoint  string
 	minioAccessKey string
@@ -40,6 +42,8 @@ type MinioRepository struct {
 func NewMinioRepository(endpoint string, accessKey string, secretKey string) *MinioRepository {
 	return &MinioRepository{minioEndpoint: endpoint, minioAccessKey: accessKey, minioSecretKey: secretKey}
 }
+
+// GetCacheURL on server
 func (r *MinioRepository) GetCacheURL(username string, objectName string) (string, error) {
 
 	log.Info("get cache")
@@ -92,6 +96,8 @@ func (r *MinioRepository) GetCacheURL(username string, objectName string) (strin
 	url := CacheURL.String()
 	return url, nil
 }
+
+// GetCacheFile on server
 func (r *MinioRepository) GetCacheFile(username string, objectName string) (*minio.Object, error) {
 
 	log.Info("get cache file")
@@ -118,6 +124,8 @@ func (r *MinioRepository) GetCacheFile(username string, objectName string) (*min
 	}
 	return file, nil
 }
+
+// PutFile to server
 func (r *MinioRepository) PutFile(username string, objectName string, reader io.Reader, objectSize int64) (int64, error) {
 
 	log.Info("put file")
@@ -144,6 +152,8 @@ func (r *MinioRepository) PutFile(username string, objectName string, reader io.
 	}
 	return n, nil
 }
+
+// ComposeFile on server
 func (r *MinioRepository) ComposeFile(dst minio.DestinationInfo, srcs []minio.SourceInfo) error {
 
 	log.Info("ComposeFile")
@@ -166,6 +176,7 @@ func (r *MinioRepository) ComposeFile(dst minio.DestinationInfo, srcs []minio.So
 	return nil
 }
 
+// GetPutState from server
 func (r *MinioRepository) GetPutState(username string, objectName string) (int64, error) {
 
 	log.Info("get put state")
@@ -199,6 +210,7 @@ func (r *MinioRepository) GetPutState(username string, objectName string) (int64
 	return objectInfo.Size, nil
 }
 
+// GetFileDownloadURL from service
 func (r *MinioRepository) GetFileDownloadURL(username string, objectName string) (string, error) {
 
 	log.Info("get file downloadURL")

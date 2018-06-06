@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,30 +14,34 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
+	"os"
+
+	contract_proto "github.com/bottos-project/magiccube/service/contract/proto"
 	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
-	contract_proto "github.com/bottos-project/magiccube/service/contract/proto"
 	"golang.org/x/net/context"
-	"os"
 )
 
-type Contract struct {}
+// Contract struct
+type Contract struct{}
 
+// Deploy Deploy
 func (u *Contract) Deploy(ctx context.Context, req *contract_proto.DeployRequest, rsp *contract_proto.DeployResponse) error {
 	return nil
 }
 
+// Query Query
 func (u *Contract) Query(ctx context.Context, req *contract_proto.QueryRequest, rsp *contract_proto.QueryResponse) error {
 	return nil
 }
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/con-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}

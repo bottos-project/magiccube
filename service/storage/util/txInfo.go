@@ -18,6 +18,7 @@
 
 package util
 
+//TxInfo struct
 type TxInfo struct {
 	TransactionID string `json:"transaction_id"`
 	Transaction   struct {
@@ -45,6 +46,7 @@ type TxInfo struct {
 	} `json:"transaction"`
 }
 
+//TxDBInfo struct
 type TxDBInfo struct {
 	TransactionID string `json:"transaction_id"`
 	From          string `json:"from"`
@@ -54,6 +56,8 @@ type TxDBInfo struct {
 	Date          string `json:"date"`
 	BlockId       uint64 `json:"block_id"`
 }
+
+//TransferDBInfo struct
 type TransferDBInfo struct {
 	TransactionID string `json:"tx_id"`
 	From          string `json:"from"`
@@ -63,4 +67,5 @@ type TransferDBInfo struct {
 	BlockNum      uint64 `json:"block_num"`
 }
 
+//InserTxInfoSql const
 const InserTxInfoSql string = "INSERT INTO txinfo(TransactionID,Price,Type,From,To,Date,BlockId) values(?,?,?,?,?,?,?)"

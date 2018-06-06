@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,16 +14,18 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+
 package mgo
 
-import(
-	"gopkg.in/mgo.v2"
+import (
 	"github.com/bottos-project/magiccube/config"
+	"gopkg.in/mgo.v2"
 )
 
 var mgoSession *mgo.Session
 
+//Session is mgo.session
 func Session() *mgo.Session {
 	if mgoSession == nil {
 		var err error

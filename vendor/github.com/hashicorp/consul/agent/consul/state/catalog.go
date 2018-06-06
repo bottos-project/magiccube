@@ -16,7 +16,7 @@ func nodesTableSchema() *memdb.TableSchema {
 	return &memdb.TableSchema{
 		Name: "nodes",
 		Indexes: map[string]*memdb.IndexSchema{
-			"id": &memdb.IndexSchema{
+			"id": {
 				Name:         "id",
 				AllowMissing: false,
 				Unique:       true,
@@ -25,7 +25,7 @@ func nodesTableSchema() *memdb.TableSchema {
 					Lowercase: true,
 				},
 			},
-			"uuid": &memdb.IndexSchema{
+			"uuid": {
 				Name:         "uuid",
 				AllowMissing: true,
 				Unique:       true,
@@ -33,7 +33,7 @@ func nodesTableSchema() *memdb.TableSchema {
 					Field: "ID",
 				},
 			},
-			"meta": &memdb.IndexSchema{
+			"meta": {
 				Name:         "meta",
 				AllowMissing: true,
 				Unique:       false,
@@ -52,7 +52,7 @@ func servicesTableSchema() *memdb.TableSchema {
 	return &memdb.TableSchema{
 		Name: "services",
 		Indexes: map[string]*memdb.IndexSchema{
-			"id": &memdb.IndexSchema{
+			"id": {
 				Name:         "id",
 				AllowMissing: false,
 				Unique:       true,
@@ -69,7 +69,7 @@ func servicesTableSchema() *memdb.TableSchema {
 					},
 				},
 			},
-			"node": &memdb.IndexSchema{
+			"node": {
 				Name:         "node",
 				AllowMissing: false,
 				Unique:       false,
@@ -78,7 +78,7 @@ func servicesTableSchema() *memdb.TableSchema {
 					Lowercase: true,
 				},
 			},
-			"service": &memdb.IndexSchema{
+			"service": {
 				Name:         "service",
 				AllowMissing: true,
 				Unique:       false,
@@ -98,7 +98,7 @@ func checksTableSchema() *memdb.TableSchema {
 	return &memdb.TableSchema{
 		Name: "checks",
 		Indexes: map[string]*memdb.IndexSchema{
-			"id": &memdb.IndexSchema{
+			"id": {
 				Name:         "id",
 				AllowMissing: false,
 				Unique:       true,
@@ -115,7 +115,7 @@ func checksTableSchema() *memdb.TableSchema {
 					},
 				},
 			},
-			"status": &memdb.IndexSchema{
+			"status": {
 				Name:         "status",
 				AllowMissing: false,
 				Unique:       false,
@@ -124,7 +124,7 @@ func checksTableSchema() *memdb.TableSchema {
 					Lowercase: false,
 				},
 			},
-			"service": &memdb.IndexSchema{
+			"service": {
 				Name:         "service",
 				AllowMissing: true,
 				Unique:       false,
@@ -133,7 +133,7 @@ func checksTableSchema() *memdb.TableSchema {
 					Lowercase: true,
 				},
 			},
-			"node": &memdb.IndexSchema{
+			"node": {
 				Name:         "node",
 				AllowMissing: true,
 				Unique:       false,
@@ -142,7 +142,7 @@ func checksTableSchema() *memdb.TableSchema {
 					Lowercase: true,
 				},
 			},
-			"node_service_check": &memdb.IndexSchema{
+			"node_service_check": {
 				Name:         "node_service_check",
 				AllowMissing: true,
 				Unique:       false,
@@ -158,7 +158,7 @@ func checksTableSchema() *memdb.TableSchema {
 					},
 				},
 			},
-			"node_service": &memdb.IndexSchema{
+			"node_service": {
 				Name:         "node_service",
 				AllowMissing: true,
 				Unique:       false,

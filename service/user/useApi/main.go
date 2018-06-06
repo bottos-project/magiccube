@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,33 +14,30 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"encoding/json"
-	"github.com/bottos-project/magiccube/service/user/proto"
-	"github.com/micro/go-micro"
-	api "github.com/micro/micro/api/proto"
-	"golang.org/x/net/context"
-	"github.com/mojocn/base64Captcha"
-	"os"
 	"github.com/bottos-project/magiccube/config"
-	"regexp"
 	errcode "github.com/bottos-project/magiccube/error"
 	sign "github.com/bottos-project/magiccube/service/common/signature"
+	"github.com/bottos-project/magiccube/service/user/proto"
+	log "github.com/cihub/seelog"
+	"github.com/micro/go-micro"
+	api "github.com/micro/micro/api/proto"
+	"github.com/mojocn/base64Captcha"
+	"golang.org/x/net/context"
+	"os"
+	"regexp"
 )
 
+//User struct
 type User struct {
 	Client user.UserClient
 }
 
-/**
- * GetVerify
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetVerify is to verify
 func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	//var configCode = base64Captcha.ConfigCharacter{
 	//	Height:             60,
@@ -69,7 +66,7 @@ func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Respons
 	b, _ := json.Marshal(map[string]interface{}{
 		"code": 1,
 		"data": map[string]interface{}{
-			"verify_id": idKeyD,
+			"verify_id":   idKeyD,
 			"verify_data": base64stringD,
 		},
 		"msg": "OK",
@@ -79,11 +76,7 @@ func (u *User) GetVerify(ctx context.Context, req *api.Request, rsp *api.Respons
 	return nil
 }
 
-/**
- * GetBlockHeader
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetBlockHeader is to get blockheader
 func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	response, err := u.Client.GetBlockHeader(ctx, &user.GetBlockHeaderRequest{})
@@ -96,11 +89,7 @@ func (u *User) GetBlockHeader(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
-/**
- * Register
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//Register is to Register
 func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	log.Info(req.Body)
@@ -112,7 +101,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	}
 	log.Info(registerRequest)
 
-	match,err :=regexp.MatchString("^[a-z][a-z1-9]{2,15}$",registerRequest.Account.Name)
+	match, err := regexp.MatchString("^[a-z][a-z1-9]{2,15}$", registerRequest.Account.Name)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -122,21 +111,21 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		return nil
 	}
 
-	if config.Enable_verification {
+	if config.EnableVerification {
 		if !base64Captcha.VerifyCaptcha(registerRequest.VerifyId, registerRequest.VerifyValue) {
 			rsp.Body = errcode.ReturnError(1001)
 			return nil
 		}
 	}
 
-	user_json_buf, err := json.Marshal(registerRequest.User)
+	userJSONBuf, err := json.Marshal(registerRequest.User)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
-	is_true, err := sign.PushVerifySign(string(user_json_buf), registerRequest.Account.Pubkey)
-	if !is_true {
+	isTrue, err := sign.PushVerifySign(string(userJSONBuf), registerRequest.Account.Pubkey)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -149,11 +138,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-/**
- * GetAccountInfo
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetAccountInfo is to get AccountInfo
 func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	var getAccountInfoRequest user.GetAccountInfoRequest
@@ -172,12 +157,8 @@ func (u *User) GetAccountInfo(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
-/**
- * Login
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
-func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
+//Login is to Login
+func (u *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
 	var loginRequest user.LoginRequest
@@ -187,14 +168,14 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 		return err
 	}
 
-	if config.Enable_verification {
+	if config.EnableVerification {
 		if !base64Captcha.VerifyCaptcha(loginRequest.VerifyId, loginRequest.VerifyValue) {
 			rsp.Body = errcode.ReturnError(1001)
 			return nil
 		}
 	}
 
-	is, err:=sign.QueryVerifySign(req.Body)
+	is, err := sign.QueryVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -204,11 +185,7 @@ func (s *User) Login(ctx context.Context, req *api.Request, rsp *api.Response) e
 	return nil
 }
 
-/**
- * Favorite
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//Favorite is to Favorite
 func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -219,7 +196,7 @@ func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is, err:=sign.PushVerifySign(req.Body)
+	is, err := sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -235,11 +212,7 @@ func (u *User) Favorite(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-/**
- * GetFavorite
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//GetFavorite is to GetFavorite
 func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -250,7 +223,7 @@ func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Respo
 		return err
 	}
 
-	is, err:=sign.QueryVerifySign(req.Body)
+	is, err := sign.QueryVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -266,11 +239,7 @@ func (u *User) GetFavorite(ctx context.Context, req *api.Request, rsp *api.Respo
 	return nil
 }
 
-/**
- * Transfer
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+// Transfer is to Transfer
 func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 
@@ -281,7 +250,7 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 		return err
 	}
 
-	is, err:=sign.PushVerifySign(req.Body)
+	is, err := sign.PushVerifySign(req.Body)
 	if !is {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
@@ -297,11 +266,7 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	return nil
 }
 
-/**
- * QueryMyBuy
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+// QueryMyBuy is to QueryMyBuy
 func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	rsp.StatusCode = 200
 	body := req.Body
@@ -312,9 +277,8 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 		return err
 	}
 
-	//验签
-	is_true, err := sign.QueryVerifySign(req.Body)
-	if !is_true {
+	isTrue, err := sign.QueryVerifySign(req.Body)
+	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
 	}
@@ -329,14 +293,10 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 	return nil
 }
 
-/**
- * Init
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
+//init is to init
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/user-log.xml")
-	if err != nil{
+	if err != nil {
 		log.Error(err)
 		panic(err)
 	}
@@ -344,11 +304,6 @@ func init() {
 	log.ReplaceLogger(logger)
 }
 
-/**
- * Main
- * @author 星空之钥丶 <778774780@qq.com>
- * @return error
- */
 func main() {
 	service := micro.NewService(
 		micro.Name("go.micro.api.v3.user"),

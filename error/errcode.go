@@ -21,35 +21,40 @@
  * @Date: 2018-4-25
  * @Last Modified by:
  * @Last Modified time:
-*/
+ */
+
 package error
 
 import (
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
+
 	log "github.com/cihub/seelog"
 )
 
+// ErrorCode struct
 type ErrorCode struct {
-	Code    int64 `json:"code"`
-	Msg     struct {
+	Code int64 `json:"code"`
+	Msg  struct {
 		Cn string `json:"cn"`
 		En string `json:"en"`
 	} `json:"msg"`
-	Details string  `json:"details"`
+	Details string `json:"details"`
 }
 
+// Ret struct
 type Ret struct {
-	Code    int64 		`json:"code"`
-	Data 	interface{} `json:"data"`
-	Msg     string		`json:"msg"`
+	Code int64       `json:"code"`
+	Data interface{} `json:"data"`
+	Msg  string      `json:"msg"`
 }
 
+// CoreRet struct
 type CoreRet struct {
-	Errcode int64 		`json:"errcode"`
+	Errcode int64 `json:"errcode"`
 }
 
-// get error info
+// GetErrorInfo  get error info
 func GetErrorInfo(code int64) ErrorCode {
 	d := GetAllErrorInfos()
 	for _, v := range d {
@@ -60,20 +65,20 @@ func GetErrorInfo(code int64) ErrorCode {
 	return ErrorCode{}
 }
 
-// return
+// Return return
 func Return(b interface{}) string {
-	buf, err:= json.Marshal(b)
+	buf, err := json.Marshal(b)
 	if err != nil {
 		log.Error(err)
 		panic(err)
 	}
 	var ret Ret
 	json.Unmarshal(buf, &ret)
-	if(ret.Code == 0 || ret.Code == 1){
+	if ret.Code == 0 || ret.Code == 1 {
 		ret.Code = 1
 		ret.Msg = "ok"
 
-		body, err:= json.Marshal(ret)
+		body, err := json.Marshal(ret)
 		if err != nil {
 			log.Error(err)
 			panic(err)
@@ -123,13 +128,13 @@ func Return(b interface{}) string {
 	return string(json)
 }
 
-// return error
+// ReturnError return error
 func ReturnError(code int64, e ...error) string {
 	log.Info(e)
 	d := GetAllErrorInfos()
 	for _, v := range d {
 		if code == v.Code {
-			if len(e)>0 && e[0]!=nil{
+			if len(e) > 0 && e[0] != nil {
 				v.Details = e[0].Error()
 			}
 			json, err := json.Marshal(v)
@@ -149,7 +154,7 @@ func ReturnError(code int64, e ...error) string {
 	return string(json)
 }
 
-//get all info
+// GetAllErrorInfos get all info
 func GetAllErrorInfos() []ErrorCode {
 	fr, err := ioutil.ReadFile("./error/err-code.json")
 	if err != nil {
@@ -165,5 +170,3 @@ func GetAllErrorInfos() []ErrorCode {
 	}
 	return d
 }
-
-

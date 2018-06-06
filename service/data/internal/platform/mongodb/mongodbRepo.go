@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,8 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package mongodb
 
 import (
@@ -27,6 +27,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// MongoRepository struct
 type MongoRepository struct {
 	mgoEndpoint string
 }
@@ -36,10 +37,12 @@ func NewMongoRepository(endpoint string) *MongoRepository {
 	return &MongoRepository{mgoEndpoint: endpoint}
 }
 
+// MongoContext struct
 type MongoContext struct {
 	mgoSession *mgo.Session
 }
 
+// GetSession on sever
 func GetSession(url string) (*MongoContext, error) {
 	if url == "" {
 		return nil, errors.New("invalid para url")
@@ -52,6 +55,8 @@ func GetSession(url string) (*MongoContext, error) {
 	}
 	return &MongoContext{mgoSession.Clone()}, nil
 }
+
+// GetCollection method
 func (c *MongoContext) GetCollection(db string, collection string) *mgo.Collection {
 	session := c.mgoSession
 	defer session.Close()
@@ -59,6 +64,8 @@ func (c *MongoContext) GetCollection(db string, collection string) *mgo.Collecti
 
 	return collects
 }
+
+// SetCollection method
 func (c *MongoContext) SetCollection(collection string, s func(*mgo.Collection) error) error {
 	session := c.mgoSession
 	defer session.Close()
@@ -66,12 +73,15 @@ func (c *MongoContext) SetCollection(collection string, s func(*mgo.Collection) 
 	return s(collects)
 }
 
+// SetCollectionCount method
 func (c *MongoContext) SetCollectionCount(collection string, s func(*mgo.Collection) (int, error)) (int, error) {
 	session := c.mgoSession
 	defer session.Close()
 	collects := session.DB("bottos").C(collection)
 	return s(collects)
 }
+
+// SetCollectionByDB on server
 func (c *MongoContext) SetCollectionByDB(db string, collection string, s func(*mgo.Collection) error) error {
 	session := c.mgoSession
 	defer session.Close()

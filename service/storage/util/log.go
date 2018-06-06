@@ -14,16 +14,17 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package util
 
 import (
-	"runtime"
 	"fmt"
+	"runtime"
 	"strings"
 )
 
+//FuncLog is to log
 func FuncLog(depthList ...int) string {
 	var depth int
 	if depthList == nil {
@@ -35,6 +36,7 @@ func FuncLog(depthList ...int) string {
 	return fmt.Sprintf("File: %s  Function: %s Line: %d", path(file), runtime.FuncForPC(function).Name(), line)
 }
 
+//path is to get filepath
 func path(filePath string) string {
 	i := strings.LastIndex(filePath, "/")
 	if i == -1 {

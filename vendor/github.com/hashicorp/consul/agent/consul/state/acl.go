@@ -12,7 +12,7 @@ func aclsTableSchema() *memdb.TableSchema {
 	return &memdb.TableSchema{
 		Name: "acls",
 		Indexes: map[string]*memdb.IndexSchema{
-			"id": &memdb.IndexSchema{
+			"id": {
 				Name:         "id",
 				AllowMissing: false,
 				Unique:       true,
@@ -32,7 +32,7 @@ func aclsBootstrapTableSchema() *memdb.TableSchema {
 	return &memdb.TableSchema{
 		Name: "acls-bootstrap",
 		Indexes: map[string]*memdb.IndexSchema{
-			"id": &memdb.IndexSchema{
+			"id": {
 				Name:         "id",
 				AllowMissing: true,
 				Unique:       true,

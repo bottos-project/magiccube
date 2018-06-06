@@ -171,5 +171,5 @@ func GrabOk(s interface{}, path string) (interface{}, bool) {
 		return result, ok
 	}
 
-	return GrabOk(result, path[dotIndex+1:len(path)])
+	return GrabOk(result, path[dotIndex+1:])
 }

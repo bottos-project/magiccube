@@ -14,8 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package minio
 
 import (
@@ -28,6 +28,7 @@ import (
 	"github.com/minio/minio-go"
 )
 
+// MinioRepository is definition of minio rep
 type MinioRepository struct {
 	minioEndpoint  string
 	minioAccessKey string
@@ -38,6 +39,8 @@ type MinioRepository struct {
 func NewMinioRepository(endpoint string, accessKey string, secretKey string) *MinioRepository {
 	return &MinioRepository{minioEndpoint: endpoint, minioAccessKey: accessKey, minioSecretKey: secretKey}
 }
+
+// GetPutURL is to get put url
 func (r *MinioRepository) GetPutURL(username string, objectName string) (string, error) {
 
 	fmt.Println("get put")
@@ -69,7 +72,7 @@ func (r *MinioRepository) GetPutURL(username string, objectName string) (string,
 		}
 		log.Println(err)
 	}
-	fmt.Println("GetPutURL %s", objectName)
+	fmt.Println("GetPutURL ", objectName)
 
 	presignedURL, err := minioClient.PresignedPutObject(username, objectName, 1000*time.Second)
 	if err != nil {
@@ -82,6 +85,8 @@ func (r *MinioRepository) GetPutURL(username string, objectName string) (string,
 	url := presignedURL.String()
 	return url, nil
 }
+
+// GetPutState is to get put state
 func (r *MinioRepository) GetPutState(username string, objectName string) (int64, error) {
 
 	useSSL := false
@@ -110,6 +115,8 @@ func (r *MinioRepository) GetPutState(username string, objectName string) (int64
 	fmt.Println("gooo", objectInfo)
 	return objectInfo.Size, nil
 }
+
+// GetFileDownloadURL is to get file down load url
 func (r *MinioRepository) GetFileDownloadURL(username string, objectName string) (string, error) {
 
 	//useSSL := true

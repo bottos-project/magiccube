@@ -14,8 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package sqlite
 
 import (
@@ -27,7 +27,6 @@ import (
 
 	"github.com/bottos-project/magiccube/service/storage/util"
 	_ "github.com/mattn/go-sqlite3"
-
 	//	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 

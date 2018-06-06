@@ -14,8 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package mongodb
 
 import (
@@ -28,6 +28,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+//RequireMessage is require message
 type RequireMessage struct {
 	ID                 bson.ObjectId `bson:"_id,omitempty"`
 	MessageID          int           `bson:"message_id"`
@@ -54,6 +55,7 @@ type RequireMessage struct {
 	CreatedAt string `bson:"createdAt"`
 }
 
+//CallGetAllRequirementList is getting all requirement list
 func (r *MongoRepository) CallGetAllRequirementList() ([]*util.RequirementDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -72,22 +74,24 @@ func (r *MongoRepository) CallGetAllRequirementList() ([]*util.RequirementDBInfo
 	for i := 0; i < len(mesgs); i++ {
 
 		dbtag := &util.RequirementDBInfo{
-			mesgs[i].Data.DataReqID,
-			mesgs[i].Data.BasicInfo.UserName,
-			mesgs[i].Data.BasicInfo.RequirementName,
-			mesgs[i].Data.BasicInfo.FeatureTag,
-			mesgs[i].Data.BasicInfo.SamplePath,
-			mesgs[i].Data.BasicInfo.SampleHash,
-			mesgs[i].Data.BasicInfo.ExpireTime,
-			mesgs[i].Data.BasicInfo.Price,
-			mesgs[i].Data.BasicInfo.Description,
-			mesgs[i].Data.BasicInfo.PublishDate}
+			RequirementId:   mesgs[i].Data.DataReqID,
+			Username:        mesgs[i].Data.BasicInfo.UserName,
+			RequirementName: mesgs[i].Data.BasicInfo.RequirementName,
+			FeatureTag:      mesgs[i].Data.BasicInfo.FeatureTag,
+			SamplePath:      mesgs[i].Data.BasicInfo.SamplePath,
+			SampleHash:      mesgs[i].Data.BasicInfo.SampleHash,
+			ExpireTime:      mesgs[i].Data.BasicInfo.ExpireTime,
+			Price:           mesgs[i].Data.BasicInfo.Price,
+			Description:     mesgs[i].Data.BasicInfo.Description,
+			PublishDate:     mesgs[i].Data.BasicInfo.PublishDate}
 		reqs = append(reqs, dbtag)
 	}
 
 	fmt.Println(reqs)
 	return reqs, nil
 }
+
+//CallGetUserRequirementList is getting user requirement list
 func (r *MongoRepository) CallGetUserRequirementList(username string) ([]*util.RequirementDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -107,16 +111,16 @@ func (r *MongoRepository) CallGetUserRequirementList(username string) ([]*util.R
 	for i := 0; i < len(mesgs); i++ {
 
 		dbtag := &util.RequirementDBInfo{
-			mesgs[i].Data.DataReqID,
-			mesgs[i].Data.BasicInfo.UserName,
-			mesgs[i].Data.BasicInfo.RequirementName,
-			mesgs[i].Data.BasicInfo.FeatureTag,
-			mesgs[i].Data.BasicInfo.SamplePath,
-			mesgs[i].Data.BasicInfo.SampleHash,
-			mesgs[i].Data.BasicInfo.ExpireTime,
-			mesgs[i].Data.BasicInfo.Price,
-			mesgs[i].Data.BasicInfo.Description,
-			mesgs[i].Data.BasicInfo.PublishDate}
+			RequirementId:   mesgs[i].Data.DataReqID,
+			Username:        mesgs[i].Data.BasicInfo.UserName,
+			RequirementName: mesgs[i].Data.BasicInfo.RequirementName,
+			FeatureTag:      mesgs[i].Data.BasicInfo.FeatureTag,
+			SamplePath:      mesgs[i].Data.BasicInfo.SamplePath,
+			SampleHash:      mesgs[i].Data.BasicInfo.SampleHash,
+			ExpireTime:      mesgs[i].Data.BasicInfo.ExpireTime,
+			Price:           mesgs[i].Data.BasicInfo.Price,
+			Description:     mesgs[i].Data.BasicInfo.Description,
+			PublishDate:     mesgs[i].Data.BasicInfo.PublishDate}
 		reqs = append(reqs, dbtag)
 	}
 
@@ -124,6 +128,7 @@ func (r *MongoRepository) CallGetUserRequirementList(username string) ([]*util.R
 	return reqs, nil
 }
 
+//CallGetRequirementNumByDay is getting requirement number by day
 func (r *MongoRepository) CallGetRequirementNumByDay(begin time.Time, end time.Time) (uint64, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -146,6 +151,8 @@ func (r *MongoRepository) CallGetRequirementNumByDay(begin time.Time, end time.T
 
 	return uint64(num), nil
 }
+
+//CallGetRequirementListByFeature is getting requirement list by feature
 func (r *MongoRepository) CallGetRequirementListByFeature(featur_tag uint64) ([]*util.RequirementDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {

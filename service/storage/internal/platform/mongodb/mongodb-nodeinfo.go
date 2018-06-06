@@ -28,6 +28,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// NodeMessage is definition os node msg
 type NodeMessage struct {
 	ID                 bson.ObjectId `bson:"_id"`
 	MessageID          int           `bson:"message_id"`
@@ -46,6 +47,7 @@ type NodeMessage struct {
 	CreatedAt time.Time `bson:"createdAt"`
 }
 
+// CallGetNodeInfos is to get node info
 func (r *MongoRepository) CallGetNodeInfos() ([]*util.NodeDBInfo, error) {
 	session, err := GetSession(r.mgoEndpoint)
 	if err != nil {
@@ -64,9 +66,9 @@ func (r *MongoRepository) CallGetNodeInfos() ([]*util.NodeDBInfo, error) {
 	for i := 0; i < len(mesgs); i++ {
 
 		dbtag := &util.NodeDBInfo{
-			mesgs[i].Data.BasicInfo.NodeIP,
-			mesgs[i].Data.BasicInfo.NodePort,
-			mesgs[i].Data.BasicInfo.NodeAddress}
+			NodeId:   mesgs[i].Data.BasicInfo.NodeIP,
+			NodeIP:   mesgs[i].Data.BasicInfo.NodePort,
+			NodePort: mesgs[i].Data.BasicInfo.NodeAddress}
 
 		reqs = append(reqs, dbtag)
 	}

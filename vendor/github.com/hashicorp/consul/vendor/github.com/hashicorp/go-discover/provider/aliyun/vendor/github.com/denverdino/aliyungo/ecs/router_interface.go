@@ -77,7 +77,7 @@ type Filter struct {
 type DescribeRouterInterfacesArgs struct {
 	RegionId common.Region
 	common.Pagination
-	Filter   []Filter
+	Filter []Filter
 }
 
 type RouterInterfaceItemType struct {

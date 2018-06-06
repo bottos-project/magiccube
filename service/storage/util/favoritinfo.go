@@ -14,10 +14,11 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package util
 
+//FavoritDBInfo struct
 type FavoritDBInfo struct {
 	UserName  string `json:"user_name"`
 	OpType    string `json:"op_type"`

@@ -28,7 +28,7 @@ func ExampleApp_Run() {
 	app.UsageText = "app [first_arg] [second_arg]"
 	app.Author = "Harrison"
 	app.Email = "harrison@lolwut.com"
-	app.Authors = []Author{Author{Name: "Oliver Allen", Email: "oliver@toyshop.com"}}
+	app.Authors = []Author{{Name: "Oliver Allen", Email: "oliver@toyshop.com"}}
 	app.Run(os.Args)
 	// Output:
 	// Hello Jeremy
@@ -456,7 +456,7 @@ func TestApp_BeforeFunc(t *testing.T) {
 	}
 
 	app.Commands = []Command{
-		Command{
+		{
 			Name: "sub",
 			Action: func(c *Context) {
 				subcommandRun = true
@@ -522,7 +522,7 @@ func TestApp_AfterFunc(t *testing.T) {
 	}
 
 	app.Commands = []Command{
-		Command{
+		{
 			Name: "sub",
 			Action: func(c *Context) {
 				subcommandRun = true
@@ -634,7 +634,7 @@ func TestAppCommandNotFound(t *testing.T) {
 	}
 
 	app.Commands = []Command{
-		Command{
+		{
 			Name: "bar",
 			Action: func(c *Context) {
 				subcommandRun = true
@@ -675,7 +675,7 @@ func TestGlobalFlagsInSubcommands(t *testing.T) {
 	}
 
 	app.Commands = []Command{
-		Command{
+		{
 			Name: "foo",
 			Flags: []Flag{
 				BoolFlag{Name: "parent, p", Usage: "Parent flag"},
@@ -944,15 +944,15 @@ func TestApp_Run_Categories(t *testing.T) {
 	app := NewApp()
 	app.Name = "categories"
 	app.Commands = []Command{
-		Command{
+		{
 			Name:     "command1",
 			Category: "1",
 		},
-		Command{
+		{
 			Name:     "command2",
 			Category: "1",
 		},
-		Command{
+		{
 			Name:     "command3",
 			Category: "2",
 		},
@@ -1011,9 +1011,9 @@ func TestApp_Run_DoesNotOverwriteErrorFromBefore(t *testing.T) {
 func TestApp_Run_SubcommandDoesNotOverwriteErrorFromBefore(t *testing.T) {
 	app := NewApp()
 	app.Commands = []Command{
-		Command{
+		{
 			Subcommands: []Command{
-				Command{
+				{
 					Name: "sub",
 				},
 			},
@@ -1051,7 +1051,7 @@ func TestApp_OnUsageError_WithWrongFlagValue(t *testing.T) {
 		return errors.New("intercepted: " + err.Error())
 	}
 	app.Commands = []Command{
-		Command{
+		{
 			Name: "bar",
 		},
 	}
@@ -1081,7 +1081,7 @@ func TestApp_OnUsageError_WithWrongFlagValue_ForSubcommand(t *testing.T) {
 		return errors.New("intercepted: " + err.Error())
 	}
 	app.Commands = []Command{
-		Command{
+		{
 			Name: "bar",
 		},
 	}

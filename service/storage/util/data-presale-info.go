@@ -14,10 +14,11 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package util
 
+//DataPresaleDBInfo struct
 type DataPresaleDBInfo struct {
 	DataPresaleID string `json:"data_presale_id"`
 	UserName      string `json:"user_name"`

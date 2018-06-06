@@ -14,8 +14,8 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
- 
+*/
+
 package blockchain
 
 import (
@@ -29,10 +29,13 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/internal/service"
 )
 
+// InsertTransaction is to insert transaction
 func InsertTransaction(tx interface{}) error {
 	fmt.Println("insert transaction")
 	return nil
 }
+
+// GetSyncedBlockCount is to get synced block count
 func GetSyncedBlockCount(stat service.StateRepository) uint64 {
 
 	fmt.Println("find blocknumber")
@@ -46,6 +49,7 @@ func GetSyncedBlockCount(stat service.StateRepository) uint64 {
 	return syncedNumber
 }
 
+// Sync is to sync latest transaction
 func Sync(syncedNumber uint64, latestBlock uint64, c chan int) {
 	if syncedNumber == 0 {
 		syncedNumber++
@@ -67,6 +71,7 @@ func Sync(syncedNumber uint64, latestBlock uint64, c chan int) {
 	c <- 1
 }
 
+// StartSync is to start sync
 func StartSync(stat service.StateRepository) {
 
 	sync := make(chan int, 1)

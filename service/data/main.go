@@ -1,4 +1,4 @@
-﻿/*Copyright 2017~2022 The Bottos Authors
+/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -14,13 +14,19 @@
 
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 package main
 
 import (
-	log "github.com/cihub/seelog"
 	"bytes"
+	"errors"
+	"io"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"time"
+
 	baseConfig "github.com/bottos-project/magiccube/config"
 	"github.com/bottos-project/magiccube/service/data/internal/platform/config"
 	hash "github.com/bottos-project/magiccube/service/data/internal/platform/hash"
@@ -28,28 +34,32 @@ import (
 	"github.com/bottos-project/magiccube/service/data/internal/platform/mongodb"
 	proto "github.com/bottos-project/magiccube/service/data/proto"
 	util "github.com/bottos-project/magiccube/service/data/util"
-	basicMinio "github.com/minio/minio-go"
-	"errors"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
+	basicMinio "github.com/minio/minio-go"
 	"golang.org/x/net/context"
-	"io/ioutil"
-	"math/rand"
-	"net/http"
-	"io"
-	"time"
 )
 
 const (
-	BASE_CHAIN_IP           = baseConfig.BASE_CHAIN_IP
-	BASE_URL                = baseConfig.BASE_CHAIN_URL
-	GET_INFO_URL            = BASE_URL + "v1/chain/get_info"
-	GET_BLOCK_URL           = BASE_URL + "v1/chain/get_block"
-	ABI_JSON_TO_BIN_URL     = BASE_URL + "v1/chain/abi_json_to_bin"
-	PUSH_TRANSACTION_URL    = BASE_URL + "v1/chain/push_transaction"
+	//BASE_CHAIN_IP baseIP
+	BASE_CHAIN_IP = baseConfig.BASE_CHAIN_IP
+	//BASE_URL baseURL
+	BASE_URL = baseConfig.BASE_CHAIN_URL
+	//GET_INFO_URL getinfoURL
+	GET_INFO_URL = BASE_URL + "v1/chain/get_info"
+	//GET_BLOCK_URL getblockURL
+	GET_BLOCK_URL = BASE_URL + "v1/chain/get_block"
+	//ABI_JSON_TO_BIN_URL binURL
+	ABI_JSON_TO_BIN_URL = BASE_URL + "v1/chain/abi_json_to_bin"
+	//PUSH_TRANSACTION_URL push_transactionURL
+	PUSH_TRANSACTION_URL = BASE_URL + "v1/chain/push_transaction"
+	//GET_TABLE_ROW_BY_STRING get_table_row_by_string_key
 	GET_TABLE_ROW_BY_STRING = BASE_URL + "v1/chain/get_table_row_by_string_key"
-	STORAGE_RPC_URL         = baseConfig.BASE_RPC
+	//STORAGE_RPC_URL BASE_RPC
+	STORAGE_RPC_URL = baseConfig.BASE_RPC
 )
 
+// DataService struct
 type DataService struct {
 	minioRepo minioRepository
 	dbRepo    dbRepository
@@ -71,10 +81,12 @@ type mgoRepository interface {
 	CallDataSliceIPRequest(sguid string) (*util.DataDBInfo, error)
 }
 
+// NewDataService is to create new dataservice
 func NewDataService(minioRepo minioRepository, mgodb mgoRepository) proto.DataHandler {
 	return &DataService{minioRepo: minioRepo, mgoRepo: mgodb}
 }
 
+//FileCheck is to  check file isExist
 func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest, rsp *proto.FileCheckResponse) error {
 
 	log.Info("Start Check File!")
@@ -111,6 +123,7 @@ func (d *DataService) FileCheck(ctx context.Context, req *proto.FileCheckRequest
 	return nil
 }
 
+//GetFileUploadURL is to get file upload URL
 func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUploadURLRequest, rsp *proto.GetFileUploadURLResponse) error {
 
 	log.Info("Start Get File Upload URL!")
@@ -123,7 +136,6 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 	userName := req.Username
 	fileSlice := req.Slice
 	rsp.Url = []*proto.Url{}
-
 
 	for _, slice := range fileSlice {
 		cacheUrl, err := d.minioRepo.GetCacheURL(userName, slice.Sguid)
@@ -143,6 +155,8 @@ func (d *DataService) GetFileUploadURL(ctx context.Context, req *proto.GetFileUp
 	rsp.Message = "OK"
 	return nil
 }
+
+//GetFileSliceUploadURL is to get file slice upload URL
 func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetFileSliceUploadURLRequest, rsp *proto.GetFileSliceUploadURLResponse) error {
 
 	log.Info("Start Get File Slice Upload URL!")
@@ -155,8 +169,6 @@ func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetF
 	userName := req.Username
 	guid := req.Guid
 
-
-
 	url, err := d.minioRepo.GetCacheURL(userName, guid)
 	if err != nil {
 		rsp.Result = 404
@@ -165,13 +177,13 @@ func (d *DataService) GetFileSliceUploadURL(ctx context.Context, req *proto.GetF
 		return errors.New("Failed get put url")
 	}
 
-		
-
-    rsp.Url = url
+	rsp.Url = url
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
 }
+
+//GetFileDownloadURL is to get file download URL
 func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFileDownloadURLRequest, rsp *proto.GetFileDownloadURLResponse) error {
 
 	log.Info("Start Get FileDownload URL!")
@@ -180,7 +192,6 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-
 
 	userName := req.Username
 	guid := req.Guid
@@ -199,6 +210,7 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 	return nil
 }
 
+//GetUploadProgress is to query file upload progress and storage file
 func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploadProgressRequest, rsp *proto.GetUploadProgressResponse) error {
 	log.Info("Start Get Upload Progress!")
 	if req == nil {
@@ -213,8 +225,8 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 
 	rsp.SliceProgressDone = []*proto.Slice{}
 	rsp.SliceProgressing = []*proto.Slice{}
-	var i int = 0
-	var j int = 0
+	i := 0
+	j := 0
 	for _, slice := range fileSlice {
 		result, err := d.minioRepo.GetPutState(userName, slice.Sguid)
 		log.Info("result")
@@ -242,6 +254,7 @@ func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploa
 
 }
 
+// GetFileStorageNode is to get node
 func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFileStorageNodeRequest, rsp *proto.GetFileStorageNodeResponse) error {
 
 	log.Info("Start Get File Storage Node!")
@@ -250,7 +263,6 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 		rsp.Message = "para error"
 		return errors.New("Missing storage node request")
 	}
-
 
 	fileSlice := req.Slice
 	rsp.Ip = []*proto.Ip{}
@@ -267,7 +279,6 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 	n := len(nodeInfo.SlaveIP)
 	k := rand.Intn(n)
 
-	
 	for _, slice := range fileSlice {
 		j := (i + k) % n
 		node := nodeInfo.SlaveIP[j]
@@ -281,6 +292,7 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 	return nil
 }
 
+//GetFileStorageURL is to get file storage URL
 func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileStorageURLRequest, rsp *proto.GetFileStorageURLResponse) error {
 
 	log.Info("Start Get File Storage URL!")
@@ -289,7 +301,6 @@ func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileS
 		rsp.Message = "para error"
 		return errors.New("Missing storage request")
 	}
-
 
 	userName := req.Username
 	guid := req.Guid
@@ -308,6 +319,8 @@ func (d *DataService) GetFileStorageURL(ctx context.Context, req *proto.GetFileS
 	rsp.Message = "OK"
 	return nil
 }
+
+//PutFile is to  put file to node
 func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rsp *proto.PutFileResponse) error {
 
 	log.Info("Start Put file!")
@@ -336,27 +349,29 @@ func (d *DataService) PutFile(ctx context.Context, req *proto.PutFileRequest, rs
 	if err != nil {
 		return nil
 	}
-	req_body, err := http.NewRequest("PUT", url, bodyBuf)
+	reqBody, err := http.NewRequest("PUT", url, bodyBuf)
 	if err != nil {
 		return nil
 	}
-	req_body.Header.Set("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3")
-	req_body.Header.Set("Accept-Encoding", "gzip,deflate,sdch")
-	req_body.Header.Set("Accept-Language", "zh-CN,zh;q=0.8")
-	req_body.Header.Set("Cache-Control", "max-age=0")
-	req_body.Header.Set("Connection", "keep-alive")
-	resp, err := client.Do(req_body)
-	defer req_body.Body.Close()
-	resp_body, err := ioutil.ReadAll(resp.Body)
+	reqBody.Header.Set("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3")
+	reqBody.Header.Set("Accept-Encoding", "gzip,deflate,sdch")
+	reqBody.Header.Set("Accept-Language", "zh-CN,zh;q=0.8")
+	reqBody.Header.Set("Cache-Control", "max-age=0")
+	reqBody.Header.Set("Connection", "keep-alive")
+	resp, err := client.Do(reqBody)
+	defer reqBody.Body.Close()
+	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil
 	}
-	log.Info("resp_body")
-	log.Info(resp_body)
+	log.Info("respBody ")
+	log.Info(respBody)
 	rsp.Result = 200
 	rsp.Message = "OK"
 	return nil
 }
+
+// DownloadFile is to download file
 func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileRequest, rsp *proto.DownloadFileResponse) error {
 	log.Info("Start download file!")
 	if req == nil {
@@ -370,25 +385,25 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 	guid := req.Guid
 
 	client := &http.Client{}
-	req_body, _ := http.NewRequest(http.MethodGet, url, nil)
-	req_body.Header.Set("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3")
-	req_body.Header.Set("Accept-Encoding", "gzip,deflate,sdch")
-	req_body.Header.Set("Accept-Language", "zh-CN,zh;q=0.8")
-	req_body.Header.Set("Cache-Control", "max-age=0")
-	req_body.Header.Set("Connection", "keep-alive")
+	reqBody, _ := http.NewRequest(http.MethodGet, url, nil)
+	reqBody.Header.Set("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3")
+	reqBody.Header.Set("Accept-Encoding", "gzip,deflate,sdch")
+	reqBody.Header.Set("Accept-Language", "zh-CN,zh;q=0.8")
+	reqBody.Header.Set("Cache-Control", "max-age=0")
+	reqBody.Header.Set("Connection", "keep-alive")
 
-	resp_http, err := client.Do(req_body)
-	defer resp_http.Body.Close()
+	respHttp, err := client.Do(reqBody)
+	log.Info(err)
+	defer respHttp.Body.Close()
 	log.Info("download success")
 	//**start
-	body_http, err := ioutil.ReadAll(resp_http.Body)
+	bodyHttp, err := ioutil.ReadAll(respHttp.Body)
 	if err != nil {
 		log.Info(err)
 	}
-	file1 := bytes.NewReader(body_http)
-	fileSize := int64(len(body_http))
+	file1 := bytes.NewReader(bodyHttp)
+	fileSize := int64(len(bodyHttp))
 
-	
 	////putfile
 	log.Info("start upload")
 	n, err := d.minioRepo.PutFile(userName, guid, file1, fileSize)
@@ -403,6 +418,8 @@ func (d *DataService) DownloadFile(ctx context.Context, req *proto.DownloadFileR
 	rsp.Message = "OK"
 	return nil
 }
+
+//ComposeFile is to compose file
 func (d *DataService) ComposeFile(ctx context.Context, req *proto.ComposeFileRequest, rsp *proto.ComposeFileResponse) error {
 
 	log.Info("Start compose file!")
@@ -443,6 +460,7 @@ func (d *DataService) ComposeFile(ctx context.Context, req *proto.ComposeFileReq
 
 }
 
+//GetStorageIP is to get file slice storage IP
 func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPRequest, rsp *proto.GetStorageIPResponse) error {
 
 	log.Info("Start Get Storage IP!")
@@ -454,14 +472,13 @@ func (d *DataService) GetStorageIP(ctx context.Context, req *proto.GetStorageIPR
 	log.Info("get StorageIP")
 
 	guid := req.Guid
-	
 
 	DataInfo, err := d.mgoRepo.CallDataSliceIPRequest(guid)
-	
+
 	if err != nil {
 		log.Info(err)
 	}
-    log.Info("DataInfo.Filename")
+	log.Info("DataInfo.Filename")
 	log.Info(DataInfo.Filename)
 	log.Info("DataInfo")
 	log.Info(DataInfo)
