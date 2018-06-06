@@ -36,7 +36,7 @@ import (
 	crand "crypto/rand"
 	"github.com/bottos-project/magiccube/service/node/api"
 	"github.com/bottos-project/magiccube/service/node/config"
-	"github.com/bottos-project/magiccube/service/node/keystore/crypto-go/crypto/aes"
+	"github.com/bottos-project/crypto-go/crypto/aes"
 	"github.com/peterh/liner"
 	"gopkg.in/urfave/cli.v1"
 	"runtime"
