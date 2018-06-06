@@ -101,7 +101,7 @@ func execProcess(shellPath string) error {
 //CreateAccount function
 func CreateAccount(nodeinfo api.NodeInfos, UserPwd string) error {
 
-	keystore.AccountCreate_Ex("/home/bto", "/home/bto", UserPwd)
+	keystore.AccountCreateEx("/home/bto", "/home/bto", UserPwd)
 
 	return nil
 }
@@ -337,12 +337,11 @@ func Sign(msg, seckey []byte) ([]byte, error) {
 func main() {
 	var input string
 	var input1 []byte
-	var err error
 
 	fmt.Println("\nPlease input your password for generating keystore: ")
-	input1, err = gopass.GetPasswd()
+	input1 = gopass.GetPasswd()
 
-	if err != nil || len(input1) <= 0 {
+	if len(input1) <= 0 {
 		fmt.Println("Input error! Failed to start node.")
 		return
 	}
@@ -388,7 +387,7 @@ func main() {
 	}
 
 	//log.Println("now call Save_ip_ponix_to_blockchain")
-	api.Save_ip_ponix_to_blockchain()
+	api.SaveIpPonixToBlockchain()
 
 	//set server according to the json file
 	if InitServer(nodeinfos) != nil {
