@@ -26,10 +26,10 @@ import (
 	"errors"
 
 	"github.com/bottos-project/magiccube/service/storage/util"
-	_ "github.com/mattn/go-sqlite3"
 	//	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// createUser ...
 func (c *SqliteContext) createUser() {
 	sqlStmt := `create table userinfo (Username VARCHAR(64) PRIMARY KEY,
 		Accountname VARCHAR(64),
@@ -47,6 +47,7 @@ func (c *SqliteContext) createUser() {
 	}
 }
 
+// insertUserInfo to db
 func (c *SqliteContext) insertUserInfo(dbtag util.UserDBInfo) error {
 
 	if !c.IsTableExist("userinfo") {
@@ -72,7 +73,7 @@ func (c *SqliteContext) insertUserInfo(dbtag util.UserDBInfo) error {
 
 }
 
-// Read
+//readOne Read
 func (c *SqliteContext) readOne(user string) (*util.UserDBInfo, error) {
 	rows, err := c.db.Query("SELECT * FROM userinfo where Username=" + user)
 	if err != nil {
@@ -90,6 +91,8 @@ func (c *SqliteContext) readOne(user string) (*util.UserDBInfo, error) {
 	}
 	return nil, nil
 }
+
+// countNum ...
 func (c *SqliteContext) countNum() (uint32, error) {
 	var num uint32
 	rows, err := c.db.Query("select count(*) from userinfo ")
@@ -107,6 +110,8 @@ func (c *SqliteContext) countNum() (uint32, error) {
 	}
 	return num, nil
 }
+
+// CallInsertUserInfo to db
 func (r *SqliteRepository) CallInsertUserInfo(value util.UserDBInfo) error {
 
 	db, err := ConnectDB()
@@ -121,6 +126,8 @@ func (r *SqliteRepository) CallInsertUserInfo(value util.UserDBInfo) error {
 	}
 	return nil
 }
+
+// CallGetUserInfo from db
 func (r *SqliteRepository) CallGetUserInfo(value string) (*util.UserDBInfo, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -132,6 +139,8 @@ func (r *SqliteRepository) CallGetUserInfo(value string) (*util.UserDBInfo, erro
 	}
 	return res, nil
 }
+
+// CallGetUserNum from db
 func (r *SqliteRepository) CallGetUserNum() (uint32, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -144,6 +153,7 @@ func (r *SqliteRepository) CallGetUserNum() (uint32, error) {
 	return res, nil
 }
 
+// insertUserToken to db
 func (c *SqliteContext) insertUserToken(username string, token string) error {
 
 	if !c.IsTableExist("tokeninfo") {
@@ -179,6 +189,8 @@ func (c *SqliteContext) insertUserToken(username string, token string) error {
 	return nil
 
 }
+
+// getToken from db
 func (c *SqliteContext) getToken(username string, token string) (*util.TokenDBInfo, error) {
 	if username == "" && token == "" {
 		return nil, errors.New("para error")
@@ -200,6 +212,8 @@ func (c *SqliteContext) getToken(username string, token string) (*util.TokenDBIn
 	}
 	return nil, nil
 }
+
+// delToken from db
 func (c *SqliteContext) delToken(username string, token string) (uint32, error) {
 	if username == "" && token == "" {
 		return 0, errors.New("para error")
@@ -221,6 +235,8 @@ func (c *SqliteContext) delToken(username string, token string) (uint32, error) 
 	}
 	return 1, nil
 }
+
+// CallInsertUserToken from db
 func (r *SqliteRepository) CallInsertUserToken(username string, token string) (uint32, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -234,6 +250,8 @@ func (r *SqliteRepository) CallInsertUserToken(username string, token string) (u
 	}
 	return 1, nil
 }
+
+// CallGetUserToken from db
 func (r *SqliteRepository) CallGetUserToken(username string, token string) (*util.TokenDBInfo, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -249,6 +267,7 @@ func (r *SqliteRepository) CallGetUserToken(username string, token string) (*uti
 	return tokeninfo, nil
 }
 
+// CallDelUserToken from db
 func (r *SqliteRepository) CallDelUserToken(username string, token string) (uint32, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -263,6 +282,7 @@ func (r *SqliteRepository) CallDelUserToken(username string, token string) (uint
 	return code, nil
 }
 
+// CallTokenAging from db
 func (r *SqliteRepository) CallTokenAging(timeout int64) error {
 	c, err := ConnectDB()
 	if err != nil {
