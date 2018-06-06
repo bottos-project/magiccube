@@ -17,6 +17,7 @@
 */
 
 package util
+
 //DataPresaleDBInfo struct
 type DataPresaleDBInfo struct {
 	DataPresaleID string `json:"data_presale_id"`

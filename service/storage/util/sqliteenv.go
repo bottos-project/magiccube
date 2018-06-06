@@ -17,5 +17,6 @@
 */
 
 package util
+
 //DefaultDbpath is DefaultDbpath
 const DefaultDbpath string = "./bottos.db"

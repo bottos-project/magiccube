@@ -17,6 +17,7 @@
 */
 
 package util
+
 //FileDBInfo struct
 type FileDBInfo struct {
 	FileHash          string `json:"file_hash"`
@@ -27,5 +28,6 @@ type FileDBInfo struct {
 	FilePolicy        string `json:"file_policy"`
 	AuthorizedStorage string `json:"authorized_storage"`
 }
-//InsertUserFileSql is insert sql 
+
+//InsertUserFileSql is insert sql
 const InsertUserFileSql string = "insert into fileinfo(FileHash,Username,FileName,FileSize,FileNumber,FilePolicy,AuthorizedStorage) values(?,?,?,?,?,?,?)"

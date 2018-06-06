@@ -154,7 +154,7 @@ func (r *MongoRepository) CallGetUserTxList(username string) ([]*util.TxDBInfo, 
 	//defer session.Close()
 	fmt.Println(session)
 	var purMsgs []PurchaseMesssage
-	
+
 	query := func(c *mgo.Collection) error {
 		return c.Find(bson.M{"type": "datapurchase", "data.basic_info.user_name": username}).All(&purMsgs)
 	}

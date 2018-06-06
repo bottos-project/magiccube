@@ -17,6 +17,7 @@
 */
 
 package util
+
 //AssetDBInfo struct
 type AssetDBInfo struct {
 	AssetID     string `bson:"asset_id" json:"asset_id"`

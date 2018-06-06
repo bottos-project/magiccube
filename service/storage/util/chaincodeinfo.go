@@ -17,6 +17,7 @@
 */
 
 package util
+
 //CodeInfo struct
 type CodeInfo struct {
 	Previous string `json:"previous"`
