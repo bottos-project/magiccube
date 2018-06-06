@@ -15,8 +15,10 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package service
 
+// StateRepository interface
 type StateRepository interface {
 	CallGetSyncBlockCount() (uint64, error)
 	CallTokenAging(int64) error

@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package service
 
 import (
@@ -26,6 +27,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
+// GetUserRequirementList from db
 func (c *StorageService) GetUserRequirementList(ctx context.Context, request *storage.UserRequireListRequest, response *storage.UserRequireListResponse) error {
 
 	if request == nil {
@@ -42,21 +44,24 @@ func (c *StorageService) GetUserRequirementList(ctx context.Context, request *st
 	}
 	response.RequireList = []*storage.Requirement{}
 	for _, require := range requires {
-		requiresTag := &storage.Requirement{require.RequirementId,
-			require.Username,
-			require.RequirementName,
-			require.FeatureTag,
-			require.SamplePath,
-			require.SampleHash,
-			require.ExpireTime,
-			require.Price,
-			require.Description,
-			require.PublishDate}
+		requiresTag := &storage.Requirement{
+			RequirementId:   require.RequirementId,
+			Username:        require.Username,
+			RequirementName: require.RequirementName,
+			FeatureTag:      require.FeatureTag,
+			SamplePath:      require.SamplePath,
+			SampleHash:      require.SampleHash,
+			ExpireTime:      require.ExpireTime,
+			Price:           require.Price,
+			Description:     require.Description,
+			PublishDate:     require.PublishDate}
 		response.RequireList = append(response.RequireList, requiresTag)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetRequirementListByFeature from db
 func (c *StorageService) GetRequirementListByFeature(ctx context.Context, request *storage.FeatureRequireListRequest, response *storage.FeatureRequireListResponse) error {
 
 	if request == nil {
@@ -73,21 +78,24 @@ func (c *StorageService) GetRequirementListByFeature(ctx context.Context, reques
 	}
 	response.RequireList = []*storage.Requirement{}
 	for _, require := range requires {
-		requiresTag := &storage.Requirement{require.RequirementId,
-			require.Username,
-			require.RequirementName,
-			require.FeatureTag,
-			require.SamplePath,
-			require.SampleHash,
-			require.ExpireTime,
-			require.Price,
-			require.Description,
-			require.PublishDate}
+		requiresTag := &storage.Requirement{
+			RequirementId:   require.RequirementId,
+			Username:        require.Username,
+			RequirementName: require.RequirementName,
+			FeatureTag:      require.FeatureTag,
+			SamplePath:      require.SamplePath,
+			SampleHash:      require.SampleHash,
+			ExpireTime:      require.ExpireTime,
+			Price:           require.Price,
+			Description:     require.Description,
+			PublishDate:     require.PublishDate}
 		response.RequireList = append(response.RequireList, requiresTag)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetRequirementNumByDay from db
 func (c *StorageService) GetRequirementNumByDay(ctx context.Context, request *storage.AllRequest, response *storage.DayRequirementNumResponse) error {
 
 	response.DayRequirementNum = 200
@@ -95,6 +103,7 @@ func (c *StorageService) GetRequirementNumByDay(ctx context.Context, request *st
 	return nil
 }
 
+// GetRequirementNumByWeek from db
 func (c *StorageService) GetRequirementNumByWeek(ctx context.Context, request *storage.AllRequest, response *storage.WeekRequirementNumResponse) error {
 
 	if request == nil {
@@ -105,17 +114,19 @@ func (c *StorageService) GetRequirementNumByWeek(ctx context.Context, request *s
 	response.WeekRequirementNum = make([]uint64, 1, 7)
 	days := util.WeekDur()
 	for _, day := range days {
-		require_num, err := c.mgoRepo.CallGetRequirementNumByDay(day.Begin, day.End)
+		requireNum, err := c.mgoRepo.CallGetRequirementNumByDay(day.Begin, day.End)
 		if err != nil {
 			response.Code = 0
 			fmt.Println(err)
 			return errors.New("Failed CallGetAssetNumByDay")
 		}
-		response.WeekRequirementNum = append(response.WeekRequirementNum, require_num)
+		response.WeekRequirementNum = append(response.WeekRequirementNum, requireNum)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetAllRequirementList from db
 func (c *StorageService) GetAllRequirementList(ctx context.Context, request *storage.AllRequest, response *storage.AllRequireListResponse) error {
 
 	if request == nil {
@@ -132,16 +143,17 @@ func (c *StorageService) GetAllRequirementList(ctx context.Context, request *sto
 	}
 	response.RequireList = []*storage.Requirement{}
 	for _, require := range requires {
-		dbTag := &storage.Requirement{require.RequirementId,
-			require.Username,
-			require.RequirementName,
-			require.FeatureTag,
-			require.SamplePath,
-			require.SampleHash,
-			require.ExpireTime,
-			require.Price,
-			require.Description,
-			require.PublishDate}
+		dbTag := &storage.Requirement{
+			RequirementId:   require.RequirementId,
+			Username:        require.Username,
+			RequirementName: require.RequirementName,
+			FeatureTag:      require.FeatureTag,
+			SamplePath:      require.SamplePath,
+			SampleHash:      require.SampleHash,
+			ExpireTime:      require.ExpireTime,
+			Price:           require.Price,
+			Description:     require.Description,
+			PublishDate:     require.PublishDate}
 		response.RequireList = append(response.RequireList, dbTag)
 	}
 	response.Code = 1

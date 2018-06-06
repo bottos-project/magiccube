@@ -26,6 +26,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// GetDownLoadURL from db
 func (c *StorageService) GetDownLoadURL(ctx context.Context, request *storage.DownLoadRequest, response *storage.DownLoadResponse) error {
 
 	if request == nil {

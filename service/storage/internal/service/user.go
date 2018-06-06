@@ -67,6 +67,8 @@ import (
 //	response.Num = num
 //	return nil
 //}
+
+// InsertUserToken to db
 func (c *StorageService) InsertUserToken(ctx context.Context, request *storage.InsertTokenRequest, response *storage.InsertTokenResponse) error {
 	if request == nil {
 		fmt.Println("request is nil ")
@@ -83,6 +85,8 @@ func (c *StorageService) InsertUserToken(ctx context.Context, request *storage.I
 	response.Code = result
 	return nil
 }
+
+// GetUserToken from db
 func (c *StorageService) GetUserToken(ctx context.Context, request *storage.TokenRequest, response *storage.TokenResponse) error {
 	response.Username = ""
 	response.Token = ""
@@ -114,6 +118,8 @@ func (c *StorageService) GetUserToken(ctx context.Context, request *storage.Toke
 	response.Code = 1
 	return nil
 }
+
+// DelUserToken on db
 func (c *StorageService) DelUserToken(ctx context.Context, request *storage.DelTokenRequest, response *storage.DelTokenResponse) error {
 	if request == nil {
 		fmt.Println("request is nil ")
@@ -131,6 +137,7 @@ func (c *StorageService) DelUserToken(ctx context.Context, request *storage.DelT
 	return nil
 }
 
+// AgeUserToken on db
 func (c *StorageService) AgeUserToken(ctx context.Context, request *storage.AgeTokenRequest, response *storage.AgeTokenResponse) error {
 	if request == nil {
 		fmt.Println("request is nil ")

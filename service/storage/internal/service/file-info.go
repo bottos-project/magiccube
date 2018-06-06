@@ -26,6 +26,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// GetUserFileList from db
 func (c *StorageService) GetUserFileList(ctx context.Context, request *storage.UserFileListRequest, response *storage.UserFileListResponse) error {
 
 	if request == nil {
@@ -43,12 +44,13 @@ func (c *StorageService) GetUserFileList(ctx context.Context, request *storage.U
 	}
 	response.FileList = []*storage.File{}
 	for _, file := range files {
-		fileTag := &storage.File{file.FileName,
-			file.FileSize,
-			file.FilePolicy,
-			file.FileNumber,
-			file.FileHash,
-			file.AuthorizedStorage}
+		fileTag := &storage.File{
+			FileName:          file.FileName,
+			FileSize:          file.FileSize,
+			FilePolicy:        file.FilePolicy,
+			FileNumber:        file.FileNumber,
+			FileHash:          file.FileHash,
+			AuthorizedStorage: file.AuthorizedStorage}
 		response.FileList = append(response.FileList, fileTag)
 	}
 	response.Code = 1

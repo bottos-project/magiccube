@@ -26,6 +26,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// GetUserFavorit from db
 func (c *StorageService) GetUserFavorit(ctx context.Context, request *storage.UserRequest, response *storage.UserFavoritResponse) error {
 
 	if request == nil {
@@ -43,10 +44,11 @@ func (c *StorageService) GetUserFavorit(ctx context.Context, request *storage.Us
 	}
 	response.FavoritList = []*storage.Favorit{}
 	for _, favor := range favors {
-		dbTag := &storage.Favorit{favor.UserName,
-			favor.OpType,
-			favor.GoodsType,
-			favor.GoodsID}
+		dbTag := &storage.Favorit{
+			Username:  favor.UserName,
+			OpType:    favor.OpType,
+			GoodsType: favor.GoodsType,
+			GoodsId:   favor.GoodsID}
 		response.FavoritList = append(response.FavoritList, dbTag)
 	}
 	response.Code = 1

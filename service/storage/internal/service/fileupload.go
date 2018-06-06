@@ -26,6 +26,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// GetFileUploadURL from db
 func (c *StorageService) GetFileUploadURL(ctx context.Context, request *storage.FileUploadRequest, response *storage.FileUploadResponse) error {
 
 	if request == nil {
@@ -47,6 +48,8 @@ func (c *StorageService) GetFileUploadURL(ctx context.Context, request *storage.
 	response.PresignedPutUrl = url
 	return nil
 }
+
+// GetFileUploadStat from minio
 func (c *StorageService) GetFileUploadStat(ctx context.Context, request *storage.FileUploadStatRequest, response *storage.FileUploadStatResponse) error {
 
 	if request == nil {

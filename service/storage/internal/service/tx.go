@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package service
 
 import (
@@ -26,6 +27,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
+// Transaction struct
 type Transaction struct {
 	Txid          int64  `json:"txid"`
 	Blockid       int64  `json:"blockid"`
@@ -37,9 +39,9 @@ type Transaction struct {
 	Price         string `json:"price"`
 	AssetId       string `json:"assetid"`
 	RequirementId string `json:"requirementid"`
-	status        string `json:"status"`
 }
 
+// GetTx from db
 func (c *StorageService) GetTx(ctx context.Context, request *storage.Request, response *storage.Response) error {
 
 	if request == nil {
@@ -47,7 +49,7 @@ func (c *StorageService) GetTx(ctx context.Context, request *storage.Request, re
 		return nil //errors.BadRequest("", "Missing storage request")
 	}
 	fmt.Print(request)
-	url := "http:"
+	//url := "http:"
 	//url, err := c.storageRepo.GetTx(request.txid, request.account)
 	//if err != nil
 	{
@@ -55,12 +57,12 @@ func (c *StorageService) GetTx(ctx context.Context, request *storage.Request, re
 		return nil //errors.InternalServerError("", "Failed get put url: %s", err.Error())
 
 	}
-	fmt.Print(url)
 	//todo
 	//c.dbRepo.CallGetTx("")
-	return nil
+
 }
 
+// InsertTx to db
 func (c *StorageService) InsertTx(ctx context.Context, request *storage.Request, response *storage.Response) error {
 
 	if request == nil {
@@ -68,7 +70,7 @@ func (c *StorageService) InsertTx(ctx context.Context, request *storage.Request,
 		return nil //errors.BadRequest("", "Missing storage request")
 	}
 	fmt.Print(request)
-	url := "http:"
+	// url := "http:"
 	//url, err := c.storageRepo.GetTx(request.txid, request.account)
 	//if err != nil
 	{
@@ -76,11 +78,10 @@ func (c *StorageService) InsertTx(ctx context.Context, request *storage.Request,
 		return nil //errors.InternalServerError("", "Failed get put url: %s", err.Error())
 
 	}
-	fmt.Print(url)
-	//response.Message = "OK"
-	return nil
+
 }
 
+// GetRecentTxList from db
 func (c *StorageService) GetRecentTxList(ctx context.Context, request *storage.RecentTxListRequest, response *storage.RecentTxListResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -101,18 +102,21 @@ func (c *StorageService) GetRecentTxList(ctx context.Context, request *storage.R
 	}
 	response.RecentTxList = []*storage.RecentTx{}
 	for _, tx := range txs {
-		dbTag := &storage.RecentTx{tx.TransactionID,
-			tx.From,
-			tx.To,
-			tx.Price,
-			tx.Type,
-			tx.Date,
-			tx.BlockId}
+		dbTag := &storage.RecentTx{
+			TransactionId: tx.TransactionID,
+			From:          tx.From,
+			To:            tx.To,
+			Price:         tx.Price,
+			Type:          tx.Type,
+			Date:          tx.Date,
+			BlockId:       tx.BlockId}
 		response.RecentTxList = append(response.RecentTxList, dbTag)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetUserTxList from db
 func (c *StorageService) GetUserTxList(ctx context.Context, request *storage.UserRequest, response *storage.UserTxListResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -133,18 +137,21 @@ func (c *StorageService) GetUserTxList(ctx context.Context, request *storage.Use
 	}
 	response.RecentTxList = []*storage.RecentTx{}
 	for _, tx := range txs {
-		dbTag := &storage.RecentTx{tx.TransactionID,
-			tx.From,
-			tx.To,
-			tx.Price,
-			tx.Type,
-			tx.Date,
-			tx.BlockId}
+		dbTag := &storage.RecentTx{
+			TransactionId: tx.TransactionID,
+			From:          tx.From,
+			To:            tx.To,
+			Price:         tx.Price,
+			Type:          tx.Type,
+			Date:          tx.Date,
+			BlockId:       tx.BlockId}
 		response.RecentTxList = append(response.RecentTxList, dbTag)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetSumTxAmount from db
 func (c *StorageService) GetSumTxAmount(ctx context.Context, request *storage.AllRequest, response *storage.SumTxAmountResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -162,6 +169,8 @@ func (c *StorageService) GetSumTxAmount(ctx context.Context, request *storage.Al
 	response.Code = 1
 	return nil
 }
+
+// GetAllTxNum from db
 func (c *StorageService) GetAllTxNum(ctx context.Context, request *storage.AllRequest, response *storage.AllTxNumResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -179,6 +188,8 @@ func (c *StorageService) GetAllTxNum(ctx context.Context, request *storage.AllRe
 	response.Code = 1
 	return nil
 }
+
+// GetTxNumByDay from db
 func (c *StorageService) GetTxNumByDay(ctx context.Context, request *storage.AllRequest, response *storage.DayTxNumResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -198,6 +209,8 @@ func (c *StorageService) GetTxNumByDay(ctx context.Context, request *storage.All
 	response.Code = 1
 	return nil
 }
+
+// GetTxNumByWeek from db
 func (c *StorageService) GetTxNumByWeek(ctx context.Context, request *storage.AllRequest, response *storage.WeekTxNumResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -218,6 +231,7 @@ func (c *StorageService) GetTxNumByWeek(ctx context.Context, request *storage.Al
 	return nil
 }
 
+// GetRecentTransferList from db
 func (c *StorageService) GetRecentTransferList(ctx context.Context, request *storage.AllRequest, response *storage.TransferListResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -238,12 +252,13 @@ func (c *StorageService) GetRecentTransferList(ctx context.Context, request *sto
 	}
 	response.TransferList = []*storage.Transfer{}
 	for _, tx := range txs {
-		dbTag := &storage.Transfer{tx.TransactionID,
-			tx.TxTime,
-			tx.Price,
-			tx.From,
-			tx.To,
-			tx.BlockNum}
+		dbTag := &storage.Transfer{
+			TxId:     tx.TransactionID,
+			TxTime:   tx.TxTime,
+			Price:    tx.Price,
+			From:     tx.From,
+			To:       tx.To,
+			BlockNum: tx.BlockNum}
 		response.TransferList = append(response.TransferList, dbTag)
 	}
 	response.Code = 1

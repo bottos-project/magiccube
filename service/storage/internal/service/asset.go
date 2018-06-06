@@ -27,6 +27,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
+// GetUserAssetList from server
 func (c *StorageService) GetUserAssetList(ctx context.Context, request *storage.UserAssetListRequest, response *storage.UserAssetListResponse) error {
 
 	if request == nil {
@@ -44,22 +45,25 @@ func (c *StorageService) GetUserAssetList(ctx context.Context, request *storage.
 
 	response.UserAssetList = []*storage.UserAsset{}
 	for _, user := range assets {
-		dbTag := &storage.UserAsset{user.AssetID,
-			user.AssetName,
-			user.FeatureTag,
-			user.SamplePath,
-			user.SampleHash,
-			user.StoragePath,
-			user.StorageHash,
-			user.ExpireTime,
-			user.Price,
-			user.Description,
-			user.UploadDate}
+		dbTag := &storage.UserAsset{
+			AssetId:     user.AssetID,
+			AssetName:   user.AssetName,
+			FeatureTag:  user.FeatureTag,
+			SamplePath:  user.SamplePath,
+			SampleHash:  user.SampleHash,
+			StoragePath: user.StoragePath,
+			StorageHash: user.StorageHash,
+			ExpireTime:  user.ExpireTime,
+			Price:       user.Price,
+			Description: user.Description,
+			UploadDate:  user.UploadDate}
 		response.UserAssetList = append(response.UserAssetList, dbTag)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetUserPurchaseAssetList from server
 func (c *StorageService) GetUserPurchaseAssetList(ctx context.Context, request *storage.UserRequest, response *storage.UserAssetListResponse) error {
 
 	if request == nil {
@@ -77,23 +81,26 @@ func (c *StorageService) GetUserPurchaseAssetList(ctx context.Context, request *
 
 	response.UserAssetList = []*storage.UserAsset{}
 	for _, user := range assets {
-		dbTag := &storage.UserAsset{user.AssetID,
-			user.AssetName,
-			user.FeatureTag,
-			user.SamplePath,
-			user.SampleHash,
-			user.StoragePath,
-			user.StorageHash,
-			user.ExpireTime,
-			user.Price,
-			user.Description,
-			user.UploadDate}
+		dbTag := &storage.UserAsset{
+			AssetId:     user.AssetID,
+			AssetName:   user.AssetName,
+			FeatureTag:  user.FeatureTag,
+			SamplePath:  user.SamplePath,
+			SampleHash:  user.SampleHash,
+			StoragePath: user.StoragePath,
+			StorageHash: user.StorageHash,
+			ExpireTime:  user.ExpireTime,
+			Price:       user.Price,
+			Description: user.Description,
+			UploadDate:  user.UploadDate}
+
 		response.UserAssetList = append(response.UserAssetList, dbTag)
 	}
 	response.Code = 1
 	return nil
 }
 
+// GetAllAssetList from server
 func (c *StorageService) GetAllAssetList(ctx context.Context, request *storage.AssetListRequest, response *storage.AssetListResponse) error {
 
 	if request == nil {
@@ -110,23 +117,26 @@ func (c *StorageService) GetAllAssetList(ctx context.Context, request *storage.A
 	}
 	response.AssetList = []*storage.Asset{}
 	for _, asset := range assets {
-		dbTag := &storage.Asset{asset.AssetID,
-			asset.UserName,
-			asset.AssetName,
-			asset.FeatureTag,
-			asset.SamplePath,
-			asset.SampleHash,
-			asset.StoragePath,
-			asset.StorageHash,
-			asset.ExpireTime,
-			asset.Price,
-			asset.Description,
-			asset.UploadDate}
+		dbTag := &storage.Asset{
+			AssetId:     asset.AssetID,
+			Username:    asset.UserName,
+			AssetName:   asset.AssetName,
+			FeatureTag:  asset.FeatureTag,
+			SamplePath:  asset.SamplePath,
+			SampleHash:  asset.SampleHash,
+			StoragePath: asset.StoragePath,
+			StorageHash: asset.StorageHash,
+			ExpireTime:  asset.ExpireTime,
+			Price:       asset.Price,
+			Description: asset.Description,
+			UploadDate:  asset.UploadDate}
 		response.AssetList = append(response.AssetList, dbTag)
 	}
 	response.Code = 1
 	return nil
 }
+
+// GetAssetByAssetId from server
 func (c *StorageService) GetAssetByAssetId(ctx context.Context, request *storage.AssetIdRequest, response *storage.AssetInfoResponse) error {
 	if request == nil {
 		response.Code = 0
@@ -140,21 +150,24 @@ func (c *StorageService) GetAssetByAssetId(ctx context.Context, request *storage
 		return errors.New("Failed get put url")
 
 	}
-	response.AssetInfo = &storage.Asset{asset.AssetID,
-		asset.UserName,
-		asset.AssetName,
-		asset.FeatureTag,
-		asset.SamplePath,
-		asset.SampleHash,
-		asset.StoragePath,
-		asset.StorageHash,
-		asset.ExpireTime,
-		asset.Price,
-		asset.Description,
-		asset.UploadDate}
+	response.AssetInfo = &storage.Asset{
+		AssetId:     asset.AssetID,
+		Username:    asset.UserName,
+		AssetName:   asset.AssetName,
+		FeatureTag:  asset.FeatureTag,
+		SamplePath:  asset.SamplePath,
+		SampleHash:  asset.SampleHash,
+		StoragePath: asset.StoragePath,
+		StorageHash: asset.StorageHash,
+		ExpireTime:  asset.ExpireTime,
+		Price:       asset.Price,
+		Description: asset.Description,
+		UploadDate:  asset.UploadDate}
 	response.Code = 1
 	return nil
 }
+
+// GetAssetNumByDay from server
 func (c *StorageService) GetAssetNumByDay(ctx context.Context, request *storage.AllRequest, response *storage.DayAssetNumResponse) error {
 
 	if request == nil {
@@ -163,17 +176,19 @@ func (c *StorageService) GetAssetNumByDay(ctx context.Context, request *storage.
 	}
 	fmt.Println("GetAssetNumByDay")
 	begin, end := util.YesterdayDur()
-	asset_num, err := c.mgoRepo.CallGetAssetNumByDay(begin, end)
+	assetNum, err := c.mgoRepo.CallGetAssetNumByDay(begin, end)
 	if err != nil {
 		response.Code = 0
 		fmt.Println(err)
 		return errors.New("Failed GetAssetNumByDay")
 
 	}
-	response.DayAssetNum = asset_num
+	response.DayAssetNum = assetNum
 	response.Code = 1
 	return nil
 }
+
+// GetAssetNumByWeek from server
 func (c *StorageService) GetAssetNumByWeek(ctx context.Context, request *storage.AllRequest, response *storage.WeekAssetNumResponse) error {
 
 	if request == nil {
@@ -184,13 +199,13 @@ func (c *StorageService) GetAssetNumByWeek(ctx context.Context, request *storage
 	response.WeekAssetNum = make([]uint64, 1, 7)
 	days := util.WeekDur()
 	for _, day := range days {
-		asset_num, err := c.mgoRepo.CallGetAssetNumByDay(day.Begin, day.End)
+		assetNum, err := c.mgoRepo.CallGetAssetNumByDay(day.Begin, day.End)
 		if err != nil {
 			response.Code = 0
 			fmt.Println(err)
 			return errors.New("Failed CallGetAssetNumByDay")
 		}
-		response.WeekAssetNum = append(response.WeekAssetNum, asset_num)
+		response.WeekAssetNum = append(response.WeekAssetNum, assetNum)
 	}
 
 	response.Code = 1

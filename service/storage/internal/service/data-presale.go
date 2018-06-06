@@ -26,6 +26,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// GetUserDataPresale from server
 func (c *StorageService) GetUserDataPresale(ctx context.Context, request *storage.UserRequest, response *storage.UserDataPresaleResponse) error {
 
 	if request == nil {
@@ -44,11 +45,11 @@ func (c *StorageService) GetUserDataPresale(ctx context.Context, request *storag
 	response.DataPresaleList = []*storage.DataPresale{}
 	for _, presale := range presales {
 		dbTag := &storage.DataPresale{
-			presale.DataPresaleID,
-			presale.UserName,
-			presale.AssetID,
-			presale.DataReqID,
-			presale.Consumer}
+			DataPresaleId: presale.DataPresaleID,
+			UserName:      presale.UserName,
+			AssetId:       presale.AssetID,
+			DataReqId:     presale.DataReqID,
+			Consumer:      presale.Consumer}
 		response.DataPresaleList = append(response.DataPresaleList, dbTag)
 	}
 	response.Code = 1

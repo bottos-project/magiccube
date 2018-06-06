@@ -15,6 +15,7 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
 package service
 
 import (
@@ -24,6 +25,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
+//StorageService struct
 type StorageService struct {
 	minioRepo minioRepository
 	dbRepo    dbRepository
@@ -71,6 +73,7 @@ type mgoRepository interface {
 	CallGetDataPresaleByUser(username string) ([]*util.DataPresaleDBInfo, error)
 }
 
+// NewStorageService new connect
 func NewStorageService(minioRepo minioRepository, mgodb mgoRepository) storage.StorageHandler {
 	return &StorageService{minioRepo: minioRepo, mgoRepo: mgodb}
 }

@@ -18,6 +18,7 @@
 
 package service
 
+// ContractInfo struct
 type ContractInfo struct {
 	AddressId int64  `json:"addressid"`
 	Name      string `json:"name"`

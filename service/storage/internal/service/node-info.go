@@ -26,6 +26,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/proto"
 )
 
+// GetNodeInfos from db
 func (c *StorageService) GetNodeInfos(ctx context.Context, request *storage.AllRequest, response *storage.NodeInfosResponse) error {
 
 	if request == nil {
@@ -43,9 +44,10 @@ func (c *StorageService) GetNodeInfos(ctx context.Context, request *storage.AllR
 	}
 	response.NodeList = []*storage.Node{}
 	for _, node := range nodes {
-		dbTag := &storage.Node{node.NodeId,
-			node.NodeIP,
-			node.NodePort}
+		dbTag := &storage.Node{
+			NodeId:   node.NodeId,
+			NodeIp:   node.NodeIP,
+			NodePort: node.NodePort}
 		response.NodeList = append(response.NodeList, dbTag)
 	}
 	response.Code = 1
