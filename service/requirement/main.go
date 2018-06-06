@@ -140,10 +140,6 @@ func (u *Requirement) QueryById(ctx context.Context, req *requirement_proto.Quer
 		}
 	}
 
-	if count1 > 0 || count2 > 0 {
-
-	}
-
 	rsp.Data = &requirement_proto.QueryByIdData{
 		RequirementId:   ret.Param.DataReqId,
 		Username:        ret.Param.Info.Username,
