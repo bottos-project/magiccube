@@ -42,7 +42,7 @@ import (
 	"github.com/bottos-project/magiccube/service/node/config"
 	"github.com/bottos-project/magiccube/service/node/keystore"
 	slog "github.com/cihub/seelog"
-	"github.com/howeyc/gopass"
+	"github.com/bottos-project/gopass"
 	"github.com/micro/go-micro"
 	"github.com/protobuf/proto"
 	log "github.com/sirupsen/logrus"
@@ -337,11 +337,11 @@ func Sign(msg, seckey []byte) ([]byte, error) {
 func main() {
 	var input string
 	var input1 []byte
-
+	var err error
 	fmt.Println("\nPlease input your password for generating keystore: ")
-	input1 = gopass.GetPasswd()
+	input1, err = gopass.GetPasswd()
 
-	if len(input1) <= 0 {
+	if err!= nil || len(input1) <= 0 {
 		fmt.Println("Input error! Failed to start node.")
 		return
 	}
