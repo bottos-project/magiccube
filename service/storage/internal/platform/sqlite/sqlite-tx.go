@@ -90,6 +90,8 @@ func (c *SqliteContext) readOneTx(tx string) (*util.TxDBInfo, error) {
 	}
 	return nil, nil
 }
+
+// CallInsertTxInfo from db
 func (r *SqliteRepository) CallInsertTxInfo(value util.TxDBInfo) error {
 	db, err := ConnectDB()
 	if err != nil {
@@ -104,6 +106,7 @@ func (r *SqliteRepository) CallInsertTxInfo(value util.TxDBInfo) error {
 	return nil
 }
 
+// CallGetTx from db
 func (r *SqliteRepository) CallGetTx(txid string) (*util.TxDBInfo, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -118,6 +121,7 @@ func (r *SqliteRepository) CallGetTx(txid string) (*util.TxDBInfo, error) {
 	return res, nil
 }
 
+// createSync sync
 func (c *SqliteContext) createSync() {
 	sqlSync := `
 		create table sync(SyncedNumber INTEGER PRIMARY KEY);
@@ -127,6 +131,8 @@ func (c *SqliteContext) createSync() {
 		log.Println(err)
 	}
 }
+
+// syncBlockNum from db
 func (c *SqliteContext) syncBlockNum() (uint64, error) {
 	var num uint64
 	if !c.IsTableExist("sync") {
@@ -151,6 +157,8 @@ func (c *SqliteContext) syncBlockNum() (uint64, error) {
 	}
 	return num, nil
 }
+
+// CallGetSyncBlockCount from db
 func (r *SqliteRepository) CallGetSyncBlockCount() (uint64, error) {
 	db, err := ConnectDB()
 	if err != nil {

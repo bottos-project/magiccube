@@ -41,7 +41,7 @@ func path(filePath string) string {
 	i := strings.LastIndex(filePath, "/")
 	if i == -1 {
 		return filePath
-	} else {
-		return filePath[i+1:]
 	}
+	return filePath[i+1:]
+
 }

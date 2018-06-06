@@ -24,8 +24,8 @@ type UserInfo struct {
 	Accountname  string `db:"accountname"`
 	Ownerpubkey  string `db:"ownerpubkey"`
 	Activepubkey string `db:"activepubkey"`
-	User_type    string `db:"user_type"`
-	Role_type    string `db:"role_type"`
+	UserType     string `db:"user_type"`
+	RoleType     string `db:"role_type"`
 	Info         string `db:"info"`
 }
 
@@ -53,7 +53,6 @@ type TokenDBInfo struct {
 const InserUserInfoSql string = "insert into userinfo(Username, Accountname, Ownerpubkey,Activepubkey,EncyptedInfo,UserType,RoleType,CompanyName,CompanyAddress) values(?,?,?,?,?,?,?,?,?)"
 
 //QueryUserInfoSql string
-
 const QueryUserInfoSql string = "select * from userinfo"
 
 //InsertUserTokenSql string

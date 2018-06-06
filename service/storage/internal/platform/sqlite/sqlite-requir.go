@@ -22,6 +22,7 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
+// CallGetUserRequirementList from db
 func (r *SqliteRepository) CallGetUserRequirementList(username string) ([]*util.RequirementDBInfo, error) {
 	var reqs = []*util.RequirementDBInfo{}
 	dbtag := new(util.RequirementDBInfo)

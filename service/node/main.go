@@ -24,6 +24,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"syscall"
+
 	pack "github.com/bottos-project/bottos/contract/msgpack"
 	aes "github.com/bottos-project/crypto-go/crypto/aes"
 	"github.com/bottos-project/crypto-go/crypto/secp256k1"
@@ -40,11 +46,6 @@ import (
 	"github.com/micro/go-micro"
 	"github.com/protobuf/proto"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"os/exec"
-	"runtime"
-	"strings"
-	"syscall"
 	//"log"
 	//"sync"
 	//"reflect"
@@ -62,7 +63,6 @@ import (
 	//"github.com/code/bottos/service/storage/internal/platform/config"
 	//"github.com/code/bottos/service/storage/internal/platform/minio"
 	//"github.com/code/bottos/service/storage/internal/platform/sqlite"
-	//"github.com/code/bottos/service/storacleage/internal/service"
 )
 
 //var wg sync.WaitGroup

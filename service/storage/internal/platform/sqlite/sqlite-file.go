@@ -28,9 +28,10 @@ import (
 	"github.com/bottos-project/magiccube/service/storage/util"
 )
 
+// InsertUserfile to db
 func (c *SqliteContext) InsertUserfile(file util.FileDBInfo) error {
 	if !c.IsTableExist("fileinfo") {
-		sqlStmt := `
+		sqlStmt := ` 
 		create table fileinfo (FileHash VARCHAR(64) PRIMARY KEY,
 		Username VARCHAR(64),
 		FileName VARCHAR(64),
@@ -65,6 +66,7 @@ func (c *SqliteContext) InsertUserfile(file util.FileDBInfo) error {
 	return nil
 }
 
+// getUserfile from db
 func (c *SqliteContext) getUserfile(username string) ([]*util.FileDBInfo, error) {
 	sql := "select * from fileinfo where Username= '" + username + "';"
 	rows, err := c.db.Query(sql)
@@ -88,6 +90,8 @@ func (c *SqliteContext) getUserfile(username string) ([]*util.FileDBInfo, error)
 	}
 	return files, nil
 }
+
+// CallInsertUserFileList from   db
 func (r *SqliteRepository) CallInsertUserFileList(file util.FileDBInfo) (int32, error) {
 	db, err := ConnectDB()
 	if err != nil {
@@ -101,6 +105,8 @@ func (r *SqliteRepository) CallInsertUserFileList(file util.FileDBInfo) (int32, 
 	}
 	return 1, nil
 }
+
+// CallGetUserFileList from db
 func (r *SqliteRepository) CallGetUserFileList(username string) ([]*util.FileDBInfo, error) {
 	db, err := ConnectDB()
 	if err != nil {

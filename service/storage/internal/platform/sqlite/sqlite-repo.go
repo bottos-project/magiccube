@@ -21,17 +21,17 @@ package sqlite
 import (
 	"database/sql"
 	"errors"
-	"log"
-
-	"github.com/bottos-project/magiccube/service/storage/util"
-	_ "github.com/mattn/go-sqlite3"
 
 	"fmt"
 )
 
+// DefaultDbpath db path
 const DefaultDbpath string = "./bottos.db"
+
+// SqlTableExists is or not
 const SqlTableExists string = "select count(*) from sqlite_master where type= 'table' and name="
 
+// SqliteRepository struct
 type SqliteRepository struct {
 }
 
@@ -40,10 +40,12 @@ func NewSqliteRepository() *SqliteRepository {
 	return &SqliteRepository{}
 }
 
+// SqliteContext struct
 type SqliteContext struct {
 	db *sql.DB
 }
 
+// ConnectDB ...
 func ConnectDB() (*SqliteContext, error) {
 	db, err := sql.Open("sqlite3", DefaultDbpath)
 	if err != nil {
@@ -54,13 +56,14 @@ func ConnectDB() (*SqliteContext, error) {
 	}
 	return &SqliteContext{db}, nil
 }
+
+// IsTableExist is or not
 func (c *SqliteContext) IsTableExist(table string) bool {
 	sql := SqlTableExists + "'" + table + "';"
 	var num uint32
 	rows, err := c.db.Query(sql)
 	if err != nil {
 		fmt.Println(sql)
-		log.Println("%s db query failed", util.FuncLog())
 		return false
 	}
 	//select count(*) from sqlite_master where type= 'table' and name='sync';
@@ -68,7 +71,6 @@ func (c *SqliteContext) IsTableExist(table string) bool {
 	if rows.Next() {
 		err = rows.Scan(&num)
 		if err != nil {
-			log.Println("%s", util.FuncLog(), err)
 			return false
 		}
 		if num == 0 {
