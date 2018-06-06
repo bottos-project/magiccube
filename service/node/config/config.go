@@ -24,7 +24,7 @@ const (
 	//CONFIG_FILE FOR NODE USAGE
 	CONFIG_FILE = "/opt/go/bin/config.json"
         //WALLET_IP FOR NODE USAGE
-        WALLET_IP=""
+        WALLET_IP="10.10.10.10"
 
 	//RUN_PLATFORM FOR NODE USAGE
 	RUN_PLATFORM = "linux"
@@ -33,7 +33,7 @@ const (
 	SCRIPT_PATH = "/opt/go/bin/build.sh"
 
         //MONGO_DB_URL FOR NODE USAGE
-        MONGO_DB_URL=""
+        MONGO_DB_URL="10.10.10.10"
 	//DB_BOTTOS FOR NODE USAGE
 	DB_BOTTOS = "local"
 	//TABLE_POINTXY FOR NODE USAGE
