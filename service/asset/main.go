@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -164,7 +164,8 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDReq
 		if err != nil {
 			log.Error(err)
 		}
-		var where2 = &bson.M{"param.info.assetid": req.AssetId, "param.info.username": req.Sender}
+		var where2 = &bson.M{"method": "buydata", "param.info.assetid": req.AssetId, "param.info.username": req.Sender}
+		log.Debug(where2)
 		count1, err = mgo.DB(config.DB_NAME).C("Transactions").Find(where2).Count()
 		if err != nil {
 			log.Error(err)
