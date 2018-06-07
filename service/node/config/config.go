@@ -22,18 +22,19 @@ package config
 const (
 
 	//CONFIG_FILE FOR NODE USAGE
-	CONFIG_FILE = "/opt/go/bin/config.json"
-        //WALLET_IP FOR NODE USAGE
-        WALLET_IP="10.10.10.10"
+	CONFIG_FILE = "/home/bottos/opt/go/bin/config.json"
+    
+    //WALLET_IP FOR NODE USAGE
+    WALLET_IP="10.10.10.184"
 
 	//RUN_PLATFORM FOR NODE USAGE
 	RUN_PLATFORM = "linux"
 
 	//SCRIPT_PATH FOR NODE USAGE
 	SCRIPT_PATH = "/opt/go/bin/build.sh"
-
-        //MONGO_DB_URL FOR NODE USAGE
-        MONGO_DB_URL="10.10.10.10"
+    
+    //MONGO_DB_URL FOR NODE USAGE
+    MONGO_DB_URL="10.10.10.184"
 	//DB_BOTTOS FOR NODE USAGE
 	DB_BOTTOS = "local"
 	//TABLE_POINTXY FOR NODE USAGE
