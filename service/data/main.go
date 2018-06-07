@@ -209,7 +209,7 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 	rsp.Message = "OK"
 	return nil
 }
-//GetFileDownloadURL is to get file download URL
+//GetFileSliceDownloadURL is to get fileslice download URL
 func (d *DataService) GetFileSliceDownloadURL(ctx context.Context, req *proto.GetFileSliceDownloadURLRequest, rsp *proto.GetFileSliceDownloadURLResponse) error {
 
 	log.Info("Start Get FileDownload URL!")
