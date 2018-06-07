@@ -36,8 +36,9 @@ It has these top-level messages:
 	GetStorageIPResponse
 	GetFileDownloadURLRequest
 	GetFileDownloadURLResponse
+	GetFileSliceDownloadURLRequest
+	GetFileSliceDownloadURLResponse
 */
-
 package data
 
 import proto "github.com/golang/protobuf/proto"
@@ -45,9 +46,9 @@ import fmt "fmt"
 import math "math"
 
 import (
-	context "context"
 	client "github.com/micro/go-micro/client"
 	server "github.com/micro/go-micro/server"
+	context "context"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -80,6 +81,7 @@ type DataClient interface {
 	ComposeFile(ctx context.Context, in *ComposeFileRequest, opts ...client.CallOption) (*ComposeFileResponse, error)
 	GetStorageIP(ctx context.Context, in *GetStorageIPRequest, opts ...client.CallOption) (*GetStorageIPResponse, error)
 	GetFileDownloadURL(ctx context.Context, in *GetFileDownloadURLRequest, opts ...client.CallOption) (*GetFileDownloadURLResponse, error)
+	GetFileSliceDownloadURL(ctx context.Context, in *GetFileSliceDownloadURLRequest, opts ...client.CallOption) (*GetFileSliceDownloadURLResponse, error)
 }
 
 type dataClient struct {
@@ -210,6 +212,16 @@ func (c *dataClient) GetFileDownloadURL(ctx context.Context, in *GetFileDownload
 	return out, nil
 }
 
+func (c *dataClient) GetFileSliceDownloadURL(ctx context.Context, in *GetFileSliceDownloadURLRequest, opts ...client.CallOption) (*GetFileSliceDownloadURLResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Data.GetFileSliceDownloadURL", in)
+	out := new(GetFileSliceDownloadURLResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Data service
 
 type DataHandler interface {
@@ -224,6 +236,7 @@ type DataHandler interface {
 	ComposeFile(context.Context, *ComposeFileRequest, *ComposeFileResponse) error
 	GetStorageIP(context.Context, *GetStorageIPRequest, *GetStorageIPResponse) error
 	GetFileDownloadURL(context.Context, *GetFileDownloadURLRequest, *GetFileDownloadURLResponse) error
+	GetFileSliceDownloadURL(context.Context, *GetFileSliceDownloadURLRequest, *GetFileSliceDownloadURLResponse) error
 }
 
 func RegisterDataHandler(s server.Server, hdlr DataHandler, opts ...server.HandlerOption) {
@@ -276,4 +289,8 @@ func (h *Data) GetStorageIP(ctx context.Context, in *GetStorageIPRequest, out *G
 
 func (h *Data) GetFileDownloadURL(ctx context.Context, in *GetFileDownloadURLRequest, out *GetFileDownloadURLResponse) error {
 	return h.DataHandler.GetFileDownloadURL(ctx, in, out)
+}
+
+func (h *Data) GetFileSliceDownloadURL(ctx context.Context, in *GetFileSliceDownloadURLRequest, out *GetFileSliceDownloadURLResponse) error {
+	return h.DataHandler.GetFileSliceDownloadURL(ctx, in, out)
 }

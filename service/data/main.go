@@ -209,6 +209,42 @@ func (d *DataService) GetFileDownloadURL(ctx context.Context, req *proto.GetFile
 	rsp.Message = "OK"
 	return nil
 }
+//GetFileDownloadURL is to get file download URL
+func (d *DataService) GetFileSliceDownloadURL(ctx context.Context, req *proto.GetFileSliceDownloadURLRequest, rsp *proto.GetFileSliceDownloadURLResponse) error {
+
+	log.Info("Start Get FileDownload URL!")
+	if req == nil {
+		rsp.Result = 404
+		rsp.Message = "para error"
+		return errors.New("Missing storage request")
+	}
+
+	userName := req.Username
+	fileSliceIP := req.Ip
+	rsp.Url = []*proto.Url{}
+
+	for _, sliceIP := range fileSliceIP {
+		sliceGuid := sliceIP.Sguid
+		
+		url, err := d.minioRepo.GetFileDownloadURL(userName, sliceGuid)
+		if err != nil {
+			rsp.Result = 404
+			rsp.Message = "get url failed"
+			log.Info(err)
+			return errors.New("Failed get download url")
+		}
+		
+		urlTag := &proto.Url{
+			Sguid: sliceGuid,
+			Surl: url}
+		rsp.Url = append(rsp.Url, urlTag)
+
+	}
+	
+	rsp.Result = 200
+	rsp.Message = "OK"
+	return nil
+}
 
 //GetUploadProgress is to query file upload progress and storage file
 func (d *DataService) GetUploadProgress(ctx context.Context, req *proto.GetUploadProgressRequest, rsp *proto.GetUploadProgressResponse) error {
