@@ -340,6 +340,63 @@ func (d *Data) GetFileDownloadURL(ctx context.Context, req *api.Request, rsp *ap
 
 	return nil
 }
+// GetFileSliceDownloadURL from server
+func (d *Data) GetFileSliceDownloadURL(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	body := req.Body
+	log.Info("Start Get FileSlice Download URL!")
+	var req1 data.GetFileDownloadURLRequest
+
+	json.Unmarshal([]byte(body), &req1)
+
+	userName := req1.Username
+	ip := req1.Ip
+	n := len(ip)
+	sUrl := []*data.Url{}
+	for i := 0; i < n; i++ {
+		//1.1 get slice ip
+		Sip := ip[i].SnodeIp
+		
+		addr := "http://" + Sip + ":8080/rpc"
+		//1.2 get slice storage url
+		sguid := ip[i].Sguid
+		log.Info("get slice storage url")
+		params := `service=go.micro.srv.v3.data&method=Data.GetFileStorageURL&request={
+					"username":"%s",
+					"guid":"%s"}`
+		s := fmt.Sprintf(params, userName, sguid)
+		respBody, err := http.Post(addr, "application/x-www-form-urlencoded",
+			strings.NewReader(s))
+		log.Info("GetFileStorageURL Result")
+		log.Info(respBody)
+		if err != nil {
+			return err
+		}
+		defer respBody.Body.Close()
+		dbody, err := ioutil.ReadAll(respBody.Body)
+		var url string
+		if err != nil {
+			return err
+		}
+		jss, _ := simplejson.NewJson([]byte(dbody))
+		url = jss.Get("url").MustString()
+		
+		urlTag := &data.Url{
+			Sguid: sguid,
+			Surl: url}
+		sUrl = append(sUrl, urlTag)
+
+	}
+	
+	rsp.StatusCode = 200
+	b, _ := json.Marshal(map[string]interface{}{
+		"result":  "200",
+		"message": "OK",
+		"url":     sUrl,
+	})
+	rsp.Body = string(b)
+
+	return nil
+}
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/datApi-log.xml")

@@ -23,9 +23,8 @@ service Data {
     };
 	rpc GetFileDownloadURL (GetFileDownloadURLRequest) returns (GetFileDownloadURLResponse) {
     };
-	
-
-    
+	rpc GetFileSliceDownloadURL (GetFileSliceDownloadURLRequest) returns (GetFileSliceDownloadURLResponse) {
+    };
 }
 message AllRequest{
 	
@@ -178,6 +177,18 @@ message GetFileDownloadURLResponse {
 	uint64 result = 1;
     string message = 2;
 	string url = 3;
+}
+message GetFileSliceDownloadURLRequest {
+	string username = 1;
+	string guid =2;
+	repeated Ip ip = 3;
+	
+}
+message GetFileSliceDownloadURLResponse {
+	uint64 result = 1;
+    string message = 2;
+	repeated Url url = 3;
+	
 }
 
 
