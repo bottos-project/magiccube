@@ -15,7 +15,7 @@
       "dbPass":      "xxxx",
       "storageSize": "1T",
       "storagePath": "/media",
-      "servPath":    "/opt/go/bin",
+      "servPath":    "/home/bottos/opt/go/bin",
       "servLst": [
         "storage",
         "ideApi",
