@@ -15,7 +15,7 @@
       "dbPass":      "xxxx",
       "storageSize": "1T",
       "storagePath": "/media",
-      "servPath":    "/opt/go/bin",
+      "servPath":    "/home/bottos/opt/go/bin",
       "servLst": [
         "storage",
         "ideApi",
@@ -28,7 +28,7 @@
         "exchange",
         "dasApi",
         "dashboard"
-      ]
+      ],
 	  "SeedipAddr": "10.10.10.184",	
 	  "SlaveipAddr": [
         "139.219.139.184",
