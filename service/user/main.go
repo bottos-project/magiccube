@@ -34,6 +34,7 @@ import (
 	"golang.org/x/net/context"
 	"gopkg.in/mgo.v2/bson"
 	"os"
+	"bytes"
 )
 
 // User struct
@@ -92,9 +93,8 @@ func (u *User) Register(ctx context.Context, req *user_proto.RegisterRequest, rs
 	}
 
 	//Add chainID Flag
-	//chainID,_:=hex.DecodeString("000000000001")
-	//msg = bytes.Join([][]byte{msg, chainID}, []byte{})
-
+	chainID,_:=hex.DecodeString(config.CHAIN_ID)
+	msg = bytes.Join([][]byte{msg, chainID}, []byte{})
 
 	signature, err := crypto.Sign(util.Sha256(msg), seckey)
 	if err != nil {
