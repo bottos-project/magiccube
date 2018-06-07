@@ -8,9 +8,9 @@ COMMON_STRATUP="/opt/go/bin/startup.sh start"
 
 function usercheck(){
 	SCRIPT_USER=`whoami`
-	if [ $SCRIPT_USER != "root" ];
+	if [ $SCRIPT_USER != "bottos" ];
 	then
-		echo "*ERROR* Please run the script as root !!!"
+		echo "*ERROR* Please run the script as bottos !!!"
 		exit 1
 	fi
 	
