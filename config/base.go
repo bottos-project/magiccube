@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -45,6 +45,9 @@ const (
 	BASE_MINIO_SECRET_KEY = ""
 	// BASE_LOG_CONF BASE_LOG_CONF
 	BASE_LOG_CONF = "config/log.json"
+
+	//CHAIN_ID
+	CHAIN_ID ="00000000000000000000000000000000"
 
 	// TOKEN_EXPIRE_TIME Token expired
 	TOKEN_EXPIRE_TIME = 2 * 60 * 60
