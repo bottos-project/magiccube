@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
 
-#GO_PATH=`echo $GOPATH |cut -d'=' -f2`
-GOPATH=/mnt/bottos
+USER_HOME_DIR=/home/bottos
+GOPATH=$USER_HOME_DIR/mnt/bottos
 SYS_GOPATH=/mnt
 SYS_GOROOT=/usr/lib/go
 
-GO_PATH=/opt/go
-CONSUL_PATH=$GO_PATH/bin/linux_386/
+GO_PATH=$USER_HOME_DIR/opt/go
+CONSUL_PATH=$GOPATH/src/
+MICRO_PATH=$GOPATH/src/
 SERVER_PATH=$GO_PATH/bin/
 GZ_PACKAGE_DIR=/mnt
 
 MINIO_SITE=https://dl.minio.io/server/minio/release/linux-amd64/minio
 MINIO_SERV_SITE=https://raw.githubusercontent.com/minio/minio-service/master/linux-systemd/minio.service
 MINIO_RUN_PATH=/usr/local/bin
-MINIO_USER=minio-user
-MINIO_GRP=minio-user
+MINIO_USER=bottos
+MINIO_GRP=bottos
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
+
+OPT_GO_BIN=$USER_HOME_DIR/opt/go/bin
 
 if [ -z $1 ]; then
     echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
@@ -45,200 +48,8 @@ OPT_GO_BIN_GZ_PACK=opt-go-bin.tar.gz
 GOPATH_DIR_PACK=GOPATH-DIR.tar.gz
 GOLANG_PACK=go1.10.1.linux-amd64.tar.gz
 
-#DO NOT FILL THESE IN SCRIPT
-PACKAGE_SVR=""
-PACKAGE_SVR_USRNAME=""
-PACKAGE_SVR_PWD=""
-PACKAGE_SVR_PACKAGE_DIR=""
-
-if [ $1 == "deploy" ]; then
-    counts=0
-    while ( [ -z "$PACKAGE_SVR" ] || [ -z "$PACKAGE_SVR_USRNAME" ] || [ -z "$PACKAGE_SVR_PWD" ] || [ -z "$PACKAGE_SVR_PACKAGE_DIR" ]); do
-        if [ $counts -gt 0 ]; then
-            echo -e "\033[31m Input wrong. Please input again.\033[0m"
-        fi
-        read -p "Please input source package server ip:" PACKAGE_SVR
-        read -p "Please input source package server packages directory:" PACKAGE_SVR_PACKAGE_DIR
-        read -p "Please input source package server user name:" PACKAGE_SVR_USRNAME
-        read -s -p "Please input source package server password:" PACKAGE_SVR_PWD
-        counts=1
-    done
-    sudo apt-get install -y tcl tk expect   
-fi
-
-function check_gzpackages() {
-    
-    #if [ ! -d /opt/go/bin/core ]; then
-  
-#/usr/bin/expect <<-EOF
-#spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
-#set timeout 600
-
-#expect {
-#"*yes/no" { send "yes\r"; exp_continue }
-#"*password:" { send "$PACKAGE_SVR_PWD\r" }
-#}
-
-#expect eof
-
-#EOF
-
-    #fi
-
-    if [ ! -f $GZ_PACKAGE_DIR/$GOLANG_PACK ]; then
-
-/usr/bin/expect <<-EOF
-
-spawn scp $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/$GOLANG_PACK $GZ_PACKAGE_DIR
-set timeout 600
-
-expect {
-"*yes/no" { send "yes\r"; exp_continue }
-"*password:" { send "$PACKAGE_SVR_PWD\r" }
-}
-
-expect eof
-
-EOF
-
-    fi
-
-
-    if [ ! -f $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK ]; then
-
-/usr/bin/expect <<-EOF
-
-spawn scp $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK $GZ_PACKAGE_DIR
-set timeout 600
-
-expect {
-"*yes/no" { send "yes\r"; exp_continue }
-"*password:" { send "$PACKAGE_SVR_PWD\r" }
-}
-
-expect eof
-
-EOF
-
-    fi
-
-
-    if [ ! -f $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK ]; then
-
-/usr/bin/expect <<-EOF
-
-spawn scp $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/$GOPATH_DIR_PACK $GZ_PACKAGE_DIR
-set timeout 600
-
-expect {
-"*yes/no" { send "yes\r"; exp_continue }
-"*password:" { send "$PACKAGE_SVR_PWD\r" }
-}
-
-expect eof
-
-EOF
-
-    fi
-
-    if [ ! -f $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK ] ; then
-        echo -e "\033[31m *ERROR* Please get your missing gz packages [ $OPT_GO_BIN_GZ_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
-        exit 1
-    fi
-    
-    if [ ! -f $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK ]; then
-        echo -e "\033[31m *ERROR* Please get your missing gz packages [ $GOPATH_DIR_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
-        exit 1
-    fi
-   
-    if [ ! -f $GZ_PACKAGE_DIR/$GOLANG_PACK ]; then
-        echo -e "\033[31m *ERROR* Please get your missing gz packages [ $GOLANG_PACK ] under directory $GZ_PACKAGE_DIR !!! \033[0m"
-        exit 1
-    fi
-	sudo cp -rf /opt/go/bin/cmd_dir /opt/go/bin/core    
-
-    echo "!!All files done."    
-}
-
-function unpackpackages() {
-    
-	sudo rm -rf /opt/go/bin 2>/dev/null
-	
-	echo "start unpack $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK:"
-	mkdir -p /opt/go/bin
-	sudo tar zxvf $GZ_PACKAGE_DIR/$OPT_GO_BIN_GZ_PACK -C /opt/go
-	
-    sudo rm -rf /opt/go/bin/core 2>/dev/null
-    #if [ ! -d /opt/go/bin/core ]; then
-  
-/usr/bin/expect <<-EOF
-spawn sudo scp -r $PACKAGE_SVR_USRNAME@$PACKAGE_SVR:$PACKAGE_SVR_PACKAGE_DIR/core /opt/go/bin
-set timeout 600
-
-expect {
-"*yes/no" { send "yes\r"; exp_continue }
-"*password:" { send "$PACKAGE_SVR_PWD\r" }
-}
-
-expect eof
-
-EOF
-
-    #fi
-    sudo cp -rf /opt/go/bin/cmd_dir /opt/go/bin/core 2>/dev/null
-
-	echo "start unpack $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK:"
-	sudo tar zxvf $GZ_PACKAGE_DIR/$GOPATH_DIR_PACK -C $SYS_GOPATH
-	
-    echo "start unpack $GZ_PACKAGE_DIR/$GOLANG_PACK:"
-	sudo tar -C /usr/lib -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
-	sudo tar -C /usr/bin -xzf $GZ_PACKAGE_DIR/$GOLANG_PACK
-	
-    cmd=$(sed  -n "/GOPATH/p" /etc/profile |wc -l)
-    if [ $cmd -lt 1 ]; then
-       sed -i '$a\export GOPATH="/mnt/bottos"' /etc/profile
-    else 
-       cmd="/GOROOT/c\GOROOT=\"/usr/lib/go\""
-       sed -ir $cmd /etc/profile 
-    fi
-
-    cmd=$(sed  -n "/GOROOT/p" /etc/profile |wc -l)
-    if [ $cmd -lt 1 ]; then
-       sed -i "\$a\export GOROOT=\"$SYS_GOROOT\"" /etc/profile
-    else
-        cmd="/GOPATH/c\GOPATH=\"/mnt/bottos\""
-        sed -ir $cmd /etc/profile
-    fi
-    
-    cmd=$(sed  -n "/GOPATH/p" ~/.profile |wc -l)
-    if [ $cmd -lt 1 ]; then
-       sed -i '$a\export GOPATH="/mnt/bottos"' ~/.profile
-    fi
-   
-    cmd=$(sed  -n "/GOROOT/p" ~/.profile |wc -l)
-    if [ $cmd -lt 1 ]; then
-        #cmd=\'+ '$a\export GOROOT='+$SYS_GOROOT+\'
-        #echo "LYP--->\$a\export GOROOT=$SYS_GOROOT"
-        sed -i "\$a\export GOROOT=\"$SYS_GOROOT\"" ~/.profile
-    fi
-
-    cmd=$(sed -n "/export PATH/p" ~/.profile |wc -l)
-    if [ $cmd -lt 1 ]; then
-        sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' ~/.profile
-    fi
-    
-    cmd=$(sed -n "/export PATH/p" /etc/profile |wc -l)
-    if [ $cmd -lt 1 ]; then
-        sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' /etc/profile
-    fi
-    #sudo cp -rf /usr/bin/go /usr/lib
-
-    
-    source /etc/profile
-    #source ~/.profile
-}
-
-function miniocheck(){
+function miniocheck()
+{
     if [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
     then
 		echo -e "\033[31m *ERROR* You need specify variable SERVER_IPADR and SERVER_PORT first !!! \033[0m"
@@ -247,11 +58,12 @@ function miniocheck(){
     return
 }
 
-function usercheck(){
+function usercheck()
+{
 	SCRIPT_USER=`whoami`
-	if [ $SCRIPT_USER != "root" ];
+	if [ -z $1 ] || [ $SCRIPT_USER != $1 ];
 	then
-		echo -e "\033[31m *ERROR* Please run the script as root !!! \033[0m"
+		echo -e "\033[31m *ERROR* Please run the script as $1 !!! \033[0m"
 		exit 1
 	fi
 	return
@@ -259,8 +71,6 @@ function usercheck(){
 
 function setminio()
 {
-	apt-get update
-	curl -O $MINIO_SITE
 	if [ ! -e "./minio" ];
 	then
 		echo -e "\033[31m *ERROR* Fail to fetch the minio from the site: "$MINIO_SITE" \033[0m"
@@ -303,9 +113,9 @@ function setminio()
 		echo -e "\033[31m *ERROR* Fail to fetch the minio.service from the site: "${MINIO_SERV_SITE}" \033[0m"
 		exit 1
 	fi
-
+	chmod +x minio.service
 	cp minio.service /etc/systemd/system
-
+        
 	systemctl daemon-reload
 	systemctl enable minio
 
@@ -318,39 +128,62 @@ function setminio()
 
 function ssldepends()
 {
-    apt-get install pkg-config libssl-dev libsasl2-dev -y
-    if [ ! -f ${GO_PATH}/bin/mongo-c-driver-1.9.2.tar.gz ] || [ ! -f ${GO_PATH}/bin/mongo-cxx-driver-r3.2.0-rc1.tar.gz ];
+    echo "HERE"	
+    if [ -z "`dpkg -l | grep libsasl2-dev`" ] || [ -z "`dpkg -l | grep libssl-dev`" ];
+	then
+	echo -e "\033[33m *WRAN* set ssl runtime environment , it may take a moment ... \033[0m"
+    	apt-get install pkg-config libssl-dev libsasl2-dev -y
+    fi
+
+    cd $USER_HOME_DIR
+     
+    wget https://github.com/mongodb/mongo-c-driver/releases/download/1.10.1/mongo-c-driver-1.10.1.tar.gz --directory-prefix=$USER_HOME_DIR
+    if [ ! -f $USER_HOME_DIR/mongo-c-driver-1.10.1.tar.gz ];
     then
-        echo "*ERROR* Fail to find the tar file: mongo-c-driver-1.9.2.tar.gz or mongo-cxx-driver-r3.2.0-rc1.tar.gz from the path "${GO_PATH}" !!!"
+        echo "*ERROR* Fail to find the tar file: mongo-c-driver-1.9.2.tar.gz !"
+         exit 1
+    fi
+
+    tar xzf $USER_HOME_DIR/mongo-c-driver-1.10.1.tar.gz
+    
+    cd $USER_HOME_DIR/mongo-c-driver-1.10.1
+    mkdir cmake-build
+    cd cmake-build
+    cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
+    make
+    make install
+
+    #./configure --disable-automatic-init-and-cleanup --enable-static
+    #make
+    #make install
+    #cd ..
+    
+    wget https://github.com/mongodb/mongo-cxx-driver/archive/r3.2.0.tar.gz --directory-prefix=$USER_HOME_DIR
+    if [ ! -f $USER_HOME_DIR/r3.2.0.tar.gz ];
+    then
+        echo "*ERROR* Fail to find the tar file: r3.2.0.tar.gz !"
         exit 1
     fi
     
-    sudo tar xzf mongo-c-driver-1.9.2.tar.gz
-    cd mongo-c-driver-1.9.2
-    ./configure --disable-automatic-init-and-cleanup --enable-static
-    make
-    make install
-    cd ..
-
-    sudo tar xzf mongo-cxx-driver-r3.2.0-rc1.tar.gz
-    cd mongo-cxx-driver-r3.2.0-rc1/build
+    tar -xzvf $USER_HOME_DIR/r3.2.0.tar.gz
+    cd $USER_HOME_DIR/mongo-cxx-driver-r3.2.0/build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
     make EP_mnmlstc_core
     make
     make install
     cd ..
 
-    rm -rf mongo-c-driver-1.9.2
-    rm -rf mongo-cxx-driver-r3.2.0-rc1
+    rm -rf $USER_HOME_DIR/mongo-c*
+    rm -rf $USER_HOME_DIR/r3.2.0*
 }
 
 function sslcheck()
 {
-	if [ -z "`dpkg -l | grep libsasl2-dev`" ] || [ -z "`dpkg -l | grep libssl-dev`" ];
-	then
-		echo -e "\033[33m *WRAN* set ssl runtime environment , it may take a moment ... \033[0m"
+	#if [ -z "`dpkg -l | grep libsasl2-dev`" ] || [ -z "`dpkg -l | grep libssl-dev`" ];
+	#then
+	#	echo -e "\033[33m *WRAN* set ssl runtime environment , it may take a moment ... \033[0m"
 	    ssldepends
-	fi
+	#fi
 }
 
 function varcheck()
@@ -364,46 +197,33 @@ function varcheck()
 
 function startcore()
 {
-    if [ ! -e /opt/go/bin/core/bottos ];
+    if [ ! -e $USER_HOME_DIR/opt/go/bin/core/bottos ];
 	then
-		echo -e "\033[31m *ERROR* Fail to find bottos process under : /opt/go/bin/core !!! \033[0m"
+		echo -e "\033[31m *ERROR* Fail to find bottos process under : $USER_HOME_DIR/opt/go/bin/core !!! \033[0m"
 		exit 1
 	fi
 	
-	if [ ! -f /opt/go/bin/core/chainconfig.json ] || [ ! -f /opt/go/bin/core/genesis.json ];
+	if [ ! -f $USER_HOME_DIR/opt/go/bin/core/chainconfig.json ] || [ ! -f $USER_HOME_DIR/opt/go/bin/core/genesis.json ];
 	then
 		echo -e "\033[31m *ERROR* Fail to find core proess's configuration item : config.json or genesis.json under :"${CORE_PROC_FILE_DIR}" \033[0m"
 		exit 1
 	fi
 
-    cp -f /opt/go/bin/*.json /home/bottos
-    cp -f /opt/go/bin/*.json /opt/go/bin/core
-	cp -f /opt/go/bin/*.json /opt/go/bin/core/cmd_dir
-
+    cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR
+    cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core
+    cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir
+    
     if [ ! -d ${CORE_PROC_FILE_DIR} ];
 	then
 		echo -e "\033[31m *ERROR* Directory does not exist:"${CORE_PROC_FILE_DIR}" \033[0m"
 		exit 1
 	fi
-	
-    sudo rm -r /opt/go/bin/datadir 2>/dev/null
-    sudo rm -r /home/bottos/datadir 2>/dev/null
-    sudo rm -r /opt/go/bin/core/datadir 2>/dev/null
-	sudo rm -r ${CORE_PROC_FILE_DIR}/datadir 2>/dev/null
-	sudo rm -r $GO_PATH/bin/datadir 2>/dev/null
 
-	#GENESIS_JSON=`cat ${GO_PATH}/bin/data-dir/config.ini | grep -e ^genesis-json | awk '{print $3}'`
-	#if [ ! -f "$GENESIS_JSON" ];
-	#then
-	#	echo -e "\033[31m *ERROR* json file :"$GENESIS_JSON" dosn't exist !!! please reconfigure config.ini \033[0m"
-	#	exit 1
-	#fi
-	
-	CHK_CORE=`ps -elf | grep "/opt/go/bin/core/bottos" | grep -v grep | wc -l`
+    CHK_CORE=`ps -elf | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | wc -l`
     if [ "$CHK_CORE" -lt 1 ];
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
-		sudo nohup /opt/go/bin/core/bottos 2>&1 & 
+		nohup $USER_HOME_DIR/opt/go/bin/core/bottos 2>&1 & 
         	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
         	sleep 3
 	fi
@@ -412,7 +232,7 @@ function startcore()
 
 function stopcore()
 {
-    RUNNING_CORE_PID=`ps -elf | grep /opt/go/bin/core/bottos | grep -v grep | awk '{print $4}'`
+    RUNNING_CORE_PID=`ps -elf | grep $USER_HOME_DIR/opt/go/bin/core/bottos | grep -v grep | awk '{print $4}'`
     if [ -z "$RUNNING_CORE_PID" ];
     then
         echo -e "\033[33m *WRAN* bottos process hadn't been running ... \033[0m"
@@ -420,7 +240,7 @@ function stopcore()
     fi
 
     kill -SIGINT $RUNNING_CORE_PID
-    ps -ef | grep "opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+    ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 
     return
 }
@@ -433,7 +253,7 @@ function restartcore()
 
 function startminio()
 {
-	systemctl start minio
+	#systemctl start minio
 	minio server $MINIO_OPTS $MINIO_VOLUMES > minio.file 2>&1 &
 	if [ "`ps -elf | grep minio | grep -v grep | wc -l`" -lt 1 ];
 	then
@@ -449,6 +269,7 @@ function prepcheck()
 	echo -e "\033[32m = Prepare to check the environment = \033[0m"
 	echo -e "\033[32m ==================================== \033[0m"
     #check if golang had been installed , if not , install it
+        rm -rf /var/lib/dpkg/lock 2>/dev/null
     if [ -n "`cat /etc/issue | grep -i Ubuntu`" ] && [ -z "`which go`" ];
 	then
 	    echo -e "\033[33m *WRAN* golang hadn't been installed , install it currently ... \033[0m"
@@ -487,14 +308,14 @@ function prepcheck()
 function startcontract()
 {
 	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/bcli
-    sudo cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
-	sudo ${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
-	sudo ${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+        cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
+	${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	echo "===CONTRACT DONE==="
 }
 
 function startserv()
-{
+{	
 	echo -e "\033[32m ==================================== \033[0m"
 	echo -e "\033[32m =       Start bottos server        = \033[0m"
 	echo -e "\033[32m ==================================== \033[0m"
@@ -511,19 +332,17 @@ function startserv()
 		exit 1
 	fi
 
-    cd /opt/go/bin
-
+    	cd $USER_HOME_DIR/opt/go/bin
+	
 	# start consul for go-micro
 	nohup ${CONSUL_PATH}consul agent -dev > consul.log 2>&1 &
 	sleep 1
 
 	# start micro service
-	nohup ${SERVER_PATH}micro api > micro.log 2>&1 &
+	nohup ${MICRO_PATH}micro api > micro.log 2>&1 &
 	# start mongodb service
-	#service mongodb start
 	sleep 3
-	#echo `ps -ef|grep micro`
-        #echo "startcore"
+    	
         startcore
 	
 	#echo "start minio"
@@ -540,7 +359,8 @@ function startserv()
     	#nohup ${SERVER_PATH}node > node.file 2>&1
     	${SERVER_PATH}./node
 	
-	startcontract
+	#startcontract
+        return
 }
 
 function stopserv()
@@ -557,27 +377,28 @@ function stopserv()
 	ps -ef | grep -w ${SERVER_PATH}"identity" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep -w ${SERVER_PATH}"ideApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"storage" | grep -v grep | cut -c 9-15 | xargs kill -s 9
-	ps -ef | grep "/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
 	sleep 2
-	ps -ef | grep "/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
-    miniopid=$(pidof minio)
-    kill -9 $miniopid 2>/dev/null
-    datapid=$(pidof data)
-    kill -9 $datapid 2>/dev/null
-    datApipid=$(pidof datApi)
-    kill -9 $datApipid 2>/dev/null
-
+	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+        
+        miniopid=$(pidof minio)
+        kill -9 $miniopid 2>/dev/null
+        datapid=$(pidof data)
+    	kill -9 $datapid 2>/dev/null
+    	datApipid=$(pidof datApi)
+    	kill -9 $datApipid 2>/dev/null
 	sleep 1
 
 	ps -ef | grep -w ${SERVER_PATH}"./node" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	sleep 1
-
-	ps -ef | grep "mongodb" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+       
+        service mongodb stop
+	#ps -ef | grep "mongodb" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	sleep 1
 
 	systemctl stop minio
 
-	ps -ef | grep ${SERVER_PATH}"micro api" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+	ps -ef | grep ${MICRO_PATH}"micro api" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 
 	ps -ef | grep ${CONSUL_PATH}"consul agent -dev" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 
@@ -587,7 +408,7 @@ function stopserv()
 }
 
 function download_git_newcode()
-{ 
+{
     echo "WARNING: THIS STEP WILL OVERWRITE YOUR CODES UNDER GOPATH. ARE YOU SURE? $1? (Y/N) (default: N) __"
     read dorm
     dorm=${dorm:=N}
@@ -597,83 +418,68 @@ function download_git_newcode()
     fi
 
     eth0_ip=$SERVER_IPADR
-
     #if [ ! -z $GOPATH ]; then
-        sudo rm -rf $GOPATH/src/github.com/bottos-project/magiccube 2>&1>/dev/null
-        sudo rm -rf $GOPATH/src/github.com/bottos-project/bottos 2>&1>/dev/null
-        sudo rm -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/keystore/crypto-go 2>&1>/dev/null
+        rm -rf $GOPATH/src/github.com/bottos-project/bottos    2>&1>/dev/null
+        rm -rf $GOPATH/src/github.com/bottos-project/magiccube 2>&1>/dev/null
+        rm -rf $GOPATH/src/github.com/bottos-project/crypto-go 2>&1>/dev/null
+
+	cd $GOPATH/src/github.com/bottos-project/
+	
+        git clone https://github.com/bottos-project/bottos.git 
+        git clone https://github.com/bottos-project/magiccube.git 
+        git clone https://github.com/bottos-project/crypto-go.git
+        git clone https://github.com/howeyc/gopass.git
+   	
+        cd $USER_HOME_DIR
         
-        sudo git clone https://github.com/bottos-project/magiccube.git $GOPATH/src/github.com/bottos-project/magiccube
-        
-        path=`pwd`
-        cd $GOPATH/src/github.com/bottos-project/magiccube/service/node/keystore
-        sudo git clone https://github.com/bottos-project/crypto-go.git
-        cd $path
-        sudo git clone https://github.com/bottos-project/bottos.git $GOPATH/src/github.com/bottos-project/bottos
-        
-        cmd="/MONGO_DB_URL/c\MONGO_DB_URL=\"$eth0_ip\""
-        sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
-        cmd="/WALLET_IP/c\WALLET_IP=\"$eth0_ip\""
-        sudo sed -ir $cmd $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
+        cmd="/MONGO_DB_URL=/c\MONGO_DB_URL=\"$eth0_ip\""
+	sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
+        cmd="/WALLET_IP=/c\WALLET_IP=\"$eth0_ip\""
+        sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
     	
-		sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/chainconfig.json /opt/go/bin
-		sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/genesis.json /opt/go/bin
+	cp -rf $GOPATH/src/github.com/bottos-project/bottos/chainconfig.json $USER_HOME_DIR/opt/go/bin
+	cp -rf $GOPATH/src/github.com/bottos-project/bottos/genesis.json $USER_HOME_DIR/opt/go/bin
 
         cmd="/option_db/c\\\"option_db\":\"$eth0_ip:27017\","
-        sudo sed -ir $cmd /opt/go/bin/chainconfig.json
+        sed -ir $cmd $USER_HOME_DIR/opt/go/bin/chainconfig.json
         cmd="/api_service_enable/c\\\"api_service_enable\":true,"
-        sudo sed -ir $cmd /opt/go/bin/chainconfig.json
+        sed -ir $cmd $USER_HOME_DIR/opt/go/bin/chainconfig.json
         
-        cmd="/ipAddr/c\\\"ipAddr\":\"$eth0_ip\","
-        sudo sed -ir $cmd /opt/go/bin/config.json
+	cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.json $USER_HOME_DIR/opt/go/bin/
+        cmd="/\"ipAddr\"/c\\\"ipAddr\":\"$eth0_ip\","
+        sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
         cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip\","
-        sudo sed -ir $cmd /opt/go/bin/config.json
-        cmd="/bind_ip/c\bind_ip=$eth0_ip"
-        sudo sed -ir $cmd /etc/mongodb.conf
-        sudo chmod 777 $GOPATH/src/github.com/bottos-project/* -R
-        echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
+        sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
+        chmod 777 $GOPATH/src/github.com/bottos-project/* -R
     #fi
+    cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/scripts/build.sh $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
+    cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/* $GOPATH/src  2>/dev/null 
+   	
+    cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/log.xml $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
+    cp -rf $GOPATH/src/github.com/bottos-project/magiccube/config $USER_HOME_DIR/opt/go/bin
+
+    cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/ 2>/dev/null
+    cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
+    cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir 2>/dev/null
     
-    sudo cp -rf /opt/go/bin/*.json ~/ 2>/dev/null
-    sudo cp -rf /opt/go/bin/*.json /home/bottos 2>/dev/null
-    sudo cp -rf /opt/go/bin/*.json /opt/go/bin/core 2>/dev/null
-    sudo cp -rf /opt/go/bin/*.json /opt/go/bin/core/cmd_dir 2>/dev/null
-	sudo cp /opt/go/bin/*.xml /opt/go/bin/config 2>/dev/null
-
-    sudo cp -rf /opt/go/bin/*.xml /opt/go/bin/config 2>/dev/null
-	
-	    
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/ass-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/dash-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/exc-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/log.json 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/req-log.xml 2>/dev/null
-    sudo cp -f /opt/go/bin/config/log.xml /opt/go/bin/config/dash-log.xml 2>/dev/null
-
-    sudo cp -f /opt/go/bin/config/*.xml /opt/go/bin 2>/dev/null
-
-    sudo cp -rf /opt/go/bin/config/* /home/bottos 2>/dev/null
-	sudo mkdir /opt/go/bin/coreconfig 2>/dev/null
-    sudo cp -rf /opt/go/bin/config/*.xml /opt/go/bin/core/config/ 2>/dev/null
-    sudo cp -rf /opt/go/bin/config /opt/go/bin/core/cmd_dir 2>/dev/null
+    chown bottos:bottos $GOPATH/src -R   
+ 
+    echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
+    
+    return	
 }
 
 function setenv()
 {
-    export GOPATH=/mnt/bottos
+    export GOPATH=/home/bottos/mnt/bottos
     export GOROOT=/usr/lib/go
     
-    sudo mkdir -p $GOPATH/src/github.com/howeyc
-    sudo cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/github.com/gopass $GOPATH/src/github.com/howeyc
-    #sudo mv /opt/go/bin/core /opt/go/bin/core_dir
-    
-    sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin/core/cmd_dir
-    sudo cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json /opt/go/bin
+    cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir
+    cp -rf $GOPATH/src/github.com/bottos-project/bottos/bcli/cliconfig.json $USER_HOME_DIR/opt/go/bin
 }
 
 function build_all_modules()
 {
-
     /usr/lib/go/bin/./go build github.com/bottos-project/bottos
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/asset
@@ -685,67 +491,164 @@ function build_all_modules()
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data/datApi
     
-    #sudo rm -rf /opt/go/bin/core
-    #sudo mv /opt/go/bin/core_dir /opt/go/bin/core
-    
-    cp -f bottos      /opt/go/bin/core/
+    cp -f bottos      $USER_HOME_DIR/opt/go/bin/core/ 2>/dev/null
     
     path=`pwd`
-    if [ $path != "/opt/go/bin" ];
+    if [ $path != "$USER_HOME_DIR/opt/go/bin" ];
     then
-        cp -f node        /opt/go/bin
-        cp -f asset       /opt/go/bin
-        cp -f storage     /opt/go/bin
-        cp -f requirement /opt/go/bin
-        cp -f exchange    /opt/go/bin
-        cp -f dasApi      /opt/go/bin
-        cp -f dashboard   /opt/go/bin
-        cp -f data        /opt/go/bin
-        cp -f datApi      /opt/go/bin
+        cp -f node        $USER_HOME_DIR/opt/go/bin
+        cp -f asset       $USER_HOME_DIR/opt/go/bin
+        cp -f storage     $USER_HOME_DIR/opt/go/bin
+        cp -f requirement $USER_HOME_DIR/opt/go/bin
+        cp -f exchange    $USER_HOME_DIR/opt/go/bin
+        cp -f dasApi      $USER_HOME_DIR/opt/go/bin
+        cp -f dashboard   $USER_HOME_DIR/opt/go/bin
+        cp -f data        $USER_HOME_DIR/opt/go/bin
+        cp -f datApi      $USER_HOME_DIR/opt/go/bin
     fi
-    cp -f /opt/go/bin/log.xml  /opt/go/bin/config
-    cp -f /opt/go/bin/log.xml  /opt/go/bin/config/log-req.xml
 
-    cd /opt/go/bin
+    cd $USER_HOME_DIR/opt/go/bin
+}
+
+function swcheck () {
+    rm -rf $GOPATH/src/* 2>/dev/null
+    rm -rf $OPT_GO_BIN/* 2>/dev/null	
+    rm -rf magiccube     2>/dev/null
+    rm -rf /home/bottos/.cache 2>/dev/null
+    cd $USER_HOME_DIR
+    #if [ ! -d $MINIO_SHR ] || [ ! -d $MINIO_COF ];
+    #then	
+        git clone https://github.com/bottos-project/magiccube.git 
+        cp ./magiccube/vendor/minio /usr/local/bin
+        cp ./magiccube/vendor/minio .
+	if [ ! -e /usr/local/bin/minio ];
+	then
+	    miniocheck
+		setminio
+	fi
+        cp -rf ./magiccube/vendor/minio $GOPATH/src
+    	rm -rf ./magiccube 2>/dev/null    
+    	
+	mkdir -p $MINIO_SHR 2>/dev/null
+        mkdir -p $MINIO_COF 2> /dev/null
+        chown bottos:bottos $MINIO_SHR   -R	
+        chown bottos:bottos $MINIO_COF   -R	
+    #fi
+    
+    mkdir -p $OPT_GO_BIN 2>/dev/null
+    mkdir -p $OPT_GO_BIN/core 2>/dev/null
+    mkdir -p $OPT_GO_BIN/core/cmd_dir 2>/dev/null
+
+    mkdir -p $USER_HOME_DIR/opt 2>/dev/null	
+    mkdir -p $USER_HOME_DIR/mnt/bottos/src/github.com/bottos-project/ 2>/dev/null
+    mkdir /home/bto  2>/dev/null   
+    
+    chown bottos:bottos /usr/bin/mongo* 
+    chown bottos:bottos /home/bto   -R
+    chown bottos:bottos $OPT_GO_BIN -R	
+    chown bottos:bottos $OPT_GO_BIN/* -R	
+    chown bottos:bottos $USER_HOME_DIR/mnt/bottos/src/github.com/bottos-project -R	
+    chown bottos:bottos $USER_HOME_DIR/opt   -R
+    chown bottos:bottos $USER_HOME_DIR/opt/* -R
+    chown bottos:bottos $USER_HOME_DIR/mnt/bottos -R	
+    chown bottos:bottos $USER_HOME_DIR/mnt/bottos/* -R	
+
+    wget https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz --directory-prefix=$USER_HOME_DIR
+    
+    if [ ! -f $USER_HOME_DIR/go1.10.1.linux-amd64.tar.gz* ]; then
+        echo "Download golang package failed!"
+        exit 1
+    fi	
+    tar -xzvf $USER_HOME_DIR/go1.10.1.linux-amd64.tar.gz -C /usr/local
+    tar -xzvf $USER_HOME_DIR/go1.10.1.linux-amd64.tar.gz -C /usr/lib
+    
+    rm -rf $USER_HOME_DIR/go1.10.1.linux-amd64.tar.gz 2>&1>/dev/null
+}
+
+function setgopath() {
+    cmd=$(sed  -n "/GOPATH/p" /etc/profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+       sed -i '$a\export GOPATH="/home/bottos/mnt/bottos"' /etc/profile
+    else
+       $(sed -ir "/GOROOT/c\export GOROOT=\"/usr/lib/go\"" /etc/profile)
+    fi
+	
+    cmd=$(sed  -n "/GOROOT/p" /etc/profile |wc -l)
+   
+     if [ $cmd -lt 1 ]; then
+       sed -i "\$a\\export GOROOT=\"$SYS_GOROOT\"" /etc/profile
+    else
+        $(sed -ir "/GOROOT/c\export GOROOT=\"/home/bottos/mnt/bottos\"" /etc/profile)
+    fi
+    
+    cmd=$(sed  -n "/GOPATH/p" $USER_HOME_DIR/.bashrc |wc -l)
+    if [ $cmd -lt 1 ]; then
+       sed -i '$a\export GOPATH="/home/bottos/mnt/bottos"' $USER_HOME_DIR/.bashrc
+    fi
+    
+    cmd=$(sed  -n "/GOROOT/p" $USER_HOME_DIR/.bashrc |wc -l)
+    if [ $cmd -lt 1 ]; then
+        sed -i "\$a\export GOROOT=\"$SYS_GOROOT\"" $USER_HOME_DIR/.bashrc
+    fi
+    
+    cmd=$(sed -n "/export PATH/p" $USER_HOME_DIR/.bashrc |wc -l)
+    if [ $cmd -lt 1 ]; then
+        sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' $USER_HOME_DIR/.bashrc
+    fi
+    
+    cmd=$(sed -n "/export PATH/p" /etc/profile |wc -l)
+    if [ $cmd -lt 1 ]; then
+        sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' /etc/profile
+    fi
+    
+    eth0_ip=$SERVER_IPADR
+    cmd="/bind_ip/c\bind_ip=$eth0_ip"
+    sed -ir $cmd /etc/mongodb.conf
+
+    export GOPATH="/home/bottos/mnt/bottos"
+    export GOROOT="/usr/lib/go"
+
+    if [ $(echo $PATH|grep "\/usr\/lib\/go"|wc -l) -lt 1 ]; then
+        export PATH=$PATH:/usr/lib/go/bin
+    fi	
 }
 
 #main
 case $1 in
     "update")
+        usercheck "bottos"
         download_git_newcode        
         ;;
     "buildstart")
-        usercheck
+        usercheck "bottos"
         stopserv
         
         setenv
         build_all_modules
-        usercheck
         varcheck
         service mongodb start
         startserv
         ;;
-	"start")
-        usercheck
+    "start")
+        usercheck "bottos"
         stopserv
           
         setenv
-        usercheck
         varcheck
         service mongodb start
         startserv 
         ;;
     "stop")
-        usercheck
+        usercheck "bottos"
         stopserv
         ;;
     "deploy")
-	    check_gzpackages
-	    unpackpackages
-        usercheck
+        usercheck "root"
         varcheck   
         prepcheck
         sslcheck
+	swcheck
+        setgopath
         ;;
     "startcore")
         startcore
@@ -761,4 +664,5 @@ case $1 in
         ;;
 esac
 
-exit 0
+#exit 0
+
