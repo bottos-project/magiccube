@@ -15,7 +15,7 @@ Our Goals
 - To build the AI model sharing network “ModelMarket” to facilitate the effective management of the AI development cycle  
 - To implement the hardware sharing network to streamline the AI product registration and communication
 
-# One-Click Deployment a Bottos Node
+# One-Click Deploy a Bottos Node
 
 - **Install**: Login as root, and execute *./startup.sh deploy*
 - **Update source code**: Create user bottos and switch to bottos, and execute *./startup.sh update*
