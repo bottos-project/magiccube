@@ -18,8 +18,8 @@
       "servPath":    "/home/bottos/opt/go/bin",
       "servLst": [
         "storage",
-        "ideApi",
-        "identity",
+        "useApi",
+        "user",
         "reqApi",
         "requirement",
         "assApi",

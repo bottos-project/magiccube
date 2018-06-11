@@ -374,8 +374,8 @@ function stopserv()
 	ps -ef | grep -w ${SERVER_PATH}"reqApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep -w ${SERVER_PATH}"dashboard" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep -w ${SERVER_PATH}"dasApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
-	ps -ef | grep -w ${SERVER_PATH}"identity" | grep -v grep | cut -c 9-15 | xargs kill -s 9
-	ps -ef | grep -w ${SERVER_PATH}"ideApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+	ps -ef | grep -w ${SERVER_PATH}"user" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+	ps -ef | grep -w ${SERVER_PATH}"useApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"storage" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
 	sleep 2
@@ -429,7 +429,8 @@ function download_git_newcode()
         git clone https://github.com/bottos-project/magiccube.git 
         git clone https://github.com/bottos-project/crypto-go.git
         git clone https://github.com/howeyc/gopass.git
-   	
+	git clone https://github.com/bottos-project/msgpack-go.git   	
+
         cd $USER_HOME_DIR
         
         cmd="/MONGO_DB_URL=/c\MONGO_DB_URL=\"$eth0_ip\""
@@ -457,11 +458,13 @@ function download_git_newcode()
    	
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/log.xml $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/config $USER_HOME_DIR/opt/go/bin
+    
+    cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
 
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/ 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
-    cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir 2>/dev/null
-    
+    cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir 2>/dev/null    
+
     chown bottos:bottos $GOPATH/src -R   
  
     echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
@@ -482,8 +485,11 @@ function build_all_modules()
 {
     /usr/lib/go/bin/./go build github.com/bottos-project/bottos
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/node
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/user/useApi
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/user
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/asset
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/storage
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/requirement/reqApi
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/requirement
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/exchange
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard/dasApi
@@ -497,9 +503,12 @@ function build_all_modules()
     if [ $path != "$USER_HOME_DIR/opt/go/bin" ];
     then
         cp -f node        $USER_HOME_DIR/opt/go/bin
+        cp -f user        $USER_HOME_DIR/opt/go/bin
+        cp -f useApi     $USER_HOME_DIR/opt/go/bin
         cp -f asset       $USER_HOME_DIR/opt/go/bin
         cp -f storage     $USER_HOME_DIR/opt/go/bin
         cp -f requirement $USER_HOME_DIR/opt/go/bin
+        cp -f reqApi      $USER_HOME_DIR/opt/go/bin
         cp -f exchange    $USER_HOME_DIR/opt/go/bin
         cp -f dasApi      $USER_HOME_DIR/opt/go/bin
         cp -f dashboard   $USER_HOME_DIR/opt/go/bin
