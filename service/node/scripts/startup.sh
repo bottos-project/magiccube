@@ -570,7 +570,7 @@ function setgopath() {
     if [ $cmd -lt 1 ]; then
        sed -i '$a\export GOPATH="/home/bottos/mnt/bottos"' /etc/profile
     else
-       $(sed -ir "/GOROOT/c\export GOROOT=\"/usr/lib/go\"" /etc/profile)
+       $(sed -ir "/GOPATH/c\export GOPATH=\"/home/bottos/mnt/bottos\"" /etc/profile)
     fi
 	
     cmd=$(sed  -n "/GOROOT/p" /etc/profile |wc -l)
@@ -578,7 +578,7 @@ function setgopath() {
      if [ $cmd -lt 1 ]; then
        sed -i "\$a\\export GOROOT=\"$SYS_GOROOT\"" /etc/profile
     else
-        $(sed -ir "/GOROOT/c\export GOROOT=\"/home/bottos/mnt/bottos\"" /etc/profile)
+       $(sed -ir "/GOROOT/c\export GOROOT=\"/usr/lib/go\"" /etc/profile)
     fi
     
     cmd=$(sed  -n "/GOPATH/p" $USER_HOME_DIR/.bashrc |wc -l)
