@@ -34,7 +34,6 @@ import (
 	"time"
 	"unsafe"
 
-	datautil "github.com/bottos-project/magiccube/service/data/util"
 	"github.com/bottos-project/magiccube/service/node/config"
 	"github.com/bottos-project/magiccube/service/storage/util"
 	log "github.com/sirupsen/logrus"
@@ -121,8 +120,8 @@ type Ippointxy struct {
 
 // StorageDBClusterInfo struct
 type StorageDBClusterInfo struct {
-	Nodetype   string              `bson:"type"`
-	Nodedbinfo datautil.NodeDBInfo `bson:"node"`
+    SeedIP           int64
+    SlaveIP          []int64
 }
 
 func bytesToString(b []byte) string {

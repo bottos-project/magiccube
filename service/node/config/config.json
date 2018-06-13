@@ -26,6 +26,8 @@
         "asset",
         "excApi",
         "exchange",
+        "data",
+        "datApi"
         "dasApi",
         "dashboard"
       ],
