@@ -459,7 +459,7 @@ function download_git_newcode()
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/log.xml $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/config $USER_HOME_DIR/opt/go/bin
     
-    cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
+    cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
 
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/ 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
