@@ -47,23 +47,7 @@ import (
 	"runtime"
 	"strings"
 	"syscall"
-	//"log"
-	//"sync"
-	//"reflect"
-	//"github.com/micro/cli"
-	//"github.com/urfave/cli"
-	//"github.com/hashicorp/consul/version"
-	//"golang.org/x/crypto/ssh"
-	//"encoding/json"
-	//"io/ioutil"
-	//"time"
-	//"net"
-	//"unsafe"
-	//"github.com/fsnotify/fsnotify"
-	//	"github.com/code/bottos/service/storage/blockchain"
-	//"github.com/code/bottos/service/storage/internal/platform/config"
-	//"github.com/code/bottos/service/storage/internal/platform/minio"
-	//"github.com/code/bottos/service/storage/internal/platform/sqlite"
+	global_config "github.com/bottos-project/magiccube/config"
 )
 
 //var wg sync.WaitGroup
@@ -316,7 +300,7 @@ func daemon(nochdir, noclose int) int {
 func sloginit() {
 
 	defer log.Flush()
-	logger, err := log.LoggerFromConfigAsFile("./log.xml")
+	logger, err := log.LoggerFromConfigAsFile("./config/node-log.xml")
 	if err != nil {
 		log.Critical("err parsing config log file", err)
 		os.Exit(1)
@@ -357,7 +341,8 @@ func Register() error {
 	if err != nil {
 		return nil
 	}
-	txAccountSign := &push_sign.TransactionSign{
+	
+    txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
 		CursorNum:   blockheader.HeadBlockNum,
 		CursorLabel: blockheader.CursorLabel,
@@ -386,6 +371,10 @@ func Register() error {
 		return nil
 	}
 
+    //Add chainID Flag
+    chainID,_:=hex.DecodeString(global_config.CHAIN_ID)
+    msg = bytes.Join([][]byte{msg, chainID}, []byte{})
+               
 	signature, err := Sign(util.Sha256(msg), seckey)
 	if err != nil {
 		return nil
