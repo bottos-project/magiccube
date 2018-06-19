@@ -307,11 +307,16 @@ function prepcheck()
 
 function startcontract()
 {
+	sleep 1
 	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/bcli
         cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
-	${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
-	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
-	echo "===CONTRACT DONE==="
+	#${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	#${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+	
+    ${CORE_PROC_FILE_DIR}/./bcli newaccount -name nodeclustermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract nodeclustermng -wasm $CORE_PROC_FILE_DIR/contract/nodeclustermng.wasm &
+	sleep 1
+    echo "===CONTRACT DONE==="
 }
 
 function startserv()
@@ -355,11 +360,12 @@ function startserv()
 
 	startminio
 
-	# start node service , other services will be started by node server
+	startcontract
+	
+    # start node service , other services will be started by node server
     	#nohup ${SERVER_PATH}node > node.file 2>&1
     	${SERVER_PATH}./node
 	
-	#startcontract
         return
 }
 

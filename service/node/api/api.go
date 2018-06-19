@@ -120,8 +120,8 @@ type Ippointxy struct {
 
 // StorageDBClusterInfo struct
 type StorageDBClusterInfo struct {
-    SeedIP           int64
-    SlaveIP          []int64
+    SeedIP           []byte
+    SlaveIP          []byte
 }
 
 func bytesToString(b []byte) string {
