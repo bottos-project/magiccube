@@ -277,11 +277,7 @@ func (u *User) GetTransfer(ctx context.Context, req *api.Request, rsp *api.Respo
 		return err
 	}
 
-	aa,_:=common.HexToBytes(queryMyRequest.Username)
-	log.Info(aa)
-
 	isTrue, err := sign.QueryVerifySign(req.Body)
-	isTrue=true
 	if !isTrue {
 		rsp.Body = errcode.ReturnError(1000, err)
 		return nil
