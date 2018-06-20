@@ -41,7 +41,6 @@ type Data struct {
 
 //global map
 var mslice = make(map[string]int)
-var msliceip = make(map[string]string)
 
 // FileCheck on server
 func (d *Data) FileCheck(ctx context.Context, req *api.Request, rsp *api.Response) error {
@@ -139,12 +138,22 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 	storageOK := 0
 	sliceIp := []*data.Ip{}
 	sliceIp = nil
+	j := 0
+	for _, slice := range fileSlice {
+		nodeTag := &data.Ip{Sguid: slice.Sguid,
+				SnodeIp: nodes.Ip[j].SnodeIp}
+		sliceIp = append(sliceIp, nodeTag)
+		j++
+	}
 	for i := 0; i < m; i++ {
-		sguid := fileSlice[i].Sguid
+		sguid := sliceIp[i].Sguid
+		//2.2.1 get slice ip
+		log.Info("get slice ip")
+		Sip := sliceIp[i].SnodeIp
+		log.Info(i)
+		log.Info(Sip)
 		if mslice[sguid] == 0 {
-			//2.2.1 get slice ip
-			log.Info("get slice ip")
-			Sip := nodes.Ip[i].SnodeIp
+			
 			//Sip := "127.0.0.1"
 			addr := "http://" + Sip + ":8080/rpc"
 			//2.2.2 get slice storage url
@@ -186,15 +195,9 @@ func (d *Data) GetUploadProgress(ctx context.Context, req *api.Request, rsp *api
 				return err
 			}
 			mslice[sguid] = 1
-			msliceip[sguid] = Sip
-			nodeTag := &data.Ip{Sguid: sguid,
-				SnodeIp: Sip}
-			sliceIp = append(sliceIp, nodeTag)
-		} else {
-			nodeTag := &data.Ip{Sguid: sguid,
-				SnodeIp: msliceip[sguid]}
-			sliceIp = append(sliceIp, nodeTag)
-		}
+			
+			
+		} 
 		storageOK++
 	}
 
