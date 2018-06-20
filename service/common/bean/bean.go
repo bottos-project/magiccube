@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -329,4 +329,28 @@ type RecordNum struct {
 	Date           string        `bson:"date"`
 	Timestamp      int           `bson:"timestamp"`
 	CreateTime     time.Time     `bson:"create_time"`
+}
+
+// Transfer struct
+type Transfer struct {
+	ID            bson.ObjectId `bson:"_id,omitempty"`
+	BlockNumber   uint32        `bson:"block_number"`
+	TransactionId string        `bson:"transaction_id"`
+	SequenceNum   uint32        `bson:"sequence_num"`
+	BlockHash     string        `bson:"block_hash"`
+	Contract      string        `bson:"contract"`
+	CursorLabel   uint32        `bson:"cursor_label"`
+	CursorNum     uint32        `bson:"cursor_num"`
+	Lifetime      uint64        `bson:"lifetime"`
+	Method        string        `bson:"method"`
+	Param         struct {
+		From string `bson:"from"`
+		To string `bson:"to"`
+		Value uint64 `bson:"value"`
+	} `bson:"param"`
+	Sender     string    `bson:"sender"`
+	SigAlg     uint32    `bson:"sig_alg"`
+	Signature  string    `bson:"signature"`
+	Version    uint32    `bson:"version"`
+	CreateTime time.Time `bson:"create_time"`
 }
