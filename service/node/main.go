@@ -641,6 +641,11 @@ func InetAtoByte(ip string) []byte {
     return iplst
 }
 
+func InetAtoString(ip string) string {
+    
+    return fmt.Sprintf("%08x", InetAtoN(ip))
+}
+
 //InetAtoN function
 func InetAtoN(ip string) int64 {
 	ipvalue := net.ParseIP(ip).To4()
@@ -655,28 +660,20 @@ func InetAtoN(ip string) int64 {
 
 //SetNodeDBClusterInfo function
 func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
-
 	var dbclusterinfo api.StorageDBClusterInfo
-
-	dbclusterinfo.SeedIP = InetAtoByte(nodeinfos.Node[0].SeedIp)
-    
-    arrcnt := 0
-    dbclusterinfo.SlaveIP = make([]byte, len(nodeinfos.Node[0].SlaveIpLst) * 4 )
+    var iplst string
+	dbclusterinfo.SeedIP = InetAtoString(nodeinfos.Node[0].SeedIp)
 	for _, ip := range nodeinfos.Node[0].SlaveIpLst {
-        iplst := InetAtoByte(ip)
+        iplst = InetAtoString(ip)
 
-        dbclusterinfo.SlaveIP[arrcnt]   = iplst[0]
-        dbclusterinfo.SlaveIP[arrcnt+1] = iplst[1]
-        dbclusterinfo.SlaveIP[arrcnt+2] = iplst[2]
-        dbclusterinfo.SlaveIP[arrcnt+3] = iplst[3]
-
-        arrcnt += 4
+        dbclusterinfo.SlaveIP += iplst
     }
-
     pubkey := keystore.GetPubKey()
     prikey := keystore.GetPriKey()
+    
+    //test2 := api.StorageDBClusterInfo { SeedIP:"1.1.1.1", SlaveIP: "2.2.2.2" }
 
-    PushNodeClusterTrx(nodeinfos, dbclusterinfo, pubkey, prikey)
+    PushNodeClusterTrx(nodeinfos, /*test2*/dbclusterinfo, pubkey, prikey)
     
 }
 
