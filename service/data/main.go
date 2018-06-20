@@ -23,7 +23,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
-	"math/rand"
+	//s"math/rand"
 	"net/http"
 	"time"
 
@@ -313,10 +313,11 @@ func (d *DataService) GetFileStorageNode(ctx context.Context, req *proto.GetFile
 
 	i := 0
 	n := len(nodeInfo.SlaveIP)
-	k := rand.Intn(n)
+	//k := rand.Intn(n)
 
 	for _, slice := range fileSlice {
-		j := (i + k) % n
+		//j := (i + k) % n
+		j := i % n
 		node := nodeInfo.SlaveIP[j]
 		nodeTag := &proto.Ip{slice.Sguid,
 			node}

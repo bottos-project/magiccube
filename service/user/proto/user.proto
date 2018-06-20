@@ -8,6 +8,7 @@ service User {
 	rpc Favorite(FavoriteRequest) returns(FavoriteResponse) {};
     rpc GetFavorite(GetFavoriteRequest) returns(GetFavoriteResponse) {};
 	rpc Transfer(PushTxRequest) returns(PushTxResponse) {};
+	rpc GetTransfer(GetTransferRequest) returns(GetTransferResponse) {};
 	rpc QueryMyBuy (QueryMyBuyRequest) returns (QueryMyBuyResponse) {};
 }
 
@@ -194,4 +195,35 @@ message Buy {
 	string storage_hash = 9;
 	uint64 expiretime = 10;
 	uint64 timestamp = 11;
+}
+
+
+message GetTransferRequest {
+	int32 page_size = 1;
+	int32 page_num = 2;
+	string username = 3;
+	string random = 4;
+	string signature = 5;
+}
+
+message GetTransferResponse {
+	int32 code = 1;
+	TransferListData data = 2;
+	string msg =3;
+}
+
+message TransferListData{
+	int32 page_num = 2;
+	int32 row_count = 1;
+	repeated Transfer row = 3;
+}
+
+message Transfer {
+	string transaction_id = 1;
+	string from = 2;
+	string to = 3;
+	uint64 Value = 4;
+
+	uint64 timestamp = 5;
+	uint32 block_number = 6;
 }

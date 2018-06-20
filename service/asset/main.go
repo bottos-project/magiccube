@@ -167,6 +167,7 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDReq
 		var where2 = &bson.M{"method": "buydata", "param.info.assetid": req.AssetId, "param.info.username": req.Sender}
 		log.Debug(where2)
 		count1, err = mgo.DB(config.DB_NAME).C("Transactions").Find(where2).Count()
+		log.Debug("Transactions: ", count1)
 		if err != nil {
 			log.Error(err)
 		}

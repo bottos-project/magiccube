@@ -246,6 +246,59 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	return nil
 }
 
+//GetTransfer is to query Transfer List
+func (u *User) GetTransfer(ctx context.Context, req *user_proto.GetTransferRequest, rsp *user_proto.GetTransferResponse) error {
+	var pageNum, pageSize, skip int = 1, 20, 0
+	if req.PageNum > 0 {
+		pageNum = int(req.PageNum)
+	}
+
+	if req.PageSize > 0 && req.PageSize < 20 {
+		pageSize = int(req.PageSize)
+	}
+
+	skip = (pageNum - 1) * pageSize
+
+	var where = bson.M{"method": "transfer","$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+		//&bson.M{"method": "transfer", []bson.M{"$or": bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	//var where = &bson.M{"method": "transfer", []bson.M{"$or": bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	 //{"$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	//var where = &bson.M{"method": "transfer", "param.to": req.Username}
+
+	var ret []bean.Transfer
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err := mgo.DB(config.DB_NAME).C("Transactions").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	mgo.DB(config.DB_NAME).C("Transactions").Find(where).Sort("-create_time").Skip(skip).Limit(pageSize).All(&ret)
+
+	var rows = []*user_proto.Transfer{}
+	for _, v := range ret {
+		//var ret2 bean.AssetBean
+		//mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.assetid": v.Param.Info.AssetId, "create_time": bson.M{"$lt": v.CreateTime}}).Sort("-create_time").Limit(1).One(&ret2)
+		log.Info(v)
+		rows = append(rows, &user_proto.Transfer{
+			TransactionId: v.TransactionId,
+			From: v.Param.From,
+			To: v.Param.To,
+			Value: v.Param.Value,
+			BlockNumber:v.BlockNumber,
+			Timestamp: uint64(v.CreateTime.Unix()),
+		})
+	}
+
+	rsp.Data = &user_proto.TransferListData{
+		RowCount: int32(count),
+		PageNum:  int32(pageNum),
+		Row:      rows,
+	}
+	return nil
+}
+
 //QueryMyBuy is to query buyInfo
 func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest, rsp *user_proto.QueryMyBuyResponse) error {
 	var pageNum, pageSize, skip int = 1, 20, 0
