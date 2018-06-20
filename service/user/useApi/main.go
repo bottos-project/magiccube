@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -99,7 +99,7 @@ func (u *User) Register(ctx context.Context, req *api.Request, rsp *api.Response
 		log.Error(err)
 		return err
 	}
-	log.Info(registerRequest)
+	log.Info("registerRequest",registerRequest)
 
 	match, err := regexp.MatchString("^[a-z][a-z1-9]{2,15}$", registerRequest.Account.Name)
 	if err != nil {
@@ -259,6 +259,35 @@ func (u *User) Transfer(ctx context.Context, req *api.Request, rsp *api.Response
 	response, err := u.Client.Transfer(ctx, &pushTxRequest)
 	if err != nil {
 
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+// GetTransfer is to QueryMyTransfer List
+func (u *User) GetTransfer(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyRequest user.GetTransferRequest
+	err := json.Unmarshal([]byte(body), &queryMyRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	isTrue, err := sign.QueryVerifySign(req.Body)
+	if !isTrue {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.GetTransfer(ctx, &queryMyRequest)
+
+
+	if err != nil {
+		log.Error(err)
 		return err
 	}
 

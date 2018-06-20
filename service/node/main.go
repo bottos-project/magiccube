@@ -24,45 +24,30 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
-	"strings"
-	"syscall"
-
 	pack "github.com/bottos-project/bottos/contract/msgpack"
 	aes "github.com/bottos-project/crypto-go/crypto/aes"
 	"github.com/bottos-project/crypto-go/crypto/secp256k1"
+	"github.com/bottos-project/gopass"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/service/common/data"
 	push_sign "github.com/bottos-project/magiccube/service/common/signature/push"
+	"github.com/bottos-project/magiccube/service/common/util"
 	commonutil "github.com/bottos-project/magiccube/service/common/util"
 	datautil "github.com/bottos-project/magiccube/service/data/util"
 	"github.com/bottos-project/magiccube/service/node/api"
 	"github.com/bottos-project/magiccube/service/node/config"
 	"github.com/bottos-project/magiccube/service/node/keystore"
-	slog "github.com/cihub/seelog"
-	"github.com/bottos-project/gopass"
+	log "github.com/cihub/seelog"
 	"github.com/micro/go-micro"
 	"github.com/protobuf/proto"
-	log "github.com/sirupsen/logrus"
-	//"log"
-	//"sync"
-	//"reflect"
-	//"github.com/micro/cli"
-	//"github.com/urfave/cli"
-	//"github.com/hashicorp/consul/version"
-	//"golang.org/x/crypto/ssh"
-	//"encoding/json"
-	//"io/ioutil"
-	//"time"
-	//"net"
-	//"unsafe"
-	//"github.com/fsnotify/fsnotify"
-	//	"github.com/code/bottos/service/storage/blockchain"
-	//"github.com/code/bottos/service/storage/internal/platform/config"
-	//"github.com/code/bottos/service/storage/internal/platform/minio"
-	//"github.com/code/bottos/service/storage/internal/platform/sqlite"
+	"math/big"
+	"net"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"syscall"
+	global_config "github.com/bottos-project/magiccube/config"
 )
 
 //var wg sync.WaitGroup
@@ -74,7 +59,7 @@ func execShell(s string) {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	fmt.Printf("%s", out.String())
 }
@@ -197,14 +182,14 @@ func CheckKeyStore(nodeinfo api.NodeInfos, UserPwd string) error {
 
 			if api.PathExist(filepath) == false {
 				errinfo := "*ERROR* Failed to search the keystone file : " + filepath
-				log.Println(errinfo)
+				log.Info(errinfo)
 				err = errors.New(errinfo)
 				return err
 			}
 
-			log.Println("Check keystone file ok ...Now decrypt file:", filepath)
+			log.Info("Check keystone file ok ...Now decrypt file:", filepath)
 			key, Account := aes.KeyDecrypt(filepath, UserPwd)
-			log.Println("DECRYPT KEYSTORE DONE! Account:", Account, ", key:", key)
+			log.Info("DECRYPT KEYSTORE DONE! Account:", Account, ", key:", key)
 
 		}
 	}
@@ -289,7 +274,7 @@ func daemon(nochdir, noclose int) int {
 	// create a new SID for the child process
 	sret, serrno := syscall.Setsid()
 	if serrno != nil {
-		log.Printf("Error: syscall.Setsid errno: %d", serrno)
+		log.Error("Error: syscall.Setsid errno: %d", serrno)
 	}
 	if sret < 0 {
 		return -1
@@ -314,24 +299,108 @@ func daemon(nochdir, noclose int) int {
 
 func sloginit() {
 
-	defer slog.Flush()
-	logger, err := slog.LoggerFromConfigAsFile("./log.xml")
+	defer log.Flush()
+	logger, err := log.LoggerFromConfigAsFile("./config/node-log.xml")
 	if err != nil {
-		slog.Critical("err parsing config log file", err)
+		log.Critical("err parsing config log file", err)
 		os.Exit(1)
 		return
 	}
-	slog.ReplaceLogger(logger)
-
-	slog.Trace("Hello , World !!!")
-	slog.Debug("Hello , World !!!")
-
+	log.ReplaceLogger(logger)
+	//log.Trace("11 Hello , World !!!")
+	//log.Debug("22 Hello , World !")
 }
 
 //Sign function
 func Sign(msg, seckey []byte) ([]byte, error) {
 	sign, err := secp256k1.Sign(msg, seckey)
 	return sign[:len(sign)-1], err
+}
+
+//NodeUUIDInfo struct
+type NodeUUIDInfo struct {
+	UserName string
+	PubKey   string
+}
+
+//Register function
+func Register() error {
+	//slog.Info("req:", req);
+	blockheader, err := data.BlockHeader()
+	if err != nil {
+		return nil
+	}
+
+	var nodeUUIDinfo NodeUUIDInfo
+
+	//Register account
+	nodeUUIDinfo.UserName = keystore.GetAccount()
+	nodeUUIDinfo.PubKey = keystore.GetPubKey()
+
+	accountbuf, err := pack.Marshal(nodeUUIDinfo)
+	if err != nil {
+		return nil
+	}
+	
+    txAccountSign := &push_sign.TransactionSign{
+		Version:     1,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 20,
+		Sender:      nodeUUIDinfo.UserName,
+		Contract:    "nodemng",
+		Method:      "nodeinforeg",
+		Param:       accountbuf,
+		SigAlg:      1,
+	}
+
+	msg, err := proto.Marshal(txAccountSign)
+	if err != nil {
+		return nil
+	}
+
+	key := keystore.GetPriKey()
+
+	if len(key) <= 0 {
+		return nil
+	}
+
+	seckey, err := hex.DecodeString(key)
+
+	if err != nil {
+		return nil
+	}
+
+    //Add chainID Flag
+    chainID,_:=hex.DecodeString(global_config.CHAIN_ID)
+    msg = bytes.Join([][]byte{msg, chainID}, []byte{})
+               
+	signature, err := Sign(util.Sha256(msg), seckey)
+	if err != nil {
+		return nil
+	}
+
+	txAccount := &bean.TxBean{
+		Version:     1,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 20,
+		Sender:      nodeUUIDinfo.UserName,
+		Contract:    "nodemng",
+		Method:      "nodeinforeg",
+		Param:       hex.EncodeToString(accountbuf),
+		SigAlg:      1,
+		Signature:   hex.EncodeToString(signature),
+	}
+
+	ret, err := data.PushTransaction(txAccount)
+	if err != nil {
+		return nil
+	}
+
+	log.Info("ret-account:", ret.Result.TrxHash)
+
+	return nil
 }
 
 func main() {
@@ -341,7 +410,7 @@ func main() {
 	fmt.Println("\nPlease input your password for generating keystore: ")
 	input1, err = gopass.GetPasswd()
 
-	if err!= nil || len(input1) <= 0 {
+	if err != nil || len(input1) <= 0 {
 		fmt.Println("Input error! Failed to start node.")
 		return
 	}
@@ -356,7 +425,6 @@ func main() {
 	UserPwd := input
 
 	sloginit()
-
 	service := micro.NewService(
 		micro.Name("go.micro.srv.node"),
 		micro.Version("2.0.0"),
@@ -398,8 +466,8 @@ func main() {
 	if InitDatabase(nodeinfos) != nil {
 		return
 	}
-
-	SetNodeDBClusterInfo()
+    
+	SetNodeDBClusterInfo(nodeinfos)
 
 	fmt.Println("Starting Server ...")
 
@@ -409,46 +477,64 @@ func main() {
 	//user_proto.RegisterUserHandler(service.Server(), new(User))
 
 	if err := service.Run(); err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 }
 
-//PushNodeClusterTrx function
-func PushNodeClusterTrx(value interface{}, prikey string) {
-
-	blockheader, err := data.BlockHeader()
+//NewNodeClusterAccount function
+func NewNodeClusterAccount(nodeinfos api.NodeInfos, value interface{}, pubkey string, prikey string) {
+    
+    pubkey = "0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f"
+    prikey = "b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45"
+	
+    blockheader, err := data.BlockHeader()
 	if err != nil {
 		return
 	}
 
-	accountbuf, err := pack.Marshal(value)
+	type NewAccountParam struct {
+		Name   string
+		Pubkey string
+	}
+
+	useraccount := &NewAccountParam {
+		Name:   "nodeclustermng",
+		Pubkey: pubkey,
+	}
+
+	accountbuf, err := pack.Marshal(useraccount)
 	if err != nil {
 		return
 	}
+
 	txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
 		CursorNum:   blockheader.HeadBlockNum,
 		CursorLabel: blockheader.CursorLabel,
-		Lifetime:    blockheader.HeadBlockTime + 20,
-		Sender:      "bottos",
-		Contract:    "nodemng",
-		Method:      "nodeinforeg2",
+		Lifetime:    blockheader.HeadBlockTime + 100,
+		Sender:      "delta",
+		Contract:    "bottos",
+		Method:      "newaccount",
 		Param:       accountbuf,
 		SigAlg:      1,
 	}
-
-	msg, err := proto.Marshal(txAccountSign)
-	if err != nil {
+	
+    msg, err2 := proto.Marshal(txAccountSign)
+	if err2 != nil {
 		return
 	}
-	//配对的pubkey   0401787e34de40f3aeb4c28259637e8c9e84b5a58f57b3c23f010f4dc7230dffced4976238196bd32cd90569d66f747525b194ca83146965df092d2585b975d0d3
-	seckey, err := hex.DecodeString(prikey) //("81407d25285450184d29247b5f06408a763f3057cba6db467ff999710aeecf8e")
-	if err != nil {
+	
+    seckey, err3 := hex.DecodeString(prikey)
+	if err3 != nil {
 		return
 	}
+    
+    //Add chainID Flag
+    chainID,_:=hex.DecodeString(global_config.CHAIN_ID)
+    msg = bytes.Join([][]byte{msg, chainID}, []byte{})
 
-	signature, err := Sign(commonutil.Sha256(msg), seckey)
-	if err != nil {
+	signature, err4 := Sign(commonutil.Sha256(msg), seckey)
+	if err4 != nil {
 		return
 	}
 
@@ -456,43 +542,142 @@ func PushNodeClusterTrx(value interface{}, prikey string) {
 		Version:     1,
 		CursorNum:   blockheader.HeadBlockNum,
 		CursorLabel: blockheader.CursorLabel,
-		Lifetime:    blockheader.HeadBlockTime + 20,
-		Sender:      "bottos",
-		Contract:    "bottos",
-		Method:      "newaccount",
+		Lifetime:    blockheader.HeadBlockTime + 100,
+		Sender:      "delta",//nodeinfos.Node[0].NodeName,
+		Contract:    "bottos",//"nodeclustermng",
+		Method:      "newaccount",//"reg",
 		Param:       hex.EncodeToString(accountbuf),
 		SigAlg:      1,
 		Signature:   hex.EncodeToString(signature),
 	}
+    
+	_, err = data.PushTransaction(txAccount)
+	if err != nil {
+		log.Error("NewNodeClusterAccount ERROR !")
+		return
+	}
+}
 
-	ret, err := data.PushTransaction(txAccount)
+//PushNodeClusterTrx function
+func PushNodeClusterTrx(nodeinfos api.NodeInfos, value /*interface{}*/ api.StorageDBClusterInfo, pubkey string, prikey string) {
+    
+    pubkey = "0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f"
+    prikey = "b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45"
+	
+    blockheader, err := data.BlockHeader()
 	if err != nil {
 		return
 	}
 
-	log.Info("ret-account:", ret.Result.TrxHash)
+	accountbuf, err := pack.Marshal(value)
+    if err != nil {
+        return
+    }
+    
+	txAccountSign := &push_sign.TransactionSign{
+		Version:     1,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 100,
+		Sender:      "bottos",
+		Contract:    "nodeclustermng",
+		Method:      "reg",
+		Param:       accountbuf,
+		SigAlg:      1,
+	}
+	
+    msg, err2 := proto.Marshal(txAccountSign)
+	if err2 != nil {
+		return
+	}
+	
+    seckey, err3 := hex.DecodeString(prikey)
+	if err3 != nil {
+		return
+	}
+    
+    //Add chainID Flag
+    chainID,_:=hex.DecodeString(global_config.CHAIN_ID)
+    msg = bytes.Join([][]byte{msg, chainID}, []byte{})
+
+	signature, err4 := Sign(commonutil.Sha256(msg), seckey)
+	if err4 != nil {
+		return
+	}
+	
+	txAccount := &bean.TxBean{
+		Version:     1,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 100,
+		Sender:      "bottos",
+		Contract:    "nodeclustermng",
+		Method:      "reg",
+		Param:       hex.EncodeToString(accountbuf),
+		SigAlg:      1,
+		Signature:   hex.EncodeToString(signature),
+	}
+    
+	_, err = data.PushTransaction(txAccount)
+	if err != nil {
+		log.Error("PushTransaction ERROR ! txAccount.Param: ", txAccount.Param)
+		return
+	}
+}
+
+//InetNtoA function
+func InetNtoA(ip int64) string {
+
+	return fmt.Sprintf("%d.%d.%d.%d",
+		byte(ip>>24), byte(ip>>16), byte(ip>>8), byte(ip))
+}
+
+//InetNtoByte function
+func InetAtoByte(ip string) []byte {
+    var iplst []byte = make([]byte, 4)
+
+	fmt.Sscanf(ip, "%d.%d.%d.%d", &iplst[0], &iplst[1], &iplst[2], &iplst[3])
+    
+    return iplst
+}
+
+//InetAtoN function
+func InetAtoN(ip string) int64 {
+	ipvalue := net.ParseIP(ip).To4()
+	if ipvalue == nil {
+		return -1
+	}
+	ret := big.NewInt(0)
+	ret.SetBytes(ipvalue)
+
+	return ret.Int64()
 }
 
 //SetNodeDBClusterInfo function
-func SetNodeDBClusterInfo() {
-	nodeinfos := api.ReadFile(config.CONFIG_FILE)
+func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
 
 	var dbclusterinfo api.StorageDBClusterInfo
 
-	nodeuuid := keystore.GetUUID()
-	dbclusterinfo.Nodetype = nodeuuid
-	dbclusterinfo.Nodedbinfo.NodeId = nodeuuid
-	dbclusterinfo.Nodedbinfo.NodeIP = nodeinfos.Node[0].IpAddr
-	dbclusterinfo.Nodedbinfo.NodePort = nodeinfos.Node[0].BtoPort
-	dbclusterinfo.Nodedbinfo.NodeAddress = nodeinfos.Node[0].IpAddr
-	dbclusterinfo.Nodedbinfo.SeedIP = nodeinfos.Node[0].SeedIp
-	dbclusterinfo.Nodedbinfo.SlaveIP = nodeinfos.Node[0].SlaveIpLst
+	dbclusterinfo.SeedIP = InetAtoByte(nodeinfos.Node[0].SeedIp)
+    
+    arrcnt := 0
+    dbclusterinfo.SlaveIP = make([]byte, len(nodeinfos.Node[0].SlaveIpLst) * 4 )
+	for _, ip := range nodeinfos.Node[0].SlaveIpLst {
+        iplst := InetAtoByte(ip)
 
-	log.Println("Repository: ", config.MONGO_DB_URL)
-	Repository := api.NewMongoRepository(config.MONGO_DB_URL)
-	log.Println("Repository: ", Repository)
+        dbclusterinfo.SlaveIP[arrcnt]   = iplst[0]
+        dbclusterinfo.SlaveIP[arrcnt+1] = iplst[1]
+        dbclusterinfo.SlaveIP[arrcnt+2] = iplst[2]
+        dbclusterinfo.SlaveIP[arrcnt+3] = iplst[3]
 
-	PushNodeClusterTrx(dbclusterinfo, keystore.GetPriKey())
+        arrcnt += 4
+    }
+
+    pubkey := keystore.GetPubKey()
+    prikey := keystore.GetPriKey()
+
+    PushNodeClusterTrx(nodeinfos, dbclusterinfo, pubkey, prikey)
+    
 }
 
 //NodeApi interface

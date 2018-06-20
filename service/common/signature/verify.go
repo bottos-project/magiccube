@@ -31,6 +31,8 @@ import (
 	"github.com/bottos-project/magiccube/service/common/util"
 	log "github.com/cihub/seelog"
 	"github.com/golang/protobuf/proto"
+	"bytes"
+	"github.com/bottos-project/magiccube/config"
 )
 
 // PushVerifySign push verify sign
@@ -93,8 +95,9 @@ func PushVerifySign(jsonstr string, pubkey ...string) (bool, error) {
 	}
 
 	//Add chainID Flag
-	//chainID,_:=hex.DecodeString("000000000001")
-	//seri_data = bytes.Join([][]byte{seri_data, chainID}, []byte{})
+
+	chainID,_:=hex.DecodeString(config.CHAIN_ID)
+	seriData = bytes.Join([][]byte{seriData, chainID}, []byte{})
 
 	return crypto.VerifySign(pubKey, util.Sha256(seriData), sign), nil
 }
