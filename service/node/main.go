@@ -569,7 +569,7 @@ func PushNodeClusterTrx(nodeinfos api.NodeInfos, value /*interface{}*/ api.Stora
 		return
 	}
 
-	accountbuf, err := pack.Marshal(value)
+	accountbuf, err := pack.Marshal(&value)
     if err != nil {
         return
     }
@@ -671,9 +671,7 @@ func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
     pubkey := keystore.GetPubKey()
     prikey := keystore.GetPriKey()
     
-    //test2 := api.StorageDBClusterInfo { SeedIP:"1.1.1.1", SlaveIP: "2.2.2.2" }
-
-    PushNodeClusterTrx(nodeinfos, /*test2*/dbclusterinfo, pubkey, prikey)
+    PushNodeClusterTrx(nodeinfos, dbclusterinfo, pubkey, prikey)
     
 }
 
