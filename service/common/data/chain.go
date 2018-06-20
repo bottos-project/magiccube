@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -144,7 +144,7 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Info(string(body))
+	log.Info(account, string(body))
 	if resp.StatusCode != 200 {
 		return nil, errors.New(string(body))
 	}
