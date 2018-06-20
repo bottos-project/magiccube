@@ -559,7 +559,7 @@ func NewNodeClusterAccount(nodeinfos api.NodeInfos, value interface{}, pubkey st
 }
 
 //PushNodeClusterTrx function
-func PushNodeClusterTrx(nodeinfos api.NodeInfos, value /*interface{}*/ api.StorageDBClusterInfo, pubkey string, prikey string) {
+func PushNodeClusterTrx(value api.StorageDBClusterInfo, pubkey string, prikey string) {
     
     pubkey = "0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f"
     prikey = "b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45"
@@ -625,6 +625,73 @@ func PushNodeClusterTrx(nodeinfos api.NodeInfos, value /*interface{}*/ api.Stora
 	}
 }
 
+//PushNodeCapacityTrx function
+func PushNodeCapacityTrx( value api.NodeCapacityInfo, pubkey string, prikey string) {
+    return 
+    pubkey = "0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f"
+    prikey = "b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45"
+	
+    blockheader, err := data.BlockHeader()
+	if err != nil {
+		return
+	}
+
+	accountbuf, err := pack.Marshal(&value)
+    if err != nil {
+        return
+    }
+    
+	txAccountSign := &push_sign.TransactionSign{
+		Version:     1,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 100,
+		Sender:      "bottos",
+		Contract:    "nodecapacitymng",
+		Method:      "reg",
+		Param:       accountbuf,
+		SigAlg:      1,
+	}
+	
+    msg, err2 := proto.Marshal(txAccountSign)
+	if err2 != nil {
+		return
+	}
+	
+    seckey, err3 := hex.DecodeString(prikey)
+	if err3 != nil {
+		return
+	}
+    
+    //Add chainID Flag
+    chainID,_:=hex.DecodeString(global_config.CHAIN_ID)
+    msg = bytes.Join([][]byte{msg, chainID}, []byte{})
+
+	signature, err4 := Sign(commonutil.Sha256(msg), seckey)
+	if err4 != nil {
+		return
+	}
+	
+	txAccount := &bean.TxBean{
+		Version:     1,
+		CursorNum:   blockheader.HeadBlockNum,
+		CursorLabel: blockheader.CursorLabel,
+		Lifetime:    blockheader.HeadBlockTime + 100,
+		Sender:      "bottos",
+		Contract:    "nodecapacitymng",
+		Method:      "reg",
+		Param:       hex.EncodeToString(accountbuf),
+		SigAlg:      1,
+		Signature:   hex.EncodeToString(signature),
+	}
+    
+	_, err = data.PushTransaction(txAccount)
+	if err != nil {
+		log.Error("PushTransaction ERROR ! txAccount.Param: ", txAccount.Param)
+		return
+	}
+}
+
 //InetNtoA function
 func InetNtoA(ip int64) string {
 
@@ -661,8 +728,10 @@ func InetAtoN(ip string) int64 {
 //SetNodeDBClusterInfo function
 func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
 	var dbclusterinfo api.StorageDBClusterInfo
+    var dbcapacityinfo api.NodeCapacityInfo
     var iplst string
-	dbclusterinfo.SeedIP = InetAtoString(nodeinfos.Node[0].SeedIp)
+	
+    dbclusterinfo.SeedIP = InetAtoString(nodeinfos.Node[0].SeedIp)
 	for _, ip := range nodeinfos.Node[0].SlaveIpLst {
         iplst = InetAtoString(ip)
 
@@ -671,8 +740,11 @@ func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
     pubkey := keystore.GetPubKey()
     prikey := keystore.GetPriKey()
     
-    PushNodeClusterTrx(nodeinfos, dbclusterinfo, pubkey, prikey)
+    PushNodeClusterTrx(dbclusterinfo, pubkey, prikey)
     
+    dbcapacityinfo = api.NodeCapacityInfo{ NodeUUID: keystore.GetUUID(), StorageCapacity: nodeinfos.Node[0].StorageCapacity }
+
+    PushNodeCapacityTrx(dbcapacityinfo, pubkey, prikey)
 }
 
 //NodeApi interface

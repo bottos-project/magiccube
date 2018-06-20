@@ -62,6 +62,7 @@ type NodeInfo struct {
 	ServLst     []string
 	SeedIp      string
 	SlaveIpLst  []string
+    StorageCapacity string
 }
 
 //NodeInfos struct
@@ -122,6 +123,12 @@ type Ippointxy struct {
 type StorageDBClusterInfo struct {
     SeedIP          string `json:"seedip"`
     SlaveIP         string `json:"slaveip"`
+}
+
+// NodeCapacityInfo struct
+type NodeCapacityInfo struct {
+    NodeUUID        string `json:nodeuuid`
+    StorageCapacity string `json:storagecapacity`
 }
 
 func bytesToString(b []byte) string {
