@@ -44,25 +44,25 @@ import (
 
 //NodeInfo struct
 type NodeInfo struct {
-	NodeName    string
-	IpAddr      string
-	UserName    string
-	PassWord    string
-	BtoPort     string
-	BtoUser     string
-	BtoPath     string
-	WalletIP    string
-	KeyPath     string
-	ProdUser    string
-	DbUser      string
-	DbPass      string
-	StorageSize string
-	StoragePath string
-	ServPath    string
-	ServLst     []string
-	SeedIp      string
-	SlaveIpLst  []string
-    StorageCapacity string
+	NodeName        string
+	IpAddr          string
+	UserName        string
+	PassWord        string
+	BtoPort         string
+	BtoUser         string
+	BtoPath         string
+	WalletIP        string
+	KeyPath         string
+	ProdUser        string
+	DbUser          string
+	DbPass          string
+	StorageSize     string
+	StoragePath     string
+	ServPath        string
+	ServLst         []string
+	SeedIp          string
+	SlaveIpLst      []string
+	StorageCapacity string
 }
 
 //NodeInfos struct
@@ -121,14 +121,15 @@ type Ippointxy struct {
 
 // StorageDBClusterInfo struct
 type StorageDBClusterInfo struct {
-    SeedIP          string `json:"seedip"`
-    SlaveIP         string `json:"slaveip"`
+	SeedIP  string `json:"seedip"`
+	SlaveIP string `json:"slaveip"`
 }
 
 // NodeCapacityInfo struct
 type NodeCapacityInfo struct {
-    NodeUUID        string `json:nodeuuid`
-    StorageCapacity string `json:storagecapacity`
+	NodeUUID        string `json:nodeuuid`
+	NodeIP          string `json:nodeip`
+	StorageCapacity string `json:storagecapacity`
 }
 
 func bytesToString(b []byte) string {
