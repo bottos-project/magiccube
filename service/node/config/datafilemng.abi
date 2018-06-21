@@ -1,0 +1,66 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "FileInfo",
+      "base": "",
+      "fields": {
+        "userName": "string",
+        "sessionId": "string",
+        "fileSize": "uint64",
+        "fileName": "string",
+        "filePolicy": "string",
+        "authPath": "string",
+        "fileNumber": "uint64",
+        "signature": "string"
+      }
+    },{
+      "name": "FileRegReq",
+      "base": "",
+      "fields": {
+        "fileHash": "string",
+        "info": "FileInfo"
+      }
+    },{
+      "name": "FileAuthReq",
+      "base": "",
+      "fields": {
+        "storgeHash": "string",
+        "userName": "string"
+      }
+    },{
+      "name": "AuthBasicInfo",
+      "base": "",
+      "fields": {
+        "authType": "string",
+        "authPath": "string"
+      }
+    },{
+      "name": "FileAuthInfo",
+      "base": "",
+      "fields": {
+        "hashUserName": "string",
+        "info": "AuthBasicInfo"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "fileregreq",
+      "type": "FileRegReq"
+    },{
+      "action_name": "fileauthreq",
+      "type": "FileAuthReq"
+    }
+  ],
+  "tables": [{
+      "table_name": "fileauthinfo",
+      "index_type": "string",
+      "key_names": [
+        "hashUserName"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "FileAuthInfo"
+    }
+  ]
+}

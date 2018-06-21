@@ -1,0 +1,28 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "UserInfo",
+      "base": "",
+      "fields": {
+        "didid": "string",
+        "info": "string"
+      }
+    },{
+      "name": "UserLogin",
+      "base": "",
+      "fields": {
+        "userName": "string",
+        "randomNum": "uint32"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "userinfo",
+      "type": "UserInfo"
+    },{
+      "action_name": "userlogin",
+      "type": "UserLogin"
+    }
+  ],
+  "tables": []
+}

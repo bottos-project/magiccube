@@ -1,0 +1,54 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "asset_info",
+      "base": "",
+      "fields": {
+        "user_name": "string",
+        "asset_name": "string",
+        "asset_type": "string",
+        "feature_tag": "string",
+        "sample_path": "string",
+        "sample_hash": "string",
+        "storage_path": "string",
+        "storage_hash": "string",
+        "expire_time": "uint32",
+        "price": "uint64",
+        "description": "string",
+        "upload_date": "uint32",
+        "signature": "string"
+      }
+    },{
+      "name": "reg_asset_req",
+      "base": "",
+      "fields": {
+        "asset_id": "string",
+        "info": "asset_info"
+      }
+    },{
+      "name": "regassettbl",
+      "base": "",
+      "fields": {
+        "asset_id": "string",
+        "info": "asset_info"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "regassetreq",
+      "type": "reg_asset_req"
+    }
+  ],
+  "tables": [{
+      "table_name": "regassettbl",
+      "index_type": "string",
+      "key_names": [
+        "asset_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "regassettbl"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "data_requirement_info",
+      "base": "",
+      "fields": {
+        "user_name": "string",
+        "session_id": "string",
+        "requirement_name": "string",
+        "feature_tag": "uint64",
+        "sample_path": "string",
+        "sample_hash": "string",
+        "expire_time": "uint32",
+        "price": "uint64",
+        "description": "string",
+        "publish_date": "uint32",
+        "signature": "string"
+      }
+    },{
+      "name": "requirereq",
+      "base": "",
+      "fields": {
+        "require_id": "string",
+        "info": "data_requirement_info"
+      }
+    },{
+      "name": "requiretbl",
+      "base": "",
+      "fields": {
+        "require_id": "string",
+        "info": "data_requirement_info"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "requirereq",
+      "type": "requirereq"
+    }
+  ],
+  "tables": [{
+      "table_name": "requiretbl",
+      "index_type": "string",
+      "key_names": [
+        "require_id"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "requiretbl"
+    }
+  ]
+}

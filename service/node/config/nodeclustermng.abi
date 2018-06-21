@@ -1,0 +1,18 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "NodeCluster",
+      "base": "",
+      "fields": {
+        "nodeIP": "string",
+        "clusterIP": "string"
+      }
+    }
+  ],
+  "actions": [{
+      "action_name": "nodecluster",
+      "type": "NodeCluster"
+    }
+  ],
+  "tables": []
+}
