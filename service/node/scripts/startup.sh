@@ -308,17 +308,90 @@ function prepcheck()
 function startcontract()
 {
 	sleep 1
+	BLUE='\e[1;34m'
+	NC='\e[0m'	
+
+    	mkdir -p $CORE_PROC_FILE_DIR/contract 2>/dev/null
 	/usr/lib/go/bin/./go build github.com/bottos-project/bottos/bcli
-    cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
-	#${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
-	#${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+        cp -rf bcli ${CORE_PROC_FILE_DIR} 2>/dev/null
+	cp -rf ~/mnt/bottos/src/github.com/bottos-project/magiccube/service/node/config/*.wasm $CORE_PROC_FILE_DIR/contract/ 2>/dev/null
+	cp -rf ~/mnt/bottos/src/github.com/bottos-project/magiccube/service/node/config/*.abi  $CORE_PROC_FILE_DIR/contract/ 2>/dev/null
 	
-    mkdir -p $CORE_PROC_FILE_DIR/contract 2>/dev/null
-    cp -rf ~/mnt/bottos/src/github.com/bottos-project/magiccube/service/node/config/nodeclustermng.wasm $CORE_PROC_FILE_DIR/contract/
-    ${CORE_PROC_FILE_DIR}/./bcli newaccount -name nodeclustermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	echo 
+	echo -e "${BLUE}######## Deploy Contract usermng ########${NC}"
+	echo 
+	${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract usermng -abi $CORE_PROC_FILE_DIR/contract/usermng.abi &	
+	sleep 5
+	echo 
+	echo -e "${BLUE}######## Deploy Contract nodeclustermng ########${NC}"
+	echo 
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name nodeclustermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
 	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract nodeclustermng -wasm $CORE_PROC_FILE_DIR/contract/nodeclustermng.wasm &
-	sleep 1
-    echo "===CONTRACT DONE==="
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract nodeclustermng -abi $CORE_PROC_FILE_DIR/contract/nodeclustermng.abi &	
+        sleep 5
+	echo 
+	echo -e "${BLUE}######## Deploy Contract assetmng ########${NC}"
+	echo
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name assetmng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract assetmng -wasm $CORE_PROC_FILE_DIR/contract/assetmng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract assetmng -abi $CORE_PROC_FILE_DIR/contract/assetmng.abi &	
+	
+	echo 
+	echo -e "${BLUE}######## Deploy Contract datadealmng ########${NC}"
+	echo 
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name datadealmng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract datadealmng -wasm $CORE_PROC_FILE_DIR/contract/datadealmng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract datadealmng -abi $CORE_PROC_FILE_DIR/contract/datadealmng.abi &	
+        sleep 5
+	echo 
+	echo -e "${BLUE}######## Deploy Contract datafilemng ########${NC}"
+	echo 
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name datafilemng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract datafilemng -wasm $CORE_PROC_FILE_DIR/contract/datafilemng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract datafilemng -abi $CORE_PROC_FILE_DIR/contract/datafilemng.abi &	
+        sleep 5
+	echo 
+	echo -e "${BLUE}######## Deploy Contract datareqmng ########${NC}"
+	echo 
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name datareqmng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract datareqmng -wasm $CORE_PROC_FILE_DIR/contract/datareqmng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract datareqmng -abi $CORE_PROC_FILE_DIR/contract/datareqmng.abi &	
+        sleep 5
+	echo 
+	echo -e "${BLUE}######## Deploy Contract favoritemng ########${NC}"
+	echo 
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name favoritemng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract favoritemng -wasm $CORE_PROC_FILE_DIR/contract/favoritemng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract favoritemng -abi $CORE_PROC_FILE_DIR/contract/favoritemng.abi &	
+        sleep 5
+	echo 
+	echo -e "${BLUE}######## Deploy Contract nodemng ########${NC}"
+	echo 
+    	${CORE_PROC_FILE_DIR}/./bcli newaccount -name nodemng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract nodemng -wasm $CORE_PROC_FILE_DIR/contract/nodemng.wasm &
+	sleep 3
+	${CORE_PROC_FILE_DIR}/./bcli deployabi -contract nodemng -abi $CORE_PROC_FILE_DIR/contract/nodemng.abi &	
+        sleep 5
+	echo 
+	
+    	echo "===CONTRACT DONE==="
 }
 
 function startserv()
