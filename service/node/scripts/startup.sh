@@ -313,6 +313,7 @@ function startcontract()
 	#${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
 	#${CORE_PROC_FILE_DIR}/./bcli deploycode -contract usermng -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
 	
+    mkdir -p $CORE_PROC_FILE_DIR/contract 2>/dev/null
     cp -rf ~/mnt/bottos/src/github.com/bottos-project/magiccube/service/node/config/nodeclustermng.wasm $CORE_PROC_FILE_DIR/contract/
     ${CORE_PROC_FILE_DIR}/./bcli newaccount -name nodeclustermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
 	${CORE_PROC_FILE_DIR}/./bcli deploycode -contract nodeclustermng -wasm $CORE_PROC_FILE_DIR/contract/nodeclustermng.wasm &
@@ -466,13 +467,13 @@ function download_git_newcode()
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/config $USER_HOME_DIR/opt/go/bin
     
     cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
+    cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin 2>/dev/null
 
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/ 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir 2>/dev/null    
 
     chown bottos:bottos $GOPATH/src -R   
- 
     echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
     
     return	
