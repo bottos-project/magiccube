@@ -509,7 +509,6 @@ function download_git_newcode()
         git clone https://github.com/bottos-project/bottos.git 
         git clone https://github.com/bottos-project/magiccube.git 
         git clone https://github.com/bottos-project/crypto-go.git
-        git clone https://github.com/howeyc/gopass.git
 	git clone https://github.com/bottos-project/msgpack-go.git   	
 
         cd $USER_HOME_DIR

@@ -27,7 +27,7 @@ import (
 	pack "github.com/bottos-project/bottos/contract/msgpack"
 	aes "github.com/bottos-project/crypto-go/crypto/aes"
 	"github.com/bottos-project/crypto-go/crypto/secp256k1"
-	"github.com/bottos-project/gopass"
+	"github.com/howeyc/gopass"
 	global_config "github.com/bottos-project/magiccube/config"
 	"github.com/bottos-project/magiccube/service/common/bean"
 	"github.com/bottos-project/magiccube/service/common/data"
