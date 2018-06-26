@@ -29,7 +29,9 @@
         "data",
         "datApi",
         "dasApi",
-        "dashboard"
+        "dashboard",
+	"branch",
+	"diurnal"
       ],
 	  "seedIp": "10.10.10.184",	
 	  "slaveIpLst": [

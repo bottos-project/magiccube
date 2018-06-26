@@ -468,6 +468,10 @@ function stopserv()
     	kill -9 $datapid 2>/dev/null
     	datApipid=$(pidof datApi)
     	kill -9 $datApipid 2>/dev/null
+    	branchpid=$(pidof branch)
+    	kill -9 $branchpid 2>/dev/null
+	diurnalpid=$(pidof diurnal)
+	kill -9 $diurnalpid 2>/dev/null
 	sleep 1
 
 	ps -ef | grep -w ${SERVER_PATH}"./node" | grep -v grep | cut -c 9-15 | xargs kill -s 9
@@ -568,14 +572,18 @@ function build_all_modules()
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/user/useApi
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/user
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/asset
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/asset/assApi
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/storage
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/requirement/reqApi
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/requirement
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/exchange
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/exchange/excApi
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard/dasApi
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard   
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data/datApi
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/branch
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/diurnal
     
     cp -f bottos      $USER_HOME_DIR/opt/go/bin/core/ 2>/dev/null
     
