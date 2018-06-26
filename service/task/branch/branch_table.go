@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -163,6 +163,8 @@ func BranchTable() {
 				return
 			}
 			bson.Unmarshal(data, &presale)
+			mgo.DB("bottos").C(prefix + v.Method).UpdateAll(bson.M{"param.datapresaleid": presale.DataPresaleId}, bson.M{"$inc": bson.M{"param.info.isRead": 0}})
+			
 			if presale.OpTyte == 2 || presale.OpTyte == 3 {
 				where = bson.M{"param.datapresaleid": presale.DataPresaleId, "param.info.optype": presale.Info.OpTyte}
 				set := bson.M{"$set": bson.M{"param.info.optype": 3}}

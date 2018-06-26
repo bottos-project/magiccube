@@ -1,4 +1,4 @@
-// Copyright 2017~2022 The Bottos Authors
+﻿// Copyright 2017~2022 The Bottos Authors
 // This file is part of the Bottos Chain library.
 // Created by Rocket Core Team of Bottos.
 
@@ -30,6 +30,7 @@ import (
 	"io/ioutil"
 
 	log "github.com/cihub/seelog"
+	"bytes"
 )
 
 // ErrorCode struct
@@ -161,7 +162,7 @@ func GetAllErrorInfos() []ErrorCode {
 		log.Error(err)
 		panic(err)
 	}
-
+	fr = bytes.TrimPrefix(fr, []byte("\xef\xbb\xbf")) // Or []byte{239, 187, 191}
 	var d []ErrorCode
 	err = json.Unmarshal(fr, &d)
 	if err != nil {
