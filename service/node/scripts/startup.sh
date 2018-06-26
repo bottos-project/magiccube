@@ -537,6 +537,7 @@ function download_git_newcode()
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/* $GOPATH/src  2>/dev/null 
    	
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/config $USER_HOME_DIR/opt/go/bin
+    cp -rf $GOPATH/src/github.com/bottos-project/magiccube/error  $USER_HOME_DIR/opt/go/bin
     
     cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
     cp -rf $GOPATH/src/github.com/bottos-project/bottos/corelog.xml $USER_HOME_DIR/opt/go/bin 2>/dev/null
@@ -544,7 +545,7 @@ function download_git_newcode()
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/ 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir 2>/dev/null    
-
+	
     chown bottos:bottos $GOPATH/src -R   
     echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
     
