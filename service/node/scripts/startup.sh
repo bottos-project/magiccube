@@ -582,8 +582,8 @@ function build_all_modules()
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/dashboard   
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data
     /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/data/datApi
-    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/branch
-    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/diurnal
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/task/branch
+    /usr/lib/go/bin/./go build github.com/bottos-project/magiccube/service/task/diurnal
     
     cp -f bottos      $USER_HOME_DIR/opt/go/bin/core/ 2>/dev/null
     
