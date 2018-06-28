@@ -183,6 +183,7 @@ func (u *Asset) QueryAssetByID(ctx context.Context, req *proto.QueryAssetByIDReq
 		SampleHash:     ret.Param.Info.SampleHash,
 		StorageHash:    ret.Param.Info.StorageHash,
 		ExpireTime:     ret.Param.Info.ExpireTime,
+		TokenType:      ret.Param.Info.TokenType,
 		Price:          ret.Param.Info.Price,
 		OpType:         ret.Param.Info.OpType,
 		Description:    ret.Param.Info.Description,

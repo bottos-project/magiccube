@@ -149,6 +149,7 @@ func (u *Requirement) QueryById(ctx context.Context, req *requirement_proto.Quer
 		FeatureTag:      ret.Param.Info.Featuretag,
 		SampleHash:      ret.Param.Info.Samplehash,
 		ExpireTime:      ret.Param.Info.Expiretime,
+		TokenType:       ret.Param.Info.Tokentype,
 		Price:           ret.Param.Info.Price,
 		Description:     ret.Param.Info.Description,
 		PublishDate:     uint64(ret.CreateTime.Unix()),
