@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -38,24 +38,50 @@ type Dashboard struct{}
 
 // GetNodeInfos on chain
 func (u *Dashboard) GetNodeInfos(ctx context.Context, req *dashboard_proto.GetNodeInfosRequest, rsp *dashboard_proto.GetNodeInfosResponse) error {
-	//var ret []bean.NodeBean
-	//var mgo = mgo.Session()
-	//defer mgo.Close()
-	//mgo.DB(config.DB_NAME).C("Messages").Find(&bson.M{"type": "nodeinforeg"}).All(&ret)
-	//var rows = []*dashboard_proto.NodeInfoData{}
-	//for _, v := range ret {
-	//	rows = append(rows, &dashboard_proto.NodeInfoData{
-	//		Ip : v.Data.BasicInfo.NodeIP,
-	//		Port : v.Data.BasicInfo.NodePort,
-	//		Address : v.Data.BasicInfo.NodeAddress,
-	//	})
-	//}
-	//
-	//log.Info(rows)
-	//rsp.Code = 0
-	//rsp.Data = rows
-	//rsp.Msg = "OK"
+	var pageNum, pageSize, skip int = 1, 20, 0
+	if req.PageNum > 0 {
+		pageNum = int(req.PageNum)
+	}
+
+	if req.PageSize > 0 && req.PageSize < 20 {
+		pageSize = int(req.PageSize)
+	}
+
+	skip = (pageNum - 1) * pageSize
+
+
+	var ret []bean.NodeInfo
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err := mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+
+	var rows = []*dashboard_proto.NodeInfoDataRow{}
+	for _, v := range ret {
+		rows = append(rows, &dashboard_proto.NodeInfoDataRow{
+			Ip:   v.IP,
+			Port: v.Port,
+			Position: &dashboard_proto.Position{
+				Longitude: v.Pointx,
+				Latitude:  v.Pointy,
+			},
+		})
+	}
+
+	var data = &dashboard_proto.NodeInfoData{
+		RowCount: uint32(count),
+		PageNum:  uint32(pageNum),
+		Row:      rows,
+	}
+	log.Info(data)
+	rsp.Data = data
 	return nil
+
 }
 
 // GetTxList on chain
@@ -458,6 +484,49 @@ func getRecent7DayTimeSlice() []int {
 		timeSlice = append(timeSlice, unixTime-i*24*60*60)
 	}
 	return timeSlice
+}
+
+// GetNodeIp on chain
+func (u *Dashboard) GetNodeIp(ctx context.Context, req *dashboard_proto.GetNodeIpRequest, rsp *dashboard_proto.GetNodeIpResponse) error {
+	var pageNum, pageSize, skip int = 1, 20, 0
+	if req.PageNum > 0 {
+		pageNum = int(req.PageNum)
+	}
+
+	if req.PageSize > 0 && req.PageSize < 20 {
+		pageSize = int(req.PageSize)
+	}
+
+	skip = (pageNum - 1) * pageSize
+
+	var ret []bean.NodeIp
+	var mgo = mgo.Session()
+	defer mgo.Close()
+
+	count, err := mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+
+	var rows = []*dashboard_proto.NodeIpDataRow{}
+	for _, v := range ret {
+		rows = append(rows, &dashboard_proto.NodeIpDataRow{
+			Ip:     v.IP,
+			Port:   v.Port,
+			NodeId: v.NodeId,
+		})
+	}
+
+	var data = &dashboard_proto.NodeIpData{
+		RowCount: uint32(count),
+		PageNum:  uint32(pageNum),
+		Row:      rows,
+	}
+	log.Info(data)
+	rsp.Data = data
+	return nil
 }
 
 func init() {

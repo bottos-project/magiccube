@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -95,108 +95,18 @@ func (s *Dashboard) GetBlockInfo(ctx context.Context, req *api.Request, rsp *api
 
 // GetNodeInfos on chain
 func (s *Dashboard) GetNodeInfos(ctx context.Context, req *api.Request, rsp *api.Response) error {
-	//response, err := s.Client.GetNodeInfos(ctx, &dashboard.GetNodeInfosRequest{})
-	//if err != nil {
-	//	return err
-	//}
 
 	rsp.StatusCode = 200
-	var data []*dashboard.NodeInfoData
+	body := req.Body
+	log.Info(body)
+	var nodeInfosRequest dashboard.GetNodeInfosRequest
+	err := json.Unmarshal([]byte(body), &nodeInfosRequest)
+	response, err := s.Client.GetNodeInfos(ctx, &nodeInfosRequest)
+	if err != nil {
+		log.Error(err)
+	}
 
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 116.240405,
-			Latitude:  39.953014,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 117.006668,
-			Latitude:  39.959003,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 116.471118,
-			Latitude:  39.607907,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 116.214313,
-			Latitude:  40.08658,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 121.295489,
-			Latitude:  31.250492,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 121.141681,
-			Latitude:  31.259884,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 121.652545,
-			Latitude:  31.250492,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 121.545428,
-			Latitude:  31.161224,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 120.147418,
-			Latitude:  30.154743,
-		},
-	})
-
-	data = append(data, &dashboard.NodeInfoData{
-		Ip:   "127.0.0.1",
-		Port: "8080",
-		Position: &dashboard.Position{
-			Longitude: 119.949903,
-			Latitude:  30.166617,
-		},
-	})
-
-	rsp.Body = errcode.Return(dashboard.GetNodeInfosResponse{
-		Code: 1,
-		Data: data,
-	})
+	rsp.Body = errcode.Return(response)
 	return nil
 }
 
@@ -283,6 +193,24 @@ func (s *Dashboard) GetAllTypeTotal(ctx context.Context, req *api.Request, rsp *
 	rsp.Body = errcode.Return(response)
 	return nil
 }
+
+// GetNodeIp on chain
+func (s *Dashboard) GetNodeIp(ctx context.Context, req *api.Request, rsp *api.Response) error {
+
+	rsp.StatusCode = 200
+	body := req.Body
+	log.Info(body)
+	var nodeIpRequest dashboard.GetNodeIpRequest
+	err := json.Unmarshal([]byte(body), &nodeIpRequest)
+	response, err := s.Client.GetNodeIp(ctx, &nodeIpRequest)
+	if err != nil {
+		log.Error(err)
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 
 func init() {
 	logger, err := log.LoggerFromConfigAsFile("./config/dash-log.xml")
