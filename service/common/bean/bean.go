@@ -257,6 +257,7 @@ type PreSaleBean struct {
 			Datareqid string `bson:"datareqid"`
 			Optype    uint32 `bson:"optype"`
 			Username  string `bson:"username"`
+			IsRead    uint32  `bson:"isread"`
 		} `bson:"info"`
 	} `bson:"param"`
 	Sender     string    `bson:"sender"`

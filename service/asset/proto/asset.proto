@@ -25,6 +25,12 @@ service Asset {
     };
     rpc QueryMyPreSale (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {
     };
+
+    rpc ModifyMyNoticeStatus (ModifyMyNoticeStatusRequest) returns (ModifyMyNoticeStatusResponse) {
+    };
+
+    rpc GetUnreadNoticeNum (GetUnreadNoticeNumRequest) returns (GetUnreadNoticeNumResponse) {
+    };
 }
 
 message PushTxRequest {
@@ -217,6 +223,34 @@ message QueryNoticeRow {
     string data_req_id = 5;
     string data_req_name = 6;
     string consumer = 7;
-    string read_flag = 8;
+    uint32 isRead = 8;
     uint64 time = 9;
+}
+
+message ModifyMyNoticeStatusRequest {
+    string noticeId = 1;
+    string username = 2;
+    string random = 3;
+    string signature = 4;
+}
+
+
+message ModifyMyNoticeStatusResponse {
+    int32 code = 1;
+    string data = 2;
+    string msg = 3;
+}
+
+
+message GetUnreadNoticeNumRequest {
+    uint32 page_size = 1;
+    uint32 page_num = 2;
+    string username = 3;
+    string random = 4;
+    string signature = 5;
+}
+message GetUnreadNoticeNumResponse {
+    int32 code = 1;
+    uint32 data = 2;
+    string msg = 3;
 }

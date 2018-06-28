@@ -801,6 +801,7 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeReque
 			DataReqId:   v.Param.Info.Datareqid,
 			DataReqName: ret3.Param.Info.Reqname,
 			Consumer:    v.Param.Info.Consumer,
+			IsRead:      v.Param.Info.IsRead,
 			Time:        uint64(v.CreateTime.Unix()),
 		})
 	}
@@ -812,6 +813,27 @@ func (u *Asset) QueryMyNotice(ctx context.Context, req *proto.QueryMyNoticeReque
 	}
 	log.Info(data)
 	rsp.Data = data
+	return nil
+}
+
+// GetUnreadNoticeNum Get Unread Notice Num number
+func (u *Asset) GetUnreadNoticeNum(ctx context.Context, req *proto.GetUnreadNoticeNumRequest, rsp *proto.GetUnreadNoticeNumResponse) error {
+	var where interface{}
+	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
+	if len(req.Username) > 0 {
+		where = &bson.M{"param.info.consumer": req.Username, "param.info.isRead": bson.M{"$exists": false}}
+	}
+	log.Info(where)
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err := mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+
+	rsp.Data = uint32(count)
 	return nil
 }
 
@@ -874,6 +896,59 @@ func (u *Asset) QueryMyPreSale(ctx context.Context, req *proto.QueryMyNoticeRequ
 	}
 	log.Info(data)
 	rsp.Data = data
+	return nil
+}
+
+// ModifyMyNoticeStatus On DB
+func (u *Asset) ModifyMyNoticeStatus(ctx context.Context, req *proto.ModifyMyNoticeStatusRequest, rsp *proto.ModifyMyNoticeStatusResponse) error {
+	var where interface{}
+	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
+	log.Info(req.NoticeId)
+	if len(req.Username) > 0 {
+		where = &bson.M{"param.info.consumer": req.Username, "param.datapresaleid": req.NoticeId}
+	}
+
+	log.Info(where)
+
+	var ret []bean.PreSaleBean
+
+	var mgo = mgo.Session()
+	defer mgo.Close()
+	count, err := mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Count()
+	log.Info(count)
+	if err != nil {
+		log.Error(err)
+	}
+	//mgo.DB(config.DB_NAME).C("pre_presale").Find(where).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+	mgo.DB(config.DB_NAME).C("pre_presale").Update(where, bson.M{"$set": bson.M{"param.info.isread": 1}})
+	//Update(bson.M{"_id": bson.ObjectIdHex("5204af979955496907000001")}, bson.M{"$pull": bson.M{ "interests": "Golang", }})
+
+	var rows = []*proto.QueryNoticeRow{}
+	for _, v := range ret {
+		var ret2 bean.AssetBean
+		mgo.DB(config.DB_NAME).C("pre_assetreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.assetid": v.Param.Info.Assetid}).One(&ret2)
+		var ret3 bean.Requirement
+		mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(bson.M{"param.info.optype": bson.M{"$in": []int32{1, 2}}, "param.datareqid": v.Param.Info.Datareqid}).One(&ret3)
+
+		rows = append(rows, &proto.QueryNoticeRow{
+			NoticeId:    v.Param.Datapresaleid,
+			Username:    v.Param.Info.Username,
+			AssetId:     v.Param.Info.Assetid,
+			AssetName:   ret2.Param.Info.AssetName,
+			DataReqId:   v.Param.Info.Datareqid,
+			DataReqName: ret3.Param.Info.Reqname,
+			Consumer:    v.Param.Info.Consumer,
+			Time:        uint64(v.CreateTime.Unix()),
+		})
+	}
+
+	var data = &proto.QueryNoticeData{
+		RowCount: uint32(count),
+		//PageNum:  uint32(pageNum),
+		Row: rows,
+	}
+	log.Info(data)
+	//rsp.Data = data
 	return nil
 }
 
