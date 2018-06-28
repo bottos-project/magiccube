@@ -161,6 +161,7 @@ type Requirement struct {
 			Expiretime  uint64 `bson:"expiretime"`
 			Featuretag  uint64 `bson:"featuretag"`
 			Optype      uint32 `bson:"optype"`
+			Tokentype  string `bson:"tokentype"`
 			Price       uint64 `bson:"price"`
 			Reqname     string `bson:"reqname"`
 			Reqtype     uint64 `bson:"reqtype"`
@@ -198,6 +199,7 @@ type AssetBean struct {
 			StorageHash string `bson:"storagehash"`
 			ExpireTime  uint32 `bson:"expiretime"`
 			OpType      uint32 `bson:"optype"`
+			TokenType string `bson:"tokentype"`
 			Price       uint64 `bson:"price"`
 			Description string `bson:"description"`
 		} `bson:"info"`

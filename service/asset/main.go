@@ -123,6 +123,7 @@ func (u *Asset) QueryAsset(ctx context.Context, req *proto.QueryRequest, rsp *pr
 			SampleHash:  v.Param.Info.SampleHash,
 			StorageHash: v.Param.Info.StorageHash,
 			ExpireTime:  v.Param.Info.ExpireTime,
+			TokenType:v.Param.Info.TokenType,
 			Price:       v.Param.Info.Price,
 			OpType:      v.Param.Info.OpType,
 			Description: v.Param.Info.Description,
@@ -821,7 +822,7 @@ func (u *Asset) GetUnreadNoticeNum(ctx context.Context, req *proto.GetUnreadNoti
 	var where interface{}
 	//where = bson.M{"param.info.optype": bson.M{"$in": []int32{1,2}}}
 	if len(req.Username) > 0 {
-		where = &bson.M{"param.info.consumer": req.Username, "param.info.isRead": bson.M{"$exists": false}}
+		where = &bson.M{"param.info.consumer": req.Username, "param.info.isread": bson.M{"$exists": false}}
 	}
 	log.Info(where)
 

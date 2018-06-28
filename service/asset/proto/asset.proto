@@ -160,9 +160,10 @@ message AssetData {
     string storage_hash = 7;
     uint32 expire_time = 8;
     uint32 op_type = 9;
-    uint64 price = 10;
-    string description = 11;
-    uint64 create_time = 12;
+    string token_type = 10;
+    uint64 price = 11;
+    string description = 12;
+    uint64 create_time = 13;
 }
 
 message QueryAssetByIDRequest {
