@@ -38,32 +38,17 @@ type Dashboard struct{}
 
 // GetNodeInfos on chain
 func (u *Dashboard) GetNodeInfos(ctx context.Context, req *dashboard_proto.GetNodeInfosRequest, rsp *dashboard_proto.GetNodeInfosResponse) error {
-	var pageNum, pageSize, skip int = 1, 20, 0
-	if req.PageNum > 0 {
-		pageNum = int(req.PageNum)
-	}
-
-	if req.PageSize > 0 && req.PageSize < 20 {
-		pageSize = int(req.PageSize)
-	}
-
-	skip = (pageNum - 1) * pageSize
-
 
 	var ret []bean.NodeInfo
 
 	var mgo = mgo.Session()
 	defer mgo.Close()
-	count, err := mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Count()
-	log.Info(count)
-	if err != nil {
-		log.Error(err)
-	}
-	mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
 
-	var rows = []*dashboard_proto.NodeInfoDataRow{}
+	mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Sort("-_id").All(&ret)
+
+	var rows = []*dashboard_proto.NodeInfoData{}
 	for _, v := range ret {
-		rows = append(rows, &dashboard_proto.NodeInfoDataRow{
+		rows = append(rows, &dashboard_proto.NodeInfoData{
 			Ip:   v.IP,
 			Port: v.Port,
 			Position: &dashboard_proto.Position{
@@ -73,13 +58,9 @@ func (u *Dashboard) GetNodeInfos(ctx context.Context, req *dashboard_proto.GetNo
 		})
 	}
 
-	var data = &dashboard_proto.NodeInfoData{
-		RowCount: uint32(count),
-		PageNum:  uint32(pageNum),
-		Row:      rows,
-	}
-	log.Info(data)
-	rsp.Data = data
+
+	log.Info(rows)
+	rsp.Data = rows
 	return nil
 
 }

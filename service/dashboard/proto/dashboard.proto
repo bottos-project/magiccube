@@ -27,24 +27,15 @@ service Dashboard {
     };
 }
 
-message GetNodeInfosRequest {
-    uint32 page_size = 1;
-    uint32 page_num = 2;
-}
+message GetNodeInfosRequest {}
 
 message GetNodeInfosResponse {
     int32 code = 1;
-    NodeInfoData data = 2;
+    repeated NodeInfoData data = 2;
     string msg = 3;
 }
 
 message NodeInfoData {
-    uint32 page_num = 1;
-    uint32 row_count = 2;
-    repeated NodeInfoDataRow row = 3;
-}
-
-message NodeInfoDataRow {
     string ip = 1;
     string port = 2;
     Position position = 3;
