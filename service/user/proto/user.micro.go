@@ -30,6 +30,8 @@ It has these top-level messages:
 	FavoriteData
 	GetBalanceRequest
 	GetBalanceResponse
+	GetBalanceRow
+	Position
 	QueryMyBuyRequest
 	QueryMyBuyResponse
 	BuyData
@@ -79,6 +81,7 @@ type UserClient interface {
 	Transfer(ctx context.Context, in *PushTxRequest, opts ...client.CallOption) (*PushTxResponse, error)
 	GetTransfer(ctx context.Context, in *GetTransferRequest, opts ...client.CallOption) (*GetTransferResponse, error)
 	QueryMyBuy(ctx context.Context, in *QueryMyBuyRequest, opts ...client.CallOption) (*QueryMyBuyResponse, error)
+	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error)
 }
 
 type userClient struct {
@@ -189,6 +192,16 @@ func (c *userClient) QueryMyBuy(ctx context.Context, in *QueryMyBuyRequest, opts
 	return out, nil
 }
 
+func (c *userClient) GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...client.CallOption) (*GetBalanceResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "User.GetBalance", in)
+	out := new(GetBalanceResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for User service
 
 type UserHandler interface {
@@ -201,6 +214,7 @@ type UserHandler interface {
 	Transfer(context.Context, *PushTxRequest, *PushTxResponse) error
 	GetTransfer(context.Context, *GetTransferRequest, *GetTransferResponse) error
 	QueryMyBuy(context.Context, *QueryMyBuyRequest, *QueryMyBuyResponse) error
+	GetBalance(context.Context, *GetBalanceRequest, *GetBalanceResponse) error
 }
 
 func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) {
@@ -245,4 +259,8 @@ func (h *User) GetTransfer(ctx context.Context, in *GetTransferRequest, out *Get
 
 func (h *User) QueryMyBuy(ctx context.Context, in *QueryMyBuyRequest, out *QueryMyBuyResponse) error {
 	return h.UserHandler.QueryMyBuy(ctx, in, out)
+}
+
+func (h *User) GetBalance(ctx context.Context, in *GetBalanceRequest, out *GetBalanceResponse) error {
+	return h.UserHandler.GetBalance(ctx, in, out)
 }

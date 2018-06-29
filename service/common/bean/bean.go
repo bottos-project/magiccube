@@ -406,3 +406,13 @@ type NodeIp struct {
 	Version    uint32    `bson:"version"`
 	CreateTime time.Time `bson:"create_time"`
 }
+
+// GetBalance struct
+type GetBalance struct {
+	Tokentype      string        `bson:"tokentype"`
+	Value      uint64        `bson:"value"`
+	Cny        string        `bson:"cny"`
+	Usd        string        `bson:"usd"`
+
+	CreateTime time.Time `bson:"create_time"`
+}

@@ -1,15 +1,27 @@
 ﻿syntax = "proto3";
 
 service User {
-	rpc Register(RegisterRequest) returns(RegisterResponse) {};
-	rpc Login(LoginRequest) returns(LoginResponse) {};
-	rpc GetBlockHeader(GetBlockHeaderRequest) returns(GetBlockHeaderResponse) {};
-	rpc GetAccountInfo(GetAccountInfoRequest) returns(GetAccountInfoResponse) {};
-	rpc Favorite(FavoriteRequest) returns(FavoriteResponse) {};
-    rpc GetFavorite(GetFavoriteRequest) returns(GetFavoriteResponse) {};
-	rpc Transfer(PushTxRequest) returns(PushTxResponse) {};
-	rpc GetTransfer(GetTransferRequest) returns(GetTransferResponse) {};
-	rpc QueryMyBuy (QueryMyBuyRequest) returns (QueryMyBuyResponse) {};
+    rpc Register (RegisterRequest) returns (RegisterResponse) {
+    };
+    rpc Login (LoginRequest) returns (LoginResponse) {
+    };
+    rpc GetBlockHeader (GetBlockHeaderRequest) returns (GetBlockHeaderResponse) {
+    };
+    rpc GetAccountInfo (GetAccountInfoRequest) returns (GetAccountInfoResponse) {
+    };
+    rpc Favorite (FavoriteRequest) returns (FavoriteResponse) {
+    };
+    rpc GetFavorite (GetFavoriteRequest) returns (GetFavoriteResponse) {
+    };
+    rpc Transfer (PushTxRequest) returns (PushTxResponse) {
+    };
+    rpc GetTransfer (GetTransferRequest) returns (GetTransferResponse) {
+    };
+    rpc QueryMyBuy (QueryMyBuyRequest) returns (QueryMyBuyResponse) {
+    };
+
+    rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse) {
+    };
 }
 
 message PushTxRequest {
@@ -74,7 +86,8 @@ message LoginResponse {
 }
 
 
-message GetBlockHeaderRequest{}
+message GetBlockHeaderRequest {
+}
 message GetBlockHeaderResponse {
 	uint32 code = 1;
 	BlockHeader data = 2;
@@ -156,11 +169,25 @@ message FavoriteData {
 message GetBalanceRequest {
 	string username = 1;
 	string random = 2;
+    string token_type = 3;
+    uint32 page_num = 4;
+    uint32 page_size = 5;
 }
 message GetBalanceResponse {
 	uint32 code = 1;
-	string data = 2;
+    repeated  GetBalanceRow data = 2;
 	string msg = 3;
+}
+message GetBalanceRow {
+    string token_type = 1;
+    uint64 value = 2;
+    float cny = 3;
+    float usd = 4;
+}
+
+message Position {
+    string longitude = 1;
+    string latitude = 2;
 }
 
 message QueryMyBuyRequest {

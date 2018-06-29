@@ -285,7 +285,6 @@ func (u *User) GetTransfer(ctx context.Context, req *api.Request, rsp *api.Respo
 
 	response, err := u.Client.GetTransfer(ctx, &queryMyRequest)
 
-
 	if err != nil {
 		log.Error(err)
 		return err
@@ -313,6 +312,33 @@ func (u *User) QueryMyBuy(ctx context.Context, req *api.Request, rsp *api.Respon
 	}
 
 	response, err := u.Client.QueryMyBuy(ctx, &queryMyBuyRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+// GetBalance from chain
+func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	rsp.StatusCode = 200
+	body := req.Body
+	var getBalanceRequest user.GetBalanceRequest
+	err := json.Unmarshal([]byte(body), &getBalanceRequest)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	isTrue, err := sign.QueryVerifySign(req.Body)
+	if !isTrue {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := u.Client.GetBalance(ctx, &getBalanceRequest)
 	if err != nil {
 		log.Error(err)
 		return err
