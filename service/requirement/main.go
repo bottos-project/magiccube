@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -97,6 +97,7 @@ func (u *Requirement) Query(ctx context.Context, req *requirement_proto.QueryReq
 			FeatureTag:      v.Param.Info.Featuretag,
 			SampleHash:      v.Param.Info.Samplehash,
 			ExpireTime:      v.Param.Info.Expiretime,
+			TokenType:       v.Param.Info.Tokentype,
 			Price:           v.Param.Info.Price,
 			Description:     v.Param.Info.Description,
 			PublishDate:     uint64(v.CreateTime.Unix()),
@@ -148,6 +149,7 @@ func (u *Requirement) QueryById(ctx context.Context, req *requirement_proto.Quer
 		FeatureTag:      ret.Param.Info.Featuretag,
 		SampleHash:      ret.Param.Info.Samplehash,
 		ExpireTime:      ret.Param.Info.Expiretime,
+		TokenType:       ret.Param.Info.Tokentype,
 		Price:           ret.Param.Info.Price,
 		Description:     ret.Param.Info.Description,
 		PublishDate:     uint64(ret.CreateTime.Unix()),

@@ -1,37 +1,49 @@
 ﻿syntax = "proto3";
 
 service Dashboard {
-	rpc GetBlockList(GetBlockListRequest) returns(GetBlockListResponse) {};
-	rpc GetBlockInfo(GetBlockInfoRequest) returns(GetBlockInfoResponse) {};
-	rpc GetNodeInfos(GetNodeInfosRequest) returns(GetNodeInfosResponse) {};
-	rpc GetTxList(GetTxListRequest) returns(GetTxListResponse) {};
-	rpc GetTxNum(GetTxNumRequest) returns(GetTxNumResponse) {};
-	rpc GetRequirementNumByDay(GetRequirementNumByDayRequest) returns(GetRequirementNumByDayResponse) {};
-	rpc GetAssetNumByDay(GetAssetNumByDayRequest) returns(GetAssetNumByDayResponse) {};
-	rpc GetAccountNumByDay(GetAccountNumByDayRequest) returns(GetAccountNumByDayResponse) {};
-	rpc GetTxAmount(GetTxAmountRequest) returns(GetTxAmountResponse) {};
-	rpc GetTxNumByDay(GetTxNumByDayRequest) returns(GetTxNumByDayResponse) {};
-	rpc GetTxAmountByDay(GetTxAmountByDayRequest) returns(GetTxAmountByDayResponse);
-	rpc GetAllTypeTotal(GetAllTypeTotalRequest) returns(GetAllTypeTotalResponse);
+    rpc GetBlockList (GetBlockListRequest) returns (GetBlockListResponse) {
+    };
+    rpc GetBlockInfo (GetBlockInfoRequest) returns (GetBlockInfoResponse) {
+    };
+    rpc GetNodeInfos (GetNodeInfosRequest) returns (GetNodeInfosResponse) {
+    };
+    rpc GetTxList (GetTxListRequest) returns (GetTxListResponse) {
+    };
+    rpc GetTxNum (GetTxNumRequest) returns (GetTxNumResponse) {
+    };
+    rpc GetRequirementNumByDay (GetRequirementNumByDayRequest) returns (GetRequirementNumByDayResponse) {
+    };
+    rpc GetAssetNumByDay (GetAssetNumByDayRequest) returns (GetAssetNumByDayResponse) {
+    };
+    rpc GetAccountNumByDay (GetAccountNumByDayRequest) returns (GetAccountNumByDayResponse) {
+    };
+    rpc GetTxAmount (GetTxAmountRequest) returns (GetTxAmountResponse) {
+    };
+    rpc GetTxNumByDay (GetTxNumByDayRequest) returns (GetTxNumByDayResponse) {
+    };
+    rpc GetTxAmountByDay (GetTxAmountByDayRequest) returns (GetTxAmountByDayResponse);
+    rpc GetAllTypeTotal (GetAllTypeTotalRequest) returns (GetAllTypeTotalResponse);
+    rpc GetNodeIp (GetNodeIpRequest) returns (GetNodeIpResponse) {
+    };
 }
 
 message GetNodeInfosRequest {}
 
 message GetNodeInfosResponse {
-	int32 code = 1;
-	repeated NodeInfoData data = 2;
-	string msg = 3;
+    int32 code = 1;
+    repeated NodeInfoData data = 2;
+    string msg = 3;
 }
 
 message NodeInfoData {
-	string ip = 1;
-	string port = 2;
-	Position position = 3;
+    string ip = 1;
+    string port = 2;
+    Position position = 3;
 }
 
 message Position {
-	float longitude = 1;
-	float latitude = 2;
+    string longitude = 1;
+    string latitude = 2;
 }
 
 //message AddressData {
@@ -41,182 +53,212 @@ message Position {
 //}
 
 message GetTxListRequest {
-	uint64 page_num = 1;
-	uint64 page_size = 2;
-	string sort = 3;
-	string username = 4;
+    uint64 page_num = 1;
+    uint64 page_size = 2;
+    string sort = 3;
+    string username = 4;
 }
 
 message GetTxListResponse {
-	int32 code = 1;
-	TxListData data = 2;
-	string msg =3;
+    int32 code = 1;
+    TxListData data = 2;
+    string msg = 3;
 }
 
-message TxListData{
-	uint32 page_num = 1;
-	uint32 row_count = 2;
-	repeated Tx row = 3;
+message TxListData {
+    uint32 page_num = 1;
+    uint32 row_count = 2;
+    repeated Tx row = 3;
 }
 
 message Tx {
-	string transaction_id = 1;
-	string from = 2;
-	string to = 3;
-	uint64 price = 4;
-	string asset_id = 5;
-	string asset_name = 6;
-	uint64 asset_type = 7;
-	uint64 timestamp = 8;
-	uint32 block_number = 9;
+    string transaction_id = 1;
+    string from = 2;
+    string to = 3;
+    uint64 price = 4;
+    string asset_id = 5;
+    string asset_name = 6;
+    uint64 asset_type = 7;
+    uint64 timestamp = 8;
+    uint32 block_number = 9;
 }
 
 message GetBlockListRequest {
-	uint32 page_size = 1;
-	uint32 page_num = 2;
-	string sort = 3;
+    uint32 page_size = 1;
+    uint32 page_num = 2;
+    string sort = 3;
 }
 
 message GetBlockListResponse {
-	uint32 code = 1;
-	BlockData data = 2;
-	string msg = 3;
+    uint32 code = 1;
+    BlockData data = 2;
+    string msg = 3;
 }
 
 message BlockData {
-	uint64 page_num = 1;
-	uint64 row_count = 2;
-	repeated Block row = 3;
+    uint64 page_num = 1;
+    uint64 row_count = 2;
+    repeated Block row = 3;
 }
 
 message Block {
-	uint64 block_number = 1;
-	string block_hash = 2;
-	string prev_block_hash = 3;
-	string merkle_root = 4;
-	uint32 tx_num = 5;
-	string delegate = 6;
-	string delegate_sign = 7;
-	uint64 timestamp = 8;
+    uint64 block_number = 1;
+    string block_hash = 2;
+    string prev_block_hash = 3;
+    string merkle_root = 4;
+    uint32 tx_num = 5;
+    string delegate = 6;
+    string delegate_sign = 7;
+    uint64 timestamp = 8;
 }
 
 message GetBlockInfoRequest {
-	uint64 block_number = 1;
+    uint64 block_number = 1;
 }
 
 message GetBlockInfoResponse {
-	int32 code = 1;
-	BlockInfoData data = 2;
+    int32 code = 1;
+    BlockInfoData data = 2;
 }
 
 message BlockInfoData {
-	Block block = 1;
-	repeated TxList tx_list = 2;
+    Block block = 1;
+    repeated TxList tx_list = 2;
 }
 
 message TxList {
-	string transaction_id = 1;
-	uint32 sequence_num = 2;
-	uint32 cursor_num = 3;
-	uint32 cursor_label = 4;
-	uint64 lifetime = 5;
-	string sender = 6;
-	string contract = 7;
-	string method = 8;
-	string param = 9;
-	uint32 sig_alg = 10;
-	string signature = 11;
-	uint64 create_time = 12;
+    string transaction_id = 1;
+    uint32 sequence_num = 2;
+    uint32 cursor_num = 3;
+    uint32 cursor_label = 4;
+    uint64 lifetime = 5;
+    string sender = 6;
+    string contract = 7;
+    string method = 8;
+    string param = 9;
+    uint32 sig_alg = 10;
+    string signature = 11;
+    uint64 create_time = 12;
 }
 
-message GetRequirementNumByDayRequest {}
+message GetRequirementNumByDayRequest {
+}
 
 message GetRequirementNumByDayResponse {
-	int32 code = 1;
-	repeated RequirementNumByDayData data = 2;
+    int32 code = 1;
+    repeated RequirementNumByDayData data = 2;
 }
 
 message RequirementNumByDayData {
-	int64 time = 1;
-	int64 count = 2;
+    int64 time = 1;
+    int64 count = 2;
 }
 
-message GetTxNumRequest {}
+message GetTxNumRequest {
+}
 
 message GetTxNumResponse {
-	int32 code = 1;
-	Num data = 2;
+    int32 code = 1;
+    Num data = 2;
 }
 
-message GetAssetNumByDayRequest {}
+message GetAssetNumByDayRequest {
+}
 
-message GetAssetNumByDayResponse{
-	int32 code = 1;
-	repeated AssetNumByDayData data = 2;
+message GetAssetNumByDayResponse {
+    int32 code = 1;
+    repeated AssetNumByDayData data = 2;
 }
 
 message AssetNumByDayData {
-	int64 time = 1;
-	int64 count = 2;
+    int64 time = 1;
+    int64 count = 2;
 }
 
-message GetAccountNumByDayRequest {}
+message GetAccountNumByDayRequest {
+}
 
 message GetAccountNumByDayResponse {
-	int32 code = 1;
-	repeated AccountNumByDayData data = 2;
+    int32 code = 1;
+    repeated AccountNumByDayData data = 2;
 }
 
-message AccountNumByDayData{
-	int64 time = 1;
-	int64 count = 2;
+message AccountNumByDayData {
+    int64 time = 1;
+    int64 count = 2;
 }
 
-message GetTxAmountRequest {}
+message GetTxAmountRequest {
+}
 
 message GetTxAmountResponse {
-	int32 code = 1;
-	Num data = 2;
+    int32 code = 1;
+    Num data = 2;
 }
 
-message GetTxNumByDayRequest{}
+message GetTxNumByDayRequest {
+}
 
 message GetTxNumByDayResponse {
-	int32 code = 1;
-	repeated TxNumByDayData data = 2;
+    int32 code = 1;
+    repeated TxNumByDayData data = 2;
 }
 
 message TxNumByDayData {
-	int64 time = 1;
-	int64 count = 2;
+    int64 time = 1;
+    int64 count = 2;
 }
 
 message Num {
-	int64 num = 1;
+    int64 num = 1;
 }
 
-message GetTxAmountByDayRequest {}
+message GetTxAmountByDayRequest {
+}
 
 message GetTxAmountByDayResponse {
-	int32 code = 1;
-	repeated TxAmountByDay data = 2;
+    int32 code = 1;
+    repeated TxAmountByDay data = 2;
 }
 
-message TxAmountByDay{
-	int64 time = 1;
-	int64 count = 2;
+message TxAmountByDay {
+    int64 time = 1;
+    int64 count = 2;
 }
 
 message GetAllTypeTotalRequest {
-	string type = 1;
+    string type = 1;
 }
 
 message GetAllTypeTotalResponse {
-	int32 code = 1;
-	repeated AllTypeData data = 2;
+    int32 code = 1;
+    repeated AllTypeData data = 2;
 }
 
 message AllTypeData {
-	string type = 1;
-	int64 total = 2;
+    string type = 1;
+    int64 total = 2;
+}
+
+message GetNodeIpRequest {
+    uint32 page_size = 1;
+    uint32 page_num = 2;
+}
+
+message GetNodeIpResponse {
+    int32 code = 1;
+    NodeIpData data = 2;
+    string msg = 3;
+}
+
+message NodeIpData {
+    uint32 page_num = 1;
+    uint32 row_count = 2;
+    repeated NodeIpDataRow row = 3;
+}
+
+message NodeIpDataRow {
+    string ip = 1;
+    string port = 2;
+    string nodeId = 3;
 }

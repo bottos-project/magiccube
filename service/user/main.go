@@ -174,6 +174,7 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 
 //GetFavorite is to get Favorite
 func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteRequest, rsp *user_proto.GetFavoriteResponse) error {
+	log.Info("GetFavorite srv start!")
 	var pageNum, pageSize, skip int = 1, 20, 0
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
@@ -218,6 +219,22 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 				Username:  ret2.Param.Info.UserName,
 				GoodsId:   v.Param.Goodsid,
 				GoodsName: ret2.Param.Info.AssetName,
+				Price:     ret2.Param.Info.Price,
+				Time:      uint64(v.CreateTime.Unix()),
+			})
+		}
+	}else if req.GoodsType == "requirement" {
+		var ret2 bean.Requirement
+		for _, v := range ret {
+			err := mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(&bson.M{"param.datareqid": v.Param.Goodsid}).Sort("-_id").Limit(1).One(&ret2)
+			if err != nil {
+				log.Error(err)
+			}
+
+			rows = append(rows, &user_proto.FavoriteData{
+				Username:  ret2.Param.Info.Username,
+				GoodsId:   v.Param.Goodsid,
+				GoodsName: ret2.Param.Info.Reqname,
 				Price:     ret2.Param.Info.Price,
 				Time:      uint64(v.CreateTime.Unix()),
 			})
@@ -348,6 +365,38 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 		RowCount: int32(count),
 		PageNum:  int32(pageNum),
 		Row:      rows,
+	}
+	return nil
+}
+
+//GetBalance from chain
+func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
+	log.Info("GetBalance src Start!")
+	accountInfo, err := data.AccountInfo(req.Username)
+
+	if accountInfo != nil {
+		var data = []*user_proto.GetBalanceRow{}
+
+		data = append(data, &user_proto.GetBalanceRow{
+			TokenType: "BTO",
+			Value:     accountInfo.Balance,
+			Cny:       0,
+			Usd:       0,
+		})
+
+		data = append(data, &user_proto.GetBalanceRow{
+			TokenType: "DTO",
+			Value:     10,
+			Cny:       0,
+			Usd:       0,
+		})
+
+		log.Info(data)
+
+		rsp.Data = data
+	} else {
+		rsp.Code = 1006
+		rsp.Msg = err.Error()
 	}
 	return nil
 }

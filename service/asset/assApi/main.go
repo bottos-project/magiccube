@@ -1,4 +1,4 @@
-/*Copyright 2017~2022 The Bottos Authors
+﻿/*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
   Created by Developers Team of Bottos.
 
@@ -407,6 +407,37 @@ func (s *Asset) QueryMyNotice(ctx context.Context, req *api.Request, rsp *api.Re
 	return nil
 }
 
+// GetUnreadNoticeNum from db
+func (s *Asset) GetUnreadNoticeNum(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("GetUnreadNoticeNum Service Start")
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice asset.GetUnreadNoticeNumRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//verify signature
+
+	isTrue, err := sign.QueryVerifySign(req.Body)
+
+	if !isTrue {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := s.Client.GetUnreadNoticeNum(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
 // QueryMyPreSale from chain
 func (s *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.Response) error {
 	log.Info("QueryMyPreSale Service Start")
@@ -428,6 +459,36 @@ func (s *Asset) QueryMyPreSale(ctx context.Context, req *api.Request, rsp *api.R
 	}
 
 	response, err := s.Client.QueryMyPreSale(ctx, &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	rsp.Body = errcode.Return(response)
+	return nil
+}
+
+// ModifyMyNoticeStatus from DB
+func (s *Asset) ModifyMyNoticeStatus(ctx context.Context, req *api.Request, rsp *api.Response) error {
+	log.Info("ModifyMyNoticeStatus Service Start")
+	rsp.StatusCode = 200
+	body := req.Body
+	var queryMyNotice asset.ModifyMyNoticeStatusRequest
+	err := json.Unmarshal([]byte(body), &queryMyNotice)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	//verify signature
+	isTrue, err := sign.QueryVerifySign(req.Body)
+
+	if !isTrue {
+		rsp.Body = errcode.ReturnError(1000, err)
+		return nil
+	}
+
+	response, err := s.Client.ModifyMyNoticeStatus(ctx, &queryMyNotice)
 	if err != nil {
 		log.Error(err)
 		return err

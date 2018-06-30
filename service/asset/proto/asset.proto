@@ -25,6 +25,12 @@ service Asset {
     };
     rpc QueryMyPreSale (QueryMyNoticeRequest) returns (QueryMyNoticeResponse) {
     };
+
+    rpc ModifyMyNoticeStatus (ModifyMyNoticeStatusRequest) returns (ModifyMyNoticeStatusResponse) {
+    };
+
+    rpc GetUnreadNoticeNum (GetUnreadNoticeNumRequest) returns (GetUnreadNoticeNumResponse) {
+    };
 }
 
 message PushTxRequest {
@@ -154,9 +160,10 @@ message AssetData {
     string storage_hash = 7;
     uint32 expire_time = 8;
     uint32 op_type = 9;
-    uint64 price = 10;
-    string description = 11;
-    uint64 create_time = 12;
+    string token_type = 10;
+    uint64 price = 11;
+    string description = 12;
+    uint64 create_time = 13;
 }
 
 message QueryAssetByIDRequest {
@@ -184,11 +191,12 @@ message QueryAssetInfoData {
     string storage_hash = 7;
     uint32 expire_time = 8;
     uint32 op_type = 9;
-    uint64 price = 10;
-    string description = 11;
-    uint64 create_time = 12;
-    bool favorite_flag = 13;
-    bool isBuy_asset_flag = 14;
+    string token_type = 10;
+    uint64 price = 11;
+    string description = 12;
+    uint64 create_time = 13;
+    bool favorite_flag = 14;
+    bool isBuy_asset_flag = 15;
 }
 
 
@@ -217,6 +225,34 @@ message QueryNoticeRow {
     string data_req_id = 5;
     string data_req_name = 6;
     string consumer = 7;
-    string read_flag = 8;
+    uint32 isRead = 8;
     uint64 time = 9;
+}
+
+message ModifyMyNoticeStatusRequest {
+    string noticeId = 1;
+    string username = 2;
+    string random = 3;
+    string signature = 4;
+}
+
+
+message ModifyMyNoticeStatusResponse {
+    int32 code = 1;
+    string data = 2;
+    string msg = 3;
+}
+
+
+message GetUnreadNoticeNumRequest {
+    uint32 page_size = 1;
+    uint32 page_num = 2;
+    string username = 3;
+    string random = 4;
+    string signature = 5;
+}
+message GetUnreadNoticeNumResponse {
+    int32 code = 1;
+    uint32 data = 2;
+    string msg = 3;
 }

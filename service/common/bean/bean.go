@@ -161,6 +161,7 @@ type Requirement struct {
 			Expiretime  uint64 `bson:"expiretime"`
 			Featuretag  uint64 `bson:"featuretag"`
 			Optype      uint32 `bson:"optype"`
+			Tokentype  string `bson:"tokentype"`
 			Price       uint64 `bson:"price"`
 			Reqname     string `bson:"reqname"`
 			Reqtype     uint64 `bson:"reqtype"`
@@ -198,6 +199,7 @@ type AssetBean struct {
 			StorageHash string `bson:"storagehash"`
 			ExpireTime  uint32 `bson:"expiretime"`
 			OpType      uint32 `bson:"optype"`
+			TokenType string `bson:"tokentype"`
 			Price       uint64 `bson:"price"`
 			Description string `bson:"description"`
 		} `bson:"info"`
@@ -257,6 +259,7 @@ type PreSaleBean struct {
 			Datareqid string `bson:"datareqid"`
 			Optype    uint32 `bson:"optype"`
 			Username  string `bson:"username"`
+			IsRead    uint32  `bson:"isread"`
 		} `bson:"info"`
 	} `bson:"param"`
 	Sender     string    `bson:"sender"`
@@ -352,5 +355,64 @@ type Transfer struct {
 	SigAlg     uint32    `bson:"sig_alg"`
 	Signature  string    `bson:"signature"`
 	Version    uint32    `bson:"version"`
+	CreateTime time.Time `bson:"create_time"`
+}
+
+// NodeInfo struct
+type NodeInfo struct {
+	ID            bson.ObjectId `bson:"_id,omitempty"`
+	BlockNumber   uint32        `bson:"block_number"`
+	TransactionId string        `bson:"transaction_id"`
+	SequenceNum   uint32        `bson:"sequence_num"`
+	BlockHash     string        `bson:"block_hash"`
+	Contract      string        `bson:"contract"`
+	CursorLabel   uint32        `bson:"cursor_label"`
+	CursorNum     uint32        `bson:"cursor_num"`
+	Lifetime      uint64        `bson:"lifetime"`
+	Method        string        `bson:"method"`
+
+	IP string `bson:"ip"`
+	Port string `bson:"port"`
+	Pointx string `bson:"pointx"`
+	Pointy string `bson:"pointy"`
+
+	Sender     string    `bson:"sender"`
+	SigAlg     uint32    `bson:"sig_alg"`
+	Signature  string    `bson:"signature"`
+	Version    uint32    `bson:"version"`
+	CreateTime time.Time `bson:"create_time"`
+}
+
+// NodeIp struct
+type NodeIp struct {
+	ID            bson.ObjectId `bson:"_id,omitempty"`
+	BlockNumber   uint32        `bson:"block_number"`
+	TransactionId string        `bson:"transaction_id"`
+	SequenceNum   uint32        `bson:"sequence_num"`
+	BlockHash     string        `bson:"block_hash"`
+	Contract      string        `bson:"contract"`
+	CursorLabel   uint32        `bson:"cursor_label"`
+	CursorNum     uint32        `bson:"cursor_num"`
+	Lifetime      uint64        `bson:"lifetime"`
+	Method        string        `bson:"method"`
+
+	IP string `bson:"ip"`
+	Port string `bson:"port"`
+	NodeId string `bson:"nodeid"`
+
+	Sender     string    `bson:"sender"`
+	SigAlg     uint32    `bson:"sig_alg"`
+	Signature  string    `bson:"signature"`
+	Version    uint32    `bson:"version"`
+	CreateTime time.Time `bson:"create_time"`
+}
+
+// GetBalance struct
+type GetBalance struct {
+	Tokentype      string        `bson:"tokentype"`
+	Value      uint64        `bson:"value"`
+	Cny        string        `bson:"cny"`
+	Usd        string        `bson:"usd"`
+
 	CreateTime time.Time `bson:"create_time"`
 }

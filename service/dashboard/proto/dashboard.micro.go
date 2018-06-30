@@ -47,6 +47,10 @@ It has these top-level messages:
 	GetAllTypeTotalRequest
 	GetAllTypeTotalResponse
 	AllTypeData
+	GetNodeIpRequest
+	GetNodeIpResponse
+	NodeIpData
+	NodeIpDataRow
 */
 package dashboard
 
@@ -55,9 +59,9 @@ import fmt "fmt"
 import math "math"
 
 import (
-	context "context"
 	client "github.com/micro/go-micro/client"
 	server "github.com/micro/go-micro/server"
+	context "context"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -91,6 +95,7 @@ type DashboardClient interface {
 	GetTxNumByDay(ctx context.Context, in *GetTxNumByDayRequest, opts ...client.CallOption) (*GetTxNumByDayResponse, error)
 	GetTxAmountByDay(ctx context.Context, in *GetTxAmountByDayRequest, opts ...client.CallOption) (*GetTxAmountByDayResponse, error)
 	GetAllTypeTotal(ctx context.Context, in *GetAllTypeTotalRequest, opts ...client.CallOption) (*GetAllTypeTotalResponse, error)
+	GetNodeIp(ctx context.Context, in *GetNodeIpRequest, opts ...client.CallOption) (*GetNodeIpResponse, error)
 }
 
 type dashboardClient struct {
@@ -231,6 +236,16 @@ func (c *dashboardClient) GetAllTypeTotal(ctx context.Context, in *GetAllTypeTot
 	return out, nil
 }
 
+func (c *dashboardClient) GetNodeIp(ctx context.Context, in *GetNodeIpRequest, opts ...client.CallOption) (*GetNodeIpResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "Dashboard.GetNodeIp", in)
+	out := new(GetNodeIpResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Dashboard service
 
 type DashboardHandler interface {
@@ -246,6 +261,7 @@ type DashboardHandler interface {
 	GetTxNumByDay(context.Context, *GetTxNumByDayRequest, *GetTxNumByDayResponse) error
 	GetTxAmountByDay(context.Context, *GetTxAmountByDayRequest, *GetTxAmountByDayResponse) error
 	GetAllTypeTotal(context.Context, *GetAllTypeTotalRequest, *GetAllTypeTotalResponse) error
+	GetNodeIp(context.Context, *GetNodeIpRequest, *GetNodeIpResponse) error
 }
 
 func RegisterDashboardHandler(s server.Server, hdlr DashboardHandler, opts ...server.HandlerOption) {
@@ -302,4 +318,8 @@ func (h *Dashboard) GetTxAmountByDay(ctx context.Context, in *GetTxAmountByDayRe
 
 func (h *Dashboard) GetAllTypeTotal(ctx context.Context, in *GetAllTypeTotalRequest, out *GetAllTypeTotalResponse) error {
 	return h.DashboardHandler.GetAllTypeTotal(ctx, in, out)
+}
+
+func (h *Dashboard) GetNodeIp(ctx context.Context, in *GetNodeIpRequest, out *GetNodeIpResponse) error {
+	return h.DashboardHandler.GetNodeIp(ctx, in, out)
 }
