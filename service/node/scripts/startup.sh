@@ -522,6 +522,9 @@ function download_git_newcode()
         rm -rf $GOPATH/src/github.com/bottos-project/crypto-go 2>&1>/dev/null
 
 	cd $GOPATH/src/github.com/bottos-project/
+
+        chmod 777 $GOPATH/src/github.com/bottos-project/* -R
+    	chown bottos:bottos $GOPATH/src -R   
 	
         git clone https://github.com/bottos-project/bottos.git 
         git clone https://github.com/bottos-project/magiccube.git 
@@ -552,7 +555,6 @@ function download_git_newcode()
         sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
         cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip\","
         sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
-        chmod 777 $GOPATH/src/github.com/bottos-project/* -R
     #fi
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/scripts/build.sh $USER_HOME_DIR/opt/go/bin/ 2>/dev/null
     cp -rf $GOPATH/src/github.com/bottos-project/magiccube/vendor/* $GOPATH/src  2>/dev/null 
@@ -567,7 +569,6 @@ function download_git_newcode()
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core 2>/dev/null
     cp -rf $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir 2>/dev/null    
 	
-    chown bottos:bottos $GOPATH/src -R   
     echo "\n Cloning all is done. Please try ./startup.sh buildstart for auto-build then, or try ./startup.sh start for directly start."
     
     return	
