@@ -36,6 +36,7 @@ import (
 
 	"github.com/bottos-project/magiccube/service/node/config"
 	"github.com/bottos-project/magiccube/service/storage/util"
+	//slog "github.com/cihub/seelog"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/mgo.v2"
@@ -121,8 +122,9 @@ type Ippointxy struct {
 
 // StorageDBClusterInfo struct
 type StorageDBClusterInfo struct {
-	SeedIP  string `json:"seedip"`
-	SlaveIP string `json:"slaveip"`
+	SeedIP  string `json:"nodeIP"` //This is node's self ip, in future, seedip should be added here.
+	SlaveIP string `json:"clusterIP"`
+	NodeUUID string `json:"uuid"`
 }
 
 // NodeCapacityInfo struct
@@ -347,7 +349,7 @@ func PathExist(_path string) bool {
 
 func multiIp2pointxyint(iplist []string) map[string]CityInfo {
 	m := make(map[string]CityInfo)
-
+	
 	for _, ip := range iplist {
 		infosPoint := ip2pointxy(ip)
 		if (infosPoint != szTongSpoint{}) {
@@ -384,7 +386,6 @@ func useInternationalPolicy(ipaddr string) (string, string) {
 func ip2pointxy(ip string) szTongSpoint {
 	var infos szTongS
 	var infosPoint szTongSpoint
-
 	url := "http://ip.taobao.com/service/getIpInfo.php?ip=" + ip
 	client := &http.Client{}
 
@@ -460,9 +461,8 @@ func getIpList() []string {
 }
 
 // SaveIpPonixToBlockchain SaveIpPonixToBlockchain
-func SaveIpPonixToBlockchain() map[string]CityInfo {
-	iplist := getIpList()
-
+func SaveIpPonixToBlockchain(myNodeIpaddr string) map[string]CityInfo {
+	iplist := []string{strings.TrimSpace(myNodeIpaddr)}
 	ipPointxyMap := multiIp2pointxyint(iplist)
 
 	//To be saved to db
@@ -471,7 +471,7 @@ func SaveIpPonixToBlockchain() map[string]CityInfo {
 	for mapKey, mapValue := range ipPointxyMap {
 		Repository.CallInsertPointxy(mapKey, mapValue.Pointx, mapValue.Pointy)
 	}
-
+	
 	return ipPointxyMap
 }
 

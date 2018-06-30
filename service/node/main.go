@@ -1,8 +1,6 @@
 /*Copyright 2017~2022 The Bottos Authors
   This file is part of the Bottos Service Layer
-  Created by Developers Team of Bottos.
-
-  This program is free software: you can distribute it and/or modify
+  Created by Developers Team of Bottos""  This program is free software: you can distribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
@@ -24,7 +22,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	pack "github.com/bottos-project/bottos/contract/msgpack"
+	abi "github.com/bottos-project/bottos/contract/abi"
 	aes "github.com/bottos-project/crypto-go/crypto/aes"
 	"github.com/bottos-project/crypto-go/crypto/secp256k1"
 	"github.com/howeyc/gopass"
@@ -48,6 +46,8 @@ import (
 	"runtime"
 	"strings"
 	"syscall"
+	"net/http"
+	"io/ioutil"
 )
 
 //var wg sync.WaitGroup
@@ -337,11 +337,11 @@ func Register() error {
 	nodeUUIDinfo.UserName = keystore.GetAccount()
 	nodeUUIDinfo.PubKey = keystore.GetPubKey()
 
-	accountbuf, err := pack.Marshal(nodeUUIDinfo)
+	accountbuf, err := abi.MarshalAbi(nodeUUIDinfo, nil, "nodemng", "nodeinforeg")
 	if err != nil {
 		return nil
 	}
-
+	
 	txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
 		CursorNum:   blockheader.HeadBlockNum,
@@ -403,6 +403,23 @@ func Register() error {
 	return nil
 }
 
+//GetMyPublicIPaddress function
+func GetMyPublicIPaddress() (string, error) {
+    resp, err1 := http.Get("http://members.3322.org/dyndns/getip")
+    if err1 != nil {
+        return "", err1
+    }
+    defer resp.Body.Close()
+    body, err2 := ioutil.ReadAll(resp.Body)
+    if err2 != nil {
+        return "", err2
+    }   
+    //log.Info("getMyPublicIPaddr"+ string(body))
+    return string(body), nil
+}
+
+
+
 func main() {
 	var input string
 	var input1 []byte
@@ -454,8 +471,8 @@ func main() {
 		return
 	}
 
-	//log.Println("now call Save_ip_ponix_to_blockchain")
-	api.SaveIpPonixToBlockchain()
+	//ipaddr, _ := GetMyPublicIPaddress()
+	//api.SaveIpPonixToBlockchain(ipaddr)
 
 	//set server according to the json file
 	if InitServer(nodeinfos) != nil {
@@ -502,7 +519,7 @@ func NewNodeClusterAccount(nodeinfos api.NodeInfos, value interface{}, pubkey st
 		Pubkey: pubkey,
 	}
 
-	accountbuf, err := pack.Marshal(useraccount)
+	accountbuf, err := abi.MarshalAbi(useraccount, nil, "bottos", "newaccount")
 	if err != nil {
 		return
 	}
@@ -569,11 +586,12 @@ func PushNodeClusterTrx(value api.StorageDBClusterInfo, pubkey string, prikey st
 		return
 	}
 
-	accountbuf, err := pack.Marshal(&value)
+	//service layer, abi parameter should be empty.
+	accountbuf, err := abi.MarshalAbi(&value, nil, "nodeclustermng", "reg")
 	if err != nil {
 		return
 	}
-
+	
 	txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
 		CursorNum:   blockheader.HeadBlockNum,
@@ -636,7 +654,7 @@ func PushNodeCapacityTrx(value api.NodeCapacityInfo, pubkey string, prikey strin
 		return
 	}
 
-	accountbuf, err := pack.Marshal(&value)
+	accountbuf, err := abi.MarshalAbi(&value, nil, "nodecapacitymng", "reg")
 	if err != nil {
 		return
 	}
@@ -738,6 +756,9 @@ func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
 
 		dbclusterinfo.SlaveIP += iplst
 	}
+	
+	dbclusterinfo.NodeUUID = keystore.GetUUID()
+	
 	pubkey := keystore.GetPubKey()
 	prikey := keystore.GetPriKey()
 

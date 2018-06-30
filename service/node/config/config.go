@@ -25,7 +25,7 @@ const (
 	CONFIG_FILE = "/home/bottos/opt/go/bin/config.json"
     
     	//WALLET_IP FOR NODE USAGE
-	WALLET_IP="10.10.10.189"
+	WALLET_IP="192.168.2.189"
 
 	//RUN_PLATFORM FOR NODE USAGE
 	RUN_PLATFORM = "linux"
@@ -34,9 +34,9 @@ const (
 	SCRIPT_PATH = "/home/bottos/opt/go/bin/build.sh"
     
     	//MONGO_DB_URL FOR NODE USAGE
-	MONGO_DB_URL="10.10.10.189"
+	MONGO_DB_URL="192.168.2.189"
 	//DB_BOTTOS FOR NODE USAGE
-	DB_BOTTOS = "local"
+	DB_BOTTOS = "bottos"
 	//TABLE_POINTXY FOR NODE USAGE
 	TABLE_POINTXY = "pointxy"
 )

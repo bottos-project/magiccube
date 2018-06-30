@@ -21,15 +21,26 @@ MINIO_COF=/etc/minio
 
 OPT_GO_BIN=$USER_HOME_DIR/opt/go/bin
 
+export GOPATH=/home/bottos/mnt/bottos
+export GOROOT=/usr/lib/go
+
 if [ -z $1 ]; then
     echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
     exit 1
 fi
 
-if [ $1 != "stop" ]; then 
+SERVER_IPADR=`ifconfig|grep "inet addr:"|grep -v "127.0.0.1"|cut -d: -f2|awk '{print $1}'`
+
+echo
+echo "Your ip address is $SERVER_IPADR"
+echo
+
+if [ -z $SERVER_IPADR ]; then 
     read -p "Please input your server ip address:" SERVER_IPADR
-else
-    SERVER_IPADR="127.0.0.1"    
+    if [ -z $SERVER_IPADR ]; then
+	echo "Your ip address is empty! Now exit."
+	exit 1
+    fi	
 fi
 
 SERVER_PORT=9000
@@ -440,7 +451,9 @@ function startserv()
     # start node service , other services will be started by node server
     	#nohup ${SERVER_PATH}node > node.file 2>&1
     	${SERVER_PATH}./node
-	
+	echo
+	echo
+
         return
 }
 
@@ -521,6 +534,8 @@ function download_git_newcode()
 	sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
         cmd="/WALLET_IP=/c\WALLET_IP=\"$eth0_ip\""
         sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
+        cmd="/BASE_CHAIN_IP =/c\BASE_CHAIN_IP =\"$eth0_ip\""
+        sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/config/base.go
     	
 	cp -rf $GOPATH/src/github.com/bottos-project/bottos/chainconfig.json $USER_HOME_DIR/opt/go/bin
 	cp -rf $GOPATH/src/github.com/bottos-project/bottos/genesis.json $USER_HOME_DIR/opt/go/bin
@@ -532,6 +547,8 @@ function download_git_newcode()
         
 	cp -rf $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.json $USER_HOME_DIR/opt/go/bin/
         cmd="/\"ipAddr\"/c\\\"ipAddr\":\"$eth0_ip\","
+        sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
+        cmd="/\"seedIp\"/c\\\"seedIp\":\"$eth0_ip\","
         sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
         cmd="/walletIP/c\\\"walletIP\":\"$eth0_ip\","
         sed -ir $cmd $USER_HOME_DIR/opt/go/bin/config.json
@@ -713,7 +730,7 @@ function setgopath() {
 #main
 case $1 in
     "update")
-        usercheck "bottos"
+	usercheck "bottos"
         download_git_newcode        
         ;;
     "buildstart")
