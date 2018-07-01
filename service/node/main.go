@@ -22,7 +22,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	abi "github.com/bottos-project/bottos/contract/abi"
+	pack "github.com/bottos-project/msgpack-go"
 	aes "github.com/bottos-project/crypto-go/crypto/aes"
 	"github.com/bottos-project/crypto-go/crypto/secp256k1"
 	"github.com/howeyc/gopass"
@@ -337,7 +337,12 @@ func Register() error {
 	nodeUUIDinfo.UserName = keystore.GetAccount()
 	nodeUUIDinfo.PubKey = keystore.GetPubKey()
 
-	accountbuf, err := abi.MarshalAbi(nodeUUIDinfo, nil, "nodemng", "nodeinforeg")
+	Abi, abierr := pack.GetAbibyContractName("nodemng")
+        if abierr != nil {
+           return nil
+        }
+
+	accountbuf, err := pack.MarshalAbi(nodeUUIDinfo, &Abi, "nodemng", "nodeinforeg")
 	if err != nil {
 		return nil
 	}
@@ -519,7 +524,12 @@ func NewNodeClusterAccount(nodeinfos api.NodeInfos, value interface{}, pubkey st
 		Pubkey: pubkey,
 	}
 
-	accountbuf, err := abi.MarshalAbi(useraccount, nil, "bottos", "newaccount")
+	Abi, abierr := pack.GetAbibyContractName("bottos")
+        if abierr != nil {
+           return
+        }
+	
+	accountbuf, err := pack.MarshalAbi(useraccount, &Abi, "bottos", "newaccount")
 	if err != nil {
 		return
 	}
@@ -585,9 +595,13 @@ func PushNodeClusterTrx(value api.StorageDBClusterInfo, pubkey string, prikey st
 	if err != nil {
 		return
 	}
+	
+	Abi, abierr := pack.GetAbibyContractName("nodeclustermng")
+        if abierr != nil {
+           return
+        }
 
-	//service layer, abi parameter should be empty.
-	accountbuf, err := abi.MarshalAbi(&value, nil, "nodeclustermng", "reg")
+	accountbuf, err := pack.MarshalAbi(&value, &Abi, "nodeclustermng", "reg")
 	if err != nil {
 		return
 	}
@@ -654,7 +668,12 @@ func PushNodeCapacityTrx(value api.NodeCapacityInfo, pubkey string, prikey strin
 		return
 	}
 
-	accountbuf, err := abi.MarshalAbi(&value, nil, "nodecapacitymng", "reg")
+	Abi, abierr := pack.GetAbibyContractName("nodecapacitymng")
+        if abierr != nil {
+           return
+        }
+	
+	accountbuf, err := pack.MarshalAbi(&value, &Abi, "nodecapacitymng", "reg")
 	if err != nil {
 		return
 	}
