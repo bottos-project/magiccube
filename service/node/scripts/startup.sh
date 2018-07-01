@@ -318,7 +318,7 @@ function prepcheck()
 
 function startcontract()
 {
-	sleep 1
+	sleep 90
 	BLUE='\e[1;34m'
 	NC='\e[0m'	
 
@@ -426,10 +426,12 @@ function startserv()
     	cd $USER_HOME_DIR/opt/go/bin
 	
 	# start consul for go-micro
+	chmod +x ${CONSUL_PATH}consul
 	nohup ${CONSUL_PATH}consul agent -dev > consul.log 2>&1 &
 	sleep 1
 
 	# start micro service
+	chmod +x ${MICRO_PATH}micro
 	nohup ${MICRO_PATH}micro api > micro.log 2>&1 &
 	# start mongodb service
 	sleep 3
@@ -445,9 +447,10 @@ function startserv()
 	fi
 
 	startminio
-
-	startcontract
 	
+	#startcontract
+	#have to wait p2p sync done for insert 1st block then.
+	sleep 30
     # start node service , other services will be started by node server
     	#nohup ${SERVER_PATH}node > node.file 2>&1
     	${SERVER_PATH}./node

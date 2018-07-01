@@ -125,6 +125,8 @@ type StorageDBClusterInfo struct {
 	SeedIP  string `json:"nodeIP"` //This is node's self ip, in future, seedip should be added here.
 	SlaveIP string `json:"clusterIP"`
 	NodeUUID string `json:"uuid"`
+	
+	StorageCapacity string `json:"capacity"`
 }
 
 // NodeCapacityInfo struct

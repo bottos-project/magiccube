@@ -668,12 +668,12 @@ func PushNodeCapacityTrx(value api.NodeCapacityInfo, pubkey string, prikey strin
 		return
 	}
 
-	Abi, abierr := pack.GetAbibyContractName("nodecapacitymng")
+	Abi, abierr := pack.GetAbibyContractName("nodemng")
         if abierr != nil {
            return
         }
 	
-	accountbuf, err := pack.MarshalAbi(&value, &Abi, "nodecapacitymng", "reg")
+	accountbuf, err := pack.MarshalAbi(&value, &Abi, "nodemng", "noderegreq")
 	if err != nil {
 		return
 	}
@@ -684,8 +684,8 @@ func PushNodeCapacityTrx(value api.NodeCapacityInfo, pubkey string, prikey strin
 		CursorLabel: blockheader.CursorLabel,
 		Lifetime:    blockheader.HeadBlockTime + 100,
 		Sender:      "bottos",
-		Contract:    "nodecapacitymng",
-		Method:      "reg",
+		Contract:    "nodemng",
+		Method:      "noderegreq",
 		Param:       accountbuf,
 		SigAlg:      1,
 	}
@@ -715,8 +715,8 @@ func PushNodeCapacityTrx(value api.NodeCapacityInfo, pubkey string, prikey strin
 		CursorLabel: blockheader.CursorLabel,
 		Lifetime:    blockheader.HeadBlockTime + 100,
 		Sender:      "bottos",
-		Contract:    "nodecapacitymng",
-		Method:      "reg",
+		Contract:    "nodemng",
+		Method:      "noderegreq",
 		Param:       hex.EncodeToString(accountbuf),
 		SigAlg:      1,
 		Signature:   hex.EncodeToString(signature),
@@ -766,7 +766,7 @@ func InetAtoN(ip string) int64 {
 //SetNodeDBClusterInfo function
 func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
 	var dbclusterinfo api.StorageDBClusterInfo
-	var dbcapacityinfo api.NodeCapacityInfo
+	//var dbcapacityinfo api.NodeCapacityInfo
 	var iplst string
 
 	dbclusterinfo.SeedIP = InetAtoString(nodeinfos.Node[0].SeedIp)
@@ -777,15 +777,16 @@ func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
 	}
 	
 	dbclusterinfo.NodeUUID = keystore.GetUUID()
-	
+	dbclusterinfo.StorageCapacity = nodeinfos.Node[0].StorageCapacity
+
 	pubkey := keystore.GetPubKey()
 	prikey := keystore.GetPriKey()
 
 	PushNodeClusterTrx(dbclusterinfo, pubkey, prikey)
 
-	dbcapacityinfo = api.NodeCapacityInfo{NodeUUID: keystore.GetUUID(), NodeIP: nodeinfos.Node[0].IpAddr, StorageCapacity: nodeinfos.Node[0].StorageCapacity}
+	//dbcapacityinfo = api.NodeCapacityInfo{NodeUUID: keystore.GetUUID(), NodeIP: nodeinfos.Node[0].IpAddr, StorageCapacity: nodeinfos.Node[0].StorageCapacity}
 
-	PushNodeCapacityTrx(dbcapacityinfo, pubkey, prikey)
+	//PushNodeCapacityTrx(dbcapacityinfo, pubkey, prikey)
 }
 
 //NodeApi interface
