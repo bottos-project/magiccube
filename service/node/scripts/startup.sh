@@ -322,7 +322,7 @@ function prepcheck()
 function startcontract()
 {
 	echo
-	echo "Wait 60s for system is ready to generate blosks..."
+	echo "Wait 60s for system be ready to generate blosks..."
 	echo
 	sleep 60
 	BLUE='\e[1;34m'
