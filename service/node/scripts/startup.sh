@@ -19,12 +19,13 @@ MINIO_GRP=bottos
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
-mongodb_ip="127.0.0.1"	
-
 OPT_GO_BIN=$USER_HOME_DIR/opt/go/bin
 
 export GOPATH=/home/bottos/mnt/bottos
 export GOROOT=/usr/lib/go
+
+mongodb_ip="127.0.0.1"	
+minio_ip=`ifconfig|grep "inet addr:"|grep -v "127.0.0.1"|cut -d: -f2|awk '{print $1}'`
 
 if [ -z $1 ]; then
     echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
@@ -54,7 +55,7 @@ MINIO_VOLUMES_ENV="MINIO_VOLUMES=\""$MINIO_SHR"\""
 MINIO_OPTS_ENV="MINIO_OPTS=\"-C "$MINIO_COF" --address "$SERVER_IPADR":"$SERVER_PORT"\""
 
 MINIO_VOLUMES="/usr/local/share/minio"
-MINIO_OPTS="-C /etc/minio --address "$SERVER_IPADR":"$SERVER_PORT
+MINIO_OPTS="-C /etc/minio --address "$minio_ip":"$SERVER_PORT
 CORE_PROC_FILE_DIR=${GO_PATH}/bin/core/cmd_dir
 
 OPT_GO_BIN_GZ_PACK=opt-go-bin.tar.gz
@@ -320,7 +321,10 @@ function prepcheck()
 
 function startcontract()
 {
-	sleep 90
+	echo
+	echo "Wait 60s for system is ready to generate blosks..."
+	echo
+	sleep 60
 	BLUE='\e[1;34m'
 	NC='\e[0m'	
 
@@ -450,7 +454,7 @@ function startserv()
 
 	startminio
 	
-	#startcontract
+	startcontract
 	#have to wait p2p sync done for insert 1st block then.
 	sleep 30
     # start node service , other services will be started by node server
