@@ -19,6 +19,8 @@ MINIO_GRP=bottos
 MINIO_SHR=/usr/local/share/minio
 MINIO_COF=/etc/minio
 
+mongodb_ip="127.0.0.1"	
+
 OPT_GO_BIN=$USER_HOME_DIR/opt/go/bin
 
 export GOPATH=/home/bottos/mnt/bottos
@@ -29,17 +31,17 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-SERVER_IPADR=`ifconfig|grep "inet addr:"|grep -v "127.0.0.1"|cut -d: -f2|awk '{print $1}'`
-
-echo
-echo "Your ip address is $SERVER_IPADR"
-echo
-
-if [ -z $SERVER_IPADR ]; then 
-    read -p "Please input your server ip address:" SERVER_IPADR
+if [ -z $SERVER_IPADR ] && [ $1 != "stop" ]; then 
+    DEFAULT_SERVER_IPADR=`curl icanhazip.com 2>/dev/null`
+    echo	
+    read -p "Please input your server ip address (Your default ip is $DEFAULT_SERVER_IPADR):" SERVER_IPADR
     if [ -z $SERVER_IPADR ]; then
-	echo "Your ip address is empty! Now exit."
-	exit 1
+	SERVER_IPADR=$DEFAULT_SERVER_IPADR
+	echo
+	echo "Your server ip address is $SERVER_IPADR"
+	echo
+    else
+	echo "Your server address is $SERVER_IPADR"
     fi	
 fi
 
@@ -536,7 +538,7 @@ function download_git_newcode()
 
         cd $USER_HOME_DIR
         
-        cmd="/MONGO_DB_URL=/c\MONGO_DB_URL=\"$eth0_ip\""
+        cmd="/MONGO_DB_URL=/c\MONGO_DB_URL=\"$mongodb_ip\""
 	sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
         cmd="/WALLET_IP=/c\WALLET_IP=\"$eth0_ip\""
         sed -ir "$cmd" $GOPATH/src/github.com/bottos-project/magiccube/service/node/config/config.go
@@ -546,7 +548,7 @@ function download_git_newcode()
 	cp -rf $GOPATH/src/github.com/bottos-project/bottos/chainconfig.json $USER_HOME_DIR/opt/go/bin
 	cp -rf $GOPATH/src/github.com/bottos-project/bottos/genesis.json $USER_HOME_DIR/opt/go/bin
 
-        cmd="/option_db/c\\\"option_db\":\"$eth0_ip:27017\","
+        cmd="/option_db/c\\\"option_db\":\"$mongodb_ip:27017\","
         sed -ir $cmd $USER_HOME_DIR/opt/go/bin/chainconfig.json
         cmd="/api_service_enable/c\\\"api_service_enable\":true,"
         sed -ir $cmd $USER_HOME_DIR/opt/go/bin/chainconfig.json
@@ -719,8 +721,7 @@ function setgopath() {
         sed -i '$a\export PATH=$PATH:/usr/lib/go/bin' /etc/profile
     fi
     
-    eth0_ip=$SERVER_IPADR
-    cmd="/bind_ip/c\bind_ip=$eth0_ip"
+    cmd="/bind_ip/c\bind_ip=$mongodb_ip"
     sed -ir $cmd /etc/mongodb.conf
 
     export GOPATH="/home/bottos/mnt/bottos"

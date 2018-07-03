@@ -6,7 +6,8 @@
       "fields": {
         "nodeIP": "string",
         "clusterIP": "string",
-        "uuid": "string"
+        "uuid": "string",
+        "capacity": "string"
       }
     },
     {
@@ -14,7 +15,8 @@
       "base": "",
       "fields": {
         "clusterIP": "string",
-        "uuid": "string"
+        "uuid": "string",
+        "capacity": "string"
       }
     }
   ],
