@@ -231,6 +231,7 @@ message GetTransferRequest {
 	string username = 3;
 	string random = 4;
 	string signature = 5;
+    string token_type = 6;
 }
 
 message GetTransferResponse {
@@ -249,8 +250,9 @@ message Transfer {
 	string transaction_id = 1;
 	string from = 2;
 	string to = 3;
-	uint64 Value = 4;
+    string token_type = 4;
+    uint64 Value = 5;
 
-	uint64 timestamp = 5;
-	uint32 block_number = 6;
+    uint64 timestamp = 6;
+    uint32 block_number = 7;
 }
