@@ -24,6 +24,12 @@ OPT_GO_BIN=$USER_HOME_DIR/opt/go/bin
 export GOPATH=/home/bottos/mnt/bottos
 export GOROOT=/usr/lib/go
 
+IS_MY_NODE_GENESIS=0
+
+if [ -n "$2" ] && [ "$2" == "genesis" ]; then
+	IS_MY_NODE_GENESIS=1
+fi
+
 mongodb_ip="127.0.0.1"	
 minio_ip=`ifconfig|grep "inet addr:"|grep -v "127.0.0.1"|cut -d: -f2|awk '{print $1}'`
 
@@ -408,14 +414,24 @@ function startcontract()
         sleep 5
 	echo 
 	
+	#have to wait p2p sync done for insert 1st block then.
+	sleep 30
+	
     	echo "===CONTRACT DONE==="
 }
 
 function startserv()
 {	
-	echo -e "\033[32m ==================================== \033[0m"
-	echo -e "\033[32m =       Start bottos server        = \033[0m"
-	echo -e "\033[32m ==================================== \033[0m"
+	if [ $IS_MY_NODE_GENESIS -eq 1 ]; then
+		echo -e "\033[32m ==================================== \033[0m"
+		echo -e "\033[32m =    Start bottos Genesis Node     = \033[0m"
+		echo -e "\033[32m ==================================== \033[0m"
+	else
+		echo -e "\033[32m ==================================== \033[0m"
+		echo -e "\033[32m =       Start bottos server        = \033[0m"
+		echo -e "\033[32m ==================================== \033[0m"	
+	fi
+	
 	if [ ! -d "$GO_PATH" ];
 	then
 		echo -e "\033[31m *ERROR* Failed to find variable GO_PATH !!! \033[0m"
@@ -454,10 +470,11 @@ function startserv()
 
 	startminio
 	
-	startcontract
-	#have to wait p2p sync done for insert 1st block then.
-	sleep 30
-    # start node service , other services will be started by node server
+	if [ $IS_MY_NODE_GENESIS -eq 1 ]; then
+		startcontract
+    	fi
+
+	# start node service , other services will be started by node server
     	#nohup ${SERVER_PATH}node > node.file 2>&1
     	${SERVER_PATH}./node
 	echo
@@ -783,7 +800,7 @@ case $1 in
         restartcore
         ;;
     "help"|*)
-        echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start|buildstart|stop|startcore|stopcore|restartcore !!! \033[0m"
+        echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start [genesis]|buildstart [genesis]|stop|startcore|stopcore|restartcore !!! \033[0m"
         ;;
 esac
 
