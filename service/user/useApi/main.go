@@ -277,11 +277,12 @@ func (u *User) GetTransfer(ctx context.Context, req *api.Request, rsp *api.Respo
 		return err
 	}
 
-	isTrue, err := sign.QueryVerifySign(req.Body)
-	if !isTrue {
-		rsp.Body = errcode.ReturnError(1000, err)
-		return nil
-	}
+	//isTrue, err := sign.QueryVerifySign(req.Body)
+	//isTrue = true
+	//if !isTrue {
+	//	rsp.Body = errcode.ReturnError(1000, err)
+	//	return nil
+	//}
 
 	response, err := u.Client.GetTransfer(ctx, &queryMyRequest)
 
@@ -332,11 +333,12 @@ func (u *User) GetBalance(ctx context.Context, req *api.Request, rsp *api.Respon
 		return err
 	}
 
-	isTrue, err := sign.QueryVerifySign(req.Body)
-	if !isTrue {
-		rsp.Body = errcode.ReturnError(1000, err)
-		return nil
-	}
+	//isTrue, err := sign.QueryVerifySign(req.Body)
+	//isTrue=true
+	//if !isTrue {
+	//	rsp.Body = errcode.ReturnError(1000, err)
+	//	return nil
+	//}
 
 	response, err := u.Client.GetBalance(ctx, &getBalanceRequest)
 	if err != nil {
