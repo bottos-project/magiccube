@@ -31,6 +31,14 @@ type CoreBaseReturn struct {
 	Result  interface{} `json:"result"`
 }
 
+// QueryObjectResult struct
+type QueryObjectResult struct {
+	Contract string `json:"contract"`
+	Object   string `json:"object"`
+	Key      string `json:"key"`
+	Value    string `json:"value"`
+}
+
 // CoreCommonReturn struct
 type CoreCommonReturn struct {
 	Errcode int64  `json:"errcode"`
@@ -349,6 +357,7 @@ type Transfer struct {
 	Param         struct {
 		From string `bson:"from"`
 		To string `bson:"to"`
+		TokenType    string `bson:"tokentype"`
 		Value uint64 `bson:"value"`
 	} `bson:"param"`
 	Sender     string    `bson:"sender"`

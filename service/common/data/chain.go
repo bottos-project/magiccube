@@ -30,6 +30,7 @@ import (
 	"github.com/bottos-project/magiccube/service/common/bean"
 	user_proto "github.com/bottos-project/magiccube/service/user/proto"
 	log "github.com/cihub/seelog"
+	"encoding/hex"
 )
 
 const (
@@ -176,4 +177,61 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	}
 
 	return accountInfo, nil
+}
+
+// QueryObject get Object
+func QueryObject(contract, object, key string) ([]byte, error) {
+	log.Info("Start QueryObject.")
+	params := `service=bottos&method=CoreApi.QueryObject&request={"contract":"%s","object":"%s","key":"%s"}`
+	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
+		strings.NewReader(fmt.Sprintf(params, contract, object, key)))
+	//strings.NewReader(fmt.Sprintf(params, "bottoscontract", "DTO", "bbb")))
+
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if resp.StatusCode != 200 {
+		log.Error(resp.Status)
+		return nil, errors.New(string(body))
+	}
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	var commonRet = &bean.CoreBaseReturn{}
+	err = json.Unmarshal(body, commonRet)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	if commonRet.Errcode != 0 {
+		return nil, errors.New(string(body))
+	}
+
+	resultBuf, err := json.Marshal(commonRet.Result)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var queryObjectRes = &bean.QueryObjectResult{}
+	err = json.Unmarshal(resultBuf, queryObjectRes)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	log.Info(queryObjectRes.Value)
+
+	resultByte, err := hex.DecodeString(queryObjectRes.Value)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return resultByte, err
 }
