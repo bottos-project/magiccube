@@ -399,7 +399,7 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 		rsp.Code = 1100
 		rsp.Msg = err.Error()
 	}
-	//log.Info(accountInfo.Balance)
+	log.Info(accountInfo.Balance)
 	if accountInfo != nil {
 		var data = []*user_proto.GetBalanceRow{}
 
@@ -413,15 +413,12 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 
 	dtoAmountByte, err := data.QueryObject("bottoscontract", dtoToken, req.Username)
 
-	log.Error(strings.Contains(err.Error(), "10205"))
-
 	if err != nil && !(strings.Contains(err.Error(), "10205")) {
 		log.Error(err)
 		rsp.Code = 1101
 		rsp.Msg = err.Error()
 		return nil
 	}
-	log.Info(dtoAmountByte)
 
 	type TransferV struct {
 		Value uint64
