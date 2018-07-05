@@ -166,7 +166,7 @@ func (u *User) Favorite(ctx context.Context, req *user_proto.FavoriteRequest, rs
 	i, err := data.PushTransaction(req)
 
 	if i == nil {
-		rsp.Code = 1008
+		rsp.Code = 1007
 		rsp.Msg = err.Error()
 	}
 	return nil
@@ -201,6 +201,8 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
+		rsp.Code = 1060
+		rsp.Msg = err.Error()
 	}
 	var ret []*bean.Favorite
 	mgo.DB(config.DB_NAME).C("pre_favoritepro").Find(where).Sort("-_id").Limit(pageSize).Skip(skip).All(&ret)
@@ -212,7 +214,8 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 		for _, v := range ret {
 			err := mgo.DB(config.DB_NAME).C("pre_assetreg").Find(&bson.M{"param.assetid": v.Param.Goodsid}).Sort("-_id").Limit(1).One(&ret2)
 			if err != nil {
-				log.Error(err)
+				rsp.Code = 1060
+				rsp.Msg = err.Error()
 			}
 
 			rows = append(rows, &user_proto.FavoriteData{
@@ -228,7 +231,8 @@ func (u *User) GetFavorite(ctx context.Context, req *user_proto.GetFavoriteReque
 		for _, v := range ret {
 			err := mgo.DB(config.DB_NAME).C("pre_datareqreg").Find(&bson.M{"param.datareqid": v.Param.Goodsid}).Sort("-_id").Limit(1).One(&ret2)
 			if err != nil {
-				log.Error(err)
+				rsp.Code = 1060
+				rsp.Msg = err.Error()
 			}
 
 			rows = append(rows, &user_proto.FavoriteData{
@@ -257,7 +261,7 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 	i, err := data.PushTransaction(req)
 
 	if i == nil {
-		rsp.Code = 1008
+		rsp.Code = 1070
 		rsp.Msg = err.Error()
 	}
 	return nil
@@ -266,6 +270,9 @@ func (u *User) Transfer(ctx context.Context, req *user_proto.PushTxRequest, rsp 
 //GetTransfer is to query Transfer List
 func (u *User) GetTransfer(ctx context.Context, req *user_proto.GetTransferRequest, rsp *user_proto.GetTransferResponse) error {
 	var pageNum, pageSize, skip int = 1, 20, 0
+	var where interface{}
+	btoToken := "BTO"
+	dtoToken := "DTO"
 	if req.PageNum > 0 {
 		pageNum = int(req.PageNum)
 	}
@@ -275,12 +282,17 @@ func (u *User) GetTransfer(ctx context.Context, req *user_proto.GetTransferReque
 	}
 
 	skip = (pageNum - 1) * pageSize
-
-	var where = bson.M{"method": "transfer","$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	if req.TokenType == btoToken {
+		where = bson.M{"method": "transfer", "param.tokentype": bson.M{"$exists": false}, "$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	} else if req.TokenType == dtoToken {
+		where = bson.M{"method": "transfer", "param.tokentype": dtoToken, "$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	} else {
+		where = bson.M{"method": "transfer", "$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
+	}
+	log.Info(where)
 		//&bson.M{"method": "transfer", []bson.M{"$or": bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
 	//var where = &bson.M{"method": "transfer", []bson.M{"$or": bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
 	 //{"$or": []bson.M{bson.M{"param.from": req.Username}, bson.M{"param.to": req.Username}}}
-	//var where = &bson.M{"method": "transfer", "param.to": req.Username}
 
 	var ret []bean.Transfer
 
@@ -290,6 +302,8 @@ func (u *User) GetTransfer(ctx context.Context, req *user_proto.GetTransferReque
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
+		rsp.Code = 1080
+		rsp.Msg = err.Error()
 	}
 	mgo.DB(config.DB_NAME).C("Transactions").Find(where).Sort("-create_time").Skip(skip).Limit(pageSize).All(&ret)
 
@@ -302,6 +316,7 @@ func (u *User) GetTransfer(ctx context.Context, req *user_proto.GetTransferReque
 			TransactionId: v.TransactionId,
 			From: v.Param.From,
 			To: v.Param.To,
+			TokenType:     v.Param.TokenType,
 			Value: v.Param.Value,
 			BlockNumber:v.BlockNumber,
 			Timestamp: uint64(v.CreateTime.Unix()),
@@ -339,6 +354,8 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 	log.Info(count)
 	if err != nil {
 		log.Error(err)
+		rsp.Code = 1090
+		rsp.Msg = err.Error()
 	}
 	mgo.DB(config.DB_NAME).C("Transactions").Find(where).Sort("-create_time").Skip(skip).Limit(pageSize).All(&ret)
 
@@ -372,21 +389,43 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 //GetBalance from chain
 func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest, rsp *user_proto.GetBalanceResponse) error {
 	log.Info("GetBalance src Start!")
-	accountInfo, err := data.AccountInfo(req.Username)
+	btoToken := "BTO"
+	dtoToken := "DTO"
 
-	if accountInfo != nil {
+	accountInfo, err := data.AccountInfo(req.Username)
+	log.Info(accountInfo.Balance)
+	if err != nil {
+		log.Error(err)
+		rsp.Code = 1100
+		rsp.Msg = err.Error()
+	}
+
+	dtoAmountByte, err := data.QueryObject("bottoscontract", dtoToken, req.Username)
+	if err != nil {
+		log.Error(err)
+		rsp.Code = 1101
+		rsp.Msg = err.Error()
+	}
+	type TransferV struct {
+		Value uint64
+	}
+	var dtoAmount = &TransferV{}
+	pack.Unmarshal(dtoAmountByte, dtoAmount)
+	log.Info(dtoAmount.Value)
+
+	if accountInfo != nil && dtoAmount != nil {
 		var data = []*user_proto.GetBalanceRow{}
 
 		data = append(data, &user_proto.GetBalanceRow{
-			TokenType: "BTO",
+			TokenType: btoToken,
 			Value:     accountInfo.Balance,
 			Cny:       0,
 			Usd:       0,
 		})
 
 		data = append(data, &user_proto.GetBalanceRow{
-			TokenType: "DTO",
-			Value:     10,
+			TokenType: dtoToken,
+			Value:     dtoAmount.Value,
 			Cny:       0,
 			Usd:       0,
 		})
@@ -395,7 +434,7 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 
 		rsp.Data = data
 	} else {
-		rsp.Code = 1006
+		rsp.Code = 1101
 		rsp.Msg = err.Error()
 	}
 	return nil

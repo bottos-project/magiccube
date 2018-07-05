@@ -69,6 +69,55 @@
   },
   "details": ""
 },{
+  "code": 1060,
+  "msg": {
+    "en": "Get the Favorite list failure",
+    "cn": "获取收藏列表失败"
+  },
+  "details": ""
+},{
+  "code": 1070,
+  "msg": {
+    "en": "Transfer failure",
+    "cn": "转账失败"
+  },
+  "details": ""
+},{
+  "code": 1080,
+  "msg": {
+    "en": "Get the Transfer list failure",
+    "cn": "获取转账列表失败"
+  },
+  "details": ""
+},{
+  "code": 1090,
+  "msg": {
+    "en": "Get the purchase list failure",
+    "cn": "获取已购买列表失败"
+  },
+  "details": ""
+},{
+  "code": 1100,
+  "msg": {
+    "en": "Get the BTO Amount list failure",
+    "cn": "获取BTO列表失败"
+  },
+  "details": ""
+},{
+  "code": 1101,
+  "msg": {
+    "en": "Get the amount list failure",
+    "cn": "获取余额列表失败"
+  },
+  "details": ""
+},{
+  "code": 1102,
+  "msg": {
+    "en": "Get the purchase list failure",
+    "cn": "获取已购买列表失败"
+  },
+  "details": ""
+},{
     "code": 2011,
     "msg": {
       "en": "Register File failure",
