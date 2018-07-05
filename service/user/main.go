@@ -371,6 +371,7 @@ func (u *User) QueryMyBuy(ctx context.Context, req *user_proto.QueryMyBuyRequest
 			AssetName:   ret2.Param.Info.AssetName,
 			AssetType:   ret2.Param.Info.AssetType,
 			FeatureTag:  ret2.Param.Info.FeatureTag,
+			TokenType:   ret2.Param.Info.TokenType,
 			Price:       ret2.Param.Info.Price,
 			SampleHash:  ret2.Param.Info.SampleHash,
 			StorageHash: ret2.Param.Info.StorageHash,

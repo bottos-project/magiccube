@@ -217,11 +217,12 @@ message Buy {
 	string asset_name = 4;
 	uint64 asset_type = 5;
 	string feature_tag = 6;
-	uint64 price = 7;
-	string sample_hash = 8;
-	string storage_hash = 9;
-	uint64 expiretime = 10;
-	uint64 timestamp = 11;
+    string token_type = 7;
+    uint64 price = 8;
+    string sample_hash = 9;
+    string storage_hash = 10;
+    uint64 expiretime = 11;
+    uint64 timestamp = 12;
 }
 
 
