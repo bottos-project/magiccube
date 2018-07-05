@@ -35,6 +35,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"os"
 	"bytes"
+	"strings"
 )
 
 // User struct
@@ -393,19 +394,35 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 	dtoToken := "DTO"
 
 	accountInfo, err := data.AccountInfo(req.Username)
-	log.Info(accountInfo.Balance)
 	if err != nil {
 		log.Error(err)
 		rsp.Code = 1100
 		rsp.Msg = err.Error()
 	}
+	//log.Info(accountInfo.Balance)
+	if accountInfo != nil {
+		var data = []*user_proto.GetBalanceRow{}
+
+		data = append(data, &user_proto.GetBalanceRow{
+			TokenType: btoToken,
+			Value:     accountInfo.Balance,
+			Cny:       0,
+			Usd:       0,
+		})
+	}
 
 	dtoAmountByte, err := data.QueryObject("bottoscontract", dtoToken, req.Username)
-	if err != nil {
+
+	log.Error(strings.Contains(err.Error(), "10205"))
+
+	if err != nil && !(strings.Contains(err.Error(), "10205")) {
 		log.Error(err)
 		rsp.Code = 1101
 		rsp.Msg = err.Error()
+		return nil
 	}
+	log.Info(dtoAmountByte)
+
 	type TransferV struct {
 		Value uint64
 	}
