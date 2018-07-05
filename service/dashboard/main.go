@@ -103,6 +103,7 @@ func (u *Dashboard) GetTxList(ctx context.Context, req *dashboard_proto.GetTxLis
 			TransactionId: v.TransactionId,
 			From:          v.Param.Info.Username,
 			To:            ret2.Param.Info.UserName,
+			TokenType:     ret2.Param.Info.TokenType,
 			Price:         ret2.Param.Info.Price,
 			AssetId:       ret2.Param.AssetId,
 			AssetName:     ret2.Param.Info.AssetName,
