@@ -19,13 +19,14 @@ package main
 
 import (
 	"github.com/bottos-project/magiccube/service/common/bean"
+	"github.com/bottos-project/magiccube/service/common/util"
 	"github.com/bottos-project/magiccube/tools/db/mongodb"
 	log "github.com/cihub/seelog"
 	"github.com/robfig/cron"
 	"gopkg.in/mgo.v2/bson"
 )
 
-var branchTable = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg"}
+var branchTable = []string{"favoritepro", "datareqreg", "assetreg", "presale", "datafilereg", "regnodeinfo"}
 var prefix = "pre_"
 
 //Favoritepro struct
@@ -67,6 +68,14 @@ type Info struct {
 //RecMessageId struct
 type RecMessageId struct {
 	MessageID string `bson:"message_id"`
+}
+
+//RegNodeInfo struct
+type RegNodeInfo struct {
+	Seedip      string `bson:"seedip"`
+	Slaveiplist string `bson:"slaveiplist"`
+	Nodeuuid    string `bson:"nodeuuid"`
+	Capacity    string `bson:"capacity"`
 }
 
 func init() {
@@ -183,6 +192,27 @@ func BranchTable() {
 				set := bson.M{"$set": bson.M{"param.info.optype": 3}}
 				mgo.DB("bottos").C(prefix+v.Method).UpdateAll(where, set)
 			}
+		case "regnodeinfo":
+			log.Info("regnodeinfo!!")
+			var regnodeinfo = &RegNodeInfo{}
+			data, err := bson.Marshal(v.Param)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			bson.Unmarshal(data, &regnodeinfo)
+
+			var cityInfo util.SzTongSpoint
+			cityInfo = util.Ip2pointxy(util.HexIptoDec(regnodeinfo.Seedip))
+			log.Info(cityInfo.Detail.City.Pointy, cityInfo.Detail.City.Pointx)
+			//if file.OpTyte == 2 || file.OpTyte == 3 {
+			where = bson.M{"param.nodeuuid": regnodeinfo.Nodeuuid}
+
+			mgo.DB("bottos").C(prefix + v.Method).Insert(v)
+			set := bson.M{"$set": bson.M{"param.latitude": cityInfo.Detail.City.Pointy, "param.longitude": cityInfo.Detail.City.Pointx,
+				"param.slaveiplist": regnodeinfo.Slaveiplist, "param.capacity": regnodeinfo.Capacity}}
+			mgo.DB("bottos").C(prefix + v.Method).UpdateAll(where, set)
+			//}
 		}
 		mgo.DB("bottos").C(prefix + v.Method).Insert(v)
 

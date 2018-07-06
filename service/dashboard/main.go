@@ -44,16 +44,16 @@ func (u *Dashboard) GetNodeInfos(ctx context.Context, req *dashboard_proto.GetNo
 	var mgo = mgo.Session()
 	defer mgo.Close()
 
-	mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Sort("-_id").All(&ret)
+	mgo.DB(config.DB_NAME).C("pre_regnodeinfo").Find(&bson.M{}).Sort("-_id").All(&ret)
 
 	var rows = []*dashboard_proto.NodeInfoData{}
 	for _, v := range ret {
 		rows = append(rows, &dashboard_proto.NodeInfoData{
-			Ip:   v.IP,
-			Port: v.Port,
+			Ip:   v.Param.Seedip,
+			Port: v.Param.Port,
 			Position: &dashboard_proto.Position{
-				Longitude: v.Pointx,
-				Latitude:  v.Pointy,
+				Latitude: v.Param.Latitude,
+				Longitude: v.Param.Longitude,
 			},
 		})
 	}
