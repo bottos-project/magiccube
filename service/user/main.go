@@ -412,7 +412,7 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 		})
 	}
 
-	dtoAmountByte, err := data.QueryObject("bottoscontract", dtoToken, req.Username)
+	dtoAmountByte, err := data.QueryObject("bottostoken", dtoToken, req.Username)
 
 	if err != nil && !(strings.Contains(err.Error(), "10205")) {
 		log.Error(err)
