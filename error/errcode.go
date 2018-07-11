@@ -89,7 +89,7 @@ func Return(b interface{}) string {
 			log.Error(err)
 			panic(err)
 		}
-
+		para["code"] = 1
 		body, err := json.Marshal(para)
 
 		//body, err := json.Marshal(ret)
