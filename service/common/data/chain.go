@@ -163,13 +163,28 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 		return nil, errors.New(string(body))
 	}
 
-	resultBuf, err := json.Marshal(commonRet.Result)
+	//fix json.Unmarshal bug,when param is (u)int64
+	decoder := json.NewDecoder(strings.NewReader(string(body)))
+	decoder.UseNumber()
+	para := make(map[string]interface{})
+	err = decoder.Decode(&para)
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+
+	log.Info(para["result"])
+
+	var resultBuf []byte
+	var accountInfo = &user_proto.AccountInfoData{}
+	if para["result"] != nil {
+		resultBuf, err = json.Marshal(para["result"])
+		//resultBuf, err := json.Marshal(commonRet.Result)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 
-	var accountInfo = &user_proto.AccountInfoData{}
 	err = json.Unmarshal(resultBuf, accountInfo)
 	if err != nil {
 		log.Error(err)
@@ -177,6 +192,9 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	}
 
 	return accountInfo, nil
+	} else {
+		return accountInfo, nil
+	}
 }
 
 // QueryObject get Object

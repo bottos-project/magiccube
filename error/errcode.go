@@ -31,6 +31,7 @@ import (
 
 	log "github.com/cihub/seelog"
 	"bytes"
+	"strings"
 )
 
 // ErrorCode struct
@@ -79,7 +80,19 @@ func Return(b interface{}) string {
 		ret.Code = 1
 		ret.Msg = "ok"
 
-		body, err := json.Marshal(ret)
+		//fix json.Unmarshal bug,when param is (u)int64
+		decoder := json.NewDecoder(strings.NewReader(string(buf)))
+		decoder.UseNumber()
+		para := make(map[string]interface{})
+		err = decoder.Decode(&para)
+		if err != nil {
+			log.Error(err)
+			panic(err)
+		}
+
+		body, err := json.Marshal(para)
+
+		//body, err := json.Marshal(ret)
 		if err != nil {
 			log.Error(err)
 			panic(err)
