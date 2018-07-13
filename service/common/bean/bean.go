@@ -408,10 +408,15 @@ type NodeIp struct {
 	CursorNum     uint32        `bson:"cursor_num"`
 	Lifetime      uint64        `bson:"lifetime"`
 	Method        string        `bson:"method"`
-
-	IP string `bson:"ip"`
+	Param struct {
+		Nodeuuid    string `bson:"nodeuuid"`
+		Seedip      string `bson:"seedip"`
 	Port string `bson:"port"`
-	NodeId string `bson:"nodeid"`
+		Slaveiplist string `bson:"slaveiplist"`
+		Capacity    string `bson:"capacity"`
+		Latitude    string `bson:"latitude"`
+		Longitude   string `bson:"longitude"`
+	} `bson:"param"`
 
 	Sender     string    `bson:"sender"`
 	SigAlg     uint32    `bson:"sig_alg"`

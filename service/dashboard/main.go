@@ -31,6 +31,7 @@ import (
 	"github.com/micro/go-micro"
 	"golang.org/x/net/context"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/bottos-project/magiccube/service/common/util"
 )
 
 // Dashboard struct
@@ -485,19 +486,19 @@ func (u *Dashboard) GetNodeIp(ctx context.Context, req *dashboard_proto.GetNodeI
 	var mgo = mgo.Session()
 	defer mgo.Close()
 
-	count, err := mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Count()
-	log.Info(count)
+	count, err := mgo.DB(config.DB_NAME).C("pre_regnodeinfo").Find(&bson.M{}).Count()
+	log.Info("count: ",count)
 	if err != nil {
 		log.Error(err)
 	}
-	mgo.DB(config.DB_NAME).C("pointxy").Find(&bson.M{}).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
+	mgo.DB(config.DB_NAME).C("pre_regnodeinfo").Find(&bson.M{}).Sort("-_id").Skip(skip).Limit(pageSize).All(&ret)
 
 	var rows = []*dashboard_proto.NodeIpDataRow{}
 	for _, v := range ret {
 		rows = append(rows, &dashboard_proto.NodeIpDataRow{
-			Ip:     v.IP,
-			Port:   v.Port,
-			NodeId: v.NodeId,
+			Ip:     util.HexIptoDec(v.Param.Seedip),
+			Port:   v.Param.Port,
+			NodeId: v.Param.Nodeuuid,
 		})
 	}
 
