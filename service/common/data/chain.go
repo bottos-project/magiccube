@@ -37,12 +37,12 @@ const (
 	// BASE_URL BASE_URL
 	BASE_URL = config.BASE_RPC
 	// TX_PARAMS TX_PARAMS
-	TX_PARAMS = "service=bottos&method=CoreApi.PushTrx&request=%s"
+	TX_PARAMS = "service=bottos&method=Chain.SendTransaction&request=%s"
 )
 
 // BlockHeader get block header
 func BlockHeader() (*user_proto.BlockHeader, error) {
-	params := `service=bottos&method=CoreApi.QueryChainInfo&request={}`
+	params := `service=bottos&method=Chain.GetInfo&request={}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(params))
 	if err != nil {
@@ -135,7 +135,7 @@ func PushTransaction(i interface{}) (*bean.CoreCommonReturn, error) {
 
 // AccountInfo get account info
 func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
-	params := `service=bottos&method=CoreApi.QueryAccount&request={"account_name":"%s"}`
+	params := `service=bottos&method=Chain.GetAccount&request={"account_name":"%s"}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf(params, string(account))))
 	if err != nil {
@@ -197,10 +197,10 @@ func AccountInfo(account string) (*user_proto.AccountInfoData, error) {
 	}
 }
 
-// QueryObject get Object
-func QueryObject(contract, object, key string) ([]byte, error) {
-	log.Info("Start QueryObject.")
-	params := `service=bottos&method=CoreApi.QueryObject&request={"contract":"%s","object":"%s","key":"%s"}`
+// GetKeyValue get Object
+func GetKeyValue(contract, object, key string) ([]byte, error) {
+	log.Info("Start GetKeyValue.")
+	params := `service=bottos&method=Chain.GetKeyValue&request={"contract":"%s","object":"%s","key":"%s"}`
 	resp, err := http.Post(BASE_URL, "application/x-www-form-urlencoded",
 		strings.NewReader(fmt.Sprintf(params, contract, object, key)))
 	//strings.NewReader(fmt.Sprintf(params, "bottoscontract", "DTO", "bbb")))
@@ -237,7 +237,7 @@ func QueryObject(contract, object, key string) ([]byte, error) {
 		return nil, err
 	}
 
-	var queryObjectRes = &bean.QueryObjectResult{}
+	var queryObjectRes = &bean.GetKeyValueResult{}
 	err = json.Unmarshal(resultBuf, queryObjectRes)
 	if err != nil {
 		log.Error(err)

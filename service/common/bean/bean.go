@@ -31,8 +31,8 @@ type CoreBaseReturn struct {
 	Result  interface{} `json:"result"`
 }
 
-// QueryObjectResult struct
-type QueryObjectResult struct {
+// GetKeyValueResult struct
+type GetKeyValueResult struct {
 	Contract string `json:"contract"`
 	Object   string `json:"object"`
 	Key      string `json:"key"`

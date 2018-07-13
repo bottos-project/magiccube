@@ -393,12 +393,13 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 	log.Info("GetBalance src Start!")
 	btoToken := "BTO"
 	dtoToken := "DTO"
-
+	//get BTO Amount
 	accountInfo, err := data.AccountInfo(req.Username)
 	if err != nil {
 		log.Error(err)
 		rsp.Code = 1100
 		rsp.Msg = err.Error()
+		return nil
 	}
 	log.Info(accountInfo.Balance)
 	if accountInfo != nil {
@@ -412,7 +413,8 @@ func (u *User) GetBalance(ctx context.Context, req *user_proto.GetBalanceRequest
 		})
 	}
 
-	dtoAmountByte, err := data.QueryObject("bottostoken", dtoToken, req.Username)
+	//get DTO Amount
+	dtoAmountByte, err := data.GetKeyValue("bottostoken", dtoToken, req.Username)
 
 	if err != nil && !(strings.Contains(err.Error(), "10205")) {
 		log.Error(err)
