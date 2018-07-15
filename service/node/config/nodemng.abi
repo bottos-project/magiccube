@@ -1,36 +1,33 @@
 {
-  "types": [],
+  "types": [],	
   "structs": [{
       "name": "NodeBaseInfo",
       "base": "",
       "fields": {
-        "nodeIp": "string",
-        "nodePort": "string",
-        "nodeAddress": "string"
-      }
+          "nodeIp": "string",
+          "nodePort": "string",
+          "city": "string",
+          "osSystem": "string",
+          "serviceProvider": "string",
+          "longitude": "string",
+          "latitude": "string"
+        }
     },{
-      "name": "NodeRegReq",
+      "name": "NodeInfoReq",
       "base": "",
       "fields": {
-        "nodeId": "string",
-        "info": "NodeBaseInfo"
-      }
-    },{
-      "name": "NodeRegTable",
-      "base": "",
-      "fields": {
-        "nodeId": "string",
-        "info": "NodeBaseInfo"
-      }
+          "nodeId": "string",
+          "info": "NodeBaseInfo"
+        }
     }
   ],
   "actions": [{
-      "action_name": "noderegreq",
-      "type": "NodeRegReq"
+      "action_name": "nodeinforeg",
+      "type": "NodeInfoReq"
     }
   ],
   "tables": [{
-      "table_name": "noderegtable",
+      "table_name": "nodeinfo",
       "index_type": "string",
       "key_names": [
         "nodeId"
@@ -38,7 +35,7 @@
       "key_types": [
         "string"
       ],
-      "type": "NodeRegTable"
+      "type": "NodeBaseInfo"
     }
   ]
 }

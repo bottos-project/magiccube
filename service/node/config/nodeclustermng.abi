@@ -4,20 +4,20 @@
       "name": "NodeClusterReg",
       "base": "",
       "fields": {
-        "nodeIP": "string",
-        "clusterIP": "string",
-        "uuid": "string",
-        "capacity": "string"
-      }
+          "nodeIP": "string",
+          "clusterIP": "string",
+          "uuid": "string",
+          "capacity": "string"
+        }
     },
     {
       "name": "NodeClusterInfo",
       "base": "",
       "fields": {
-        "clusterIP": "string",
-        "uuid": "string",
-        "capacity": "string"
-      }
+          "clusterIP": "string",
+          "uuid": "string",
+          "capacity": "string"
+        }
     }
   ],
   "actions": [{

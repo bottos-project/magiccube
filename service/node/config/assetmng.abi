@@ -1,54 +1,46 @@
 {
   "types": [],
   "structs": [{
-      "name": "asset_info",
+      "name": "AssetInfo",
       "base": "",
       "fields": {
-        "user_name": "string",
-        "asset_name": "string",
-        "asset_type": "string",
-        "feature_tag": "string",
-        "sample_path": "string",
-        "sample_hash": "string",
-        "storage_path": "string",
-        "storage_hash": "string",
-        "expire_time": "uint32",
-        "price": "uint64",
-        "description": "string",
-        "upload_date": "uint32",
-        "signature": "string"
-      }
-    },{
-      "name": "reg_asset_req",
+           "userName": "string",
+           "assetName": "string",
+           "assetType": "uint64",
+           "featureTag": "string",
+           "sampleHash": "string",
+           "storageHash": "string",
+           "expireTime": "uint32",
+           "opType":     "uint32",
+           "tokenType":  "string",
+           "price":       "uint64",
+           "description": "string"
+        }
+    },
+    {
+      "name": "RegAssetReq",
       "base": "",
       "fields": {
-        "asset_id": "string",
-        "info": "asset_info"
-      }
-    },{
-      "name": "regassettbl",
-      "base": "",
-      "fields": {
-        "asset_id": "string",
-        "info": "asset_info"
-      }
+           "assetId": "string",
+           "info":    "AssetInfo"
+        }
     }
   ],
   "actions": [{
-      "action_name": "regassetreq",
-      "type": "reg_asset_req"
+       "action_name": "assetreg",
+       "type": "RegAssetReq"
     }
   ],
   "tables": [{
-      "table_name": "regassettbl",
+      "table_name":"assetreginfo",
       "index_type": "string",
       "key_names": [
-        "asset_id"
+        "assetId"
       ],
       "key_types": [
         "string"
       ],
-      "type": "regassettbl"
+      "type": "AssetInfo"
     }
   ]
 }

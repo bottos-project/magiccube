@@ -586,11 +586,11 @@ func NewNodeClusterAccount(nodeinfos api.NodeInfos, value interface{}, pubkey st
 }
 
 //PushNodeClusterTrx function
-func PushNodeClusterTrx(value api.StorageDBClusterInfo, pubkey string, prikey string) {
+func PushNodeClusterTrx(mapstruct map[string]interface{}, value api.StorageDBClusterInfo, pubkey string, prikey string) {
 
 	pubkey = "0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f"
 	prikey = "b799ef616830cd7b8599ae7958fbee56d4c8168ffd5421a16025a398b8a4be45"
-
+	
 	blockheader, err := data.BlockHeader()
 	if err != nil {
 		return
@@ -601,10 +601,7 @@ func PushNodeClusterTrx(value api.StorageDBClusterInfo, pubkey string, prikey st
            return
         }
 
-	accountbuf, err := pack.MarshalAbi(&value, &Abi, "nodeclustermng", "reg")
-	if err != nil {
-		return
-	}
+	accountbuf, err := pack.MarshalAbiEx(mapstruct, &Abi, "nodeclustermng", "reg")
 	
 	txAccountSign := &push_sign.TransactionSign{
 		Version:     1,
@@ -781,8 +778,17 @@ func SetNodeDBClusterInfo(nodeinfos api.NodeInfos) {
 
 	pubkey := keystore.GetPubKey()
 	prikey := keystore.GetPriKey()
+	
 
-	PushNodeClusterTrx(dbclusterinfo, pubkey, prikey)
+	/* Prepare map for abi */
+	nodeclustermngMap := make(map[string]interface{})
+	
+	pack.Setmapval(nodeclustermngMap, "nodeIP", dbclusterinfo.SeedIP)
+	pack.Setmapval(nodeclustermngMap, "clusterIP", dbclusterinfo.SlaveIP)
+	pack.Setmapval(nodeclustermngMap, "uuid", dbclusterinfo.NodeUUID)
+	pack.Setmapval(nodeclustermngMap, "capacity", dbclusterinfo.StorageCapacity)
+
+	PushNodeClusterTrx(nodeclustermngMap, dbclusterinfo, pubkey, prikey)
 
 	//dbcapacityinfo = api.NodeCapacityInfo{NodeUUID: keystore.GetUUID(), NodeIP: nodeinfos.Node[0].IpAddr, StorageCapacity: nodeinfos.Node[0].StorageCapacity}
 

@@ -243,6 +243,7 @@ function startcore()
     if [ "$CHK_CORE" -lt 1 ];
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
+		cd $USER_HOME_DIR/opt/go/bin/core/
 		nohup $USER_HOME_DIR/opt/go/bin/core/bottos 2>&1 & 
         	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
         	sleep 3
@@ -260,7 +261,10 @@ function stopcore()
     fi
 
     kill -SIGINT $RUNNING_CORE_PID
-    ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 9
+    ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+    ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+    ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+    ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
 
     return
 }
@@ -328,7 +332,7 @@ function prepcheck()
 function startcontract()
 {
 	echo
-	echo "Wait 60s for system be ready to generate blosks..."
+	echo "Wait 60s for system be ready to generate blocks..."
 	echo
 	sleep 60
 	BLUE='\e[1;34m'
@@ -476,7 +480,8 @@ function startserv()
 
 	# start node service , other services will be started by node server
     	#nohup ${SERVER_PATH}node > node.file 2>&1
-    	${SERVER_PATH}./node
+    	cd ${SERVER_PATH}
+	${SERVER_PATH}./node
 	echo
 	echo
 
@@ -498,8 +503,10 @@ function stopserv()
 	ps -ef | grep -w ${SERVER_PATH}"useApi" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep ${SERVER_PATH}"storage" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
-	sleep 2
 	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+	ps -ef | grep "$USER_HOME_DIR/opt/go/bin/core/bottos" | grep -v grep | cut -c 9-15 | xargs kill -s 2
+	sleep 2
         
         miniopid=$(pidof minio)
         kill -9 $miniopid 2>/dev/null

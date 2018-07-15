@@ -1,57 +1,64 @@
 {
   "types": [],
   "structs": [{
-      "name": "FileInfo",
+      "name": "DataFileInfo",
       "base": "",
       "fields": {
-        "userName": "string",
-        "sessionId": "string",
-        "fileSize": "uint64",
-        "fileName": "string",
-        "filePolicy": "string",
-        "authPath": "string",
-        "fileNumber": "uint64",
-        "signature": "string"
-      }
-    },{
-      "name": "FileRegReq",
+          "userName": "string",
+          "fileSize": "uint64",
+          "fileName": "string",
+          "filePolicy": "string",
+          "fileNumber": "uint64",
+          "simorass": "uint32",
+          "opType": "uint32",
+          "storeAddr": "string"
+        }
+    },
+    {
+      "name": "DataFileRegReq",
       "base": "",
       "fields": {
-        "fileHash": "string",
-        "info": "FileInfo"
-      }
-    },{
-      "name": "FileAuthReq",
+          "fileHash":"string",
+          "info": "DataFileInfo"
+        }
+    },
+    {
+      "name": "DataFileAuthReq",
       "base": "",
       "fields": {
-        "storgeHash": "string",
-        "userName": "string"
-      }
-    },{
+          "storgeHash": "string",
+          "userName": "string"
+        }
+    },
+    {
       "name": "AuthBasicInfo",
       "base": "",
       "fields": {
-        "authType": "string",
-        "authPath": "string"
-      }
-    },{
-      "name": "FileAuthInfo",
-      "base": "",
-      "fields": {
-        "hashUserName": "string",
-        "info": "AuthBasicInfo"
-      }
+          "authType": "string"
+        }
     }
   ],
   "actions": [{
-      "action_name": "fileregreq",
-      "type": "FileRegReq"
-    },{
-      "action_name": "fileauthreq",
-      "type": "FileAuthReq"
+      "action_name": "datafilereg",
+      "type": "DataFileRegReq"
+    },
+    {
+      "action_name": "fileauthreg",
+      "type": "DataFileAuthReq"
     }
   ],
   "tables": [{
+      "table_name": "datafileinfo",
+      "index_type": "string",
+      "key_names": [
+        "fileHash"
+      ],
+      "key_types": [
+        "string"
+      ],
+      "type": "DataFileInfo"
+    },
+    {
       "table_name": "fileauthinfo",
       "index_type": "string",
       "key_names": [
@@ -60,7 +67,7 @@
       "key_types": [
         "string"
       ],
-      "type": "FileAuthInfo"
+      "type": "AuthBasicInfo"
     }
   ]
 }

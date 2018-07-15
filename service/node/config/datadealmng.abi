@@ -1,69 +1,52 @@
 {
   "types": [],
   "structs": [{
-      "name": "DataExchangeBaseInfo",
+      "name":"DataDealnfo",
       "base": "",
       "fields": {
-        "userName": "string",
-        "sessionId": "string",
-        "assetId": "string",
-        "random_num": "uint64",
-        "signature": "string"
-      }
-    },{
-      "name": "DataExchgReq",
+           "userName": "string",
+           "assetId":  "string"
+        }
+    },
+    {
+      "name":"DataDealReq",
       "base": "",
       "fields": {
-        "dataExchangeId": "string",
-        "info": "DataExchangeBaseInfo"
-      }
-    },{
-      "name": "DataPresaleInfo",
+           "dataExchangeId": "string",
+           "info": "DataDealnfo"
+        }
+    },
+    {
+      "name":"PresaleInfo",
       "base": "",
       "fields": {
-        "userName": "string",
-        "sessionId": "string",
-        "assetId": "string",
-        "assetName": "string",
-        "dataReqId": "string",
-        "dataReqName": "string",
-        "consumer": "string",
-        "random_num": "uint64",
-        "signature": "string"
-      }
-    },{
-      "name": "PresaleReq",
+           "userName": "string",
+           "assetId":  "string",
+           "dataReqId":"string",
+           "consumer": "string",
+           "opType":   "uint32"
+        }  
+    },
+    {
+      "name":"PresaleReq",
       "base": "",
       "fields": {
-        "dataPresaleId": "string",
-        "info": "DataPresaleInfo"
-      }
-    },{
-      "name": "ExgReqTbl",
-      "base": "",
-      "fields": {
-        "dataExchangeId": "string",
-        "info": "DataExchangeBaseInfo"
-      }
-    },{
-      "name": "PresaleTbl",
-      "base": "",
-      "fields": {
-        "dataPresaleId": "string",
-        "info": "DataPresaleInfo"
-      }
+           "dataPresaleId": "string",
+           "info": "PresaleInfo"
+        }
     }
   ],
   "actions": [{
-      "action_name": "dataexchgreq",
-      "type": "DataExchgReq"
-    },{
-      "action_name": "presalereq",
-      "type": "PresaleReq"
+       "action_name": "buydata",
+       "type": "DataDealReq"
+    },
+    {
+       "action_name": "presale",
+       "type": "PresaleReq"
     }
   ],
   "tables": [{
-      "table_name": "exgreqtbl",
+      "table_name": "datadealinfo",
       "index_type": "string",
       "key_names": [
         "dataExchangeId"
@@ -71,9 +54,10 @@
       "key_types": [
         "string"
       ],
-      "type": "ExgReqTbl"
-    },{
-      "table_name": "presaletbl",
+	  "type": "DataDealnfo"
+    },
+    {
+      "table_name": "presaleinfo",
       "index_type": "string",
       "key_names": [
         "dataPresaleId"
@@ -81,7 +65,7 @@
       "key_types": [
         "string"
       ],
-      "type": "PresaleTbl"
+      "type": "PresaleInfo"
     }
   ]
 }
