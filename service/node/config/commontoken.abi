@@ -1,0 +1,83 @@
+{
+  "types": [],
+  "structs": [{
+      "name": "CreateTokenReq",
+      "base": "",
+      "fields": {
+              "tokenType": "bytes",
+              "maxSupply": "uint64"  
+           }
+       },
+       {
+          "name": "IssueTokenReq",
+          "base": "",
+          "fields": {
+              "tokenType": "bytes",
+              "targetAccount": "bytes",
+              "issueAmount": "uint64"
+           }
+       },
+       {
+      	    "name": "TransferReq",
+      	    "base": "",
+      	    "fields": {
+          	 "from": "bytes",
+                 "to": "bytes",
+                 "tokenType": "bytes",
+                 "value": "uint64"
+             }
+       },
+       {
+           "name": "TransferCredit",
+           "base": "",
+           "fields": {
+           "name": "bytes",
+           "spender": "bytes",
+           "tokenType": "bytes",
+           "value" : "uint64"
+        }
+    },
+    {
+        "name": "CancelCredit",
+        "base": "",
+        "fields": {
+            "name": "bytes",
+            "spender": "bytes",
+            "tokenType": "bytes"
+        }
+    },
+    {
+      "name": "TransferFromParam4XTO",
+      "base": "",
+      "fields": {
+          "from": "bytes",
+          "to": "bytes",
+          "tokenType": "bytes",
+          "value": "uint64"
+        }
+    }
+  ],
+  "actions": [{
+      "name": "create",
+      "type": "CreateTokenReq"
+    },
+    {
+      "name": "issue",
+      "type": "IssueTokenReq"
+    },
+    {
+      "name": "transfer",
+      "type": "TransferReq"
+    },{
+      "name": "grandcredit",
+      "type": "TransferCredit"
+    },{
+      "name": "deletecredit",
+      "type": "CancelCredit"
+    },{
+      "name": "from",
+      "type": "TransferFromParam4XTO"
+    }
+  ],
+  "tables": []
+}

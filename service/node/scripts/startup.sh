@@ -345,6 +345,15 @@ function startcontract()
 	cp -rf ~/mnt/bottos/src/github.com/bottos-project/magiccube/service/node/config/*.abi  $CORE_PROC_FILE_DIR/contract/ 2>/dev/null
 	
 	echo 
+        echo -e "${BLUE}######## Deploy Contract commontoken ########${NC}"
+        echo 
+        ${CORE_PROC_FILE_DIR}/./bcli newaccount -name commontoken -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
+        sleep 3
+        ${CORE_PROC_FILE_DIR}/./bcli deploycode -contract commontoken -wasm $CORE_PROC_FILE_DIR/contract/usermng.wasm &
+        sleep 3
+        ${CORE_PROC_FILE_DIR}/./bcli deployabi -contract commontoken -abi $CORE_PROC_FILE_DIR/contract/usermng.abi &
+        sleep 5
+	echo 
 	echo -e "${BLUE}######## Deploy Contract usermng ########${NC}"
 	echo 
 	${CORE_PROC_FILE_DIR}/./bcli newaccount -name usermng -pubkey 0454f1c2223d553aa6ee53ea1ccea8b7bf78b8ca99f3ff622a3bb3e62dedc712089033d6091d77296547bc071022ca2838c9e86dec29667cf740e5c9e654b6127f &
