@@ -1,41 +1,45 @@
 {
-  "types": [],	
-  "structs": [{
-      "name": "NodeBaseInfo",
-      "base": "",
-      "fields": {
-          "nodeIp": "string",
-          "nodePort": "string",
-          "city": "string",
-          "osSystem": "string",
-          "serviceProvider": "string",
-          "longitude": "string",
-          "latitude": "string"
-        }
-    },{
-      "name": "NodeInfoReq",
-      "base": "",
-      "fields": {
-          "nodeId": "string",
-          "info": "NodeBaseInfo"
-        }
-    }
-  ],
-  "actions": [{
-      "action_name": "nodeinforeg",
-      "type": "NodeInfoReq"
-    }
-  ],
-  "tables": [{
-      "table_name": "nodeinfo",
-      "index_type": "string",
-      "key_names": [
-        "nodeId"
-      ],
-      "key_types": [
-        "string"
-      ],
-      "type": "NodeBaseInfo"
-    }
-  ]
+	"types": [],
+	"structs": [
+              {
+              	"name": "NodeBaseInfo",
+              	"base": "",
+              	"fields": {
+              		"nodeIp": "string",
+              		"nodePort": "string",
+              		"city": "string",
+              		"osSystem": "string",
+              		"serviceProvider": "string",
+              		"longitude": "string",
+              		"latitude": "string"
+                    }
+              	},
+              {
+              	"name": "NodeInfoReq",
+              	"base": "",
+              	"fields": {
+              		"nodeId": "string",
+              		"info": "NodeBaseInfo"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "nodeinforeg",
+              	"type": "NodeInfoReq"
+              }
+       ],
+	"tables": [
+              {
+              	"table_name": "nodeinfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"nodeId"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "NodeBaseInfo"
+              }
+       ]
 }

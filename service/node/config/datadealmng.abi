@@ -1,71 +1,74 @@
 {
-  "types": [],
-  "structs": [{
-      "name":"DataDealnfo",
-      "base": "",
-      "fields": {
-           "userName": "string",
-           "assetId":  "string"
-        }
-    },
-    {
-      "name":"DataDealReq",
-      "base": "",
-      "fields": {
-           "dataExchangeId": "string",
-           "info": "DataDealnfo"
-        }
-    },
-    {
-      "name":"PresaleInfo",
-      "base": "",
-      "fields": {
-           "userName": "string",
-           "assetId":  "string",
-           "dataReqId":"string",
-           "consumer": "string",
-           "opType":   "uint32"
-        }  
-    },
-    {
-      "name":"PresaleReq",
-      "base": "",
-      "fields": {
-           "dataPresaleId": "string",
-           "info": "PresaleInfo"
-        }
-    }
-  ],
-  "actions": [{
-       "action_name": "buydata",
-       "type": "DataDealReq"
-    },
-    {
-       "action_name": "presale",
-       "type": "PresaleReq"
-    }
-  ],
-  "tables": [{
-      "table_name": "datadealinfo",
-      "index_type": "string",
-      "key_names": [
-        "dataExchangeId"
-      ],
-      "key_types": [
-        "string"
-      ],
-	  "type": "DataDealnfo"
-    },
-    {
-      "table_name": "presaleinfo",
-      "index_type": "string",
-      "key_names": [
-        "dataPresaleId"
-      ],
-      "key_types": [
-        "string"
-      ],
-      "type": "PresaleInfo"
-    }
-  ]
+	"types": [],
+	"structs": [
+              {
+              	"name": "DataDealnfo",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"assetId": "string"
+                    }
+              	},
+              {
+              	"name": "DataDealReq",
+              	"base": "",
+              	"fields": {
+              		"dataExchangeId": "string",
+              		"info": "DataDealnfo"
+                    }
+              	},
+              {
+              	"name": "PresaleInfo",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"assetId": "string",
+              		"dataReqId": "string",
+              		"consumer": "string",
+              		"opType": "uint32"
+                    }
+              	},
+              {
+              	"name": "PresaleReq",
+              	"base": "",
+              	"fields": {
+              		"dataPresaleId": "string",
+              		"info": "PresaleInfo"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "buydata",
+              	"type": "DataDealReq"
+              },
+              {
+              	"action_name": "presaledata",
+              	"type": "PresaleReq"
+              }
+       ],
+	"tables": [
+              {
+              	"table_name": "datadealinfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"dataExchangeId"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "DataDealnfo"
+              },
+              {
+              	"table_name": "presaleinfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"dataPresaleId"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "PresaleInfo"
+              }
+       ]
 }

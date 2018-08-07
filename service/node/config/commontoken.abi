@@ -1,83 +1,89 @@
 {
-  "types": [],
-  "structs": [{
-      "name": "CreateTokenReq",
-      "base": "",
-      "fields": {
-              "tokenType": "string",
-              "maxSupply": "uint64"  
-           }
-       },
-       {
-          "name": "IssueTokenReq",
-          "base": "",
-          "fields": {
-              "tokenType": "string",
-              "targetAccount": "string",
-              "issueAmount": "uint64"
-           }
-       },
-       {
-      	    "name": "TransferReq",
-      	    "base": "",
-      	    "fields": {
-          	 "from": "string",
-                 "to": "string",
-                 "tokenType": "string",
-                 "value": "uint64"
-             }
-       },
-       {
-           "name": "TransferCredit",
-           "base": "",
-           "fields": {
-           "name": "string",
-           "spender": "string",
-           "tokenType": "string",
-           "value" : "uint64"
-        }
-    },
-    {
-        "name": "CancelCredit",
-        "base": "",
-        "fields": {
-            "name": "string",
-            "spender": "string",
-            "tokenType": "string"
-        }
-    },
-    {
-      "name": "TransferFromParam4XTO",
-      "base": "",
-      "fields": {
-          "from": "string",
-          "to": "string",
-          "tokenType": "string",
-          "value": "uint64"
-        }
-    }
-  ],
-  "actions": [{
-      "action_name": "create",
-      "type": "CreateTokenReq"
-    },
-    {
-      "action_name": "issue",
-      "type": "IssueTokenReq"
-    },
-    {
-      "action_name": "transfer",
-      "type": "TransferReq"
-    },{
-      "action_name": "grandcredit",
-      "type": "TransferCredit"
-    },{
-      "action_name": "deletecredit",
-      "type": "CancelCredit"
-    },{
-      "action_name": "from",
-      "type": "TransferFromParam4XTO"
-    }
-  ],
-  "tables": []
+	"types": [],
+	"structs": [
+              {
+              	"name": "CreateTokenReq",
+              	"base": "",
+              	"fields": {
+              		"tokenType": "string",
+              		"maxSupply": "uint64"
+                    }
+              	},
+              {
+              	"name": "IssueTokenReq",
+              	"base": "",
+              	"fields": {
+              		"tokenType": "string",
+              		"targetAccount": "string",
+              		"issueAmount": "uint64"
+                    }
+              	},
+              {
+              	"name": "TransferReq",
+              	"base": "",
+              	"fields": {
+              		"from": "string",
+              		"to": "string",
+              		"tokenType": "string",
+              		"value": "uint64"
+                    }
+              	},
+              {
+              	"name": "TransferCredit",
+              	"base": "",
+              	"fields": {
+              		"name": "string",
+              		"spender": "string",
+              		"tokenType": "string",
+              		"value": "uint64"
+                    }
+              	},
+              {
+              	"name": "CancelCredit",
+              	"base": "",
+              	"fields": {
+              		"name": "string",
+              		"spender": "string",
+              		"tokenType": "string"
+                    }
+              	},
+              {
+              	"name": "TransferFromParam4XTO",
+              	"base": "",
+              	"fields": {
+              		"from": "string",
+              		"to": "string",
+              		"tokenType": "string",
+              		"value": "uint64"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "create",
+              	"type": "CreateTokenReq"
+              },
+              {
+              	"action_name": "issue",
+              	"type": "IssueTokenReq"
+              },
+              {
+              	"action_name": "transfer",
+              	"type": "TransferReq"
+              },
+              {
+              	"action_name": "grandcredit",
+              	"type": "TransferCredit"
+              },
+              {
+              	"action_name": "deletecredit",
+              	"type": "CancelCredit"
+              },
+              {
+              	"action_name": "fromcontracttransfer",
+              	"type": "TransferFromParam4XTO"
+              }
+       ],
+	"tables": [
+       ]
 }

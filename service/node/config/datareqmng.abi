@@ -1,46 +1,49 @@
 {
-  "types": [],
-  "structs": [{
-      "name": "DataReqInfo",
-      "base": "",
-      "fields": {
-          "userName": "string",
-          "reqName": "string",
-          "reqType": "uint64",
-          "featureTag": "uint64",
-          "sampleHash": "string",
-          "expireTime": "uint64",
-          "opType": "uint32",
-          "tokenType":"string",
-          "price": "uint64",
-          "favoriFlag": "uint32",
-          "description": "string"
-        }
-    },
-    {
-      "name": "RegDataReqReq",
-      "base": "",
-      "fields": {
-          "dataReqId": "string",
-          "info": "DataReqInfo"
-        }
-    }
-  ],
-  "actions": [{
-      "action_name": "datareqreg",
-      "type": "RegDataReqReq"
-    }
-  ],
-  "tables": [{
-      "table_name": "datareqreginfo",
-      "index_type": "string",
-      "key_names": [
-        "dataReqId"
-      ],
-      "key_types": [
-        "string"
-      ],
-      "type": "DataReqInfo"
-    }
-  ]
+	"types": [],
+	"structs": [
+              {
+              	"name": "DataReqInfo",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"reqName": "string",
+              		"reqType": "uint64",
+              		"featureTag": "uint64",
+              		"sampleHash": "string",
+              		"expireTime": "uint64",
+              		"opType": "uint32",
+              		"tokenType": "string",
+              		"price": "uint64",
+              		"favoriFlag": "uint32",
+              		"description": "string"
+                    }
+              	},
+              {
+              	"name": "RegDataReqReq",
+              	"base": "",
+              	"fields": {
+              		"dataReqId": "string",
+              		"info": "DataReqInfo"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "datareqreg",
+              	"type": "RegDataReqReq"
+              }
+       ],
+	"tables": [
+              {
+              	"table_name": "datareqreginfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"dataReqId"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "DataReqInfo"
+              }
+       ]
 }

@@ -1,46 +1,49 @@
 {
-  "types": [],
-  "structs": [{
-      "name": "AssetInfo",
-      "base": "",
-      "fields": {
-           "userName": "string",
-           "assetName": "string",
-           "assetType": "uint64",
-           "featureTag": "string",
-           "sampleHash": "string",
-           "storageHash": "string",
-           "expireTime": "uint32",
-           "opType":     "uint32",
-           "tokenType":  "string",
-           "price":       "uint64",
-           "description": "string"
-        }
-    },
-    {
-      "name": "RegAssetReq",
-      "base": "",
-      "fields": {
-           "assetId": "string",
-           "info":    "AssetInfo"
-        }
-    }
-  ],
-  "actions": [{
-       "action_name": "assetreg",
-       "type": "RegAssetReq"
-    }
-  ],
-  "tables": [{
-      "table_name":"assetreginfo",
-      "index_type": "string",
-      "key_names": [
-        "assetId"
-      ],
-      "key_types": [
-        "string"
-      ],
-      "type": "AssetInfo"
-    }
-  ]
+	"types": [],
+	"structs": [
+              {
+              	"name": "AssetInfo",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"assetName": "string",
+              		"assetType": "uint64",
+              		"featureTag": "string",
+              		"sampleHash": "string",
+              		"storageHash": "string",
+              		"expireTime": "uint32",
+              		"opType": "uint32",
+              		"tokenType": "string",
+              		"price": "uint64",
+              		"description": "string"
+                    }
+              	},
+              {
+              	"name": "RegAssetReq",
+              	"base": "",
+              	"fields": {
+              		"assetId": "string",
+              		"info": "AssetInfo"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "assetreg",
+              	"type": "RegAssetReq"
+              }
+       ],
+	"tables": [
+              {
+              	"table_name": "assetreginfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"assetId"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "AssetInfo"
+              }
+       ]
 }

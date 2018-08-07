@@ -1,45 +1,51 @@
 {
-  "types": [],
-  "structs": [{
-      "name": "UserInfo",
-      "base": "",
-      "fields": {
-          "didid": "string",
-          "info": "string"
-        }
-    },{
-      "name": "UserLogin",
-      "base": "",
-      "fields": {
-          "userName": "string",
-          "randomNum": "uint32"
-        }
-    },{
-      "name": "UserBaseInfo",
-      "base": "",
-      "fields": {
-          "info": "string"
-        }
-    }
-  ],
-  "actions": [{
-      "action_name": "reguser",
-      "type": "UserInfo"
-    },{
-      "action_name": "userlogin",
-      "type": "UserLogin"
-    }
-  ],
-  "tables": [{
-      "table_name": "userreginfo",
-      "index_type": "string",
-      "key_names": [
-        "didid"
-      ],
-      "key_types": [
-        "string"
-      ],
-      "type": "UserBaseInfo"
-    }
-  ]
+	"types": [],
+	"structs": [
+              {
+              	"name": "UserInfo",
+              	"base": "",
+              	"fields": {
+              		"didid": "string",
+              		"info": "string"
+                    }
+              	},
+              {
+              	"name": "UserLogin",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"randomNum": "uint32"
+                    }
+              	},
+              {
+              	"name": "UserBaseInfo",
+              	"base": "",
+              	"fields": {
+              		"info": "string"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "reguser",
+              	"type": "UserInfo"
+              },
+              {
+              	"action_name": "userlogin",
+              	"type": "UserLogin"
+              }
+       ],
+	"tables": [
+              {
+              	"table_name": "userreginfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"didid"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "UserBaseInfo"
+              }
+       ]
 }

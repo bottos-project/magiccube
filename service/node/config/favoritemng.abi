@@ -1,39 +1,42 @@
 {
-  "types": [],
-  "structs": [{
-      "name": "GoodsBaseInfo",
-      "base": "",
-      "fields": {
-          "userName": "string",
-          "goodsType": "string"
-        }
-    },
-    {
-      "name": "GoodsProReq",
-      "base": "",
-      "fields": {
-          "userName": "string",
-          "opType": "uint32",
-          "goodsType": "string",
-          "goodsId": "string"
-        }
-    }
-  ],
-  "actions": [{
-      "action_name": "favoritepro",
-      "type": "GoodsProReq"
-    }
-  ],
-  "tables": [{
-      "table_name": "favoriteinfo",
-      "index_type": "string",
-      "key_names": [
-        "IdUserName"
-      ],
-      "key_types": [
-        "string"
-      ],
-      "type": "GoodsBaseInfo"
-    }
-  ]
+	"types": [],
+	"structs": [
+              {
+              	"name": "GoodsBaseInfo",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"goodsType": "string"
+                    }
+              	},
+              {
+              	"name": "GoodsProReq",
+              	"base": "",
+              	"fields": {
+              		"userName": "string",
+              		"opType": "uint32",
+              		"goodsType": "string",
+              		"goodsId": "string"
+                    }
+              	}
+       ],
+	"actions": [
+              {
+              	"action_name": "favoritepro",
+              	"type": "GoodsProReq"
+              }
+       ],
+	"tables": [
+              {
+              	"table_name": "favoriteinfo",
+              	"index_type": "string",
+              	"key_names":  [
+              		"IdUserName"
+              	 ],
+              	"key_types":  [
+              		"string"
+              	 ],
+              	"type": "GoodsBaseInfo"
+              }
+       ]
 }
