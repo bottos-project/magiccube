@@ -33,7 +33,8 @@ Our Goals
 
 # Our Official website:
    www.bottos.org
-
+   
    www.botfans.org
+   
 # License
 Bottos is GPLv3 licensed.
