@@ -217,6 +217,12 @@ function varcheck()
 
 function startcore()
 {
+    if [ ! -z $2 ] && [ $2 == 'genesis' ]; then	
+    	shift 2
+    else 
+	shift 1	
+    fi
+ 				
     if [ ! -e $USER_HOME_DIR/opt/go/bin/core/bottos ];
 	then
 		echo -e "\033[31m *ERROR* Fail to find bottos process under : $USER_HOME_DIR/opt/go/bin/core !!! \033[0m"
@@ -226,12 +232,12 @@ function startcore()
 	if [ ! -f $USER_HOME_DIR/opt/go/bin/core/chainconfig.json ] || [ ! -f $USER_HOME_DIR/opt/go/bin/core/genesis.json ];
 	then
 		echo -e "\033[31m *ERROR* Fail to find core proess's configuration item : config.json or genesis.json under :"${CORE_PROC_FILE_DIR}" \033[0m"
-		exit 1
+		#exit 1
 	fi
 
-    cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR
-    cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core
-    cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir
+    #cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR
+    #cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core
+    #cp -f $USER_HOME_DIR/opt/go/bin/*.json $USER_HOME_DIR/opt/go/bin/core/cmd_dir
     
     if [ ! -d ${CORE_PROC_FILE_DIR} ];
 	then
@@ -244,7 +250,7 @@ function startcore()
 	then 
 		#start Core process  , nohup "command" > myout.file 2>&1 &
 		cd $USER_HOME_DIR/opt/go/bin/core/
-		nohup $USER_HOME_DIR/opt/go/bin/core/bottos 2>&1 & 
+		nohup $USER_HOME_DIR/opt/go/bin/core/bottos $@ 2>&1 & 
         	#--http-server-address ${SERVER_IPADR}:${CHAIN_PORT} -m mongodb://126.0.0.1/bottos --resync > core.file 2>&1 &
         	sleep 3
 	fi
@@ -272,7 +278,7 @@ function stopcore()
 function restartcore()
 {
     stopcore
-    startcore
+    startcore $@
 }
 
 function startminio()
@@ -471,7 +477,7 @@ function startserv()
 	# start mongodb service
 	sleep 3
     	
-        startcore
+        startcore $@
 	
 	#echo "start minio"
 	# setup minio
@@ -783,7 +789,7 @@ case $1 in
         build_all_modules
         varcheck
         service mongodb start
-        startserv
+        startserv $@
         ;;
     "start")
         usercheck "bottos"
@@ -792,7 +798,7 @@ case $1 in
         setenv
         varcheck
         service mongodb start
-        startserv 
+        startserv $@
         ;;
     "stop")
         usercheck "bottos"
@@ -807,13 +813,13 @@ case $1 in
         setgopath
         ;;
     "startcore")
-        startcore
+        startcore $@
         ;;
     "stopcore")
         stopcore
         ;;
     "restartcore")
-        restartcore
+        restartcore $@
         ;;
     "help"|*)
         echo -e "\033[32m you have to input a parameter , Please run the script like ./startup.sh deploy|update|start [genesis]|buildstart [genesis]|stop|startcore|stopcore|restartcore !!! \033[0m"
