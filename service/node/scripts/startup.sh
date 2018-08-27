@@ -68,6 +68,30 @@ OPT_GO_BIN_GZ_PACK=opt-go-bin.tar.gz
 GOPATH_DIR_PACK=GOPATH-DIR.tar.gz
 GOLANG_PACK=go1.10.1.linux-amd64.tar.gz
 
+function mongodb_createusers () {
+    if [ `grep \#auth /etc/mongodb.conf | grep \= | wc -l` -le 0 ]; then
+	    cmd="/auth/c\#auth = true"
+	    sed -ir $cmd /etc/mongodb.conf
+	    service mongodb restart
+	    sleep 1	
+    fi
+
+mongo <<EOF	
+    use admin
+    db.createUser({ user: "bottosadmin", pwd: "bottosadmin", roles: [{ role: "userAdminAnyDatabase", db: "admin" }] })
+    db.auth("bottosadmin", "bottosadmin")
+    use bottos
+    db.createUser({ user: "bottos", pwd: "bottos", roles: [{ role: "readWrite", db: "bottos" }] })
+    db.auth("bottos", "bottos")
+EOF
+
+    cmd="/#auth/c\auth = true"
+    sed -ir $cmd /etc/mongodb.conf
+    #service mongodb restart
+    service mongodb stop
+    #mongod --port 27017 --dbpath /var/lib/mongodb &
+}
+
 function miniocheck()
 {
     if [ -z "$SERVER_IPADR" ] || [ -z "$SERVER_PORT" ];
@@ -539,6 +563,7 @@ function stopserv()
 	sleep 1
        
         service mongodb stop
+	sudo killall mongod mongodb
 	#ps -ef | grep "mongodb" | grep -v grep | cut -c 9-15 | xargs kill -s 9
 	sleep 1
 
@@ -788,7 +813,8 @@ case $1 in
         setenv
         build_all_modules
         varcheck
-        service mongodb start
+        #service mongodb start
+	sudo mongod --port 27017 --dbpath /var/lib/mongodb &
         startserv $@
         ;;
     "start")
@@ -797,7 +823,8 @@ case $1 in
           
         setenv
         varcheck
-        service mongodb start
+        #service mongodb start
+	sudo mongod --port 27017 --dbpath /var/lib/mongodb &
         startserv $@
         ;;
     "stop")
@@ -811,6 +838,7 @@ case $1 in
         sslcheck
 	swcheck
         setgopath
+	mongodb_createusers
         ;;
     "startcore")
         startcore $@
