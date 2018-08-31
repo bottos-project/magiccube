@@ -350,7 +350,7 @@ function prepcheck()
 	if [ -n "`cat /etc/issue | grep -i Ubuntu`" ] && [ -z "`dpkg -l | grep mongodb`" ];
 	then
 		echo -e "\033[33m *WRAN* mongodb hadn't been installed , install it currently ... \033[0m"
-		apt-get install mongodb -y
+		apt-get install mongodb-server mongodb -y
 	fi
 
 	apt-get install jq -y
